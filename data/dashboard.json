@@ -6,72 +6,39 @@
 			"width": "full",
 			"widgets": [
 				{
-					"id": "widget-1",
-					"type": "html",
-					"title": "Welcome Message",
+					"id": "quick_links_1753966885_4d30",
+					"type": "quick-links",
 					"settings": {
-						"html_content": "<h2>Welcome to Dashmate!</h2><p>This is a custom HTML widget that can display any formatted content.</p><ul><li>Feature 1</li><li>Feature 2</li><li>Feature 3</li></ul>",
+						"customTitle": "Quick Access",
+						"filterLinks": "content",
+						"hideIcon": false,
+						"showTitle": true,
+						"linkStyle": "list"
+					},
+					"created": "2025-07-31 13:01:25",
+					"updated": "2025-07-31 13:01:25"
+				},
+				{
+					"id": "html_1753966885_bosq",
+					"type": "html",
+					"settings": {
+						"html_content": "<div style=\"background: #f0f0f0; padding: 15px; border-radius: 5px;\"><h4>\ud83d\udcca Dashboard Stats</h4><p><strong>Posts:</strong> 25<br><strong>Pages:</strong> 8<br><strong>Comments:</strong> 12</p></div>",
 						"allow_scripts": false
 					},
-					"position": 0
+					"created": "2025-07-31 13:01:25",
+					"updated": "2025-07-31 13:01:25"
 				},
 				{
-					"id": "widget-2",
-					"type": "iconbox",
-					"title": "User Statistics",
+					"id": "progress_circle_1753966885_e2ej",
+					"type": "progress-circle",
 					"settings": {
-						"icon": "dashicons-admin-users",
-						"title": "1,234 Users",
-						"subtitle": "Active members",
-						"color": "blue"
+						"percentage": 85,
+						"label": "85%",
+						"caption": "Site Completion",
+						"color": "green"
 					},
-					"position": 1
-				},
-
-				{
-					"id": "widget-4",
-					"type": "tabular",
-					"title": "Recent Users",
-					"settings": {
-						"tables": [
-							{
-								"title": "User List",
-								"headers": [
-									{ "text": "Name" },
-									{ "text": "Email" },
-									{ "text": "Role" },
-									{ "text": "Status" }
-								],
-								"rows": [
-									{
-										"cells": [
-											{ "text": "John Doe" },
-											{ "text": "john@example.com" },
-											{ "text": "Administrator" },
-											{ "text": "Active" }
-										]
-									},
-									{
-										"cells": [
-											{ "text": "Jane Smith" },
-											{ "text": "jane@example.com" },
-											{ "text": "Editor" },
-											{ "text": "Active" }
-										]
-									},
-									{
-										"cells": [
-											{ "text": "Bob Wilson" },
-											{ "text": "bob@example.com" },
-											{ "text": "Author" },
-											{ "text": "Inactive" }
-										]
-									}
-								]
-							}
-						]
-					},
-					"position": 2
+					"created": "2025-07-31 13:01:25",
+					"updated": "2025-07-31 13:01:25"
 				}
 			]
 		},
@@ -81,151 +48,26 @@
 			"width": "sidebar",
 			"widgets": [
 				{
-					"id": "widget-5",
-					"type": "quick-links",
-					"title": "Quick Access",
+					"id": "html_1753966885_lzxq",
+					"type": "html",
 					"settings": {
-						"title": "Quick Links",
-						"links": [
-							{
-								"title": "WordPress Admin",
-								"url": "/wp-admin",
-								"icon": "dashicons-admin-home"
-							},
-							{
-								"title": "Settings",
-								"url": "/wp-admin/options-general.php",
-								"icon": "dashicons-admin-generic"
-							},
-							{
-								"title": "Users",
-								"url": "/wp-admin/users.php",
-								"icon": "dashicons-admin-users"
-							},
-							{
-								"title": "Posts",
-								"url": "/wp-admin/edit.php",
-								"icon": "dashicons-admin-post"
-							},
-							{
-								"title": "Media",
-								"url": "/wp-admin/upload.php",
-								"icon": "dashicons-admin-media"
-							}
-						]
+						"html_content": "<h3>Welcome to Dashmate!</h3><p>This is a custom HTML widget. You can add any HTML content here.</p><ul><li>Feature 1</li><li>Feature 2</li><li>Feature 3</li></ul>",
+						"allow_scripts": false
 					},
-					"position": 0
+					"created": "2025-07-31 13:01:25",
+					"updated": "2025-07-31 13:01:25"
 				},
 				{
-					"id": "widget-6",
-					"type": "tabular",
-					"title": "Data Tables",
-					"settings": {
-						"tables": [
-							{
-								"title": "User Data",
-								"headers": [
-									{ "text": "Name" },
-									{ "text": "Email" },
-									{ "text": "Role" },
-									{ "text": "Status" }
-								],
-								"rows": [
-									{
-										"cells": [
-											{ "text": "John Doe" },
-											{ "text": "john@example.com" },
-											{ "text": "Admin" },
-											{ "text": "Active" }
-										]
-									},
-									{
-										"cells": [
-											{ "text": "Jane Smith" },
-											{ "text": "jane@example.com" },
-											{ "text": "Editor" },
-											{ "text": "Active" }
-										]
-									},
-									{
-										"cells": [
-											{ "text": "Bob Wilson" },
-											{ "text": "bob@example.com" },
-											{ "text": "Author" },
-											{ "text": "Inactive" }
-										]
-									}
-								]
-							},
-							{
-								"title": "Product Inventory",
-								"headers": [
-									{ "text": "Product" },
-									{ "text": "Category" },
-									{ "text": "Price" },
-									{ "text": "Stock" }
-								],
-								"rows": [
-									{
-										"cells": [
-											{ "text": "Laptop Pro" },
-											{ "text": "Electronics" },
-											{ "text": "$1,299" },
-											{ "text": "In Stock" }
-										]
-									},
-									{
-										"cells": [
-											{ "text": "Wireless Mouse" },
-											{ "text": "Accessories" },
-											{ "text": "$29.99" },
-											{ "text": "Low Stock" }
-										]
-									},
-									{
-										"cells": [
-											{ "text": "USB Cable" },
-											{ "text": "Cables" },
-											{ "text": "$9.99" },
-											{ "text": "Out of Stock" }
-										]
-									}
-								]
-							}
-						]
-					},
-					"position": 1
-				}
-			]
-		},
-		{
-			"id": "col-3",
-			"title": "Third Column",
-			"width": "sidebar",
-			"widgets": [
-				{
-					"id": "widget-7",
+					"id": "iconbox_1753966885_6qqc",
 					"type": "iconbox",
-					"title": "System Status",
 					"settings": {
-						"icon": "dashicons-admin-tools",
-						"title": "System Online",
-						"subtitle": "All services running",
-						"color": "green"
+						"icon": "dashicons-admin-users",
+						"title": "User Management",
+						"subtitle": "Manage your site users",
+						"color": "blue"
 					},
-					"position": 0
-				},
-				{
-					"id": "widget-3",
-					"type": "progress-circle",
-					"title": "Project Completion",
-					"settings": {
-						"percentage": 75,
-						"label": "75%",
-						"caption": "Project Progress",
-						"color": "green"
-					},
-					"position": 1
+					"created": "2025-07-31 13:01:25",
+					"updated": "2025-07-31 13:01:25"
 				}
 			]
 		}

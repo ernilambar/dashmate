@@ -55,15 +55,15 @@ class WidgetContent extends Component {
 		// Route to appropriate widget component
 		switch ( widget.type ) {
 			case 'html':
-				return <HtmlWidget data={ data } />;
+				return <HtmlWidget widgetId={ widget.id } data={ data } />;
 			case 'iconbox':
-				return <IconboxWidget data={ data } />;
+				return <IconboxWidget widgetId={ widget.id } data={ data } />;
 			case 'progress-circle':
-				return <ProgressCircleWidget data={ data } />;
+				return <ProgressCircleWidget widgetId={ widget.id } data={ data } />;
 			case 'quick-links':
-				return <QuickLinksWidget data={ data } />;
+				return <QuickLinksWidget widgetId={ widget.id } data={ data } />;
 			case 'tabular':
-				return <TabularWidget data={ data } />;
+				return <TabularWidget widgetId={ widget.id } data={ data } />;
 			default:
 				return <p>Unknown widget type: { widget.type }</p>;
 		}
