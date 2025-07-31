@@ -16,7 +16,22 @@ class WidgetContent extends Component {
 	}
 
 	componentDidMount() {
-		this.loadWidgetData();
+		// If widgetData is provided as prop, use it; otherwise fetch data
+		if ( this.props.widgetData ) {
+			this.setState( { data: this.props.widgetData, loading: false } );
+		} else {
+			this.loadWidgetData();
+		}
+	}
+
+	componentDidUpdate( prevProps ) {
+		// Check if widgetData prop changed (when settings are saved and content is refetched)
+		if ( prevProps.widgetData !== this.props.widgetData ) {
+			console.log( 'WidgetContent: widgetData updated', this.props.widgetData );
+			if ( this.props.widgetData ) {
+				this.setState( { data: this.props.widgetData, loading: false } );
+			}
+		}
 	}
 
 	async loadWidgetData() {

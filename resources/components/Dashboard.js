@@ -81,7 +81,7 @@ class Dashboard extends Component {
 	}
 
 	render() {
-		const { dashboard, loading, error } = this.state;
+		const { dashboard, widgets, loading, error } = this.state;
 
 		if ( loading ) {
 			return (
@@ -103,20 +103,32 @@ class Dashboard extends Component {
 			);
 		}
 
+		// Get columns from the new structure
+		const columns = dashboard?.layout?.columns || [];
+		const allWidgets = dashboard?.widgets || [];
+
 		return (
 			<div className="dashmate-app">
 				<div className="dashboard-header">
 					<h1>{ __( 'Dashmate Dashboard', 'dashmate' ) }</h1>
 				</div>
 				<div className="dashboard-content">
-					{ dashboard && dashboard.columns ? (
-						dashboard.columns.map( ( column ) => (
-							<Column
-								key={ column.id }
-								column={ column }
-								widgets={ this.state.widgets }
-							/>
-						) )
+					{ columns.length > 0 ? (
+						columns.map( ( column ) => {
+							// Get widgets for this column
+							const columnWidgets = allWidgets
+								.filter( ( widget ) => widget.column_id === column.id )
+								.sort( ( a, b ) => ( a.position || 0 ) - ( b.position || 0 ) );
+
+							return (
+								<Column
+									key={ column.id }
+									column={ column }
+									widgets={ widgets }
+									columnWidgets={ columnWidgets }
+								/>
+							);
+						} )
 					) : (
 						<div className="empty-dashboard">
 							<p>No dashboard columns found</p>

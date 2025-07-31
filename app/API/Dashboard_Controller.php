@@ -96,10 +96,6 @@ class Dashboard_Controller extends Base_Controller {
 			return $this->error_response( 'Columns must be an array', 400, 'invalid_columns' );
 		}
 
-		// Get current dashboard data to preserve widgets.
-		$current_data = $this->get_dashboard_data();
-		$widgets      = $current_data['widgets'] ?? [];
-
 		// Build new layout structure.
 		$layout_columns = [];
 		foreach ( $columns as $index => $column ) {
@@ -114,7 +110,7 @@ class Dashboard_Controller extends Base_Controller {
 			'layout'  => [
 				'columns' => $layout_columns,
 			],
-			'widgets' => $widgets,
+			'widgets' => [],
 		];
 
 		$result = update_option( 'dashmate_dashboard_data', $dashboard_data, false );
@@ -140,18 +136,13 @@ class Dashboard_Controller extends Base_Controller {
 		}
 
 		foreach ( $columns as $column ) {
-			if ( ! isset( $column['id'] ) || ! isset( $column['title'] ) || ! isset( $column['widgets'] ) ) {
-				return new WP_Error( 'invalid_column', 'Each column must have id, title, and widgets' );
+			if ( ! isset( $column['id'] ) ) {
+				return new WP_Error( 'invalid_column', 'Each column must have an id' );
 			}
 
-			if ( ! is_array( $column['widgets'] ) ) {
-				return new WP_Error( 'invalid_widgets', 'Widgets must be an array' );
-			}
-
-			foreach ( $column['widgets'] as $widget ) {
-				if ( ! isset( $widget['id'] ) || ! isset( $widget['type'] ) || ! isset( $widget['title'] ) ) {
-					return new WP_Error( 'invalid_widget', 'Each widget must have id, type, and title' );
-				}
+			// Width is optional, but if provided it should be a string
+			if ( isset( $column['width'] ) && ! is_string( $column['width'] ) ) {
+				return new WP_Error( 'invalid_width', 'Column width must be a string' );
 			}
 		}
 

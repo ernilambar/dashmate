@@ -54,38 +54,13 @@ class Widget_Blueprint_Manager {
 			'description'     => 'Display quick access links',
 			'icon'            => 'admin-links',
 			'settings_schema' => [
-				'customTitle' => [
-					'type'        => 'text',
-					'label'       => 'Custom Title',
-					'description' => 'Custom title for the widget',
-					'default'     => 'Quick Access',
-				],
-				'filterLinks' => [
-					'type'    => 'select',
-					'label'   => 'Filter Links',
-					'options' => [
-						[
-							'value' => 'content',
-							'label' => 'Content',
-						],
-						[
-							'value' => 'media',
-							'label' => 'Media',
-						],
-						[
-							'value' => 'all',
-							'label' => 'All',
-						],
-					],
-					'default' => 'content',
-				],
-				'hideIcon'    => [
+				'hideIcon'  => [
 					'type'        => 'checkbox',
 					'label'       => 'Hide Icons',
 					'description' => 'Hide link icons',
 					'default'     => false,
 				],
-				'linkStyle'   => [
+				'linkStyle' => [
 					'type'    => 'select',
 					'label'   => 'Link Style',
 					'options' => [

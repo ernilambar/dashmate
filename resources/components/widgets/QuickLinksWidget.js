@@ -7,20 +7,25 @@ class QuickLinksWidget extends React.Component {
 		this.state = {
 			showSettings: false,
 			settings: props.settings || {},
-			data: null,
-			loading: true,
 			widgetSchemas: null,
 		};
 	}
 
 	componentDidMount() {
 		this.fetchWidgetSchemas();
-		this.fetchWidgetData();
 	}
 
 	componentDidUpdate( prevProps ) {
+		// Check if widgetId changed
 		if ( prevProps.widgetId !== this.props.widgetId ) {
-			this.fetchWidgetData();
+			// Widget ID changed, but data will be fetched by parent component
+		}
+
+		// Check if data prop changed (when settings are saved and content is refetched)
+		if ( prevProps.data !== this.props.data ) {
+			console.log( 'QuickLinksWidget: Data updated', this.props.data );
+			// Data has been updated by parent component, no need to update state
+			// as we'll use props.data directly in render
 		}
 	}
 
@@ -39,37 +44,6 @@ class QuickLinksWidget extends React.Component {
 		}
 	};
 
-	fetchWidgetData = async () => {
-		try {
-			this.setState( { loading: true } );
-
-			// Use POST to send settings with the request
-			const response = await fetch(
-				`/wp-json/dashmate/v1/widgets/content/${ this.props.widgetId }`,
-				{
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify( {
-						settings: this.state.settings,
-					} ),
-				}
-			);
-			const result = await response.json();
-
-			if ( result.success ) {
-				this.setState( { data: result.data, loading: false } );
-			} else {
-				console.error( 'Failed to fetch widget data:', result );
-				this.setState( { loading: false } );
-			}
-		} catch ( error ) {
-			console.error( 'Error fetching widget data:', error );
-			this.setState( { loading: false } );
-		}
-	};
-
 	handleLinkClick = ( link ) => {
 		console.log( 'QuickLinksWidget link clicked:', link );
 		window.open( link.url, '_blank' );
@@ -81,12 +55,16 @@ class QuickLinksWidget extends React.Component {
 	};
 
 	render() {
-		const { settings, data, loading, widgetSchemas } = this.state;
+		const { settings, widgetSchemas } = this.state;
+		const { data } = this.props; // Use data from props instead of state
 		const schema = widgetSchemas?.[ 'links' ]?.settings_schema;
-		const { title, links } = data || {};
-		const { hideIcon = false, linkStyle = 'list' } = settings;
 
-		if ( loading ) {
+		// Handle nested data structure: data.links contains {links, linkStyle, hideIcon}
+		const linksData = data?.links || {};
+		const { links, linkStyle, hideIcon } = linksData;
+
+		// Show loading if data is not available yet
+		if ( ! data ) {
 			return <div>Loading...</div>;
 		}
 
@@ -95,18 +73,16 @@ class QuickLinksWidget extends React.Component {
 
 		return (
 			<div className="quick-links-widget">
-				<div className={ `quick-links-list quick-links-${ linkStyle }` }>
+				<div className={ `quick-links-list quick-links-${ linkStyle || 'list' }` }>
 					{ safeLinks.map( ( link, index ) => (
 						<div
 							key={ index }
 							className="quick-link-item"
 							onClick={ () => this.handleLinkClick( link ) }
 						>
-							{ ! hideIcon && (
+							{ ! hideIcon && link.icon && (
 								<span
-									className={ `quick-link-icon dashicons ${
-										link.icon || 'dashicons-admin-links'
-									}` }
+									className={ `quick-link-icon dashicons ${ link.icon }` }
 								></span>
 							) }
 							<span className="quick-link-title">{ link.title }</span>

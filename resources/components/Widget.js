@@ -48,10 +48,36 @@ class Widget extends Component {
 		this.setState( { showSettings: ! this.state.showSettings } );
 	};
 
-	handleSettingsChange = ( newSettings ) => {
+	handleSettingsChange = async ( newSettings ) => {
 		// Update widget settings in the parent component
 		console.log( 'Settings changed:', newSettings );
-		// Here you could also save settings to backend
+
+		try {
+			const response = await fetch(
+				`/wp-json/dashmate/v1/widgets/${ this.props.widget.id }/settings`,
+				{
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify( {
+						settings: newSettings,
+					} ),
+				}
+			);
+
+			const result = await response.json();
+
+			if ( result.success ) {
+				console.log( 'Settings saved successfully' );
+				// Reload widget data to reflect the new settings
+				this.loadWidgetData();
+			} else {
+				console.error( 'Failed to save settings:', result );
+			}
+		} catch ( error ) {
+			console.error( 'Error saving settings:', error );
+		}
 	};
 
 	render() {
@@ -134,7 +160,10 @@ class Widget extends Component {
 								/>
 							</div>
 						) }
-						<WidgetContent widget={ { ...widget, type: widgetType } } />
+						<WidgetContent
+							widget={ { ...widget, type: widgetType } }
+							widgetData={ widgetData }
+						/>
 					</div>
 				) }
 			</div>

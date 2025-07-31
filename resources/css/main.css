@@ -358,6 +358,12 @@
 	gap: 8px;
 }
 
+.quick-links-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+	gap: 12px;
+}
+
 .quick-link-item {
 	display: flex;
 	align-items: center;
@@ -367,12 +373,12 @@
 	text-decoration: none;
 	color: #23282d;
 	transition: background-color 0.2s ease;
+	cursor: pointer;
 }
 
 .quick-link-item:hover {
 	background: #f0f0f0;
 	text-decoration: none;
-	color: #23282d;
 }
 
 .quick-link-icon {

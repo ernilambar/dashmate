@@ -64,57 +64,72 @@ class Quick_Links_Widget extends Abstract_Widget {
 	 * @return array
 	 */
 	private function get_links( $settings ) {
-		$all_links = [
-			[
-				'title'    => 'Dashboard',
-				'url'      => admin_url(),
-				'icon'     => 'dashicons-admin-home',
-				'category' => 'content',
+		// Define admin menu items with their icons and capabilities
+		$admin_menu_items = [
+			'themes.php'          => [
+				'title' => 'Appearance',
+				'icon'  => 'dashicons-admin-appearance',
+				'cap'   => 'switch_themes',
 			],
-			[
-				'title'    => 'Posts',
-				'url'      => admin_url( 'edit.php' ),
-				'icon'     => 'dashicons-admin-post',
-				'category' => 'content',
+			'plugins.php'         => [
+				'title' => 'Plugins',
+				'icon'  => 'dashicons-admin-plugins',
+				'cap'   => 'activate_plugins',
 			],
-			[
-				'title'    => 'Pages',
-				'url'      => admin_url( 'edit.php?post_type=page' ),
-				'icon'     => 'dashicons-admin-page',
-				'category' => 'content',
+			'tools.php'           => [
+				'title' => 'Tools',
+				'icon'  => 'dashicons-admin-tools',
+				'cap'   => 'manage_options',
 			],
-			[
-				'title'    => 'Media',
-				'url'      => admin_url( 'upload.php' ),
-				'icon'     => 'dashicons-admin-media',
-				'category' => 'media',
-			],
-			[
-				'title'    => 'Comments',
-				'url'      => admin_url( 'edit-comments.php' ),
-				'icon'     => 'dashicons-admin-comments',
-				'category' => 'content',
+			'options-general.php' => [
+				'title' => 'Settings',
+				'icon'  => 'dashicons-admin-settings',
+				'cap'   => 'manage_options',
 			],
 		];
 
-		// Filter links based on settings.
-		$filter = $settings['filterLinks'] ?? 'content';
-		if ( 'all' !== $filter ) {
-			$all_links = array_filter(
-				$all_links,
-				function ( $link ) use ( $filter ) {
-					return $link['category'] === $filter;
-				}
-			);
+		$all_links = [];
+
+		// Check if we're in an API context (no user logged in)
+		$is_api_request = defined( 'REST_REQUEST' ) && REST_REQUEST;
+
+		// Build links based on user capabilities or provide all links for API requests
+		foreach ( $admin_menu_items as $page => $item ) {
+			if ( $is_api_request || current_user_can( $item['cap'] ) ) {
+				$all_links[] = [
+					'title' => $item['title'],
+					'url'   => admin_url( $page ),
+					'icon'  => $item['icon'],
+				];
+			}
 		}
 
+		/**
+		 * Filter the quick links.
+		 *
+		 * This filter allows other plugins to add or modify quick links.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param array $links Array of quick links.
+		 */
+		$all_links = apply_filters( 'dashmate_quick_links', $all_links );
+
 		// Hide icons if setting is enabled.
-		if ( ! empty( $settings['hideIcon'] ) ) {
+		$hide_icon = $settings['hideIcon'] ?? false;
+		if ( $hide_icon ) {
 			foreach ( $all_links as &$link ) {
 				unset( $link['icon'] );
 			}
 		}
 
-		return array_values( $all_links );
+		// Add link style to the output so frontend can apply appropriate CSS.
+		$link_style = $settings['linkStyle'] ?? 'list';
+
+		return [
+			'links'     => array_values( $all_links ),
+			'linkStyle' => $link_style,
+			'hideIcon'  => $hide_icon,
+		];
 	}
 }
