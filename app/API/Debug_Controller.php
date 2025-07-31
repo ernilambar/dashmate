@@ -58,22 +58,29 @@ class Debug_Controller extends Base_Controller {
 	 * @return WP_REST_Response
 	 */
 	public function get_debug_info( $request ) {
+		$method      = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+		$nonce       = $_SERVER['HTTP_X_WP_NONCE'] ?? '';
+		$all_headers = getallheaders();
+
 		$debug_info = [
 			'user_logged_in'    => is_user_logged_in(),
 			'current_user_id'   => get_current_user_id(),
 			'user_can_manage'   => current_user_can( 'manage_options' ),
-			'nonce_verified'    => wp_verify_nonce( $_SERVER['HTTP_X_WP_NONCE'] ?? '', 'wp_rest' ),
-			'request_method'    => $_SERVER['REQUEST_METHOD'] ?? 'GET',
-			'headers'           => getallheaders(),
+			'request_method'    => $method,
+			'nonce_received'    => $nonce,
+			'nonce_verified'    => wp_verify_nonce( $nonce, 'wp_rest' ),
+			'nonce_length'      => strlen( $nonce ),
+			'headers'           => $all_headers,
+			'permission_check'  => $this->check_permissions(),
 			'data_files_exist'  => [
 				'dashboard.json' => file_exists( DASHMATE_DIR . '/data/dashboard.json' ),
 				'widgets.json'   => file_exists( DASHMATE_DIR . '/data/widgets.json' ),
-				'sales.json'     => file_exists( DASHMATE_DIR . '/data/sales.json' ),
-				'revenue.json'   => file_exists( DASHMATE_DIR . '/data/revenue.json' ),
-				'orders.json'    => file_exists( DASHMATE_DIR . '/data/orders.json' ),
 			],
 			'plugin_version'    => DASHMATE_VERSION,
 			'wordpress_version' => get_bloginfo( 'version' ),
+			'rest_url'          => rest_url(),
+			'namespace'         => $this->get_namespace(),
+			'base_route'        => $this->get_base_route(),
 		];
 
 		return $this->success_response( $debug_info );

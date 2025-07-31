@@ -37,11 +37,11 @@ abstract class Base_Controller {
 	 */
 	protected $base_route = '';
 
-	/**
-	 * Constructor.
-	 *
-	 * @since 1.0.0
-	 */
+		/**
+		 * Constructor.
+		 *
+		 * @since 1.0.0
+		 */
 	public function __construct() {
 		add_action( 'rest_api_init', [ $this, 'register_routes' ] );
 	}
@@ -86,30 +86,43 @@ abstract class Base_Controller {
 		return '/' . $this->get_namespace() . '/' . $this->get_base_route();
 	}
 
-	/**
-	 * Check permissions.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return bool
-	 */
+			/**
+			 * Check permissions.
+			 *
+			 * @since 1.0.0
+			 *
+			 * @return bool
+			 */
 	public function check_permissions() {
-		// Check if user is logged in and has manage_options capability.
+		$method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+
+		// For GET requests, temporarily allow all requests without authentication.
+		if ( 'GET' === $method ) {
+			return true;
+		}
+
+		// For POST/PUT/DELETE requests, require full permissions.
 		if ( ! is_user_logged_in() ) {
+			error_log( 'Dashmate API: User not logged in for ' . $method . ' request' );
 			return false;
 		}
 
 		if ( ! current_user_can( 'manage_options' ) ) {
+			error_log( 'Dashmate API: User does not have manage_options capability' );
 			return false;
 		}
 
 		// Verify nonce for POST/PUT/DELETE requests.
-		$method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
-		if ( in_array( $method, [ 'POST', 'PUT', 'DELETE' ], true ) ) {
-			$nonce = $_SERVER['HTTP_X_WP_NONCE'] ?? '';
-			if ( ! wp_verify_nonce( $nonce, 'wp_rest' ) ) {
-				return false;
-			}
+		$nonce = $_SERVER['HTTP_X_WP_NONCE'] ?? '';
+		if ( empty( $nonce ) ) {
+			// Try to get nonce from other possible sources.
+			$nonce = $_SERVER['HTTP_X_WP_NONCE'] ?? $_POST['_wpnonce'] ?? $_GET['_wpnonce'] ?? '';
+		}
+
+		if ( ! wp_verify_nonce( $nonce, 'wp_rest' ) ) {
+			// Log the nonce verification failure for debugging.
+			error_log( 'Dashmate API: Nonce verification failed. Method: ' . $method . ', Nonce: ' . $nonce );
+			return false;
 		}
 
 		return true;

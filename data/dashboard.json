@@ -1,51 +1,229 @@
 {
-  "columns": [
-    {
-      "id": "col-1",
-      "title": "Main Column",
-      "width": "full",
-      "widgets": [
-        {
-          "id": "widget-1",
-          "type": "chart",
-          "title": "Sales Overview",
-          "settings": {
-            "chart_type": "line",
-            "data_source": "sales",
-            "time_period": "30_days"
-          },
-          "position": 0
-        },
-        {
-          "id": "widget-2",
-          "type": "metric",
-          "title": "Total Revenue",
-          "settings": {
-            "metric_type": "currency",
-            "data_source": "revenue",
-            "format": "USD"
-          },
-          "position": 1
-        }
-      ]
-    },
-    {
-      "id": "col-2",
-      "title": "Sidebar",
-      "width": "sidebar",
-      "widgets": [
-        {
-          "id": "widget-3",
-          "type": "list",
-          "title": "Recent Orders",
-          "settings": {
-            "list_type": "orders",
-            "limit": 5,
-            "show_date": true
-          },
-          "position": 0
-        }
-      ]
-    }
-  ]
+	"columns": [
+		{
+			"id": "col-1",
+			"title": "Main Column",
+			"width": "full",
+			"widgets": [
+				{
+					"id": "widget-1",
+					"type": "html",
+					"title": "Welcome Message",
+					"settings": {
+						"html_content": "<h2>Welcome to Dashmate!</h2><p>This is a custom HTML widget that can display any formatted content.</p><ul><li>Feature 1</li><li>Feature 2</li><li>Feature 3</li></ul>",
+						"allow_scripts": false
+					},
+					"position": 0
+				},
+				{
+					"id": "widget-2",
+					"type": "iconbox",
+					"title": "User Statistics",
+					"settings": {
+						"icon": "dashicons-admin-users",
+						"title": "1,234 Users",
+						"subtitle": "Active members",
+						"color": "blue"
+					},
+					"position": 1
+				},
+
+				{
+					"id": "widget-4",
+					"type": "table",
+					"title": "Recent Users",
+					"settings": {
+						"title": "User List",
+						"headers": [
+							{ "text": "Name" },
+							{ "text": "Email" },
+							{ "text": "Role" },
+							{ "text": "Status" }
+						],
+						"rows": [
+							{
+								"cells": [
+									{ "text": "John Doe" },
+									{ "text": "john@example.com" },
+									{ "text": "Administrator" },
+									{ "text": "Active" }
+								]
+							},
+							{
+								"cells": [
+									{ "text": "Jane Smith" },
+									{ "text": "jane@example.com" },
+									{ "text": "Editor" },
+									{ "text": "Active" }
+								]
+							},
+							{
+								"cells": [
+									{ "text": "Bob Wilson" },
+									{ "text": "bob@example.com" },
+									{ "text": "Author" },
+									{ "text": "Inactive" }
+								]
+							}
+						]
+					},
+					"position": 2
+				}
+			]
+		},
+		{
+			"id": "col-2",
+			"title": "Sidebar",
+			"width": "sidebar",
+			"widgets": [
+				{
+					"id": "widget-5",
+					"type": "quick-links",
+					"title": "Quick Access",
+					"settings": {
+						"title": "Quick Links",
+						"links": [
+							{
+								"title": "WordPress Admin",
+								"url": "/wp-admin",
+								"icon": "dashicons-admin-home"
+							},
+							{
+								"title": "Settings",
+								"url": "/wp-admin/options-general.php",
+								"icon": "dashicons-admin-generic"
+							},
+							{
+								"title": "Users",
+								"url": "/wp-admin/users.php",
+								"icon": "dashicons-admin-users"
+							},
+							{
+								"title": "Posts",
+								"url": "/wp-admin/edit.php",
+								"icon": "dashicons-admin-post"
+							},
+							{
+								"title": "Media",
+								"url": "/wp-admin/upload.php",
+								"icon": "dashicons-admin-media"
+							}
+						]
+					},
+					"position": 0
+				},
+				{
+					"id": "widget-6",
+					"type": "tabular",
+					"title": "Data Tables",
+					"settings": {
+						"tables": [
+							{
+								"title": "User Data",
+								"headers": [
+									{ "text": "Name" },
+									{ "text": "Email" },
+									{ "text": "Role" },
+									{ "text": "Status" }
+								],
+								"rows": [
+									{
+										"cells": [
+											{ "text": "John Doe" },
+											{ "text": "john@example.com" },
+											{ "text": "Admin" },
+											{ "text": "Active" }
+										]
+									},
+									{
+										"cells": [
+											{ "text": "Jane Smith" },
+											{ "text": "jane@example.com" },
+											{ "text": "Editor" },
+											{ "text": "Active" }
+										]
+									},
+									{
+										"cells": [
+											{ "text": "Bob Wilson" },
+											{ "text": "bob@example.com" },
+											{ "text": "Author" },
+											{ "text": "Inactive" }
+										]
+									}
+								]
+							},
+							{
+								"title": "Product Inventory",
+								"headers": [
+									{ "text": "Product" },
+									{ "text": "Category" },
+									{ "text": "Price" },
+									{ "text": "Stock" }
+								],
+								"rows": [
+									{
+										"cells": [
+											{ "text": "Laptop Pro" },
+											{ "text": "Electronics" },
+											{ "text": "$1,299" },
+											{ "text": "In Stock" }
+										]
+									},
+									{
+										"cells": [
+											{ "text": "Wireless Mouse" },
+											{ "text": "Accessories" },
+											{ "text": "$29.99" },
+											{ "text": "Low Stock" }
+										]
+									},
+									{
+										"cells": [
+											{ "text": "USB Cable" },
+											{ "text": "Cables" },
+											{ "text": "$9.99" },
+											{ "text": "Out of Stock" }
+										]
+									}
+								]
+							}
+						]
+					},
+					"position": 1
+				}
+			]
+		},
+		{
+			"id": "col-3",
+			"title": "Third Column",
+			"width": "sidebar",
+			"widgets": [
+				{
+					"id": "widget-7",
+					"type": "iconbox",
+					"title": "System Status",
+					"settings": {
+						"icon": "dashicons-admin-tools",
+						"title": "System Online",
+						"subtitle": "All services running",
+						"color": "green"
+					},
+					"position": 0
+				},
+				{
+					"id": "widget-3",
+					"type": "progress-circle",
+					"title": "Project Completion",
+					"settings": {
+						"percentage": 75,
+						"label": "75%",
+						"caption": "Project Progress",
+						"color": "green"
+					},
+					"position": 1
+				}
+			]
+		}
+	]
 }

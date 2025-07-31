@@ -281,6 +281,16 @@ class Widgets_Controller extends Base_Controller {
 				return $this->get_list_data( $settings );
 			case 'table':
 				return $this->get_table_data( $settings );
+			case 'html':
+				return $this->get_html_data( $settings );
+			case 'iconbox':
+				return $this->get_iconbox_data( $settings );
+			case 'progress-circle':
+				return $this->get_progress_circle_data( $settings );
+			case 'quick-links':
+				return $this->get_quick_links_data( $settings );
+			case 'tabular':
+				return $this->get_tabular_data( $settings );
 			default:
 				return $this->error_response( 'Unknown widget type: ' . $widget_type, 400, 'unknown_widget_type' );
 		}
@@ -364,5 +374,88 @@ class Widgets_Controller extends Base_Controller {
 			default:
 				return $this->error_response( 'Unknown table type: ' . $table_type, 400, 'unknown_table_type' );
 		}
+	}
+
+	/**
+	 * Get HTML data.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $settings Widget settings.
+	 *
+	 * @return array
+	 */
+	private function get_html_data( $settings ) {
+		return [
+			'html_content'  => $settings['html_content'] ?? '<p>No HTML content provided</p>',
+			'allow_scripts' => $settings['allow_scripts'] ?? false,
+		];
+	}
+
+	/**
+	 * Get iconbox data.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $settings Widget settings.
+	 *
+	 * @return array
+	 */
+	private function get_iconbox_data( $settings ) {
+		return [
+			'icon'     => $settings['icon'] ?? 'dashicons-admin-users',
+			'title'    => $settings['title'] ?? 'Title',
+			'subtitle' => $settings['subtitle'] ?? 'Subtitle',
+			'color'    => $settings['color'] ?? 'blue',
+		];
+	}
+
+	/**
+	 * Get progress circle data.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $settings Widget settings.
+	 *
+	 * @return array
+	 */
+	private function get_progress_circle_data( $settings ) {
+		return [
+			'percentage' => $settings['percentage'] ?? 0,
+			'label'      => $settings['label'] ?? '0%',
+			'caption'    => $settings['caption'] ?? 'Progress',
+			'color'      => $settings['color'] ?? 'blue',
+		];
+	}
+
+	/**
+	 * Get quick links data.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $settings Widget settings.
+	 *
+	 * @return array
+	 */
+	private function get_quick_links_data( $settings ) {
+		return [
+			'title' => $settings['title'] ?? 'Quick Links',
+			'links' => $settings['links'] ?? [],
+		];
+	}
+
+	/**
+	 * Get tabular data.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $settings Widget settings.
+	 *
+	 * @return array
+	 */
+	private function get_tabular_data( $settings ) {
+		return [
+			'tables' => $settings['tables'] ?? [],
+		];
 	}
 }

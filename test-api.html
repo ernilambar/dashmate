@@ -46,10 +46,10 @@
     <script>
         const baseUrl = '/wp-json/dashmate/v1';
 
-                async function makeRequest(url, options = {}) {
+                        async function makeRequest(url, options = {}) {
             try {
                 // Get nonce from WordPress if available
-                const nonce = window.wpApiSettings?.nonce || '';
+                const nonce = window.dashmateApiSettings?.nonce || '';
 
                 const response = await fetch(url, {
                     headers: {
