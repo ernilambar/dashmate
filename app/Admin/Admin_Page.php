@@ -79,7 +79,7 @@ class Admin_Page {
 		// Localize script with API settings.
 		wp_localize_script(
 			'dashmate-main',
-			'wpApiSettings',
+			'dashmateApiSettings',
 			[
 				'nonce' => wp_create_nonce( 'wp_rest' ),
 				'root'  => esc_url_raw( rest_url() ),

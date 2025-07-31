@@ -1,8 +1,8 @@
 {
-  "current": 45000,
-  "previous": 38000,
-  "change_percentage": 18.4,
-  "trend": "up",
-  "currency": "USD",
-  "period": "current_month"
+	"current": 45000,
+	"previous": 38000,
+	"change_percentage": 18.4,
+	"trend": "up",
+	"currency": "USD",
+	"period": "current_month"
 }

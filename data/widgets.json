@@ -1,147 +1,171 @@
 {
-  "chart": {
-    "name": "Chart Widget",
-    "description": "Display data in various chart formats",
-    "icon": "chart-line",
-    "settings_schema": {
-      "chart_type": {
-        "type": "select",
-        "label": "Chart Type",
-        "options": [
-          {"value": "line", "label": "Line Chart"},
-          {"value": "bar", "label": "Bar Chart"},
-          {"value": "pie", "label": "Pie Chart"},
-          {"value": "area", "label": "Area Chart"}
-        ],
-        "default": "line"
-      },
-      "data_source": {
-        "type": "select",
-        "label": "Data Source",
-        "options": [
-          {"value": "sales", "label": "Sales Data"},
-          {"value": "users", "label": "User Data"},
-          {"value": "orders", "label": "Order Data"}
-        ],
-        "default": "sales"
-      },
-      "time_period": {
-        "type": "select",
-        "label": "Time Period",
-        "options": [
-          {"value": "7_days", "label": "Last 7 Days"},
-          {"value": "30_days", "label": "Last 30 Days"},
-          {"value": "90_days", "label": "Last 90 Days"},
-          {"value": "1_year", "label": "Last Year"}
-        ],
-        "default": "30_days"
-      }
-    }
-  },
-  "metric": {
-    "name": "Metric Widget",
-    "description": "Display a single metric value",
-    "icon": "calculator",
-    "settings_schema": {
-      "metric_type": {
-        "type": "select",
-        "label": "Metric Type",
-        "options": [
-          {"value": "number", "label": "Number"},
-          {"value": "currency", "label": "Currency"},
-          {"value": "percentage", "label": "Percentage"},
-          {"value": "duration", "label": "Duration"}
-        ],
-        "default": "number"
-      },
-      "data_source": {
-        "type": "select",
-        "label": "Data Source",
-        "options": [
-          {"value": "revenue", "label": "Revenue"},
-          {"value": "orders", "label": "Orders"},
-          {"value": "users", "label": "Users"},
-          {"value": "conversion", "label": "Conversion Rate"}
-        ],
-        "default": "revenue"
-      },
-      "format": {
-        "type": "text",
-        "label": "Format",
-        "description": "Format string (e.g., USD, EUR)",
-        "default": "USD"
-      }
-    }
-  },
-  "list": {
-    "name": "List Widget",
-    "description": "Display a list of items",
-    "icon": "list",
-    "settings_schema": {
-      "list_type": {
-        "type": "select",
-        "label": "List Type",
-        "options": [
-          {"value": "orders", "label": "Recent Orders"},
-          {"value": "users", "label": "Recent Users"},
-          {"value": "products", "label": "Top Products"},
-          {"value": "comments", "label": "Recent Comments"}
-        ],
-        "default": "orders"
-      },
-      "limit": {
-        "type": "number",
-        "label": "Number of Items",
-        "min": 1,
-        "max": 50,
-        "default": 5
-      },
-      "show_date": {
-        "type": "checkbox",
-        "label": "Show Date",
-        "default": true
-      },
-      "show_avatar": {
-        "type": "checkbox",
-        "label": "Show Avatar",
-        "default": false
-      }
-    }
-  },
-  "table": {
-    "name": "Table Widget",
-    "description": "Display data in a table format",
-    "icon": "table",
-    "settings_schema": {
-      "table_type": {
-        "type": "select",
-        "label": "Table Type",
-        "options": [
-          {"value": "orders", "label": "Orders Table"},
-          {"value": "users", "label": "Users Table"},
-          {"value": "products", "label": "Products Table"}
-        ],
-        "default": "orders"
-      },
-      "columns": {
-        "type": "multiselect",
-        "label": "Columns to Display",
-        "options": [
-          {"value": "id", "label": "ID"},
-          {"value": "title", "label": "Title"},
-          {"value": "date", "label": "Date"},
-          {"value": "status", "label": "Status"},
-          {"value": "amount", "label": "Amount"}
-        ],
-        "default": ["id", "title", "date", "status"]
-      },
-      "rows_per_page": {
-        "type": "number",
-        "label": "Rows per Page",
-        "min": 5,
-        "max": 100,
-        "default": 10
-      }
-    }
-  }
+	"html": {
+		"name": "HTML Widget",
+		"description": "Display custom HTML content",
+		"icon": "editor-code",
+		"settings_schema": {
+			"html_content": {
+				"type": "textarea",
+				"label": "HTML Content",
+				"description": "Enter HTML content to display",
+				"default": "<p>Enter your HTML content here...</p>"
+			},
+			"allow_scripts": {
+				"type": "checkbox",
+				"label": "Allow Scripts",
+				"description": "Allow JavaScript execution",
+				"default": false
+			}
+		}
+	},
+	"iconbox": {
+		"name": "Icon Box Widget",
+		"description": "Display icon with title and subtitle",
+		"icon": "admin-appearance",
+		"settings_schema": {
+			"icon": {
+				"type": "text",
+				"label": "Icon Class",
+				"description": "CSS class for the icon (e.g., dashicons-admin-users)",
+				"default": "dashicons-admin-users"
+			},
+			"title": {
+				"type": "text",
+				"label": "Title",
+				"description": "Main title text",
+				"default": "Sample Title"
+			},
+			"subtitle": {
+				"type": "text",
+				"label": "Subtitle",
+				"description": "Subtitle text",
+				"default": "Sample subtitle"
+			},
+			"color": {
+				"type": "select",
+				"label": "Color Theme",
+				"options": [
+					{ "value": "blue", "label": "Blue" },
+					{ "value": "green", "label": "Green" },
+					{ "value": "orange", "label": "Orange" },
+					{ "value": "red", "label": "Red" },
+					{ "value": "purple", "label": "Purple" }
+				],
+				"default": "blue"
+			}
+		}
+	},
+	"progress-circle": {
+		"name": "Progress Circle Widget",
+		"description": "Display percentage in a circular progress indicator",
+		"icon": "chart-pie",
+		"settings_schema": {
+			"percentage": {
+				"type": "number",
+				"label": "Percentage",
+				"min": 0,
+				"max": 100,
+				"default": 75
+			},
+			"label": {
+				"type": "text",
+				"label": "Label",
+				"description": "Text to display inside the circle",
+				"default": "75%"
+			},
+			"caption": {
+				"type": "text",
+				"label": "Caption",
+				"description": "Caption text below the circle",
+				"default": "Completion Rate"
+			},
+			"color": {
+				"type": "select",
+				"label": "Color",
+				"options": [
+					{ "value": "blue", "label": "Blue" },
+					{ "value": "green", "label": "Green" },
+					{ "value": "orange", "label": "Orange" },
+					{ "value": "red", "label": "Red" }
+				],
+				"default": "blue"
+			}
+		}
+	},
+	"quick-links": {
+		"name": "Quick Links Widget",
+		"description": "Display a list of external links",
+		"icon": "admin-links",
+		"settings_schema": {
+			"title": {
+				"type": "text",
+				"label": "Widget Title",
+				"default": "Quick Links"
+			},
+			"links": {
+				"type": "repeater",
+				"label": "Links",
+				"fields": {
+					"title": {
+						"type": "text",
+						"label": "Link Title"
+					},
+					"url": {
+						"type": "url",
+						"label": "URL"
+					},
+					"icon": {
+						"type": "text",
+						"label": "Icon Class",
+						"description": "CSS class for the icon"
+					}
+				},
+				"default": [
+					{
+						"title": "WordPress Admin",
+						"url": "/wp-admin",
+						"icon": "dashicons-admin-home"
+					},
+					{
+						"title": "Settings",
+						"url": "/wp-admin/options-general.php",
+						"icon": "dashicons-admin-generic"
+					}
+				]
+			}
+		}
+	},
+
+	"tabular": {
+		"name": "Tabular Widget",
+		"description": "Display multiple tables in tabs (DataTables ready)",
+		"icon": "table-row-after",
+		"settings_schema": {
+			"tabs": {
+				"type": "repeater",
+				"label": "Table Tabs",
+				"fields": {
+					"title": {
+						"type": "text",
+						"label": "Tab Title"
+					},
+					"table_data": {
+						"type": "textarea",
+						"label": "Table Data (JSON)",
+						"description": "JSON data for the table"
+					}
+				},
+				"default": [
+					{
+						"title": "Users",
+						"table_data": "[{\"name\":\"John Doe\",\"email\":\"john@example.com\",\"role\":\"Admin\"}]"
+					},
+					{
+						"title": "Products",
+						"table_data": "[{\"name\":\"Product 1\",\"price\":\"$10\",\"stock\":\"In Stock\"}]"
+					}
+				]
+			}
+		}
+	}
 }
