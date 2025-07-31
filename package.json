@@ -1,40 +1,51 @@
 {
-  "name": "dashmate",
-  "version": "1.0.0",
-  "title": "Dashmate",
-  "description": "Dashboard helper.",
-  "author": "Nilambar Sharma",
-  "license": "GPL-2.0-or-later",
-  "main_file": "dashmate.php",
-  "keywords": [
-    "wordpress",
-    "wordpress-plugin"
-  ],
-  "homepage": "https://github.com/ernilambar/dashmate",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/ernilambar/dashmate.git"
-  },
-  "bugs": {
-    "url": "https://github.com/ernilambar/dashmate/issues"
-  },
-  "browserslist": "> 2%, last 2 versions, not dead",
-  "dependencies": {
-    "@wordpress/api-fetch": "^7.26.0",
-    "@wordpress/element": "^6.26.0",
-    "@wordpress/i18n": "^5.26.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
-  },
-  "devDependencies": {
-    "@wordpress/prettier-config": "^4.26.0",
-    "@wordpress/scripts": "^30.19.0",
-    "prettier": "npm:wp-prettier@^3.0.3",
-    "rimraf": "^6.0.1"
-  },
-  "scripts": {
-    "start": "wp-scripts start src/snippets/index.js --output-path=build",
-    "build": "wp-scripts build src/snippets/index.js --output-path=build",
-    "format": "prettier \"**/*.{css,js,json,jsx}\" --write"
-  }
+	"name": "dashmate",
+	"version": "1.0.0",
+	"title": "Dashmate",
+	"description": "Dashboard helper.",
+	"author": "Nilambar Sharma",
+	"license": "GPL-2.0-or-later",
+	"main_file": "dashmate.php",
+	"keywords": [
+		"wordpress",
+		"wordpress-plugin"
+	],
+	"homepage": "https://github.com/ernilambar/dashmate",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/ernilambar/dashmate.git"
+	},
+	"bugs": {
+		"url": "https://github.com/ernilambar/dashmate/issues"
+	},
+	"browserslist": "> 2%, last 2 versions, not dead",
+	"pnpm": {
+		"onlyBuiltDependencies": [
+			"@parcel/watcher",
+			"core-js",
+			"core-js-pure"
+		]
+	},
+	"dependencies": {
+		"@wordpress/api-fetch": "^7.26.0",
+		"@wordpress/element": "^6.26.0",
+		"@wordpress/i18n": "^5.26.0",
+		"react": "^18.3.1",
+		"react-dom": "^18.3.1"
+	},
+	"devDependencies": {
+		"@wordpress/prettier-config": "^4.26.0",
+		"@wordpress/scripts": "^30.19.0",
+		"postcss": "^8.5.6",
+		"postcss-import": "^16.1.1",
+		"postcss-nested": "^7.0.2",
+		"postcss-preset-env": "^10.2.4",
+		"prettier": "npm:wp-prettier@^3.0.3"
+	},
+	"scripts": {
+		"build": "wp-scripts build",
+		"dev": "wp-scripts start",
+		"format": "wp-scripts format && pnpm run format:css",
+		"format:css": "prettier --write \"**/*.{css,scss}\""
+	}
 }
