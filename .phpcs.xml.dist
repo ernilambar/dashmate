@@ -9,6 +9,7 @@
 	<file>.</file>
 
 	<!-- Exclude files and folders -->
+	<exclude-pattern>*/assets/*</exclude-pattern>
 	<exclude-pattern>*/build/*</exclude-pattern>
 	<exclude-pattern>*/deploy/*</exclude-pattern>
 	<exclude-pattern>*/languages/*</exclude-pattern>

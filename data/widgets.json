@@ -1,0 +1,147 @@
+{
+  "chart": {
+    "name": "Chart Widget",
+    "description": "Display data in various chart formats",
+    "icon": "chart-line",
+    "settings_schema": {
+      "chart_type": {
+        "type": "select",
+        "label": "Chart Type",
+        "options": [
+          {"value": "line", "label": "Line Chart"},
+          {"value": "bar", "label": "Bar Chart"},
+          {"value": "pie", "label": "Pie Chart"},
+          {"value": "area", "label": "Area Chart"}
+        ],
+        "default": "line"
+      },
+      "data_source": {
+        "type": "select",
+        "label": "Data Source",
+        "options": [
+          {"value": "sales", "label": "Sales Data"},
+          {"value": "users", "label": "User Data"},
+          {"value": "orders", "label": "Order Data"}
+        ],
+        "default": "sales"
+      },
+      "time_period": {
+        "type": "select",
+        "label": "Time Period",
+        "options": [
+          {"value": "7_days", "label": "Last 7 Days"},
+          {"value": "30_days", "label": "Last 30 Days"},
+          {"value": "90_days", "label": "Last 90 Days"},
+          {"value": "1_year", "label": "Last Year"}
+        ],
+        "default": "30_days"
+      }
+    }
+  },
+  "metric": {
+    "name": "Metric Widget",
+    "description": "Display a single metric value",
+    "icon": "calculator",
+    "settings_schema": {
+      "metric_type": {
+        "type": "select",
+        "label": "Metric Type",
+        "options": [
+          {"value": "number", "label": "Number"},
+          {"value": "currency", "label": "Currency"},
+          {"value": "percentage", "label": "Percentage"},
+          {"value": "duration", "label": "Duration"}
+        ],
+        "default": "number"
+      },
+      "data_source": {
+        "type": "select",
+        "label": "Data Source",
+        "options": [
+          {"value": "revenue", "label": "Revenue"},
+          {"value": "orders", "label": "Orders"},
+          {"value": "users", "label": "Users"},
+          {"value": "conversion", "label": "Conversion Rate"}
+        ],
+        "default": "revenue"
+      },
+      "format": {
+        "type": "text",
+        "label": "Format",
+        "description": "Format string (e.g., USD, EUR)",
+        "default": "USD"
+      }
+    }
+  },
+  "list": {
+    "name": "List Widget",
+    "description": "Display a list of items",
+    "icon": "list",
+    "settings_schema": {
+      "list_type": {
+        "type": "select",
+        "label": "List Type",
+        "options": [
+          {"value": "orders", "label": "Recent Orders"},
+          {"value": "users", "label": "Recent Users"},
+          {"value": "products", "label": "Top Products"},
+          {"value": "comments", "label": "Recent Comments"}
+        ],
+        "default": "orders"
+      },
+      "limit": {
+        "type": "number",
+        "label": "Number of Items",
+        "min": 1,
+        "max": 50,
+        "default": 5
+      },
+      "show_date": {
+        "type": "checkbox",
+        "label": "Show Date",
+        "default": true
+      },
+      "show_avatar": {
+        "type": "checkbox",
+        "label": "Show Avatar",
+        "default": false
+      }
+    }
+  },
+  "table": {
+    "name": "Table Widget",
+    "description": "Display data in a table format",
+    "icon": "table",
+    "settings_schema": {
+      "table_type": {
+        "type": "select",
+        "label": "Table Type",
+        "options": [
+          {"value": "orders", "label": "Orders Table"},
+          {"value": "users", "label": "Users Table"},
+          {"value": "products", "label": "Products Table"}
+        ],
+        "default": "orders"
+      },
+      "columns": {
+        "type": "multiselect",
+        "label": "Columns to Display",
+        "options": [
+          {"value": "id", "label": "ID"},
+          {"value": "title", "label": "Title"},
+          {"value": "date", "label": "Date"},
+          {"value": "status", "label": "Status"},
+          {"value": "amount", "label": "Amount"}
+        ],
+        "default": ["id", "title", "date", "status"]
+      },
+      "rows_per_page": {
+        "type": "number",
+        "label": "Rows per Page",
+        "min": 5,
+        "max": 100,
+        "default": 10
+      }
+    }
+  }
+}

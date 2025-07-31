@@ -1,0 +1,18 @@
+{
+  "chart_data": {
+    "labels": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    "datasets": [
+      {
+        "label": "Sales",
+        "data": [12000, 19000, 15000, 25000, 22000, 30000, 28000, 35000, 32000, 40000, 38000, 45000],
+        "borderColor": "#3b82f6",
+        "backgroundColor": "rgba(59, 130, 246, 0.1)"
+      }
+    ]
+  },
+  "summary": {
+    "total_sales": 336000,
+    "average_monthly": 28000,
+    "growth_rate": 15.2
+  }
+}
