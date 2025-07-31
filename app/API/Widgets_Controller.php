@@ -273,12 +273,6 @@ class Widgets_Controller extends Base_Controller {
 	 */
 	private function get_widget_data_by_type( $widget_type, $settings ) {
 		switch ( $widget_type ) {
-			case 'chart':
-				return $this->get_chart_data( $settings );
-			case 'metric':
-				return $this->get_metric_data( $settings );
-			case 'list':
-				return $this->get_list_data( $settings );
 			case 'html':
 				return $this->get_html_data( $settings );
 			case 'iconbox':
@@ -294,65 +288,7 @@ class Widgets_Controller extends Base_Controller {
 		}
 	}
 
-	/**
-	 * Get chart data.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param array $settings Widget settings.
-	 *
-	 * @return array|WP_Error
-	 */
-	private function get_chart_data( $settings ) {
-		$data_source = $settings['data_source'] ?? 'sales';
 
-		switch ( $data_source ) {
-			case 'sales':
-				return $this->read_json_file( 'sales.json' );
-			default:
-				return $this->error_response( 'Unknown data source: ' . $data_source, 400, 'unknown_data_source' );
-		}
-	}
-
-	/**
-	 * Get metric data.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param array $settings Widget settings.
-	 *
-	 * @return array|WP_Error
-	 */
-	private function get_metric_data( $settings ) {
-		$data_source = $settings['data_source'] ?? 'revenue';
-
-		switch ( $data_source ) {
-			case 'revenue':
-				return $this->read_json_file( 'revenue.json' );
-			default:
-				return $this->error_response( 'Unknown data source: ' . $data_source, 400, 'unknown_data_source' );
-		}
-	}
-
-	/**
-	 * Get list data.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param array $settings Widget settings.
-	 *
-	 * @return array|WP_Error
-	 */
-	private function get_list_data( $settings ) {
-		$list_type = $settings['list_type'] ?? 'orders';
-
-		switch ( $list_type ) {
-			case 'orders':
-				return $this->read_json_file( 'orders.json' );
-			default:
-				return $this->error_response( 'Unknown list type: ' . $list_type, 400, 'unknown_list_type' );
-		}
-	}
 
 
 
