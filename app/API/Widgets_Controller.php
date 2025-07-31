@@ -329,25 +329,19 @@ class Widgets_Controller extends Base_Controller {
 	 * @since 1.0.0
 	 *
 	 * @param string $widget_type Widget type.
-	 * @param string $widget_id   Widget ID (optional).
+	 * @param string $widget_id   Widget ID.
 	 *
 	 * @return array|WP_Error
 	 */
 	private function get_widget_content_by_type( $widget_type, $widget_id = null ) {
-		switch ( $widget_type ) {
-			case 'html':
-				return $this->get_html_content( $widget_id );
-			case 'iconbox':
-				return $this->get_iconbox_content( $widget_id );
-			case 'progress-circle':
-				return $this->get_progress_circle_content( $widget_id );
-			case 'quick-links':
-				return $this->get_quick_links_content( $widget_id );
-			case 'tabular':
-				return $this->get_tabular_content( $widget_id );
-			default:
-				return $this->error_response( 'Unknown widget type: ' . $widget_type, 400, 'unknown_widget_type' );
+		// Use Widget_Type_Manager to get content for any registered widget type.
+		$content = Widget_Type_Manager::get_widget_content( $widget_type, $widget_id );
+
+		if ( is_wp_error( $content ) ) {
+			return $this->error_response( $content->get_error_message(), 400, $content->get_error_code() );
 		}
+
+		return $content;
 	}
 
 	/**
@@ -362,20 +356,14 @@ class Widgets_Controller extends Base_Controller {
 	 * @return array|WP_Error
 	 */
 	private function get_widget_content_by_type_with_settings( $widget_type, $widget_id, $settings ) {
-		switch ( $widget_type ) {
-			case 'html':
-				return $this->get_html_content_with_settings( $widget_id, $settings );
-			case 'iconbox':
-				return $this->get_iconbox_content_with_settings( $widget_id, $settings );
-			case 'progress-circle':
-				return $this->get_progress_circle_content_with_settings( $widget_id, $settings );
-			case 'quick-links':
-				return $this->get_quick_links_content_with_settings( $widget_id, $settings );
-			case 'tabular':
-				return $this->get_tabular_content_with_settings( $widget_id, $settings );
-			default:
-				return $this->error_response( 'Unknown widget type: ' . $widget_type, 400, 'unknown_widget_type' );
+		// Use Widget_Type_Manager to get content for any registered widget type with settings.
+		$content = Widget_Type_Manager::get_widget_content( $widget_type, $widget_id, $settings );
+
+		if ( is_wp_error( $content ) ) {
+			return $this->error_response( $content->get_error_message(), 400, $content->get_error_code() );
 		}
+
+		return $content;
 	}
 
 	/**

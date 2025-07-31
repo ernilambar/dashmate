@@ -1,0 +1,420 @@
+<?php
+/**
+ * Abstract_Widget
+ *
+ * @package Dashmate
+ */
+
+declare(strict_types=1);
+
+namespace Nilambar\Dashmate;
+
+/**
+ * Abstract_Widget class.
+ *
+ * @since 1.0.0
+ */
+abstract class Abstract_Widget {
+
+	/**
+	 * Widget type identifier.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var string
+	 */
+	protected $type;
+
+	/**
+	 * Widget name.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var string
+	 */
+	protected $name;
+
+	/**
+	 * Widget description.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var string
+	 */
+	protected $description;
+
+	/**
+	 * Widget icon.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var string
+	 */
+	protected $icon;
+
+	/**
+	 * Widget settings schema.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var array
+	 */
+	protected $settings_schema;
+
+	/**
+	 * Widget output schema.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var array
+	 */
+	protected $output_schema;
+
+	/**
+	 * Constructor.
+	 *
+	 * @since 1.0.0
+	 */
+	public function __construct() {
+		$this->init();
+	}
+
+	/**
+	 * Initialize the widget.
+	 *
+	 * @since 1.0.0
+	 */
+	abstract protected function init();
+
+	/**
+	 * Get widget content.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $widget_id Widget ID.
+	 * @param array  $settings  Widget settings.
+	 *
+	 * @return array
+	 */
+	abstract public function get_content( $widget_id = null, $settings = [] );
+
+	/**
+	 * Get widget type.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string
+	 */
+	public function get_type() {
+		return $this->type;
+	}
+
+	/**
+	 * Get widget name.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string
+	 */
+	public function get_name() {
+		return $this->name;
+	}
+
+	/**
+	 * Get widget description.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string
+	 */
+	public function get_description() {
+		return $this->description;
+	}
+
+	/**
+	 * Get widget icon.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string
+	 */
+	public function get_icon() {
+		return $this->icon;
+	}
+
+	/**
+	 * Get widget settings schema.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return array
+	 */
+	public function get_settings_schema() {
+		return $this->settings_schema;
+	}
+
+	/**
+	 * Get widget output schema.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return array
+	 */
+	public function get_output_schema() {
+		return $this->output_schema;
+	}
+
+	/**
+	 * Get widget definition.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return array
+	 */
+	public function get_definition() {
+		return [
+			'name'            => $this->name,
+			'description'     => $this->description,
+			'icon'            => $this->icon,
+			'settings_schema' => $this->settings_schema,
+			'output_schema'   => $this->output_schema,
+		];
+	}
+
+	/**
+	 * Validate widget settings.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $settings Widget settings.
+	 *
+	 * @return bool
+	 */
+	protected function validate_settings( $settings ) {
+		if ( empty( $this->settings_schema ) ) {
+			return true;
+		}
+
+		foreach ( $this->settings_schema as $key => $schema ) {
+			if ( isset( $schema['required'] ) && $schema['required'] && ! isset( $settings[ $key ] ) ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Validate widget output against universal schema.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $output Widget output data.
+	 *
+	 * @return bool
+	 */
+	protected function validate_universal_output( $output ) {
+		$universal_schema = $this->get_universal_output_schema();
+
+		foreach ( $universal_schema as $key => $schema ) {
+			if ( isset( $schema['required'] ) && $schema['required'] && ! isset( $output[ $key ] ) ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Validate widget output against schema.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $output Widget output data.
+	 *
+	 * @return bool
+	 */
+	protected function validate_output( $output ) {
+		// First validate universal schema (title and icon are required for all widgets).
+		if ( ! $this->validate_universal_output( $output ) ) {
+			return false;
+		}
+
+		// Then validate widget-specific schema.
+		if ( empty( $this->output_schema ) ) {
+			return true;
+		}
+
+		foreach ( $this->output_schema as $key => $schema ) {
+			if ( isset( $schema['required'] ) && $schema['required'] && ! isset( $output[ $key ] ) ) {
+				return false;
+			}
+
+			// Validate type if specified.
+			if ( isset( $schema['type'] ) && isset( $output[ $key ] ) ) {
+				$actual_type = gettype( $output[ $key ] );
+				if ( $actual_type !== $schema['type'] ) {
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Get default settings.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return array
+	 */
+	protected function get_default_settings() {
+		$defaults = [];
+
+		if ( empty( $this->settings_schema ) ) {
+			return $defaults;
+		}
+
+		foreach ( $this->settings_schema as $key => $schema ) {
+			if ( isset( $schema['default'] ) ) {
+				$defaults[ $key ] = $schema['default'];
+			}
+		}
+
+		return $defaults;
+	}
+
+	/**
+	 * Merge settings with defaults.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $settings Widget settings.
+	 *
+	 * @return array
+	 */
+	protected function merge_settings_with_defaults( $settings ) {
+		return wp_parse_args( $settings, $this->get_default_settings() );
+	}
+
+	/**
+	 * Get validated content with universal fields.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $widget_id Widget ID.
+	 * @param array  $settings  Widget settings.
+	 *
+	 * @return array|WP_Error
+	 */
+	public function get_validated_content( $widget_id = null, $settings = [] ) {
+		// Get content from the widget implementation.
+		$content = $this->get_content( $widget_id, $settings );
+
+		// Add universal fields (title and icon) if not already present.
+		$content = $this->add_universal_fields( $content );
+
+		// Validate output against schema.
+		if ( ! $this->validate_output( $content ) ) {
+			return new \WP_Error( 'invalid_output', 'Widget output does not match schema for widget type: ' . $this->type );
+		}
+
+		return $content;
+	}
+
+	/**
+	 * Add universal fields to widget content.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $content Widget content.
+	 *
+	 * @return array
+	 */
+	protected function add_universal_fields( $content ) {
+		// Add title if not present.
+		if ( ! isset( $content['title'] ) ) {
+			$content['title'] = $this->name;
+		}
+
+		// Add icon if not present.
+		if ( ! isset( $content['icon'] ) ) {
+			$content['icon'] = $this->icon;
+		}
+
+		return $content;
+	}
+
+	/**
+	 * Get essential fields for frontend rendering.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return array
+	 */
+	public function get_essential_fields() {
+		return [
+			'id' => [
+				'type'     => 'string',
+				'required' => true,
+				'description' => 'Unique widget identifier',
+			],
+			'type' => [
+				'type'     => 'string',
+				'required' => true,
+				'description' => 'Widget type for routing',
+			],
+			'title' => [
+				'type'     => 'string',
+				'required' => true,
+				'description' => 'Widget display title (REQUIRED FOR ALL WIDGETS)',
+			],
+			'settings' => [
+				'type'     => 'object',
+				'required' => true,
+				'description' => 'Widget settings object',
+			],
+		];
+	}
+
+	/**
+	 * Get universal output schema that all widgets must follow.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return array
+	 */
+	protected function get_universal_output_schema() {
+		return [
+			'title' => [
+				'type'     => 'string',
+				'required' => true,
+				'description' => 'Widget title (REQUIRED FOR ALL WIDGETS)',
+			],
+			'icon' => [
+				'type'     => 'string',
+				'required' => true,
+				'description' => 'Widget icon CSS class (REQUIRED FOR ALL WIDGETS, may be empty)',
+			],
+		];
+	}
+
+	/**
+	 * Get widget definition with essential fields.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return array
+	 */
+	public function get_definition_with_essentials() {
+		return [
+			'name'            => $this->name,
+			'description'     => $this->description,
+			'icon'            => $this->icon,
+			'settings_schema' => $this->settings_schema,
+			'output_schema'   => $this->output_schema,
+			'essential_fields' => $this->get_essential_fields(),
+		];
+	}
+}
