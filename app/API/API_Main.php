@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Nilambar\Dashmate\API;
 
+use Nilambar\Dashmate\Widget_Registry;
+
 /**
  * API_Main class.
  *
@@ -22,6 +24,9 @@ class API_Main {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
+		// Initialize widget registry before registering API routes.
+		Widget_Registry::init();
+
 		$this->init_controllers();
 	}
 
