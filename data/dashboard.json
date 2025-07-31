@@ -1,0 +1,51 @@
+{
+  "columns": [
+    {
+      "id": "col-1",
+      "title": "Main Column",
+      "width": "full",
+      "widgets": [
+        {
+          "id": "widget-1",
+          "type": "chart",
+          "title": "Sales Overview",
+          "settings": {
+            "chart_type": "line",
+            "data_source": "sales",
+            "time_period": "30_days"
+          },
+          "position": 0
+        },
+        {
+          "id": "widget-2",
+          "type": "metric",
+          "title": "Total Revenue",
+          "settings": {
+            "metric_type": "currency",
+            "data_source": "revenue",
+            "format": "USD"
+          },
+          "position": 1
+        }
+      ]
+    },
+    {
+      "id": "col-2",
+      "title": "Sidebar",
+      "width": "sidebar",
+      "widgets": [
+        {
+          "id": "widget-3",
+          "type": "list",
+          "title": "Recent Orders",
+          "settings": {
+            "list_type": "orders",
+            "limit": 5,
+            "show_date": true
+          },
+          "position": 0
+        }
+      ]
+    }
+  ]
+}

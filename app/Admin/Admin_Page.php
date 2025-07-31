@@ -54,7 +54,6 @@ class Admin_Page {
 		}
 
 		$asset_file_name = DASHMATE_DIR . '/assets/index.asset.php';
-		// nsdump( $asset_file_name );
 
 		if ( ! file_exists( $asset_file_name ) ) {
 			return;
@@ -65,15 +64,26 @@ class Admin_Page {
 		wp_enqueue_style(
 			'dashmate-main',
 			DASHMATE_URL . '/assets/index.css',
-			$asset_file['dependencies'],
+			[],
 			$asset_file['version']
 		);
+
 		wp_enqueue_script(
 			'dashmate-main',
 			DASHMATE_URL . '/assets/index.js',
 			$asset_file['dependencies'],
 			$asset_file['version'],
 			true
+		);
+
+		// Localize script with API settings.
+		wp_localize_script(
+			'dashmate-main',
+			'wpApiSettings',
+			[
+				'nonce' => wp_create_nonce( 'wp_rest' ),
+				'root'  => esc_url_raw( rest_url() ),
+			]
 		);
 	}
 }
