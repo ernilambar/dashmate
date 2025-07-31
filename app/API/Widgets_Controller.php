@@ -279,8 +279,6 @@ class Widgets_Controller extends Base_Controller {
 				return $this->get_metric_data( $settings );
 			case 'list':
 				return $this->get_list_data( $settings );
-			case 'table':
-				return $this->get_table_data( $settings );
 			case 'html':
 				return $this->get_html_data( $settings );
 			case 'iconbox':
@@ -356,25 +354,7 @@ class Widgets_Controller extends Base_Controller {
 		}
 	}
 
-	/**
-	 * Get table data.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param array $settings Widget settings.
-	 *
-	 * @return array|WP_Error
-	 */
-	private function get_table_data( $settings ) {
-		$table_type = $settings['table_type'] ?? 'orders';
 
-		switch ( $table_type ) {
-			case 'orders':
-				return $this->read_json_file( 'orders.json' );
-			default:
-				return $this->error_response( 'Unknown table type: ' . $table_type, 400, 'unknown_table_type' );
-		}
-	}
 
 	/**
 	 * Get HTML data.

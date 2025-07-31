@@ -135,61 +135,7 @@
 			}
 		}
 	},
-	"table": {
-		"name": "Table Widget",
-		"description": "Display data in a simple table format",
-		"icon": "table",
-		"settings_schema": {
-			"title": {
-				"type": "text",
-				"label": "Table Title",
-				"default": "Data Table"
-			},
-			"headers": {
-				"type": "repeater",
-				"label": "Table Headers",
-				"fields": {
-					"text": {
-						"type": "text",
-						"label": "Header Text"
-					}
-				},
-				"default": [ { "text": "Name" }, { "text": "Email" }, { "text": "Status" } ]
-			},
-			"rows": {
-				"type": "repeater",
-				"label": "Table Rows",
-				"fields": {
-					"cells": {
-						"type": "repeater",
-						"label": "Row Cells",
-						"fields": {
-							"text": {
-								"type": "text",
-								"label": "Cell Text"
-							}
-						}
-					}
-				},
-				"default": [
-					{
-						"cells": [
-							{ "text": "John Doe" },
-							{ "text": "john@example.com" },
-							{ "text": "Active" }
-						]
-					},
-					{
-						"cells": [
-							{ "text": "Jane Smith" },
-							{ "text": "jane@example.com" },
-							{ "text": "Inactive" }
-						]
-					}
-				]
-			}
-		}
-	},
+
 	"tabular": {
 		"name": "Tabular Widget",
 		"description": "Display multiple tables in tabs (DataTables ready)",

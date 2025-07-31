@@ -1,4 +1,9 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
+import HtmlWidget from './widgets/HtmlWidget';
+import IconboxWidget from './widgets/IconboxWidget';
+import ProgressCircleWidget from './widgets/ProgressCircleWidget';
+import QuickLinksWidget from './widgets/QuickLinksWidget';
+import TabularWidget from './widgets/TabularWidget';
 
 class WidgetContent extends Component {
 	constructor( props ) {
@@ -35,177 +40,8 @@ class WidgetContent extends Component {
 		}
 	}
 
-	renderHtmlWidget() {
-		const { widget } = this.props;
-		const settings = widget.settings || {};
-		const htmlContent = settings.html_content || '<p>No HTML content provided</p>';
-
-		return (
-			<div className="html-widget">
-				<div className="html-content" dangerouslySetInnerHTML={ { __html: htmlContent } } />
-			</div>
-		);
-	}
-
-	renderIconboxWidget() {
-		const { widget } = this.props;
-		const settings = widget.settings || {};
-
-		return (
-			<div className={ `iconbox-widget iconbox-${ settings.color || 'blue' }` }>
-				<div className="iconbox-icon">
-					<span className={ settings.icon || 'dashicons-admin-users' }></span>
-				</div>
-				<div className="iconbox-content">
-					<h4 className="iconbox-title">{ settings.title || 'Title' }</h4>
-					<p className="iconbox-subtitle">{ settings.subtitle || 'Subtitle' }</p>
-				</div>
-			</div>
-		);
-	}
-
-	renderProgressCircleWidget() {
-		const { widget } = this.props;
-		const settings = widget.settings || {};
-		const percentage = settings.percentage || 0;
-		const label = settings.label || `${ percentage }%`;
-		const caption = settings.caption || 'Progress';
-		const color = settings.color || 'blue';
-
-		// Calculate circle dimensions
-		const radius = 60;
-		const circumference = 2 * Math.PI * radius;
-		const strokeDasharray = circumference;
-		const strokeDashoffset = circumference - ( percentage / 100 ) * circumference;
-
-		return (
-			<div className={ `progress-circle-widget progress-circle-${ color }` }>
-				<div className="progress-circle-container">
-					<svg className="progress-circle" width="150" height="150">
-						<circle
-							className="progress-circle-bg"
-							cx="75"
-							cy="75"
-							r={ radius }
-							fill="none"
-							stroke="#e1e1e1"
-							strokeWidth="8"
-						/>
-						<circle
-							className="progress-circle-fill"
-							cx="75"
-							cy="75"
-							r={ radius }
-							fill="none"
-							strokeWidth="8"
-							strokeDasharray={ strokeDasharray }
-							strokeDashoffset={ strokeDashoffset }
-							transform="rotate(-90 75 75)"
-						/>
-					</svg>
-					<div className="progress-circle-label">{ label }</div>
-				</div>
-				<div className="progress-circle-caption">{ caption }</div>
-			</div>
-		);
-	}
-
-	renderQuickLinksWidget() {
-		const { widget } = this.props;
-		const settings = widget.settings || {};
-		const links = settings.links || [];
-
-		return (
-			<div className="quick-links-widget">
-				<div className="quick-links-list">
-					{ links.map( ( link, index ) => (
-						<a
-							key={ index }
-							href={ link.url }
-							className="quick-link-item"
-							target="_blank"
-							rel="noopener noreferrer"
-						>
-							<span
-								className={ `quick-link-icon ${
-									link.icon || 'dashicons-admin-links'
-								}` }
-							></span>
-							<span className="quick-link-title">{ link.title }</span>
-						</a>
-					) ) }
-				</div>
-			</div>
-		);
-	}
-
-	renderTableWidget() {
-		const { widget } = this.props;
-		const settings = widget.settings || {};
-		const headers = settings.headers || [];
-		const rows = settings.rows || [];
-
-		return (
-			<div className="table-widget">
-				{ settings.title && <h4 className="table-title">{ settings.title }</h4> }
-				<table className="wp-list-table widefat fixed striped">
-					<thead>
-						<tr>
-							{ headers.map( ( header, index ) => (
-								<th key={ index }>{ header.text }</th>
-							) ) }
-						</tr>
-					</thead>
-					<tbody>
-						{ rows.map( ( row, rowIndex ) => (
-							<tr key={ rowIndex }>
-								{ row.cells.map( ( cell, cellIndex ) => (
-									<td key={ cellIndex }>{ cell.text }</td>
-								) ) }
-							</tr>
-						) ) }
-					</tbody>
-				</table>
-			</div>
-		);
-	}
-
-	renderTabularWidget() {
-		const { widget } = this.props;
-		const settings = widget.settings || {};
-		const tables = settings.tables || [];
-
-		return (
-			<div className="tabular-widget">
-				{ tables.map( ( table, tableIndex ) => (
-					<div key={ tableIndex } className="tabular-table">
-						{ table.title && <h4 className="table-title">{ table.title }</h4> }
-						<table className="wp-list-table widefat fixed striped">
-							<thead>
-								<tr>
-									{ table.headers.map( ( header, index ) => (
-										<th key={ index }>{ header.text }</th>
-									) ) }
-								</tr>
-							</thead>
-							<tbody>
-								{ table.rows.map( ( row, rowIndex ) => (
-									<tr key={ rowIndex }>
-										{ row.cells.map( ( cell, cellIndex ) => (
-											<td key={ cellIndex }>{ cell.text }</td>
-										) ) }
-									</tr>
-								) ) }
-							</tbody>
-						</table>
-					</div>
-				) ) }
-			</div>
-		);
-	}
-
 	render() {
-		const { loading, error } = this.state;
+		const { loading, error, data } = this.state;
 		const { widget } = this.props;
 
 		if ( loading ) {
@@ -216,19 +52,18 @@ class WidgetContent extends Component {
 			return <div className="widget-error">Error: { error }</div>;
 		}
 
+		// Route to appropriate widget component
 		switch ( widget.type ) {
 			case 'html':
-				return this.renderHtmlWidget();
+				return <HtmlWidget data={ data } />;
 			case 'iconbox':
-				return this.renderIconboxWidget();
+				return <IconboxWidget data={ data } />;
 			case 'progress-circle':
-				return this.renderProgressCircleWidget();
+				return <ProgressCircleWidget data={ data } />;
 			case 'quick-links':
-				return this.renderQuickLinksWidget();
-			case 'table':
-				return this.renderTableWidget();
+				return <QuickLinksWidget data={ data } />;
 			case 'tabular':
-				return this.renderTabularWidget();
+				return <TabularWidget data={ data } />;
 			default:
 				return <p>Unknown widget type: { widget.type }</p>;
 		}

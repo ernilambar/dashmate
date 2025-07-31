@@ -30,39 +30,43 @@
 
 				{
 					"id": "widget-4",
-					"type": "table",
+					"type": "tabular",
 					"title": "Recent Users",
 					"settings": {
-						"title": "User List",
-						"headers": [
-							{ "text": "Name" },
-							{ "text": "Email" },
-							{ "text": "Role" },
-							{ "text": "Status" }
-						],
-						"rows": [
+						"tables": [
 							{
-								"cells": [
-									{ "text": "John Doe" },
-									{ "text": "john@example.com" },
-									{ "text": "Administrator" },
-									{ "text": "Active" }
-								]
-							},
-							{
-								"cells": [
-									{ "text": "Jane Smith" },
-									{ "text": "jane@example.com" },
-									{ "text": "Editor" },
-									{ "text": "Active" }
-								]
-							},
-							{
-								"cells": [
-									{ "text": "Bob Wilson" },
-									{ "text": "bob@example.com" },
-									{ "text": "Author" },
-									{ "text": "Inactive" }
+								"title": "User List",
+								"headers": [
+									{ "text": "Name" },
+									{ "text": "Email" },
+									{ "text": "Role" },
+									{ "text": "Status" }
+								],
+								"rows": [
+									{
+										"cells": [
+											{ "text": "John Doe" },
+											{ "text": "john@example.com" },
+											{ "text": "Administrator" },
+											{ "text": "Active" }
+										]
+									},
+									{
+										"cells": [
+											{ "text": "Jane Smith" },
+											{ "text": "jane@example.com" },
+											{ "text": "Editor" },
+											{ "text": "Active" }
+										]
+									},
+									{
+										"cells": [
+											{ "text": "Bob Wilson" },
+											{ "text": "bob@example.com" },
+											{ "text": "Author" },
+											{ "text": "Inactive" }
+										]
+									}
 								]
 							}
 						]
