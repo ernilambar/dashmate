@@ -9,8 +9,8 @@ declare(strict_types=1);
 
 namespace Nilambar\Dashmate\API;
 
-use Nilambar\Dashmate\Widget_Manager;
-use Nilambar\Dashmate\Widget_Type_Manager;
+use Nilambar\Dashmate\Widget_Blueprint_Manager;
+use Nilambar\Dashmate\Widget_Dispatcher;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -138,7 +138,7 @@ class Widgets_Controller extends Base_Controller {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public function get_widgets( $request ) {
-		$data = Widget_Type_Manager::get_widget_types_for_frontend();
+		$data = Widget_Blueprint_Manager::get_widget_blueprints_for_frontend();
 
 		return $this->success_response( $data );
 	}
@@ -155,30 +155,31 @@ class Widgets_Controller extends Base_Controller {
 	public function get_widget_data( $request ) {
 		$widget_id = $request->get_param( 'id' );
 
-		// Get widget info from dashboard to determine type.
-		$dashboard_data = $this->read_json_file( 'dashboard.json' );
+		// Get widget from the new system.
+		$widget = Widget_Dispatcher::get_widget( $widget_id );
+
+		if ( null === $widget ) {
+			return $this->error_response( 'Widget not found: ' . $widget_id, 404, 'widget_not_found' );
+		}
+
+		// Get widget settings from WordPress options.
+		$dashboard_data = $this->get_dashboard_data();
 
 		if ( is_wp_error( $dashboard_data ) ) {
 			return $dashboard_data;
 		}
 
-		$widget = $this->find_widget_by_id( $widget_id, $dashboard_data );
+		$widget_data = $this->find_widget_by_id( $widget_id, $dashboard_data );
+		$settings    = $widget_data['settings'] ?? [];
 
-		if ( ! $widget ) {
-			return $this->error_response( 'Widget not found: ' . $widget_id, 404, 'widget_not_found' );
+		// Get content using the new system.
+		$content = Widget_Dispatcher::get_widget_content( $widget->get_blueprint_type(), $widget_id, $settings );
+
+		if ( is_wp_error( $content ) ) {
+			return $content;
 		}
 
-		$widget_type = $widget['type'];
-		$settings    = $widget['settings'] ?? [];
-
-		// Get content from generic endpoint.
-		$content_response = $this->get_widget_content_by_type( $widget_type );
-
-		if ( is_wp_error( $content_response ) ) {
-			return $content_response;
-		}
-
-		return $this->success_response( $content_response );
+		return $this->success_response( $content );
 	}
 
 	/**
@@ -193,7 +194,14 @@ class Widgets_Controller extends Base_Controller {
 	public function get_widget_content( $request ) {
 		$widget_id = $request->get_param( 'widget_id' );
 
-		$content = Widget_Manager::get_widget_content( $widget_id );
+		// Get widget from the new system.
+		$widget = Widget_Dispatcher::get_widget( $widget_id );
+
+		if ( null === $widget ) {
+			return $this->error_response( 'Widget not found: ' . $widget_id, 404, 'widget_not_found' );
+		}
+
+		$content = Widget_Dispatcher::get_widget_content( $widget->get_blueprint_type(), $widget_id );
 
 		if ( is_wp_error( $content ) ) {
 			return $content;
@@ -215,7 +223,14 @@ class Widgets_Controller extends Base_Controller {
 		$widget_id = $request->get_param( 'widget_id' );
 		$settings  = $request->get_param( 'settings' ) ?? [];
 
-		$content = Widget_Manager::get_widget_content( $widget_id, $settings );
+		// Get widget from the new system.
+		$widget = Widget_Dispatcher::get_widget( $widget_id );
+
+		if ( null === $widget ) {
+			return $this->error_response( 'Widget not found: ' . $widget_id, 404, 'widget_not_found' );
+		}
+
+		$content = Widget_Dispatcher::get_widget_content( $widget->get_blueprint_type(), $widget_id, $settings );
 
 		if ( is_wp_error( $content ) ) {
 			return $content;
@@ -237,7 +252,7 @@ class Widgets_Controller extends Base_Controller {
 		$widget_id = $request->get_param( 'id' );
 		$settings  = $request->get_param( 'settings' );
 
-		$result = Widget_Manager::update_widget_settings( $widget_id, $settings );
+		$result = Widget_Dispatcher::update_widget_settings( $widget_id, $settings );
 
 		if ( is_wp_error( $result ) ) {
 			return $result;
@@ -334,12 +349,26 @@ class Widgets_Controller extends Base_Controller {
 	 * @return array|WP_Error
 	 */
 	private function get_widget_content_by_type( $widget_type, $widget_id = null ) {
-		// Use Widget_Type_Manager to get content for any registered widget type.
-		$content = Widget_Type_Manager::get_widget_content( $widget_type, $widget_id );
+		// Get widget by ID and get its blueprint type.
+		$widget = Widget_Dispatcher::get_widget( $widget_id );
+
+		if ( null === $widget ) {
+			return new \WP_Error( 'unknown_widget', 'Unknown widget: ' . $widget_id );
+		}
+
+		// Get the blueprint type from the widget.
+		$blueprint_type = $widget->get_blueprint_type();
+
+		// Use the new widget system.
+		$content = Widget_Dispatcher::get_widget_content( $blueprint_type, $widget_id );
 
 		if ( is_wp_error( $content ) ) {
-			return $this->error_response( $content->get_error_message(), 400, $content->get_error_code() );
+			return $content;
 		}
+
+		// Add widget ID to content.
+		$content['id']   = $widget_id;
+		$content['type'] = $blueprint_type;
 
 		return $content;
 	}
@@ -356,12 +385,26 @@ class Widgets_Controller extends Base_Controller {
 	 * @return array|WP_Error
 	 */
 	private function get_widget_content_by_type_with_settings( $widget_type, $widget_id, $settings ) {
-		// Use Widget_Type_Manager to get content for any registered widget type with settings.
-		$content = Widget_Type_Manager::get_widget_content( $widget_type, $widget_id, $settings );
+		// Get widget by ID and get its blueprint type.
+		$widget = Widget_Dispatcher::get_widget( $widget_id );
+
+		if ( null === $widget ) {
+			return new \WP_Error( 'unknown_widget', 'Unknown widget: ' . $widget_id );
+		}
+
+		// Get the blueprint type from the widget.
+		$blueprint_type = $widget->get_blueprint_type();
+
+		// Use the new widget system with settings.
+		$content = Widget_Dispatcher::get_widget_content( $blueprint_type, $widget_id, $settings );
 
 		if ( is_wp_error( $content ) ) {
-			return $this->error_response( $content->get_error_message(), 400, $content->get_error_code() );
+			return $content;
 		}
+
+		// Add widget ID to content.
+		$content['id']   = $widget_id;
+		$content['type'] = $blueprint_type;
 
 		return $content;
 	}
@@ -665,7 +708,7 @@ class Widgets_Controller extends Base_Controller {
 		// Get widget settings if widget_id is provided.
 		$settings = [];
 		if ( $widget_id ) {
-			$dashboard_data = $this->read_json_file( 'dashboard.json' );
+			$dashboard_data = $this->get_dashboard_data();
 			if ( ! is_wp_error( $dashboard_data ) ) {
 				$widget = $this->find_widget_by_id( $widget_id, $dashboard_data );
 				if ( $widget ) {

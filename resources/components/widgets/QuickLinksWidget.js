@@ -81,10 +81,10 @@ class QuickLinksWidget extends React.Component {
 	};
 
 	render() {
-		const { showSettings, settings, data, loading, widgetSchemas } = this.state;
-		const schema = widgetSchemas?.[ 'quick-links' ]?.settings_schema;
+		const { settings, data, loading, widgetSchemas } = this.state;
+		const schema = widgetSchemas?.[ 'links' ]?.settings_schema;
 		const { title, links } = data || {};
-		const { hideIcon = false, showTitle = true, linkStyle = 'list' } = settings;
+		const { hideIcon = false, linkStyle = 'list' } = settings;
 
 		if ( loading ) {
 			return <div>Loading...</div>;
@@ -95,20 +95,6 @@ class QuickLinksWidget extends React.Component {
 
 		return (
 			<div className="quick-links-widget">
-				<button
-					onClick={ () => this.setState( { showSettings: ! showSettings } ) }
-					style={ { float: 'right', marginBottom: 8 } }
-				>
-					{ showSettings ? 'Close Settings' : 'Edit Settings' }
-				</button>
-				{ showSettings && (
-					<WidgetSettingsForm
-						schema={ schema }
-						values={ settings }
-						onChange={ this.handleSettingsChange }
-					/>
-				) }
-				{ showTitle && title && <h4 className="quick-links-title">{ title }</h4> }
 				<div className={ `quick-links-list quick-links-${ linkStyle }` }>
 					{ safeLinks.map( ( link, index ) => (
 						<div

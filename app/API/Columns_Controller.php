@@ -125,7 +125,7 @@ class Columns_Controller extends Base_Controller {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public function get_columns( $request ) {
-		$dashboard_data = $this->read_json_file( 'dashboard.json' );
+		$dashboard_data = $this->get_dashboard_data();
 
 		if ( is_wp_error( $dashboard_data ) ) {
 			return $dashboard_data;
@@ -150,7 +150,7 @@ class Columns_Controller extends Base_Controller {
 		$width = $request->get_param( 'width' );
 
 		// Get current dashboard data.
-		$dashboard_data = $this->read_json_file( 'dashboard.json' );
+		$dashboard_data = $this->get_dashboard_data();
 
 		if ( is_wp_error( $dashboard_data ) ) {
 			return $dashboard_data;
@@ -172,10 +172,10 @@ class Columns_Controller extends Base_Controller {
 		$dashboard_data['columns'] = $columns;
 
 		// Save updated dashboard data.
-		$result = $this->write_json_file( 'dashboard.json', $dashboard_data );
+		$result = update_option( 'dashmate_dashboard_data', $dashboard_data, false );
 
-		if ( is_wp_error( $result ) ) {
-			return $result;
+		if ( false === $result ) {
+			return $this->error_response( 'Unable to save dashboard data', 500, 'save_error' );
 		}
 
 		return $this->success_response( $new_column, 201 );
@@ -193,7 +193,7 @@ class Columns_Controller extends Base_Controller {
 	public function get_column( $request ) {
 		$column_id = $request->get_param( 'id' );
 
-		$dashboard_data = $this->read_json_file( 'dashboard.json' );
+		$dashboard_data = $this->get_dashboard_data();
 
 		if ( is_wp_error( $dashboard_data ) ) {
 			return $dashboard_data;
@@ -222,28 +222,25 @@ class Columns_Controller extends Base_Controller {
 		$title     = $request->get_param( 'title' );
 		$width     = $request->get_param( 'width' );
 
-		// Get current dashboard data.
-		$dashboard_data = $this->read_json_file( 'dashboard.json' );
+		$dashboard_data = $this->get_dashboard_data();
 
 		if ( is_wp_error( $dashboard_data ) ) {
 			return $dashboard_data;
 		}
 
-		// Find and update column.
-		$updated = $this->update_column_data( $column_id, $title, $width, $dashboard_data );
+		$column = $this->find_column_by_id( $column_id, $dashboard_data );
 
-		if ( ! $updated ) {
+		if ( ! $column ) {
 			return $this->error_response( 'Column not found: ' . $column_id, 404, 'column_not_found' );
 		}
 
-		// Save updated dashboard data.
-		$result = $this->write_json_file( 'dashboard.json', $dashboard_data );
+		$this->update_column_data( $column_id, $title, $width, $dashboard_data );
 
-		if ( is_wp_error( $result ) ) {
-			return $result;
+		$result = update_option( 'dashmate_dashboard_data', $dashboard_data, false );
+
+		if ( false === $result ) {
+			return $this->error_response( 'Unable to save dashboard data', 500, 'save_error' );
 		}
-
-		$column = $this->find_column_by_id( $column_id, $dashboard_data );
 
 		return $this->success_response( $column );
 	}
@@ -260,25 +257,24 @@ class Columns_Controller extends Base_Controller {
 	public function delete_column( $request ) {
 		$column_id = $request->get_param( 'id' );
 
-		// Get current dashboard data.
-		$dashboard_data = $this->read_json_file( 'dashboard.json' );
+		$dashboard_data = $this->get_dashboard_data();
 
 		if ( is_wp_error( $dashboard_data ) ) {
 			return $dashboard_data;
 		}
 
-		// Find and remove column.
-		$removed = $this->remove_column( $column_id, $dashboard_data );
+		$column = $this->find_column_by_id( $column_id, $dashboard_data );
 
-		if ( ! $removed ) {
+		if ( ! $column ) {
 			return $this->error_response( 'Column not found: ' . $column_id, 404, 'column_not_found' );
 		}
 
-		// Save updated dashboard data.
-		$result = $this->write_json_file( 'dashboard.json', $dashboard_data );
+		$this->remove_column( $column_id, $dashboard_data );
 
-		if ( is_wp_error( $result ) ) {
-			return $result;
+		$result = update_option( 'dashmate_dashboard_data', $dashboard_data, false );
+
+		if ( false === $result ) {
+			return $this->error_response( 'Unable to save dashboard data', 500, 'save_error' );
 		}
 
 		return $this->success_response( [ 'message' => 'Column deleted successfully' ] );

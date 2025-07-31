@@ -190,7 +190,7 @@ class Widget_Type_Manager {
 	 * @return array
 	 */
 	public static function get_widget_types_for_frontend() {
-		$widget_types = [];
+		$widget_types          = [];
 		$filtered_widget_types = self::get_widget_types();
 
 		foreach ( $filtered_widget_types as $type => $definition ) {

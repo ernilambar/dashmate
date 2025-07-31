@@ -71,7 +71,7 @@ class Dashboard_Controller extends Base_Controller {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public function get_dashboard( $request ) {
-		$data = $this->read_json_file( 'dashboard.json' );
+		$data = $this->get_dashboard_data();
 
 		if ( is_wp_error( $data ) ) {
 			return $data;
@@ -100,10 +100,10 @@ class Dashboard_Controller extends Base_Controller {
 			'columns' => $columns,
 		];
 
-		$result = $this->write_json_file( 'dashboard.json', $dashboard_data );
+		$result = update_option( 'dashmate_dashboard_data', $dashboard_data, false );
 
-		if ( is_wp_error( $result ) ) {
-			return $result;
+		if ( false === $result ) {
+			return $this->error_response( 'Unable to save dashboard data', 500, 'save_error' );
 		}
 
 		return $this->success_response( $dashboard_data, 201 );

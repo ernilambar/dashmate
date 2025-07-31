@@ -26,6 +26,24 @@ abstract class Abstract_Widget {
 	protected $type;
 
 	/**
+	 * Widget blueprint type.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var string
+	 */
+	protected $blueprint_type;
+
+	/**
+	 * Widget instance ID.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var string
+	 */
+	protected $id;
+
+	/**
 	 * Widget name.
 	 *
 	 * @since 1.0.0
@@ -74,17 +92,20 @@ abstract class Abstract_Widget {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 */
-	public function __construct() {
-		$this->init();
-	}
-
-	/**
-	 * Initialize the widget.
 	 *
-	 * @since 1.0.0
+	 * @param string $id             Widget instance ID.
+	 * @param string $blueprint_type Widget blueprint type.
+	 * @param string $name           Widget name.
 	 */
-	abstract protected function init();
+	public function __construct( $id, $blueprint_type, $name ) {
+		$this->id              = $id;
+		$this->blueprint_type  = $blueprint_type;
+		$this->name            = $name;
+		$this->description     = '';
+		$this->icon            = '';
+		$this->settings_schema = [];
+		$this->output_schema   = [];
+	}
 
 	/**
 	 * Get widget content.
@@ -107,6 +128,28 @@ abstract class Abstract_Widget {
 	 */
 	public function get_type() {
 		return $this->type;
+	}
+
+	/**
+	 * Get widget blueprint type.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string
+	 */
+	public function get_blueprint_type() {
+		return $this->blueprint_type;
+	}
+
+	/**
+	 * Get widget ID.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string|null
+	 */
+	public function get_id() {
+		return $this->id;
 	}
 
 	/**
@@ -150,7 +193,15 @@ abstract class Abstract_Widget {
 	 * @return array
 	 */
 	public function get_settings_schema() {
-		return $this->settings_schema;
+		// Get blueprint settings schema if available.
+		if ( ! empty( $this->blueprint_type ) ) {
+			$blueprint = Widget_Blueprint_Manager::get_widget_blueprint( $this->blueprint_type );
+			if ( $blueprint && isset( $blueprint['settings_schema'] ) ) {
+				return $blueprint['settings_schema'];
+			}
+		}
+
+		return $this->settings_schema ?? [];
 	}
 
 	/**
@@ -161,7 +212,15 @@ abstract class Abstract_Widget {
 	 * @return array
 	 */
 	public function get_output_schema() {
-		return $this->output_schema;
+		// Get blueprint output schema if available.
+		if ( ! empty( $this->blueprint_type ) ) {
+			$blueprint = Widget_Blueprint_Manager::get_widget_blueprint( $this->blueprint_type );
+			if ( $blueprint && isset( $blueprint['output_schema'] ) ) {
+				return $blueprint['output_schema'];
+			}
+		}
+
+		return $this->output_schema ?? [];
 	}
 
 	/**
@@ -172,6 +231,20 @@ abstract class Abstract_Widget {
 	 * @return array
 	 */
 	public function get_definition() {
+		// Get blueprint definition if available.
+		if ( ! empty( $this->blueprint_type ) ) {
+			$blueprint = Widget_Blueprint_Manager::get_widget_blueprint( $this->blueprint_type );
+			if ( $blueprint ) {
+				return [
+					'name'            => $blueprint['name'],
+					'description'     => $blueprint['description'],
+					'icon'            => $blueprint['icon'],
+					'settings_schema' => $blueprint['settings_schema'],
+					'output_schema'   => $blueprint['output_schema'],
+				];
+			}
+		}
+
 		return [
 			'name'            => $this->name,
 			'description'     => $this->description,
@@ -355,24 +428,29 @@ abstract class Abstract_Widget {
 	 */
 	public function get_essential_fields() {
 		return [
-			'id' => [
-				'type'     => 'string',
-				'required' => true,
+			'id'       => [
+				'type'        => 'string',
+				'required'    => true,
 				'description' => 'Unique widget identifier',
 			],
-			'type' => [
-				'type'     => 'string',
-				'required' => true,
+			'type'     => [
+				'type'        => 'string',
+				'required'    => true,
 				'description' => 'Widget type for routing',
 			],
-			'title' => [
-				'type'     => 'string',
-				'required' => true,
+			'title'    => [
+				'type'        => 'string',
+				'required'    => true,
 				'description' => 'Widget display title (REQUIRED FOR ALL WIDGETS)',
 			],
+			'icon'     => [
+				'type'        => 'string',
+				'required'    => true,
+				'description' => 'Widget icon CSS class (REQUIRED FOR ALL WIDGETS, may be empty)',
+			],
 			'settings' => [
-				'type'     => 'object',
-				'required' => true,
+				'type'        => 'object',
+				'required'    => true,
 				'description' => 'Widget settings object',
 			],
 		];
@@ -388,13 +466,13 @@ abstract class Abstract_Widget {
 	protected function get_universal_output_schema() {
 		return [
 			'title' => [
-				'type'     => 'string',
-				'required' => true,
+				'type'        => 'string',
+				'required'    => true,
 				'description' => 'Widget title (REQUIRED FOR ALL WIDGETS)',
 			],
-			'icon' => [
-				'type'     => 'string',
-				'required' => true,
+			'icon'  => [
+				'type'        => 'string',
+				'required'    => true,
 				'description' => 'Widget icon CSS class (REQUIRED FOR ALL WIDGETS, may be empty)',
 			],
 		];
@@ -409,11 +487,11 @@ abstract class Abstract_Widget {
 	 */
 	public function get_definition_with_essentials() {
 		return [
-			'name'            => $this->name,
-			'description'     => $this->description,
-			'icon'            => $this->icon,
-			'settings_schema' => $this->settings_schema,
-			'output_schema'   => $this->output_schema,
+			'name'             => $this->name,
+			'description'      => $this->description,
+			'icon'             => $this->icon,
+			'settings_schema'  => $this->settings_schema,
+			'output_schema'    => $this->output_schema,
 			'essential_fields' => $this->get_essential_fields(),
 		];
 	}

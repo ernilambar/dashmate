@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import HtmlWidget from './widgets/HtmlWidget';
-import IconboxWidget from './widgets/IconboxWidget';
-import ProgressCircleWidget from './widgets/ProgressCircleWidget';
+// import IconboxWidget from './widgets/IconboxWidget'; // For reference
+// import ProgressCircleWidget from './widgets/ProgressCircleWidget'; // For reference
 import QuickLinksWidget from './widgets/QuickLinksWidget';
-import TabularWidget from './widgets/TabularWidget';
+// import TabularWidget from './widgets/TabularWidget'; // For reference
 
 class WidgetContent extends Component {
 	constructor( props ) {
@@ -56,14 +56,14 @@ class WidgetContent extends Component {
 		switch ( widget.type ) {
 			case 'html':
 				return <HtmlWidget widgetId={ widget.id } data={ data } />;
-			case 'iconbox':
-				return <IconboxWidget widgetId={ widget.id } data={ data } />;
-			case 'progress-circle':
-				return <ProgressCircleWidget widgetId={ widget.id } data={ data } />;
-			case 'quick-links':
+			case 'links':
 				return <QuickLinksWidget widgetId={ widget.id } data={ data } />;
-			case 'tabular':
-				return <TabularWidget widgetId={ widget.id } data={ data } />;
+			// case 'iconbox':
+			// 	return <IconboxWidget widgetId={ widget.id } data={ data } />;
+			// case 'progress-circle':
+			// 	return <ProgressCircleWidget widgetId={ widget.id } data={ data } />;
+			// case 'tabular':
+			// 	return <TabularWidget widgetId={ widget.id } data={ data } />;
 			default:
 				return <p>Unknown widget type: { widget.type }</p>;
 		}
