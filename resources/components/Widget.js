@@ -1,12 +1,41 @@
 import { Component } from 'react';
 import WidgetContent from './WidgetContent';
+import WidgetSettingsForm from './WidgetSettingsForm';
 
 class Widget extends Component {
 	constructor( props ) {
 		super( props );
 		this.state = {
 			collapsed: false,
+			widgetData: null,
+			loading: true,
+			showSettings: false,
 		};
+	}
+
+	componentDidMount() {
+		this.loadWidgetData();
+	}
+
+	async loadWidgetData() {
+		const { widget } = this.props;
+
+		try {
+			const response = await fetch( `/wp-json/dashmate/v1/widgets/${ widget.id }/data`, {
+				headers: {
+					'X-WP-Nonce': dashmateApiSettings?.nonce || '',
+				},
+			} );
+			const data = await response.json();
+
+			if ( data.success ) {
+				this.setState( { widgetData: data.data, loading: false } );
+			} else {
+				this.setState( { loading: false } );
+			}
+		} catch ( error ) {
+			this.setState( { loading: false } );
+		}
 	}
 
 	toggleCollapse = () => {
@@ -16,19 +45,38 @@ class Widget extends Component {
 	};
 
 	openWidgetSettings = () => {
-		// TODO: Implement widget settings modal
-		console.log( 'Open settings for widget:', this.props.widget );
+		this.setState( { showSettings: ! this.state.showSettings } );
+	};
+
+	handleSettingsChange = ( newSettings ) => {
+		// Update widget settings in the parent component
+		console.log( 'Settings changed:', newSettings );
+		// Here you could also save settings to backend
 	};
 
 	render() {
 		const { widget, widgets } = this.props;
-		const { collapsed } = this.state;
+		const { collapsed, widgetData, loading, showSettings } = this.state;
 
-		if ( ! widgets || ! widgets[ widget.type ] ) {
+		// Get widget type from widget ID since JSON no longer contains type field.
+		const getWidgetType = ( widgetId ) => {
+			if ( widgetId.includes( 'html' ) ) {
+				return 'html';
+			}
+			if ( widgetId.includes( 'links' ) ) {
+				return 'links';
+			}
+			return 'unknown';
+		};
+
+		const widgetType = getWidgetType( widget.id );
+		const widgetTitle = widgetData?.title || widget.id;
+
+		if ( ! widgets || ! widgets[ widgetType ] ) {
 			return (
 				<div className="widget widget-unknown">
 					<div className="widget-header">
-						<h3>{ widget.title }</h3>
+						<h3>{ widgetTitle }</h3>
 						<div className="widget-actions">
 							<button
 								className="button button-small widget-toggle"
@@ -41,7 +89,7 @@ class Widget extends Component {
 					</div>
 					{ ! collapsed && (
 						<div className="widget-content">
-							<p>Unknown widget type: { widget.type }</p>
+							<p>Unknown widget type: { widgetType }</p>
 						</div>
 					) }
 				</div>
@@ -49,9 +97,9 @@ class Widget extends Component {
 		}
 
 		return (
-			<div className={ `widget widget-${ widget.type } ${ collapsed ? 'collapsed' : '' }` }>
+			<div className={ `widget widget-${ widgetType } ${ collapsed ? 'collapsed' : '' }` }>
 				<div className="widget-header">
-					<h3>{ widget.title }</h3>
+					<h3>{ widgetTitle }</h3>
 					<div className="widget-actions">
 						{ ! collapsed && (
 							<button
@@ -77,7 +125,16 @@ class Widget extends Component {
 				</div>
 				{ ! collapsed && (
 					<div className="widget-content">
-						<WidgetContent widget={ widget } />
+						{ showSettings && widgetType === 'links' && (
+							<div className="widget-settings-panel">
+								<WidgetSettingsForm
+									schema={ widgets[ widgetType ]?.settings_schema }
+									values={ widget.settings || {} }
+									onChange={ this.handleSettingsChange }
+								/>
+							</div>
+						) }
+						<WidgetContent widget={ { ...widget, type: widgetType } } />
 					</div>
 				) }
 			</div>

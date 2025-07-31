@@ -140,68 +140,68 @@ abstract class Base_Controller {
 	}
 
 	/**
-	 * Read JSON file.
+	 * Get dashboard data from WordPress options.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $file_path File path.
-	 *
 	 * @return array|WP_Error
 	 */
-	protected function read_json_file( $file_path ) {
-		$full_path = DASHMATE_DIR . '/data/' . $file_path;
+	protected function get_dashboard_data() {
+		$data = get_option( 'dashmate_dashboard_data', null );
 
-		if ( ! file_exists( $full_path ) ) {
-			return $this->error_response( 'File not found: ' . $file_path, 404, 'file_not_found' );
-		}
-
-		$content = file_get_contents( $full_path );
-
-		if ( false === $content ) {
-			return $this->error_response( 'Unable to read file: ' . $file_path, 500, 'file_read_error' );
-		}
-
-		$data = json_decode( $content, true );
-
-		if ( null === $data && JSON_ERROR_NONE !== json_last_error() ) {
-			return $this->error_response( 'Invalid JSON in file: ' . $file_path, 500, 'json_decode_error' );
+		if ( null === $data ) {
+			// Return default dashboard structure if no data exists.
+			return $this->get_default_dashboard_data();
 		}
 
 		return $data;
 	}
 
 	/**
-	 * Write JSON file.
+	 * Get default dashboard data.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $file_path File path.
-	 * @param array  $data      Data to write.
-	 *
-	 * @return bool|WP_Error
+	 * @return array
 	 */
-	protected function write_json_file( $file_path, $data ) {
-		$full_path = DASHMATE_DIR . '/data/' . $file_path;
-		$dir       = dirname( $full_path );
-
-		if ( ! is_dir( $dir ) ) {
-			if ( ! mkdir( $dir, 0755, true ) ) {
-				return $this->error_response( 'Unable to create directory: ' . $dir, 500, 'directory_creation_error' );
-			}
-		}
-
-		$json_content = wp_json_encode( $data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES );
-
-		if ( false === $json_content ) {
-			return $this->error_response( 'Unable to encode data to JSON', 500, 'json_encode_error' );
-		}
-
-		$result = file_put_contents( $full_path, $json_content );
-
-		if ( false === $result ) {
-			return $this->error_response( 'Unable to write file: ' . $file_path, 500, 'file_write_error' );
-		}
-
-		return true;
+	protected function get_default_dashboard_data() {
+		return [
+			'layout'  => [
+				'columns' => [
+					[
+						'id'    => 'col-1',
+						'order' => 1,
+						'width' => '50%',
+					],
+					[
+						'id'    => 'col-2',
+						'order' => 2,
+						'width' => '50%',
+					],
+				],
+			],
+			'widgets' => [
+				[
+					'id'        => 'welcome-html-1',
+					'column_id' => 'col-1',
+					'position'  => 1,
+					'settings'  => [
+						'allow_scripts' => false,
+					],
+				],
+				[
+					'id'        => 'quick-links-1',
+					'column_id' => 'col-2',
+					'position'  => 1,
+					'settings'  => [
+						'customTitle' => 'Quick Access',
+						'filterLinks' => 'content',
+						'hideIcon'    => false,
+						'showTitle'   => true,
+						'linkStyle'   => 'list',
+					],
+				],
+			],
+		];
 	}
 }

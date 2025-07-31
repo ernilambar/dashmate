@@ -22,7 +22,7 @@ class Widget_Initializer {
 	 * @since 1.0.0
 	 */
 	public static function init() {
-		// Initialize widget registry.
+		// Initialize the new widget system.
 		Widget_Registry::init();
 
 		// Create default widget instances if they don't exist.
@@ -60,14 +60,10 @@ class Widget_Initializer {
 				'columns' => [
 					[
 						'id'      => 'col-1',
-						'title'   => 'Main Column',
-						'width'   => 'full',
 						'widgets' => [],
 					],
 					[
 						'id'      => 'col-2',
-						'title'   => 'Sidebar',
-						'width'   => 'sidebar',
 						'widgets' => [],
 					],
 				],
@@ -99,57 +95,14 @@ class Widget_Initializer {
 	private static function create_widget_instances() {
 		$widgets = [];
 
-		// Quick Links Widget
-		$widgets[] = Widget_Manager::create_widget(
-			'quick-links',
-			[
-				'customTitle' => 'Quick Access',
-				'filterLinks' => 'content',
-				'hideIcon'    => false,
-				'showTitle'   => true,
-				'linkStyle'   => 'list',
-			]
-		);
-
-		// HTML Widget 1
-		$widgets[] = Widget_Manager::create_widget(
-			'html',
-			[
-				'html_content'  => '<h3>Welcome to Dashmate!</h3><p>This is a custom HTML widget. You can add any HTML content here.</p><ul><li>Feature 1</li><li>Feature 2</li><li>Feature 3</li></ul>',
+		// HTML Widget
+		$widgets[] = [
+			'id'       => 'html-1',
+			'type'     => 'html',
+			'settings' => [
 				'allow_scripts' => false,
-			]
-		);
-
-		// HTML Widget 2
-		$widgets[] = Widget_Manager::create_widget(
-			'html',
-			[
-				'html_content'  => '<div style="background: #f0f0f0; padding: 15px; border-radius: 5px;"><h4>📊 Dashboard Stats</h4><p><strong>Posts:</strong> 25<br><strong>Pages:</strong> 8<br><strong>Comments:</strong> 12</p></div>',
-				'allow_scripts' => false,
-			]
-		);
-
-		// Icon Box Widget
-		$widgets[] = Widget_Manager::create_widget(
-			'iconbox',
-			[
-				'icon'     => 'dashicons-admin-users',
-				'title'    => 'User Management',
-				'subtitle' => 'Manage your site users',
-				'color'    => 'blue',
-			]
-		);
-
-		// Progress Circle Widget
-		$widgets[] = Widget_Manager::create_widget(
-			'progress-circle',
-			[
-				'percentage' => 85,
-				'label'      => '85%',
-				'caption'    => 'Site Completion',
-				'color'      => 'green',
-			]
-		);
+			],
+		];
 
 		return $widgets;
 	}
@@ -162,22 +115,21 @@ class Widget_Initializer {
 	 * @return array|WP_Error
 	 */
 	private static function get_dashboard_data() {
-		$file_path = DASHMATE_DIR . '/data/dashboard.json';
-
-		if ( ! file_exists( $file_path ) ) {
-			return new \WP_Error( 'file_not_found', 'Dashboard file not found' );
-		}
-
-		$content = file_get_contents( $file_path );
-		if ( false === $content ) {
-			return new \WP_Error( 'file_read_error', 'Could not read dashboard file' );
-		}
-
-		$data = json_decode( $content, true );
+		$data = get_option( 'dashmate_dashboard_data', null );
 		if ( null === $data ) {
-			return new \WP_Error( 'json_decode_error', 'Invalid JSON in dashboard file' );
+			return [
+				'columns' => [
+					[
+						'id'      => 'col-1',
+						'widgets' => [],
+					],
+					[
+						'id'      => 'col-2',
+						'widgets' => [],
+					],
+				],
+			];
 		}
-
 		return $data;
 	}
 
@@ -191,18 +143,10 @@ class Widget_Initializer {
 	 * @return bool|WP_Error
 	 */
 	private static function save_dashboard_data( $data ) {
-		$file_path = DASHMATE_DIR . '/data/dashboard.json';
-
-		$json = json_encode( $data, JSON_PRETTY_PRINT );
-		if ( false === $json ) {
-			return new \WP_Error( 'json_encode_error', 'Could not encode dashboard data' );
-		}
-
-		$result = file_put_contents( $file_path, $json );
+		$result = update_option( 'dashmate_dashboard_data', $data, false );
 		if ( false === $result ) {
-			return new \WP_Error( 'file_write_error', 'Could not write dashboard file' );
+			return new \WP_Error( 'option_update_error', 'Could not save dashboard data to options' );
 		}
-
 		return true;
 	}
 }

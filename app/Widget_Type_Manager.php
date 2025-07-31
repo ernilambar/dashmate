@@ -77,7 +77,17 @@ class Widget_Type_Manager {
 	 * @return array
 	 */
 	public static function get_widget_types() {
-		return self::$widget_types;
+		/**
+		 * Filter the registered widget types.
+		 *
+		 * This filter allows other plugins and addons to add their own widget types
+		 * to the Dashmate dashboard.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param array $widget_types Array of registered widget types.
+		 */
+		return apply_filters( 'dashmate_widget_types', self::$widget_types );
 	}
 
 	/**
@@ -90,7 +100,8 @@ class Widget_Type_Manager {
 	 * @return array|null
 	 */
 	public static function get_widget_type( $type ) {
-		return self::$widget_types[ $type ] ?? null;
+		$filtered_widget_types = self::get_widget_types();
+		return $filtered_widget_types[ $type ] ?? null;
 	}
 
 	/**
@@ -103,7 +114,8 @@ class Widget_Type_Manager {
 	 * @return bool
 	 */
 	public static function is_widget_type_registered( $type ) {
-		return isset( self::$widget_types[ $type ] );
+		$filtered_widget_types = self::get_widget_types();
+		return isset( $filtered_widget_types[ $type ] );
 	}
 
 	/**
@@ -124,6 +136,13 @@ class Widget_Type_Manager {
 
 		// Check if content handler exists.
 		if ( ! isset( self::$content_handlers[ $type ] ) ) {
+			// Try to get content via filter for external widget types.
+			$filtered_content = apply_filters( 'dashmate_widget_content_' . $type, null, $widget_id, $settings );
+
+			if ( null !== $filtered_content ) {
+				return $filtered_content;
+			}
+
 			return new \WP_Error( 'no_content_handler', 'No content handler registered for widget type: ' . $type );
 		}
 
@@ -171,9 +190,10 @@ class Widget_Type_Manager {
 	 * @return array
 	 */
 	public static function get_widget_types_for_frontend() {
-		$widget_types = [];
+		$widget_types          = [];
+		$filtered_widget_types = self::get_widget_types();
 
-		foreach ( self::$widget_types as $type => $definition ) {
+		foreach ( $filtered_widget_types as $type => $definition ) {
 			$widget_types[ $type ] = [
 				'name'                => $definition['name'],
 				'description'         => $definition['description'],
