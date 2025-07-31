@@ -96,12 +96,28 @@ class Dashboard_Controller extends Base_Controller {
 			return $this->error_response( 'Columns must be an array', 400, 'invalid_columns' );
 		}
 
+		// Get current dashboard data to preserve widgets.
+		$current_data = $this->get_dashboard_data();
+		$widgets      = $current_data['widgets'] ?? [];
+
+		// Build new layout structure.
+		$layout_columns = [];
+		foreach ( $columns as $index => $column ) {
+			$layout_columns[] = [
+				'id'    => $column['id'] ?? 'col-' . ( $index + 1 ),
+				'order' => $index + 1,
+				'width' => $column['width'] ?? '50%',
+			];
+		}
+
 		$dashboard_data = [
-			'columns' => $columns,
+			'layout'  => [
+				'columns' => $layout_columns,
+			],
+			'widgets' => $widgets,
 		];
 
 		$result = update_option( 'dashmate_dashboard_data', $dashboard_data, false );
-
 		if ( false === $result ) {
 			return $this->error_response( 'Unable to save dashboard data', 500, 'save_error' );
 		}

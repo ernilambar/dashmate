@@ -166,31 +166,39 @@ abstract class Base_Controller {
 	 */
 	protected function get_default_dashboard_data() {
 		return [
-			'columns' => [
+			'layout'  => [
+				'columns' => [
+					[
+						'id'    => 'col-1',
+						'order' => 1,
+						'width' => '50%',
+					],
+					[
+						'id'    => 'col-2',
+						'order' => 2,
+						'width' => '50%',
+					],
+				],
+			],
+			'widgets' => [
 				[
-					'id'      => 'col-1',
-					'widgets' => [
-						[
-							'id'       => 'welcome-html-1',
-							'settings' => [
-								'allow_scripts' => false,
-							],
-						],
+					'id'        => 'welcome-html-1',
+					'column_id' => 'col-1',
+					'position'  => 1,
+					'settings'  => [
+						'allow_scripts' => false,
 					],
 				],
 				[
-					'id'      => 'col-2',
-					'widgets' => [
-						[
-							'id'       => 'quick-links-1',
-							'settings' => [
-								'customTitle' => 'Quick Access',
-								'filterLinks' => 'content',
-								'hideIcon'    => false,
-								'showTitle'   => true,
-								'linkStyle'   => 'list',
-							],
-						],
+					'id'        => 'quick-links-1',
+					'column_id' => 'col-2',
+					'position'  => 1,
+					'settings'  => [
+						'customTitle' => 'Quick Access',
+						'filterLinks' => 'content',
+						'hideIcon'    => false,
+						'showTitle'   => true,
+						'linkStyle'   => 'list',
 					],
 				],
 			],

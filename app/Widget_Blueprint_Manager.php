@@ -85,12 +85,6 @@ class Widget_Blueprint_Manager {
 					'description' => 'Hide link icons',
 					'default'     => false,
 				],
-				'showTitle'   => [
-					'type'        => 'checkbox',
-					'label'       => 'Show Title',
-					'description' => 'Show widget title',
-					'default'     => true,
-				],
 				'linkStyle'   => [
 					'type'    => 'select',
 					'label'   => 'Link Style',

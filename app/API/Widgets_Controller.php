@@ -93,6 +93,34 @@ class Widgets_Controller extends Base_Controller {
 			]
 		);
 
+		// Move widget to new position.
+		register_rest_route(
+			$this->get_namespace(),
+			'/' . $this->get_base_route() . '/(?P<id>[a-zA-Z0-9_-]+)/move',
+			[
+				[
+					'methods'             => \WP_REST_Server::EDITABLE,
+					'callback'            => [ $this, 'move_widget' ],
+					'permission_callback' => [ $this, 'check_permissions' ],
+					'args'                => [
+						'id'        => [
+							'required'          => true,
+							'validate_callback' => [ $this, 'validate_widget_id' ],
+						],
+						'column_id' => [
+							'required' => true,
+							'type'     => 'string',
+						],
+						'position'  => [
+							'required' => true,
+							'type'     => 'integer',
+							'minimum'  => 1,
+						],
+					],
+				],
+			]
+		);
+
 		// Get widget content by widget ID.
 		register_rest_route(
 			$this->get_namespace(),
@@ -255,10 +283,33 @@ class Widgets_Controller extends Base_Controller {
 		$result = Widget_Dispatcher::update_widget_settings( $widget_id, $settings );
 
 		if ( is_wp_error( $result ) ) {
-			return $result;
+			return $this->error_response( $result->get_error_message(), 400, $result->get_error_code() );
 		}
 
-		return $this->success_response( $settings );
+		return $this->success_response( [ 'message' => 'Settings saved successfully' ] );
+	}
+
+	/**
+	 * Move widget to new position.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_REST_Request $request Request object.
+	 *
+	 * @return WP_REST_Response|WP_Error
+	 */
+	public function move_widget( $request ) {
+		$widget_id = $request->get_param( 'id' );
+		$column_id = $request->get_param( 'column_id' );
+		$position  = $request->get_param( 'position' );
+
+		$result = Widget_Dispatcher::move_widget( $widget_id, $column_id, $position );
+
+		if ( is_wp_error( $result ) ) {
+			return $this->error_response( $result->get_error_message(), 400, $result->get_error_code() );
+		}
+
+		return $this->success_response( [ 'message' => 'Widget moved successfully' ] );
 	}
 
 	/**

@@ -278,31 +278,39 @@ class Widget_Dispatcher {
 	 */
 	private static function get_default_dashboard_data() {
 		return [
-			'columns' => [
+			'layout'  => [
+				'columns' => [
+					[
+						'id'    => 'col-1',
+						'order' => 1,
+						'width' => '50%',
+					],
+					[
+						'id'    => 'col-2',
+						'order' => 2,
+						'width' => '50%',
+					],
+				],
+			],
+			'widgets' => [
 				[
-					'id'      => 'col-1',
-					'widgets' => [
-						[
-							'id'       => 'welcome-html-1',
-							'settings' => [
-								'allow_scripts' => false,
-							],
-						],
+					'id'        => 'welcome-html-1',
+					'column_id' => 'col-1',
+					'position'  => 1,
+					'settings'  => [
+						'allow_scripts' => false,
 					],
 				],
 				[
-					'id'      => 'col-2',
-					'widgets' => [
-						[
-							'id'       => 'quick-links-1',
-							'settings' => [
-								'customTitle' => 'Quick Access',
-								'filterLinks' => 'content',
-								'hideIcon'    => false,
-								'showTitle'   => true,
-								'linkStyle'   => 'list',
-							],
-						],
+					'id'        => 'quick-links-1',
+					'column_id' => 'col-2',
+					'position'  => 1,
+					'settings'  => [
+						'customTitle' => 'Quick Access',
+						'filterLinks' => 'content',
+						'hideIcon'    => false,
+						'showTitle'   => true,
+						'linkStyle'   => 'list',
 					],
 				],
 			],
@@ -320,16 +328,143 @@ class Widget_Dispatcher {
 	 * @return array|null
 	 */
 	private static function find_widget_by_id( $widget_id, $dashboard_data ) {
-		foreach ( $dashboard_data['columns'] ?? [] as $column ) {
-			if ( isset( $column['widgets'] ) ) {
-				foreach ( $column['widgets'] as $widget ) {
-					if ( isset( $widget['id'] ) && $widget['id'] === $widget_id ) {
-						return $widget;
-					}
-				}
+		$widgets = $dashboard_data['widgets'] ?? [];
+
+		foreach ( $widgets as $widget ) {
+			if ( isset( $widget['id'] ) && $widget['id'] === $widget_id ) {
+				return $widget;
 			}
 		}
 
 		return null;
+	}
+
+	/**
+	 * Get widgets for a specific column.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $column_id      Column ID.
+	 * @param array  $dashboard_data Dashboard data.
+	 *
+	 * @return array
+	 */
+	public static function get_widgets_for_column( $column_id, $dashboard_data = null ) {
+		if ( null === $dashboard_data ) {
+			$dashboard_data = self::get_dashboard_data();
+		}
+
+		if ( is_wp_error( $dashboard_data ) ) {
+			return [];
+		}
+
+		$widgets        = $dashboard_data['widgets'] ?? [];
+		$column_widgets = [];
+
+		foreach ( $widgets as $widget ) {
+			if ( isset( $widget['column_id'] ) && $widget['column_id'] === $column_id ) {
+				$column_widgets[] = $widget;
+			}
+		}
+
+		// Sort by position.
+		usort(
+			$column_widgets,
+			function ( $a, $b ) {
+				return ( $a['position'] ?? 0 ) - ( $b['position'] ?? 0 );
+			}
+		);
+
+		return $column_widgets;
+	}
+
+	/**
+	 * Move widget to a new position.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $widget_id Widget ID.
+	 * @param string $column_id Column ID.
+	 * @param int    $position  New position.
+	 *
+	 * @return bool|WP_Error
+	 */
+	public static function move_widget( $widget_id, $column_id, $position ) {
+		$dashboard_data = self::get_dashboard_data();
+
+		if ( is_wp_error( $dashboard_data ) ) {
+			return $dashboard_data;
+		}
+
+		$widgets = &$dashboard_data['widgets'];
+
+		// Find the widget.
+		$widget_index = null;
+		foreach ( $widgets as $index => $widget ) {
+			if ( isset( $widget['id'] ) && $widget['id'] === $widget_id ) {
+				$widget_index = $index;
+				break;
+			}
+		}
+
+		if ( null === $widget_index ) {
+			return new \WP_Error( 'widget_not_found', 'Widget not found: ' . $widget_id );
+		}
+
+		// Update widget position and column.
+		$widgets[ $widget_index ]['column_id'] = $column_id;
+		$widgets[ $widget_index ]['position']  = $position;
+
+		// Reorder other widgets in the same column.
+		$column_widgets = self::get_widgets_for_column( $column_id, $dashboard_data );
+		$new_position   = 1;
+
+		foreach ( $column_widgets as $column_widget ) {
+			if ( $column_widget['id'] !== $widget_id ) {
+				// Find and update this widget's position.
+				foreach ( $widgets as $index => $widget ) {
+					if ( isset( $widget['id'] ) && $widget['id'] === $column_widget['id'] ) {
+						$widgets[ $index ]['position'] = $new_position;
+						break;
+					}
+				}
+				++$new_position;
+			}
+		}
+
+		return self::save_dashboard_data( $dashboard_data );
+	}
+
+	/**
+	 * Get next available position for a column.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $column_id Column ID.
+	 *
+	 * @return int
+	 */
+	public static function get_next_position_for_column( $column_id ) {
+		$dashboard_data = self::get_dashboard_data();
+
+		if ( is_wp_error( $dashboard_data ) ) {
+			return 1;
+		}
+
+		$column_widgets = self::get_widgets_for_column( $column_id, $dashboard_data );
+
+		if ( empty( $column_widgets ) ) {
+			return 1;
+		}
+
+		$max_position = 0;
+		foreach ( $column_widgets as $widget ) {
+			$position = $widget['position'] ?? 0;
+			if ( $position > $max_position ) {
+				$max_position = $position;
+			}
+		}
+
+		return $max_position + 1;
 	}
 }
