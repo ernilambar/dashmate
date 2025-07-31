@@ -219,17 +219,17 @@ class Widget_Dispatcher {
 			return $dashboard_data;
 		}
 
-		$widget = self::find_widget_by_id( $widget_id, $dashboard_data );
+		$widgets = &$dashboard_data['widgets'];
 
-		if ( ! $widget ) {
-			return new \WP_Error( 'widget_not_found', 'Widget not found: ' . $widget_id );
+		// Find the widget and update its settings.
+		foreach ( $widgets as $index => $widget ) {
+			if ( isset( $widget['id'] ) && $widget['id'] === $widget_id ) {
+				$widgets[ $index ]['settings'] = array_merge( $widget['settings'] ?? [], $settings );
+				return self::save_dashboard_data( $dashboard_data );
+			}
 		}
 
-		// Update settings.
-		$widget['settings'] = array_merge( $widget['settings'] ?? [], $settings );
-
-		// Save dashboard data.
-		return self::save_dashboard_data( $dashboard_data );
+		return new \WP_Error( 'widget_not_found', 'Widget not found: ' . $widget_id );
 	}
 
 	/**
@@ -306,11 +306,9 @@ class Widget_Dispatcher {
 					'column_id' => 'col-2',
 					'position'  => 1,
 					'settings'  => [
-						'customTitle' => 'Quick Access',
-						'filterLinks' => 'content',
-						'hideIcon'    => false,
-						'showTitle'   => true,
-						'linkStyle'   => 'list',
+						'hideIcon'  => false,
+						'showTitle' => true,
+						'linkStyle' => 'list',
 					],
 				],
 			],

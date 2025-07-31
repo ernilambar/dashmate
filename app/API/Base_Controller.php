@@ -150,7 +150,11 @@ abstract class Base_Controller {
 		$data = get_option( 'dashmate_dashboard_data', null );
 
 		if ( null === $data ) {
-			// Return default dashboard structure if no data exists.
+			return $this->get_default_dashboard_data();
+		}
+
+		// Ensure we always return the new structure.
+		if ( ! isset( $data['layout'] ) || ! isset( $data['widgets'] ) ) {
 			return $this->get_default_dashboard_data();
 		}
 
@@ -194,11 +198,8 @@ abstract class Base_Controller {
 					'column_id' => 'col-2',
 					'position'  => 1,
 					'settings'  => [
-						'customTitle' => 'Quick Access',
-						'filterLinks' => 'content',
-						'hideIcon'    => false,
-						'showTitle'   => true,
-						'linkStyle'   => 'list',
+						'hideIcon'  => false,
+						'linkStyle' => 'list',
 					],
 				],
 			],

@@ -2,6 +2,35 @@ import React from 'react';
 
 // Renders a form based on a widget schema and current values
 export default function WidgetSettingsForm( { schema, values, onChange } ) {
+	const [ localValues, setLocalValues ] = React.useState( values );
+	const [ isSaving, setIsSaving ] = React.useState( false );
+	const [ saveMessage, setSaveMessage ] = React.useState( '' );
+
+	// Update local values when props change
+	React.useEffect( () => {
+		setLocalValues( values );
+	}, [ values ] );
+
+	const handleFieldChange = ( key, newValue ) => {
+		setLocalValues( { ...localValues, [ key ]: newValue } );
+	};
+
+	const handleSave = async () => {
+		setIsSaving( true );
+		setSaveMessage( '' );
+
+		try {
+			await onChange( localValues );
+			setSaveMessage( 'Settings saved successfully!' );
+			setTimeout( () => setSaveMessage( '' ), 3000 );
+		} catch ( error ) {
+			setSaveMessage( 'Error saving settings' );
+			setTimeout( () => setSaveMessage( '' ), 3000 );
+		} finally {
+			setIsSaving( false );
+		}
+	};
+
 	// Helper to render a single field
 	const renderField = ( key, fieldSchema, value ) => {
 		switch ( fieldSchema.type ) {
@@ -12,7 +41,7 @@ export default function WidgetSettingsForm( { schema, values, onChange } ) {
 						<input
 							type="text"
 							value={ value || '' }
-							onChange={ ( e ) => onChange( { ...values, [ key ]: e.target.value } ) }
+							onChange={ ( e ) => handleFieldChange( key, e.target.value ) }
 						/>
 					</div>
 				);
@@ -23,7 +52,7 @@ export default function WidgetSettingsForm( { schema, values, onChange } ) {
 						<input
 							type="url"
 							value={ value || '' }
-							onChange={ ( e ) => onChange( { ...values, [ key ]: e.target.value } ) }
+							onChange={ ( e ) => handleFieldChange( key, e.target.value ) }
 						/>
 					</div>
 				);
@@ -34,9 +63,7 @@ export default function WidgetSettingsForm( { schema, values, onChange } ) {
 							<input
 								type="checkbox"
 								checked={ !! value }
-								onChange={ ( e ) =>
-									onChange( { ...values, [ key ]: e.target.checked } )
-								}
+								onChange={ ( e ) => handleFieldChange( key, e.target.checked ) }
 							/>
 							{ fieldSchema.label }
 						</label>
@@ -48,7 +75,7 @@ export default function WidgetSettingsForm( { schema, values, onChange } ) {
 						<label>{ fieldSchema.label }</label>
 						<select
 							value={ value || fieldSchema.default }
-							onChange={ ( e ) => onChange( { ...values, [ key ]: e.target.value } ) }
+							onChange={ ( e ) => handleFieldChange( key, e.target.value ) }
 						>
 							{ fieldSchema.options.map( ( opt ) => (
 								<option key={ opt.value } value={ opt.value }>
@@ -80,7 +107,7 @@ export default function WidgetSettingsForm( { schema, values, onChange } ) {
 									onClick={ () => {
 										const newArr = [ ...value ];
 										newArr.splice( idx, 1 );
-										onChange( { ...values, [ key ]: newArr } );
+										handleFieldChange( key, newArr );
 									} }
 								>
 									Remove
@@ -96,7 +123,7 @@ export default function WidgetSettingsForm( { schema, values, onChange } ) {
 										newItem[ subKey ] = subSchema.default || '';
 									}
 								);
-								onChange( { ...values, [ key ]: [ ...( value || [] ), newItem ] } );
+								handleFieldChange( key, [ ...( value || [] ), newItem ] );
 							} }
 						>
 							Add
@@ -109,10 +136,47 @@ export default function WidgetSettingsForm( { schema, values, onChange } ) {
 	};
 
 	return (
-		<form>
-			{ Object.entries( schema ).map( ( [ key, fieldSchema ] ) =>
-				renderField( key, fieldSchema, values[ key ] )
-			) }
-		</form>
+		<div>
+			<form>
+				{ Object.entries( schema ).map( ( [ key, fieldSchema ] ) =>
+					renderField( key, fieldSchema, localValues[ key ] )
+				) }
+			</form>
+
+			<div style={ { marginTop: 16, textAlign: 'right' } }>
+				{ saveMessage && (
+					<div
+						style={ {
+							marginBottom: 8,
+							padding: 8,
+							backgroundColor: saveMessage.includes( 'Error' )
+								? '#ffebee'
+								: '#e8f5e8',
+							color: saveMessage.includes( 'Error' ) ? '#c62828' : '#2e7d32',
+							borderRadius: 4,
+							fontSize: '12px',
+						} }
+					>
+						{ saveMessage }
+					</div>
+				) }
+				<button
+					type="button"
+					onClick={ handleSave }
+					disabled={ isSaving }
+					style={ {
+						backgroundColor: '#0073aa',
+						color: 'white',
+						border: 'none',
+						padding: '8px 16px',
+						borderRadius: 4,
+						cursor: isSaving ? 'not-allowed' : 'pointer',
+						opacity: isSaving ? 0.6 : 1,
+					} }
+				>
+					{ isSaving ? 'Saving...' : 'Save Settings' }
+				</button>
+			</div>
+		</div>
 	);
 }

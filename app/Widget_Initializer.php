@@ -30,59 +30,50 @@ class Widget_Initializer {
 	}
 
 	/**
-	 * Create default widget instances.
+	 * Create default widgets.
 	 *
 	 * @since 1.0.0
 	 */
 	private static function create_default_widgets() {
-		// Check if dashboard already has widgets.
 		$dashboard_data = self::get_dashboard_data();
 
-		if ( ! is_wp_error( $dashboard_data ) && ! empty( $dashboard_data['columns'] ) ) {
-			// Check if any column has widgets.
-			$has_widgets = false;
-			foreach ( $dashboard_data['columns'] as $column ) {
-				if ( ! empty( $column['widgets'] ) ) {
-					$has_widgets = true;
-					break;
-				}
-			}
-
-			if ( $has_widgets ) {
-				// Widgets already exist, don't create defaults.
-				return;
-			}
+		if ( is_wp_error( $dashboard_data ) ) {
+			return;
 		}
 
-		// Create default dashboard structure if it doesn't exist.
-		if ( is_wp_error( $dashboard_data ) || empty( $dashboard_data['columns'] ) ) {
-			$dashboard_data = [
-				'columns' => [
-					[
-						'id'      => 'col-1',
-						'widgets' => [],
-					],
-					[
-						'id'      => 'col-2',
-						'widgets' => [],
-					],
+		// Check if widgets already exist.
+		$existing_widgets = $dashboard_data['widgets'] ?? [];
+		if ( ! empty( $existing_widgets ) ) {
+			return; // Widgets already exist, don't overwrite them.
+		}
+
+		// Create default widgets only if none exist.
+		$default_widgets = [
+			[
+				'id'        => 'welcome-html-1',
+				'column_id' => 'col-1',
+				'position'  => 1,
+				'settings'  => [
+					'allow_scripts' => false,
 				],
-			];
+			],
+			[
+				'id'        => 'quick-links-1',
+				'column_id' => 'col-2',
+				'position'  => 1,
+				'settings'  => [
+					'hideIcon'  => false,
+					'linkStyle' => 'list',
+				],
+			],
+		];
+
+		$dashboard_data['widgets'] = $default_widgets;
+
+		$result = self::save_dashboard_data( $dashboard_data );
+		if ( is_wp_error( $result ) ) {
+			error_log( 'Dashmate: Failed to create default widgets: ' . $result->get_error_message() );
 		}
-
-		// Create widget instances.
-		$widgets = self::create_widget_instances();
-
-		// Add widgets to columns.
-		$widget_index = 0;
-		foreach ( $widgets as $widget ) {
-			$column_index = $widget_index % 2; // Distribute between 2 columns.
-			$dashboard_data['columns'][ $column_index ]['widgets'][] = $widget;
-			++$widget_index;
-		}
-
-		// Save dashboard data.
-		self::save_dashboard_data( $dashboard_data );
 	}
 
 	/**
@@ -118,16 +109,21 @@ class Widget_Initializer {
 		$data = get_option( 'dashmate_dashboard_data', null );
 		if ( null === $data ) {
 			return [
-				'columns' => [
-					[
-						'id'      => 'col-1',
-						'widgets' => [],
-					],
-					[
-						'id'      => 'col-2',
-						'widgets' => [],
+				'layout'  => [
+					'columns' => [
+						[
+							'id'    => 'col-1',
+							'order' => 1,
+							'width' => '50%',
+						],
+						[
+							'id'    => 'col-2',
+							'order' => 2,
+							'width' => '50%',
+						],
 					],
 				],
+				'widgets' => [],
 			];
 		}
 		return $data;
