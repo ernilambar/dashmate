@@ -4,75 +4,43 @@ class ProgressCirclesWidget extends React.Component {
 	constructor( props ) {
 		super( props );
 		this.state = {
-			animatedValues: {},
+			currentValues: {},
 		};
 	}
 
 	componentDidMount() {
-		this.animateAllProgress();
+		this.setProgressValues();
 	}
 
 	componentDidUpdate( prevProps ) {
 		if ( prevProps.data?.items !== this.props.data?.items ) {
-			this.animateAllProgress();
+			this.setProgressValues();
 		}
 	}
 
-	animateAllProgress = () => {
+	setProgressValues = () => {
 		const { items } = this.props.data || {};
 		if ( ! items || ! Array.isArray( items ) ) {
 			return;
 		}
 
-		// Initialize animated values
-		const animatedValues = {};
+		// Set current values directly
+		const currentValues = {};
 		items.forEach( ( item, index ) => {
-			animatedValues[ index ] = 0;
+			currentValues[ index ] = item.percentage || 0;
 		} );
-		this.setState( { animatedValues } );
-
-		// Animate each progress circle
-		items.forEach( ( item, index ) => {
-			this.animateProgress( index, item.percentage || 0 );
-		} );
-	};
-
-	animateProgress = ( index, targetValue ) => {
-		const duration = 1000; // 1 second
-		const steps = 60;
-		const increment = targetValue / steps;
-		let currentStep = 0;
-
-		const animate = () => {
-			currentStep++;
-			const newValue = Math.min( currentStep * increment, targetValue );
-
-			this.setState( ( prevState ) => ( {
-				animatedValues: {
-					...prevState.animatedValues,
-					[ index ]: newValue,
-				},
-			} ) );
-
-			if ( currentStep < steps ) {
-				setTimeout( animate, duration / steps );
-			}
-		};
-
-		setTimeout( animate, index * 200 ); // Stagger animations
+		this.setState( { currentValues } );
 	};
 
 	handleCircleClick = ( index, item ) => {
-		this.animateProgress( index, item.percentage || 0 );
 		console.log( 'ProgressCircle clicked:', item );
 	};
 
 	renderProgressCircle = ( item, index ) => {
-		const { animatedValues } = this.state;
-		const { percentage, value, caption, color } = item;
+		const { currentValues } = this.state;
+		const { percentage, value, caption } = item;
 
-		const currentValue = animatedValues[ index ] || 0;
-		const colorClass = color || 'blue';
+		const currentValue = currentValues[ index ] || 0;
 		const radius = 40;
 		const circumference = 2 * Math.PI * radius;
 		const strokeDasharray = circumference;
@@ -96,7 +64,7 @@ class ProgressCirclesWidget extends React.Component {
 							strokeWidth="6"
 						/>
 						<circle
-							className={ `progress-circle-fill progress-circle-${ colorClass }` }
+							className="progress-circle-fill"
 							cx="50"
 							cy="50"
 							r={ radius }
@@ -109,11 +77,9 @@ class ProgressCirclesWidget extends React.Component {
 							transform="rotate(-90 50 50)"
 						/>
 					</svg>
-					<div className="progress-circle-label">
-						{ value || `${ Math.round( currentValue ) }%` }
-					</div>
+					{ value && <div className="progress-circle-label">{ value }</div> }
 				</div>
-				<div className="progress-circle-caption">{ caption || 'Progress' }</div>
+				{ caption && <div className="progress-circle-caption">{ caption }</div> }
 			</div>
 		);
 	};

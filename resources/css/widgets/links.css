@@ -1,0 +1,47 @@
+/* Quick Links Widget */
+.quick-links-widget {
+	padding: 10px;
+
+	.quick-links-list {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	.quick-links-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+		gap: 12px;
+	}
+
+	.quick-link-item {
+		display: flex;
+		align-items: center;
+		padding: 10px 12px;
+		background: #f9f9f9;
+		border-radius: 4px;
+		text-decoration: none;
+		color: #23282d;
+		transition: background-color 0.2s ease;
+		cursor: pointer;
+
+		&:hover {
+			background: #f0f0f0;
+			text-decoration: none;
+		}
+
+		.quick-link-icon {
+			margin-right: 10px;
+			font-size: 16px;
+			width: 16px;
+			height: 16px;
+			line-height: 1;
+			color: #0073aa;
+		}
+
+		.quick-link-title {
+			font-size: 14px;
+			font-weight: 500;
+		}
+	}
+}

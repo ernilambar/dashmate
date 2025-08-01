@@ -1,3 +1,8 @@
+/* Import widget-specific styles */
+@import "./widgets/html.css";
+@import "./widgets/links.css";
+@import "./widgets/progress-circles.css";
+
 /* Dashboard App Styles */
 .dashmate-app {
 	max-width: 2200px;
@@ -250,35 +255,6 @@
 	margin-bottom: 0;
 }
 
-/* HTML Widget */
-.html-widget {
-	padding: 10px;
-}
-
-.html-content {
-	line-height: 1.6;
-}
-
-.html-content h1,
-.html-content h2,
-.html-content h3,
-.html-content h4,
-.html-content h5,
-.html-content h6 {
-	margin-top: 0;
-	margin-bottom: 10px;
-}
-
-.html-content p {
-	margin-bottom: 10px;
-}
-
-.html-content ul,
-.html-content ol {
-	margin-bottom: 10px;
-	padding-left: 20px;
-}
-
 /* Icon Box Widget */
 .iconbox-widget {
 	display: flex;
@@ -335,78 +311,6 @@
 
 .iconbox-purple .iconbox-icon .dashicons {
 	color: #8c8f94;
-}
-
-/* Progress Circles Widget */
-.progress-circles-widget {
-	padding: 10px;
-}
-
-.progress-circles-grid {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-	gap: 20px;
-	align-items: start;
-}
-
-.progress-circle-item {
-	text-align: center;
-	cursor: pointer;
-	transition: transform 0.2s ease;
-}
-
-.progress-circle-item:hover {
-	transform: scale(1.05);
-}
-
-.progress-circles-widget .progress-circle-container {
-	position: relative;
-	display: inline-block;
-	margin-bottom: 8px;
-}
-
-.progress-circles-widget .progress-circle {
-	transform: rotate(-90deg);
-}
-
-.progress-circles-widget .progress-circle-bg {
-	stroke: #e1e1e1;
-}
-
-.progress-circles-widget .progress-circle-fill {
-	transition: stroke-dashoffset 0.5s ease-in-out;
-}
-
-.progress-circles-widget .progress-circle-blue .progress-circle-fill {
-	stroke: #0073aa;
-}
-
-.progress-circles-widget .progress-circle-green .progress-circle-fill {
-	stroke: #00a32a;
-}
-
-.progress-circles-widget .progress-circle-orange .progress-circle-fill {
-	stroke: #d63638;
-}
-
-.progress-circles-widget .progress-circle-red .progress-circle-fill {
-	stroke: #d63638;
-}
-
-.progress-circles-widget .progress-circle-label {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	font-size: 14px;
-	font-weight: 600;
-	color: #23282d;
-}
-
-.progress-circles-widget .progress-circle-caption {
-	font-size: 12px;
-	color: #666;
-	margin-top: 5px;
 }
 
 .widget-no-data {
@@ -475,54 +379,6 @@
 	color: #666;
 	margin-top: 2px;
 	margin-bottom: 8px;
-}
-
-/* Quick Links Widget */
-.quick-links-widget {
-	padding: 10px;
-}
-
-.quick-links-list {
-	display: flex;
-	flex-direction: column;
-	gap: 8px;
-}
-
-.quick-links-grid {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-	gap: 12px;
-}
-
-.quick-link-item {
-	display: flex;
-	align-items: center;
-	padding: 10px 12px;
-	background: #f9f9f9;
-	border-radius: 4px;
-	text-decoration: none;
-	color: #23282d;
-	transition: background-color 0.2s ease;
-	cursor: pointer;
-}
-
-.quick-link-item:hover {
-	background: #f0f0f0;
-	text-decoration: none;
-}
-
-.quick-link-icon {
-	margin-right: 10px;
-	font-size: 16px;
-	width: 16px;
-	height: 16px;
-	line-height: 1;
-	color: #0073aa;
-}
-
-.quick-link-title {
-	font-size: 14px;
-	font-weight: 500;
 }
 
 /* Table Widget */

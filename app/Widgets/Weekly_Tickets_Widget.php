@@ -47,22 +47,29 @@ class Weekly_Tickets_Widget extends Abstract_Widget {
 
 		$circles = [
 			[
-				'percentage' => 70,
+				'percentage' => 90,
 				'value'      => 70,
 				'caption'    => 'W:43',
-				'color'      => 'blue',
+			],
+			[
+				'percentage' => 110,
+				'value'      => 110,
+				'caption'    => 'W:43',
+			],
+			[
+				'percentage' => 0,
+				'value'      => 'Zero',
+				'caption'    => 'W:43',
 			],
 			[
 				'percentage' => 45,
-				'value'      => 45,
-				'caption'    => 'W:44',
-				'color'      => 'green',
+				'value'      => '',
+				'caption'    => 'caption chha',
 			],
 			[
 				'percentage' => 85,
-				'value'      => 85,
+				'value'      => 223,
 				'caption'    => 'W:45',
-				'color'      => 'orange',
 			],
 		];
 
