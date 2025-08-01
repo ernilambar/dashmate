@@ -1,14 +1,14 @@
-/* Tabular Widget Styles */
+/* Tabular Widget Styles - Minimal Design */
 .tabular-widget {
 	padding: 0;
 }
 
 .tabular-table {
-	margin-bottom: 30px;
-	background: #fff;
-	border-radius: 8px;
-	overflow: hidden;
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	margin-bottom: 12px;
+	background: transparent;
+	border-radius: 0;
+	overflow: visible;
+	box-shadow: none;
 }
 
 .tabular-table:last-child {
@@ -16,110 +16,220 @@
 }
 
 .tabular-widget .table-title {
-	margin: 0;
-	padding: 20px 20px 15px 20px;
-	font-size: 16px;
-	font-weight: 600;
-	color: #23282d;
-	border-bottom: 1px solid #f0f0f0;
-	background: #f9f9f9;
+	margin: 0 0 8px 0;
+	padding: 0;
+	font-size: 13px;
+	font-weight: 500;
+	color: #1d2327;
+	border-bottom: none;
+	background: transparent;
+	letter-spacing: 0.01em;
 }
 
 .table-container {
 	overflow-x: auto;
+	border: 1px solid #dcdcde;
+	border-radius: 3px;
+	background: transparent;
 }
 
 .tabular-widget table {
 	width: 100%;
 	border-collapse: collapse;
 	margin: 0;
+	background: transparent;
+	table-layout: fixed;
 }
 
 .tabular-widget th {
-	background: #f9f9f9;
-	padding: 12px 16px;
+	background: transparent;
+	padding: 4px 8px;
 	text-align: left;
-	font-weight: 600;
-	font-size: 13px;
-	color: #23282d;
-	border-bottom: 1px solid #e1e1e1;
+	font-weight: 500;
+	font-size: 11px;
+	color: #1d2327;
+	border-bottom: 1px solid #dcdcde;
 	white-space: nowrap;
+	text-transform: uppercase;
+	letter-spacing: 0.02em;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .tabular-widget td {
-	padding: 12px 16px;
-	border-bottom: 1px solid #f0f0f0;
-	font-size: 13px;
-	color: #444;
+	padding: 4px 8px;
+	border-bottom: 1px solid #f0f0f1;
+	font-size: 12px;
+	color: #1d2327;
 	vertical-align: middle;
+	line-height: 1.2;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
-.tabular-widget tr:hover {
-	background: #f9f9f9;
-	cursor: pointer;
-	transition: background-color 0.2s ease;
+.tabular-widget tr:last-child td {
+	border-bottom: none;
 }
 
 .tabular-widget tr.alternate {
-	background: #fafafa;
+	background: transparent;
 }
 
-.tabular-widget tr.alternate:hover {
-	background: #f0f0f0;
+/* Column width control */
+.tabular-widget th:nth-child(1),
+.tabular-widget td:nth-child(1) {
+	width: 80px;
+	max-width: 80px;
+	min-width: 80px;
 }
 
-/* Status styling */
-.tabular-widget td:nth-child(3) {
-	font-weight: 500;
+.tabular-widget th:nth-child(2),
+.tabular-widget td:nth-child(2) {
+	width: 200px;
+	max-width: 200px;
+	min-width: 200px;
 }
 
-.tabular-widget td:nth-child(3):contains("Completed"),
-.tabular-widget td:nth-child(3):contains("Active") {
-	color: #46b450;
-}
-
-.tabular-widget td:nth-child(3):contains("Processing"),
-.tabular-widget td:nth-child(3):contains("Pending") {
-	color: #ffb900;
-}
-
-.tabular-widget td:nth-child(3):contains("Cancelled"),
-.tabular-widget td:nth-child(3):contains("Inactive") {
-	color: #dc3232;
-}
-
-/* Actions column styling */
+.tabular-widget th:last-child,
 .tabular-widget td:last-child {
-	color: #0073aa;
-	font-weight: 500;
+	width: 60px;
+	max-width: 60px;
+	min-width: 60px;
+	text-align: center;
 }
 
-.tabular-widget td:last-child:hover {
-	color: #005a87;
+/* Linked cells styling */
+.tabular-widget .cell-link {
+	color: #007cba;
+	text-decoration: none;
+	font-weight: 400;
+}
+
+/* Action buttons styling */
+.tabular-widget .table-actions {
+	display: flex;
+	gap: 3px;
+	align-items: center;
+	justify-content: center;
+}
+
+.tabular-widget .action-btn {
+	background: transparent;
+	border: none;
+	padding: 2px;
+	border-radius: 2px;
+	cursor: pointer;
+	color: #1d2327;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.tabular-widget .action-btn svg {
+	width: 12px;
+	height: 12px;
+}
+
+.tabular-widget .action-btn .dashicons {
+	font-size: 12px;
+	width: 12px;
+	height: 12px;
+	line-height: 1;
 }
 
 /* Responsive design */
 @media (max-width: 768px) {
 	.tabular-widget .table-title {
-		padding: 15px;
-		font-size: 14px;
+		font-size: 12px;
+		margin-bottom: 6px;
 	}
 
 	.tabular-widget th,
 	.tabular-widget td {
-		padding: 10px 12px;
-		font-size: 12px;
+		padding: 3px 6px;
+		font-size: 11px;
 	}
 
-	.table-container {
-		font-size: 12px;
+	.tabular-widget .action-btn {
+		padding: 1px;
+	}
+
+	.tabular-widget .action-btn svg {
+		width: 10px;
+		height: 10px;
+	}
+
+	.tabular-widget .action-btn .dashicons {
+		font-size: 10px;
+		width: 10px;
+		height: 10px;
+	}
+
+	/* Mobile column widths */
+	.tabular-widget th:nth-child(1),
+	.tabular-widget td:nth-child(1) {
+		width: 60px;
+		max-width: 60px;
+		min-width: 60px;
+	}
+
+	.tabular-widget th:nth-child(2),
+	.tabular-widget td:nth-child(2) {
+		width: 150px;
+		max-width: 150px;
+		min-width: 150px;
+	}
+
+	.tabular-widget th:last-child,
+	.tabular-widget td:last-child {
+		width: 50px;
+		max-width: 50px;
+		min-width: 50px;
 	}
 }
 
 @media (max-width: 480px) {
 	.tabular-widget th,
 	.tabular-widget td {
-		padding: 8px 10px;
-		font-size: 11px;
+		padding: 2px 4px;
+		font-size: 10px;
+	}
+
+	.table-container {
+		border-radius: 2px;
+	}
+
+	.tabular-widget .action-btn svg {
+		width: 9px;
+		height: 9px;
+	}
+
+	.tabular-widget .action-btn .dashicons {
+		font-size: 9px;
+		width: 9px;
+		height: 9px;
+	}
+
+	/* Small mobile column widths */
+	.tabular-widget th:nth-child(1),
+	.tabular-widget td:nth-child(1) {
+		width: 50px;
+		max-width: 50px;
+		min-width: 50px;
+	}
+
+	.tabular-widget th:nth-child(2),
+	.tabular-widget td:nth-child(2) {
+		width: 120px;
+		max-width: 120px;
+		min-width: 120px;
+	}
+
+	.tabular-widget th:last-child,
+	.tabular-widget td:last-child {
+		width: 40px;
+		max-width: 40px;
+		min-width: 40px;
 	}
 }
