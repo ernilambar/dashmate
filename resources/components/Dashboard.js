@@ -176,10 +176,16 @@ class Dashboard extends Component {
 		const allWidgets = dashboard?.widgets || [];
 		const columnWidgets = dashboard?.column_widgets || {};
 
+		// Determine if we should use grid layout (more than max columns)
+		const maxColumns = window.dashmateApiSettings?.config?.maxColumns || 2;
+		const shouldUseGridLayout = columns.length > maxColumns;
+		const gridClass = shouldUseGridLayout ? `grid-layout grid-${ maxColumns }` : '';
+		const dashboardContentClass = `dashboard-content${ gridClass ? ' ' + gridClass : '' }`;
+
 		return (
 			<div className="dashmate-app">
 				<DragDropContext onDragEnd={ this.handleDragEnd }>
-					<div className="dashboard-content">
+					<div className={ dashboardContentClass }>
 						{ columns.length > 0 ? (
 							columns.map( ( column ) => {
 								// Get widgets for this column using column_widgets structure
