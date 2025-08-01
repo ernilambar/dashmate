@@ -41,10 +41,29 @@ class ProgressCirclesWidget extends React.Component {
 		const { percentage, value, caption } = item;
 
 		const currentValue = currentValues[ index ] || 0;
-		const radius = 40;
+
+		// Responsive radius calculation - smaller circles for smaller containers
+		const baseRadius = 40;
+		const minRadius = 25;
+		const maxRadius = 50;
+
+		// Calculate responsive radius based on container width
+		const containerWidth = this.props.containerWidth || 400; // Default fallback
+		const responsiveRadius = Math.max( minRadius, Math.min( maxRadius, containerWidth / 12 ) );
+
+		const radius = responsiveRadius;
 		const circumference = 2 * Math.PI * radius;
 		const strokeDasharray = circumference;
 		const strokeDashoffset = circumference - ( currentValue / 100 ) * circumference;
+
+		// Calculate responsive stroke width based on radius
+		const minStrokeWidth = 2;
+		const maxStrokeWidth = 8;
+		const strokeWidth = Math.max( minStrokeWidth, Math.min( maxStrokeWidth, radius / 8 ) );
+
+		// Calculate SVG size based on radius
+		const svgSize = radius * 2 + 20; // Add padding
+		const center = svgSize / 2;
 
 		return (
 			<div
@@ -53,28 +72,28 @@ class ProgressCirclesWidget extends React.Component {
 				onClick={ () => this.handleCircleClick( index, item ) }
 			>
 				<div className="progress-circle-container">
-					<svg className="progress-circle" width="100" height="100">
+					<svg className="progress-circle" width={ svgSize } height={ svgSize }>
 						<circle
 							className="progress-circle-bg"
-							cx="50"
-							cy="50"
+							cx={ center }
+							cy={ center }
 							r={ radius }
 							fill="none"
 							stroke="#f0f0f0"
-							strokeWidth="6"
+							strokeWidth={ strokeWidth }
 						/>
 						<circle
 							className="progress-circle-fill"
-							cx="50"
-							cy="50"
+							cx={ center }
+							cy={ center }
 							r={ radius }
 							fill="none"
 							stroke="currentColor"
-							strokeWidth="6"
+							strokeWidth={ strokeWidth }
 							strokeDasharray={ strokeDasharray }
 							strokeDashoffset={ strokeDashoffset }
 							strokeLinecap="round"
-							transform="rotate(-90 50 50)"
+							transform={ `rotate(-90 ${ center } ${ center })` }
 						/>
 					</svg>
 					{ value && <div className="progress-circle-label">{ value }</div> }

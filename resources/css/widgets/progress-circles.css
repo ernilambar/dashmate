@@ -9,7 +9,7 @@
 	}
 
 	.progress-circle {
-		transform: rotate(-90deg);
+		/* Remove transform as it's handled in JS */
 	}
 
 	.progress-circle-bg {
@@ -35,18 +35,63 @@
 		font-size: 12px;
 		color: #666;
 		margin-top: 5px;
+		text-align: center;
+		word-wrap: break-word;
 	}
 }
 
 .progress-circles-grid {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-	gap: 20px;
+	grid-template-columns: repeat(4, 1fr); /* Always 4 columns */
+	gap: 10px;
 	align-items: start;
+	width: 100%;
 }
 
 .progress-circle-item {
 	text-align: center;
 	cursor: pointer;
 	transition: transform 0.2s ease;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	min-height: 80px;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+	.progress-circles-grid {
+		gap: 8px;
+	}
+
+	.progress-circle-item {
+		min-height: 60px;
+	}
+
+	.progress-circle-label {
+		font-size: 12px;
+	}
+
+	.progress-circle-caption {
+		font-size: 10px;
+	}
+}
+
+@media (max-width: 480px) {
+	.progress-circles-grid {
+		gap: 5px;
+	}
+
+	.progress-circle-item {
+		min-height: 50px;
+	}
+
+	.progress-circle-label {
+		font-size: 10px;
+	}
+
+	.progress-circle-caption {
+		font-size: 9px;
+	}
 }
