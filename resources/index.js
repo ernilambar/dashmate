@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client';
-import './css/main.css';
+import './css/index.css';
 import Dashboard from './components/Dashboard';
 
 document.addEventListener( 'DOMContentLoaded', () => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import WidgetSettingsForm from '../WidgetSettingsForm';
 
-class QuickLinksWidget extends React.Component {
+class Links extends React.Component {
 	constructor( props ) {
 		super( props );
 		this.state = {
@@ -94,4 +94,4 @@ class QuickLinksWidget extends React.Component {
 	}
 }
 
-export default QuickLinksWidget;
+export default Links;

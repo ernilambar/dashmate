@@ -1,0 +1,6 @@
+/* General styles */
+@import "./general.css";
+/* Import widget-specific styles */
+@import "./widgets/html.css";
+@import "./widgets/links.css";
+@import "./widgets/progress-circles.css";

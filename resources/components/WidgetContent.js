@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import HtmlWidget from './widgets/HtmlWidget';
 // import IconboxWidget from './widgets/IconboxWidget'; // For reference
 import ProgressCirclesWidget from './widgets/ProgressCirclesWidget';
-import QuickLinksWidget from './widgets/QuickLinksWidget';
+import Links from './widgets/Links';
 // import TabularWidget from './widgets/TabularWidget'; // For reference
 
 class WidgetContent extends Component {
@@ -75,7 +75,7 @@ class WidgetContent extends Component {
 			case 'html':
 				return <HtmlWidget widgetId={ widget.id } data={ data } />;
 			case 'links':
-				return <QuickLinksWidget widgetId={ widget.id } data={ data } />;
+				return <Links widgetId={ widget.id } data={ data } />;
 			case 'progress-circles':
 				return <ProgressCirclesWidget widgetId={ widget.id } data={ data } />;
 			// case 'iconbox':
