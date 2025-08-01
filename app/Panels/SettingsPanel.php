@@ -40,17 +40,15 @@ class SettingsPanel extends Abstract_Panel {
 	public function get_field_configuration() {
 		return [
 			[
-				'name'    => 'page_heading',
-				'label'   => esc_html__( 'Heading', 'dashmate' ),
-				'type'    => 'text',
-				'default' => Option::defaults( 'page_heading' ),
-			],
-			[
-				'name'    => 'columns_number',
+				'name'    => 'max_columns',
 				'label'   => esc_html__( 'Columns Number', 'dashmate' ),
 				'type'    => 'buttonset',
-				'default' => Option::defaults( 'columns_number' ),
+				'default' => Option::defaults( 'max_columns' ),
 				'choices' => [
+					[
+						'label' => 'One',
+						'value' => '1',
+					],
 					[
 						'label' => 'Two',
 						'value' => '2',

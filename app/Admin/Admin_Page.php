@@ -7,6 +7,7 @@
 
 namespace Nilambar\Dashmate\Admin;
 
+use Nilambar\Dashmate\Core\Option;
 use Nilambar\Dashmate\Panels\SettingsPanel;
 use Nilambar\Optify\Optify;
 use Nilambar\Optify\Panel_Manager;
@@ -109,6 +110,9 @@ class Admin_Page {
 				[
 					'nonce'   => wp_create_nonce( 'wp_rest' ),
 					'restUrl' => rest_url( 'dashmate/v1/' ),
+					'config'  => [
+						'maxColumns' => absint( Option::get( 'max_columns' ) ),
+					],
 				]
 			);
 		}

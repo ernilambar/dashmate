@@ -54,9 +54,7 @@ class Option {
 		return apply_filters(
 			'dashmate_option_defaults',
 			[
-				'page_heading'   => esc_html__( 'Dashboard', 'dashmate' ),
-				'columns_number' => '2',
-
+				'max_columns' => '3',
 			]
 		);
 	}
