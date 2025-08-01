@@ -99,38 +99,33 @@ class Admin_Page {
 			return;
 		}
 
+		// Load app assets.
 		$asset_file_name = DASHMATE_DIR . '/assets/index.asset.php';
 
-		if ( ! file_exists( $asset_file_name ) ) {
-			return;
+		if ( file_exists( $asset_file_name ) ) {
+			$asset_file = include $asset_file_name;
+
+			wp_enqueue_style( 'dashmate-main', DASHMATE_URL . '/assets/index.css', [], $asset_file['version'] );
+			wp_enqueue_script( 'dashmate-main', DASHMATE_URL . '/assets/index.js', $asset_file['dependencies'], $asset_file['version'], true );
+			wp_localize_script(
+				'dashmate-main',
+				'dashmateApiSettings',
+				[
+					'nonce'   => wp_create_nonce( 'wp_rest' ),
+					'restUrl' => rest_url( 'dashmate/v1/' ),
+				]
+			);
 		}
 
-		$asset_file = include $asset_file_name;
+		// Load common assets.
+		$asset_file_name = DASHMATE_DIR . '/assets/common.asset.php';
 
-		wp_enqueue_style(
-			'dashmate-main',
-			DASHMATE_URL . '/assets/index.css',
-			[],
-			$asset_file['version']
-		);
+		if ( file_exists( $asset_file_name ) ) {
+			$asset_file = include $asset_file_name;
 
-		wp_enqueue_script(
-			'dashmate-main',
-			DASHMATE_URL . '/assets/index.js',
-			$asset_file['dependencies'],
-			$asset_file['version'],
-			true
-		);
-
-		// Localize script with API settings.
-		wp_localize_script(
-			'dashmate-main',
-			'dashmateApiSettings',
-			[
-				'nonce'   => wp_create_nonce( 'wp_rest' ),
-				'restUrl' => rest_url( 'dashmate/v1/' ),
-			]
-		);
+			wp_enqueue_style( 'dashmate-common', DASHMATE_URL . '/assets/common.css', [ 'linkit-main' ], $asset_file['version'] );
+			wp_enqueue_script( 'dashmate-common', DASHMATE_URL . '/assets/common.js', $asset_file['dependencies'], $asset_file['version'], true );
+		}
 	}
 
 	protected function render_review_links() {
@@ -147,7 +142,7 @@ class Admin_Page {
 		}
 
 		// Add Open Links button.
-		echo '<a href="#" class="button button-secondary" style="margin-left: 10px;">Open Links</a>';
+		echo '<a href="#" id="btn-dm-open-links" class="button button-secondary">Open Links</a>';
 
 		echo '<div class="linkit-menu-links-container">';
 
@@ -155,7 +150,7 @@ class Admin_Page {
 			$icon = ( array_key_exists( 'icon', $link ) && ! empty( $link['icon'] ) ) ? $link['icon'] : 'external';
 
 			echo '<a class="linkit-menu-link linkit-qlink-item" href="' . esc_url( $link['url'] ) . '" target="_blank">';
-			echo '<span class="linkit-qlink-item"><span class="linkit-qlink-icon">' . Linkit_Icon::get( $icon ) . '</span><span class="linkit-qlink-title">' . esc_html( $link['title'] ) . '</span></span>';
+			echo '<span class="linkit-qlink-item"><span class="linkit-qlink-icon linkit-qlink-icon-' . esc_attr( $icon ) . '">' . Linkit_Icon::get( $icon ) . '</span><span class="linkit-qlink-title">' . esc_html( $link['title'] ) . '</span></span>';
 			echo '</a>';
 		}
 
