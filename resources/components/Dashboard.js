@@ -21,7 +21,7 @@ class Dashboard extends Component {
 
 	async loadDashboard() {
 		try {
-			const response = await fetch( '/wp-json/dashmate/v1/dashboard', {
+			const response = await fetch( `${ dashmateApiSettings.restUrl }dashboard`, {
 				headers: {
 					'X-WP-Nonce': dashmateApiSettings?.nonce || '',
 				},
@@ -40,7 +40,7 @@ class Dashboard extends Component {
 
 	async loadWidgets() {
 		try {
-			const response = await fetch( '/wp-json/dashmate/v1/widgets', {
+			const response = await fetch( `${ dashmateApiSettings.restUrl }widgets`, {
 				headers: {
 					'X-WP-Nonce': dashmateApiSettings?.nonce || '',
 				},
@@ -57,7 +57,7 @@ class Dashboard extends Component {
 
 	async saveDashboard( dashboardData ) {
 		try {
-			const response = await fetch( '/wp-json/dashmate/v1/dashboard', {
+			const response = await fetch( `${ dashmateApiSettings.restUrl }dashboard`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -123,7 +123,7 @@ class Dashboard extends Component {
 
 		// Save the new order to the server using column_widgets structure
 		try {
-			const response = await fetch( '/wp-json/dashmate/v1/dashboard/reorder', {
+			const response = await fetch( `${ dashmateApiSettings.restUrl }dashboard/reorder`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -178,9 +178,6 @@ class Dashboard extends Component {
 
 		return (
 			<div className="dashmate-app">
-				<div className="dashboard-header">
-					<h1>{ __( 'Dashmate Dashboard', 'dashmate' ) }</h1>
-				</div>
 				<DragDropContext onDragEnd={ this.handleDragEnd }>
 					<div className="dashboard-content">
 						{ columns.length > 0 ? (

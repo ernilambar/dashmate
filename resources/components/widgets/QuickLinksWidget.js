@@ -31,7 +31,7 @@ class QuickLinksWidget extends React.Component {
 
 	fetchWidgetSchemas = async () => {
 		try {
-			const response = await fetch( '/wp-json/dashmate/v1/widgets' );
+			const response = await fetch( `${ dashmateApiSettings.restUrl }widgets` );
 			const result = await response.json();
 
 			if ( result.success ) {

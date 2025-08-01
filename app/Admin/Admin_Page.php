@@ -41,7 +41,10 @@ class Admin_Page {
 			'manage_options',
 			'dashmate',
 			function () {
-				echo '<div class="wrap"><div id="dashmate-app">Loading...</div></wrap>';
+				echo '<div class="wrap">';
+				echo '<h1>' . esc_html__( 'Dashmate', 'dashmate' ) . '</h1>';
+				echo '<div id="dashmate-app">Loading...</div>';
+				echo '</wrap>';
 			}
 		);
 
@@ -52,10 +55,11 @@ class Admin_Page {
 			'dashmate-settings',
 			function () {
 				echo '<div class="wrap">';
+				echo '<h1>' . esc_html__( 'Dashmate Settings', 'dashmate' ) . '</h1>';
 				Panel_Manager::render_panel(
 					'dashmate-settings',
 					[
-						'show_title' => true,
+						'show_title' => false,
 						'display'    => 'inline',
 					]
 				);
@@ -119,8 +123,8 @@ class Admin_Page {
 			'dashmate-main',
 			'dashmateApiSettings',
 			[
-				'nonce' => wp_create_nonce( 'wp_rest' ),
-				'root'  => esc_url_raw( rest_url() ),
+				'nonce'   => wp_create_nonce( 'wp_rest' ),
+				'restUrl' => rest_url( 'dashmate/v1/' ),
 			]
 		);
 	}

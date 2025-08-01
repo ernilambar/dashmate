@@ -22,11 +22,14 @@ class Widget extends Component {
 		const { widget } = this.props;
 
 		try {
-			const response = await fetch( `/wp-json/dashmate/v1/widgets/${ widget.id }/data`, {
-				headers: {
-					'X-WP-Nonce': dashmateApiSettings?.nonce || '',
-				},
-			} );
+			const response = await fetch(
+				`${ dashmateApiSettings.restUrl }widgets/${ widget.id }/data`,
+				{
+					headers: {
+						'X-WP-Nonce': dashmateApiSettings?.nonce || '',
+					},
+				}
+			);
 			const data = await response.json();
 
 			if ( data.success ) {
@@ -139,7 +142,7 @@ class Widget extends Component {
 
 		try {
 			const response = await fetch(
-				`/wp-json/dashmate/v1/widgets/${ this.props.widget.id }/settings`,
+				`${ dashmateApiSettings.restUrl }widgets/${ this.props.widget.id }/settings`,
 				{
 					method: 'POST',
 					headers: {
