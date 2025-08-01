@@ -34,10 +34,20 @@ class Loader {
 			}
 		);
 
-		Widget_Initializer::init();
+		// Initialize widgets after init hook to ensure text domain is loaded.
+		add_action( 'init', [ $this, 'init_widgets' ] );
 
 		new API_Main();
 		new Admin_Page();
+	}
+
+	/**
+	 * Initialize widgets.
+	 *
+	 * @since 1.0.0
+	 */
+	public function init_widgets() {
+		Widget_Initializer::init();
 	}
 
 	/**
