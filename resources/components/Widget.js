@@ -11,6 +11,8 @@ class Widget extends Component {
 			widgetData: null,
 			loading: true,
 			showSettings: false,
+			reloading: false,
+			fadeState: 'normal', // 'normal', 'fading', 'faded'
 		};
 	}
 
@@ -22,6 +24,15 @@ class Widget extends Component {
 		const { widget } = this.props;
 
 		try {
+			// Start fade out
+			this.setState( { reloading: true, fadeState: 'fading' } );
+
+			// Wait a bit for fade out animation
+			await new Promise( ( resolve ) => setTimeout( resolve, 150 ) );
+
+			// Set to faded state
+			this.setState( { fadeState: 'faded' } );
+
 			const response = await fetch(
 				`${ dashmateApiSettings.restUrl }widgets/${ widget.id }/data`,
 				{
@@ -37,13 +48,23 @@ class Widget extends Component {
 			} else {
 				this.setState( { loading: false } );
 			}
+
+			// Fade back in
+			this.setState( { fadeState: 'fading' } );
+			await new Promise( ( resolve ) => setTimeout( resolve, 150 ) );
+			this.setState( { reloading: false, fadeState: 'normal' } );
 		} catch ( error ) {
-			this.setState( { loading: false } );
+			this.setState( { loading: false, reloading: false, fadeState: 'normal' } );
 		}
 	}
 
+	handleReload = () => {
+		this.loadWidgetData();
+	};
+
 	renderErrorWidget( error ) {
 		const { widget, index } = this.props;
+		const { fadeState } = this.state;
 
 		return (
 			<Draggable draggableId={ widget.id } index={ index }>
@@ -62,7 +83,11 @@ class Widget extends Component {
 								Widget Error
 							</h3>
 						</div>
-						<div className="widget-content">
+						<div
+							className={ `widget-content ${
+								fadeState !== 'normal' ? fadeState : ''
+							}` }
+						>
 							<div className="widget-error-message">
 								<p>
 									<strong>Error:</strong> { error.message }
@@ -80,7 +105,7 @@ class Widget extends Component {
 
 	renderBasicWidget() {
 		const { widget, widgets, index } = this.props;
-		const { collapsed, showSettings } = this.state;
+		const { collapsed, showSettings, fadeState } = this.state;
 
 		return (
 			<Draggable draggableId={ widget.id } index={ index }>
@@ -113,7 +138,11 @@ class Widget extends Component {
 							</div>
 						</div>
 						{ ! collapsed && (
-							<div className="widget-content">
+							<div
+								className={ `widget-content ${
+									fadeState !== 'normal' ? fadeState : ''
+								}` }
+							>
 								<div className="widget-basic-message">
 									<p>Widget configuration not available.</p>
 									<p>Check console for details.</p>
@@ -170,7 +199,7 @@ class Widget extends Component {
 
 	render() {
 		const { widget, widgets, index } = this.props;
-		const { collapsed, widgetData, loading, showSettings } = this.state;
+		const { collapsed, widgetData, loading, showSettings, reloading, fadeState } = this.state;
 
 		// Show loading state while data is being fetched
 		if ( loading ) {
@@ -242,6 +271,22 @@ class Widget extends Component {
 								{ widgetTitle }
 							</h3>
 							<div className="widget-actions">
+								{ ! collapsed && (
+									<button
+										className={ `button button-small widget-reload ${
+											reloading ? 'reloading' : ''
+										}` }
+										onClick={ this.handleReload }
+										title="Reload Widget"
+										disabled={ reloading }
+									>
+										<span
+											className={ `dashicons dashicons-${
+												reloading ? 'update-alt' : 'update'
+											}` }
+										></span>
+									</button>
+								) }
 								{ ! collapsed &&
 									widgets[ widgetType ]?.settings_schema &&
 									Object.keys( widgets[ widgetType ].settings_schema ).length >
@@ -268,7 +313,11 @@ class Widget extends Component {
 							</div>
 						</div>
 						{ ! collapsed && (
-							<div className="widget-content">
+							<div
+								className={ `widget-content ${
+									fadeState !== 'normal' ? fadeState : ''
+								}` }
+							>
 								{ showSettings &&
 									widgets[ widgetType ]?.settings_schema &&
 									Object.keys( widgets[ widgetType ].settings_schema ).length >
