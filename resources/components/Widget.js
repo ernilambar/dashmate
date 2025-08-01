@@ -75,6 +75,54 @@ class Widget extends Component {
 		);
 	}
 
+	renderBasicWidget() {
+		const { widget, widgets, index } = this.props;
+		const { collapsed, showSettings } = this.state;
+
+		return (
+			<Draggable draggableId={ widget.id } index={ index }>
+				{ ( provided, snapshot ) => (
+					<div
+						className={ `widget widget-basic ${
+							collapsed ? 'collapsed' : ''
+						} ${ snapshot.isDragging ? 'dragging' : '' }` }
+						ref={ provided.innerRef }
+						{ ...provided.draggableProps }
+						{ ...provided.dragHandleProps }
+					>
+						<div className="widget-header">
+							<h3>
+								<span className="dashicons dashicons-admin-generic"></span>
+								{ widget.id }
+							</h3>
+							<div className="widget-actions">
+								<button
+									className="button button-small widget-toggle"
+									onClick={ this.toggleCollapse }
+									title={ collapsed ? 'Expand' : 'Collapse' }
+								>
+									<span
+										className={ `dashicons dashicons-${
+											collapsed ? 'arrow-down-alt2' : 'arrow-up-alt2'
+										}` }
+									></span>
+								</button>
+							</div>
+						</div>
+						{ ! collapsed && (
+							<div className="widget-content">
+								<div className="widget-basic-message">
+									<p>Widget configuration not available.</p>
+									<p>Check console for details.</p>
+								</div>
+							</div>
+						) }
+					</div>
+				) }
+			</Draggable>
+		);
+	}
+
 	toggleCollapse = () => {
 		this.setState( ( prevState ) => ( {
 			collapsed: ! prevState.collapsed,
@@ -121,6 +169,33 @@ class Widget extends Component {
 		const { widget, widgets, index } = this.props;
 		const { collapsed, widgetData, loading, showSettings } = this.state;
 
+		// Show loading state while data is being fetched
+		if ( loading ) {
+			return (
+				<Draggable draggableId={ widget.id } index={ index }>
+					{ ( provided, snapshot ) => (
+						<div
+							className={ `widget widget-loading ${
+								snapshot.isDragging ? 'dragging' : ''
+							}` }
+							ref={ provided.innerRef }
+							{ ...provided.draggableProps }
+							{ ...provided.dragHandleProps }
+						>
+							<div className="widget-header">
+								<h3>Loading...</h3>
+							</div>
+							<div className="widget-content">
+								<div className="widget-loading">
+									<p>Loading widget data...</p>
+								</div>
+							</div>
+						</div>
+					) }
+				</Draggable>
+			);
+		}
+
 		// Get widget type from API response instead of guessing from ID
 		const widgetType = widgetData?.type;
 		const widgetTitle = widgetData?.title || widget.id;
@@ -128,19 +203,19 @@ class Widget extends Component {
 
 		// Validate that we have a widget type and it's supported
 		if ( ! widgetType ) {
-			return this.renderErrorWidget(
-				new Error( `No widget type found for widget: ${ widget.id }` )
-			);
+			console.warn( `No widget type found for widget: ${ widget.id }` );
+			// Fallback to a basic widget display
+			return this.renderBasicWidget();
 		}
 
 		if ( ! widgets || ! widgets[ widgetType ] ) {
-			return this.renderErrorWidget(
-				new Error(
-					`Widget type '${ widgetType }' is not registered. Available types: ${ Object.keys(
-						widgets || {}
-					).join( ', ' ) }`
-				)
+			console.warn(
+				`Widget type '${ widgetType }' is not registered. Available types: ${ Object.keys(
+					widgets || {}
+				).join( ', ' ) }`
 			);
+			// Fallback to a basic widget display
+			return this.renderBasicWidget();
 		}
 
 		return (

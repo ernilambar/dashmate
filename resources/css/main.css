@@ -197,6 +197,15 @@
 	color: #666;
 }
 
+.widget-loading .widget-header {
+	background: #f8f9fa;
+	border-color: #dee2e6;
+}
+
+.widget-loading .widget-header h3 {
+	color: #6c757d;
+}
+
 .widget-error {
 	color: #d63638;
 }
@@ -223,6 +232,34 @@
 }
 
 .widget-error-message p:last-child {
+	margin-bottom: 0;
+}
+
+/* Basic Widget (Fallback) */
+.widget-basic .widget-header {
+	background: #f8f9fa;
+	border-color: #dee2e6;
+}
+
+.widget-basic .widget-header h3 {
+	color: #6c757d;
+}
+
+.widget-basic-message {
+	padding: 15px;
+	background: #f8f9fa;
+	border: 1px solid #dee2e6;
+	border-radius: 4px;
+	text-align: center;
+}
+
+.widget-basic-message p {
+	margin: 0 0 5px 0;
+	font-size: 13px;
+	color: #6c757d;
+}
+
+.widget-basic-message p:last-child {
 	margin-bottom: 0;
 }
 
