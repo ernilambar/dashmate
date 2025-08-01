@@ -27,7 +27,7 @@ class Weekly_Tickets_Widget extends Abstract_Widget {
 	 * @param string $id Widget instance ID.
 	 */
 	public function __construct( $id ) {
-		parent::__construct( $id, 'progress-circles', 'Weekly Tickets' );
+		parent::__construct( $id, 'progress-circles', esc_html__( 'Weekly Tickets', 'dashmate' ) );
 
 		$this->description = 'Display progress circles';
 		$this->icon        = 'feedback';

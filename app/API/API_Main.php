@@ -24,9 +24,6 @@ class API_Main {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-		// Initialize widget registry before registering API routes.
-		Widget_Registry::init();
-
 		$this->init_controllers();
 	}
 
