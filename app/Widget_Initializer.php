@@ -92,6 +92,14 @@ class Widget_Initializer {
 					'linkStyle' => 'list',
 				],
 			],
+			[
+				'id'        => 'weekly-tickets',
+				'column_id' => 'col-3',
+				'position'  => 1,
+				'settings'  => [
+					'hideCaption' => false,
+				],
+			],
 		];
 	}
 
@@ -106,7 +114,7 @@ class Widget_Initializer {
 		return [
 			'col-1' => [ 'welcome-html-1' ],
 			'col-2' => [ 'quick-links-1' ],
-			'col-3' => [],
+			'col-3' => [ 'weekly-tickets' ],
 		];
 	}
 

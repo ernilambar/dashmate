@@ -24,7 +24,7 @@ class Widget_Blueprint_Manager {
 	 * @var array
 	 */
 	private static $widget_blueprints = [
-		'html'  => [
+		'html'             => [
 			'name'            => 'HTML Widget',
 			'description'     => 'Display HTML content',
 			'icon'            => 'editor-code',
@@ -37,7 +37,7 @@ class Widget_Blueprint_Manager {
 				],
 			],
 		],
-		'links' => [
+		'links'            => [
 			'name'            => 'Links Widget',
 			'description'     => 'Display quick access links',
 			'icon'            => 'admin-links',
@@ -69,6 +69,26 @@ class Widget_Blueprint_Manager {
 					'type'        => 'array',
 					'required'    => true,
 					'description' => 'Array of link objects',
+				],
+			],
+		],
+		'progress-circles' => [
+			'name'            => 'Progress Circles Widget',
+			'description'     => 'Display progress circles',
+			'icon'            => 'feedback',
+			'settings_schema' => [
+				'hideCaption' => [
+					'type'        => 'checkbox',
+					'label'       => 'Hide Caption',
+					'description' => 'Hide circle caption',
+					'default'     => false,
+				],
+			],
+			'output_schema'   => [
+				'items' => [
+					'type'        => 'array',
+					'required'    => true,
+					'description' => 'Array of circle objects',
 				],
 			],
 		],

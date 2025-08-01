@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Nilambar\Dashmate;
 
 use Nilambar\Dashmate\Widgets\Quick_Links_Widget;
+use Nilambar\Dashmate\Widgets\Weekly_Tickets_Widget;
 use Nilambar\Dashmate\Widgets\Welcome_HTML_Widget;
 
 /**
@@ -34,9 +35,10 @@ class Widget_Registry {
 	 * @since 1.0.0
 	 */
 	private static function register_default_widgets() {
-		// Register widget instances (each with their own ID).
+		// Register widget instances.
 		Widget_Dispatcher::register_widget( new Welcome_HTML_Widget( 'welcome-html-1' ) );
 		Widget_Dispatcher::register_widget( new Quick_Links_Widget( 'quick-links-1' ) );
+		Widget_Dispatcher::register_widget( new Weekly_Tickets_Widget( 'weekly-tickets' ) );
 	}
 
 	/**

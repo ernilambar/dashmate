@@ -337,60 +337,90 @@
 	color: #8c8f94;
 }
 
-/* Progress Circle Widget */
-.progress-circle-widget {
-	text-align: center;
-	padding: 20px;
+/* Progress Circles Widget */
+.progress-circles-widget {
+	padding: 10px;
 }
 
-.progress-circle-container {
+.progress-circles-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+	gap: 20px;
+	align-items: start;
+}
+
+.progress-circle-item {
+	text-align: center;
+	cursor: pointer;
+	transition: transform 0.2s ease;
+}
+
+.progress-circle-item:hover {
+	transform: scale(1.05);
+}
+
+.progress-circles-widget .progress-circle-container {
 	position: relative;
 	display: inline-block;
-	margin-bottom: 15px;
+	margin-bottom: 8px;
 }
 
-.progress-circle {
+.progress-circles-widget .progress-circle {
 	transform: rotate(-90deg);
 }
 
-.progress-circle-bg {
+.progress-circles-widget .progress-circle-bg {
 	stroke: #e1e1e1;
 }
 
-.progress-circle-fill {
+.progress-circles-widget .progress-circle-fill {
 	transition: stroke-dashoffset 0.5s ease-in-out;
 }
 
-.progress-circle-blue .progress-circle-fill {
+.progress-circles-widget .progress-circle-blue .progress-circle-fill {
 	stroke: #0073aa;
 }
 
-.progress-circle-green .progress-circle-fill {
+.progress-circles-widget .progress-circle-green .progress-circle-fill {
 	stroke: #00a32a;
 }
 
-.progress-circle-orange .progress-circle-fill {
+.progress-circles-widget .progress-circle-orange .progress-circle-fill {
 	stroke: #d63638;
 }
 
-.progress-circle-red .progress-circle-fill {
+.progress-circles-widget .progress-circle-red .progress-circle-fill {
 	stroke: #d63638;
 }
 
-.progress-circle-label {
+.progress-circles-widget .progress-circle-label {
 	position: absolute;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	font-size: 18px;
+	font-size: 14px;
 	font-weight: 600;
 	color: #23282d;
 }
 
-.progress-circle-caption {
-	font-size: 14px;
+.progress-circles-widget .progress-circle-caption {
+	font-size: 12px;
 	color: #666;
-	margin-top: 10px;
+	margin-top: 5px;
+}
+
+.widget-no-data {
+	text-align: center;
+	padding: 20px;
+	color: #666;
+	background: #f8f9fa;
+	border: 1px solid #dee2e6;
+	border-radius: 4px;
+}
+
+.widget-no-data p {
+	margin: 0;
+	font-size: 14px;
 }
 
 /* Widget Settings Panel */
