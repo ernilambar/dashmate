@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import { __ } from '@wordpress/i18n';
+import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 import Column from './Column';
 
 class Dashboard extends Component {
@@ -80,6 +81,73 @@ class Dashboard extends Component {
 		}
 	}
 
+	handleDragEnd = async ( result ) => {
+		const { source, destination, draggableId } = result;
+
+		// If dropped outside a droppable area or no movement
+		if (
+			! destination ||
+			( source.droppableId === destination.droppableId && source.index === destination.index )
+		) {
+			return;
+		}
+
+		const { dashboard } = this.state;
+		if ( ! dashboard ) {
+			return;
+		}
+
+		// Create a copy of the dashboard data
+		const updatedDashboard = { ...dashboard };
+		const updatedColumnWidgets = { ...updatedDashboard.column_widgets };
+
+		// Remove widget from source column
+		if ( updatedColumnWidgets[ source.droppableId ] ) {
+			updatedColumnWidgets[ source.droppableId ] = updatedColumnWidgets[ source.droppableId ].filter(
+				( widgetId ) => widgetId !== draggableId
+			);
+		}
+
+		// Add widget to destination column at the correct position
+		if ( ! updatedColumnWidgets[ destination.droppableId ] ) {
+			updatedColumnWidgets[ destination.droppableId ] = [];
+		}
+
+		updatedColumnWidgets[ destination.droppableId ].splice( destination.index, 0, draggableId );
+
+		// Update the column_widgets in dashboard
+		updatedDashboard.column_widgets = updatedColumnWidgets;
+
+		// Update state immediately for UI responsiveness
+		this.setState( { dashboard: updatedDashboard } );
+
+		// Save the new order to the server using column_widgets structure
+		try {
+			const response = await fetch( '/wp-json/dashmate/v1/dashboard/reorder', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'X-WP-Nonce': dashmateApiSettings?.nonce || '',
+				},
+				body: JSON.stringify( {
+					column_widgets: updatedColumnWidgets,
+				} ),
+			} );
+
+			const data = await response.json();
+
+			if ( ! data.success ) {
+				console.error( 'Failed to save widget positions:', data );
+				// Reload dashboard to revert changes
+				this.loadDashboard();
+			}
+		} catch ( error ) {
+			console.error( 'Error saving widget positions:', error );
+			// Reload dashboard to revert changes
+			this.loadDashboard();
+		}
+	};
+
 	render() {
 		const { dashboard, widgets, loading, error } = this.state;
 
@@ -106,35 +174,39 @@ class Dashboard extends Component {
 		// Get columns from the new structure
 		const columns = dashboard?.layout?.columns || [];
 		const allWidgets = dashboard?.widgets || [];
+		const columnWidgets = dashboard?.column_widgets || {};
 
 		return (
 			<div className="dashmate-app">
 				<div className="dashboard-header">
 					<h1>{ __( 'Dashmate Dashboard', 'dashmate' ) }</h1>
 				</div>
-				<div className="dashboard-content">
-					{ columns.length > 0 ? (
-						columns.map( ( column ) => {
-							// Get widgets for this column
-							const columnWidgets = allWidgets
-								.filter( ( widget ) => widget.column_id === column.id )
-								.sort( ( a, b ) => ( a.position || 0 ) - ( b.position || 0 ) );
+				<DragDropContext onDragEnd={ this.handleDragEnd }>
+					<div className="dashboard-content">
+						{ columns.length > 0 ? (
+							columns.map( ( column ) => {
+								// Get widgets for this column using column_widgets structure
+								const columnWidgetIds = columnWidgets[ column.id ] || [];
+								const columnWidgetsList = columnWidgetIds.map( ( widgetId ) => {
+									return allWidgets.find( ( widget ) => widget.id === widgetId );
+								} ).filter( Boolean );
 
-							return (
-								<Column
-									key={ column.id }
-									column={ column }
-									widgets={ widgets }
-									columnWidgets={ columnWidgets }
-								/>
-							);
-						} )
-					) : (
-						<div className="empty-dashboard">
-							<p>No dashboard columns found</p>
-						</div>
-					) }
-				</div>
+								return (
+									<Column
+										key={ column.id }
+										column={ column }
+										widgets={ widgets }
+										columnWidgets={ columnWidgetsList }
+									/>
+								);
+							} )
+						) : (
+							<div className="empty-dashboard">
+								<p>No dashboard columns found</p>
+							</div>
+						) }
+					</div>
+				</DragDropContext>
 			</div>
 		);
 	}

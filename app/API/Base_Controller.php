@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Nilambar\Dashmate\API;
 
+use Nilambar\Dashmate\Widget_Initializer;
 use WP_Error;
 use WP_REST_Response;
 
@@ -94,7 +95,7 @@ abstract class Base_Controller {
 				 * @return bool
 				 */
 	public function check_permissions() {
-		// Temporarily allow all requests for testing.
+		// Allow all requests for development.
 		return true;
 	}
 
@@ -150,12 +151,40 @@ abstract class Base_Controller {
 		$data = get_option( 'dashmate_dashboard_data', null );
 
 		if ( null === $data ) {
-			return $this->get_default_dashboard_data();
+			// Trigger Widget_Initializer to create default data.
+			Widget_Initializer::create_default_widgets();
+
+			// Get the data again after initialization.
+			$data = get_option( 'dashmate_dashboard_data', null );
+
+			if ( null === $data ) {
+				return [
+					'layout'         => [
+						'columns' => [],
+					],
+					'widgets'        => [],
+					'column_widgets' => [],
+				];
+			}
 		}
 
 		// Ensure we always return the new structure.
 		if ( ! isset( $data['layout'] ) || ! isset( $data['widgets'] ) ) {
-			return $this->get_default_dashboard_data();
+			// Trigger Widget_Initializer to create default data.
+			Widget_Initializer::create_default_widgets();
+
+			// Get the data again after initialization.
+			$data = get_option( 'dashmate_dashboard_data', null );
+
+			if ( null === $data || ! isset( $data['layout'] ) || ! isset( $data['widgets'] ) ) {
+				return [
+					'layout'         => [
+						'columns' => [],
+					],
+					'widgets'        => [],
+					'column_widgets' => [],
+				];
+			}
 		}
 
 		return $data;
@@ -170,39 +199,11 @@ abstract class Base_Controller {
 	 */
 	protected function get_default_dashboard_data() {
 		return [
-			'layout'  => [
-				'columns' => [
-					[
-						'id'    => 'col-1',
-						'order' => 1,
-						'width' => '50%',
-					],
-					[
-						'id'    => 'col-2',
-						'order' => 2,
-						'width' => '50%',
-					],
-				],
+			'layout'         => [
+				'columns' => [],
 			],
-			'widgets' => [
-				[
-					'id'        => 'welcome-html-1',
-					'column_id' => 'col-1',
-					'position'  => 1,
-					'settings'  => [
-						'allow_scripts' => false,
-					],
-				],
-				[
-					'id'        => 'quick-links-1',
-					'column_id' => 'col-2',
-					'position'  => 1,
-					'settings'  => [
-						'hideIcon'  => false,
-						'linkStyle' => 'list',
-					],
-				],
-			],
+			'widgets'        => [],
+			'column_widgets' => [],
 		];
 	}
 }

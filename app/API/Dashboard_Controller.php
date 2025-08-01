@@ -59,6 +59,25 @@ class Dashboard_Controller extends Base_Controller {
 				],
 			]
 		);
+
+		// Batch reorder widgets endpoint.
+		register_rest_route(
+			$this->get_namespace(),
+			'/' . $this->get_base_route() . '/reorder',
+			[
+				[
+					'methods'             => \WP_REST_Server::EDITABLE,
+					'callback'            => [ $this, 'reorder_widgets' ],
+					'permission_callback' => [ $this, 'check_permissions' ],
+					'args'                => [
+						'column_widgets' => [
+							'required' => true,
+							'type'     => 'object',
+						],
+					],
+				],
+			]
+		);
 	}
 
 	/**
@@ -119,6 +138,76 @@ class Dashboard_Controller extends Base_Controller {
 		}
 
 		return $this->success_response( $dashboard_data, 201 );
+	}
+
+	/**
+	 * Reorder widgets using column_widgets structure.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_REST_Request $request Request object.
+	 *
+	 * @return WP_REST_Response|WP_Error
+	 */
+	public function reorder_widgets( $request ) {
+		try {
+			$column_widgets = $request->get_param( 'column_widgets' );
+
+			if ( ! is_array( $column_widgets ) ) {
+				return $this->error_response( 'Column widgets must be an array', 400, 'invalid_column_widgets' );
+			}
+
+			$dashboard_data = $this->get_dashboard_data();
+
+			if ( is_wp_error( $dashboard_data ) ) {
+				return $dashboard_data;
+			}
+
+			// Get existing widgets for reference.
+			$existing_widgets       = $dashboard_data['widgets'] ?? [];
+			$existing_widgets_by_id = [];
+
+			foreach ( $existing_widgets as $existing_widget ) {
+				if ( isset( $existing_widget['id'] ) ) {
+					$existing_widgets_by_id[ $existing_widget['id'] ] = $existing_widget;
+				}
+			}
+
+			// Update widgets with new column_id and position based on column_widgets.
+			$updated_widgets        = [];
+			$updated_column_widgets = [];
+
+			foreach ( $column_widgets as $column_id => $widget_ids ) {
+				$updated_column_widgets[ $column_id ] = $widget_ids;
+
+				foreach ( $widget_ids as $position => $widget_id ) {
+					if ( isset( $existing_widgets_by_id[ $widget_id ] ) ) {
+						$widget              = $existing_widgets_by_id[ $widget_id ];
+						$widget['column_id'] = $column_id;
+						$widget['position']  = $position + 1; // Convert to 1-based position.
+						$updated_widgets[]   = $widget;
+					}
+				}
+			}
+
+			$dashboard_data['widgets']        = $updated_widgets;
+			$dashboard_data['column_widgets'] = $updated_column_widgets;
+
+			$current_option = get_option( 'dashmate_dashboard_data' );
+
+			if ( $current_option === $dashboard_data ) {
+				return $this->success_response( [ 'message' => 'Widgets reordered successfully' ] );
+			}
+
+			$result = update_option( 'dashmate_dashboard_data', $dashboard_data, true );
+			if ( false === $result ) {
+				return $this->error_response( 'Unable to save widget positions', 500, 'save_error' );
+			}
+
+			return $this->success_response( [ 'message' => 'Widgets reordered successfully' ] );
+		} catch ( Exception $e ) {
+			return $this->error_response( 'Internal server error: ' . $e->getMessage(), 500, 'internal_error' );
+		}
 	}
 
 	/**

@@ -62,12 +62,37 @@
 
 .column-content {
 	padding: 5px;
+	min-height: 100px;
+	transition: background-color 0.2s ease;
+}
+
+.column-content.dragging-over {
+	background-color: #f0f8ff;
+	border: 2px dashed #0073aa;
+	border-radius: 6px;
 }
 
 .empty-column {
 	text-align: center;
 	padding: 40px 20px;
 	color: #666;
+	background: #f8f9fa;
+	border: 2px dashed #dee2e6;
+	border-radius: 8px;
+	margin: 10px 0;
+	transition: all 0.2s ease;
+}
+
+.empty-column:hover {
+	background: #e9ecef;
+	border-color: #adb5bd;
+}
+
+.empty-column p {
+	margin: 0;
+	font-size: 14px;
+	font-weight: 500;
+	color: #6c757d;
 }
 
 /* Widget Styles */
@@ -77,10 +102,25 @@
 	border-radius: 6px;
 	background: #fff;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	transition:
+		transform 0.2s ease,
+		box-shadow 0.2s ease;
+	cursor: grab;
 }
 
 .widget:last-child {
 	margin-bottom: 0;
+}
+
+.widget:hover {
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.widget.dragging {
+	transform: rotate(5deg);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+	cursor: grabbing;
+	z-index: 1000;
 }
 
 .widget-header {

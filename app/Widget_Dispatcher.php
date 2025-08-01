@@ -243,8 +243,13 @@ class Widget_Dispatcher {
 		$data = get_option( 'dashmate_dashboard_data', null );
 
 		if ( null === $data ) {
-			// Return default dashboard structure if no data exists.
-			return self::get_default_dashboard_data();
+			// Return empty dashboard structure if no data exists.
+			return [
+				'layout'  => [
+					'columns' => [],
+				],
+				'widgets' => [],
+			];
 		}
 
 		return $data;
@@ -279,39 +284,9 @@ class Widget_Dispatcher {
 	private static function get_default_dashboard_data() {
 		return [
 			'layout'  => [
-				'columns' => [
-					[
-						'id'    => 'col-1',
-						'order' => 1,
-						'width' => '50%',
-					],
-					[
-						'id'    => 'col-2',
-						'order' => 2,
-						'width' => '50%',
-					],
-				],
+				'columns' => [],
 			],
-			'widgets' => [
-				[
-					'id'        => 'welcome-html-1',
-					'column_id' => 'col-1',
-					'position'  => 1,
-					'settings'  => [
-						'allow_scripts' => false,
-					],
-				],
-				[
-					'id'        => 'quick-links-1',
-					'column_id' => 'col-2',
-					'position'  => 1,
-					'settings'  => [
-						'hideIcon'  => false,
-						'showTitle' => true,
-						'linkStyle' => 'list',
-					],
-				],
-			],
+			'widgets' => [],
 		];
 	}
 
@@ -409,24 +384,66 @@ class Widget_Dispatcher {
 			return new \WP_Error( 'widget_not_found', 'Widget not found: ' . $widget_id );
 		}
 
+		// Get current widget data.
+		$widget_to_move = $widgets[ $widget_index ];
+		$old_column_id  = $widget_to_move['column_id'] ?? '';
+		$old_position   = $widget_to_move['position'] ?? 1;
+
 		// Update widget position and column.
 		$widgets[ $widget_index ]['column_id'] = $column_id;
 		$widgets[ $widget_index ]['position']  = $position;
 
-		// Reorder other widgets in the same column.
-		$column_widgets = self::get_widgets_for_column( $column_id, $dashboard_data );
-		$new_position   = 1;
+		// If moving to a different column, reorder widgets in both columns.
+		if ( $old_column_id !== $column_id ) {
+			// Reorder widgets in the old column.
+			$old_column_widgets = self::get_widgets_for_column( $old_column_id, $dashboard_data );
+			$new_position       = 1;
 
-		foreach ( $column_widgets as $column_widget ) {
-			if ( $column_widget['id'] !== $widget_id ) {
-				// Find and update this widget's position.
-				foreach ( $widgets as $index => $widget ) {
-					if ( isset( $widget['id'] ) && $widget['id'] === $column_widget['id'] ) {
-						$widgets[ $index ]['position'] = $new_position;
-						break;
+			foreach ( $old_column_widgets as $column_widget ) {
+				if ( $column_widget['id'] !== $widget_id ) {
+					// Find and update this widget's position.
+					foreach ( $widgets as $index => $widget ) {
+						if ( isset( $widget['id'] ) && $widget['id'] === $column_widget['id'] ) {
+							$widgets[ $index ]['position'] = $new_position;
+							break;
+						}
 					}
+					++$new_position;
 				}
-				++$new_position;
+			}
+
+			// Reorder widgets in the new column.
+			$new_column_widgets = self::get_widgets_for_column( $column_id, $dashboard_data );
+			$new_position       = 1;
+
+			foreach ( $new_column_widgets as $column_widget ) {
+				if ( $column_widget['id'] !== $widget_id ) {
+					// Find and update this widget's position.
+					foreach ( $widgets as $index => $widget ) {
+						if ( isset( $widget['id'] ) && $widget['id'] === $column_widget['id'] ) {
+							$widgets[ $index ]['position'] = $new_position;
+							break;
+						}
+					}
+					++$new_position;
+				}
+			}
+		} else {
+			// Moving within the same column, reorder all widgets in the column.
+			$column_widgets = self::get_widgets_for_column( $column_id, $dashboard_data );
+			$new_position   = 1;
+
+			foreach ( $column_widgets as $column_widget ) {
+				if ( $column_widget['id'] !== $widget_id ) {
+					// Find and update this widget's position.
+					foreach ( $widgets as $index => $widget ) {
+						if ( isset( $widget['id'] ) && $widget['id'] === $column_widget['id'] ) {
+							$widgets[ $index ]['position'] = $new_position;
+							break;
+						}
+					}
+					++$new_position;
+				}
 			}
 		}
 

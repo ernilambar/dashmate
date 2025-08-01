@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import { Draggable } from '@hello-pangea/dnd';
 import WidgetContent from './WidgetContent';
 import WidgetSettingsForm from './WidgetSettingsForm';
 
@@ -81,7 +82,7 @@ class Widget extends Component {
 	};
 
 	render() {
-		const { widget, widgets } = this.props;
+		const { widget, widgets, index } = this.props;
 		const { collapsed, widgetData, loading, showSettings } = this.state;
 
 		// Get widget type from widget ID since JSON no longer contains type field.
@@ -100,73 +101,95 @@ class Widget extends Component {
 
 		if ( ! widgets || ! widgets[ widgetType ] ) {
 			return (
-				<div className="widget widget-unknown">
-					<div className="widget-header">
-						<h3>{ widgetTitle }</h3>
-						<div className="widget-actions">
-							<button
-								className="button button-small widget-toggle"
-								onClick={ this.toggleCollapse }
-								title={ collapsed ? 'Expand' : 'Collapse' }
-							>
-								<span className="dashicons dashicons-{ collapsed ? 'arrow-down-alt2' : 'arrow-up-alt2' }"></span>
-							</button>
-						</div>
-					</div>
-					{ ! collapsed && (
-						<div className="widget-content">
-							<p>Unknown widget type: { widgetType }</p>
+				<Draggable draggableId={ widget.id } index={ index }>
+					{ ( provided, snapshot ) => (
+						<div
+							className={ `widget widget-unknown ${
+								snapshot.isDragging ? 'dragging' : ''
+							}` }
+							ref={ provided.innerRef }
+							{ ...provided.draggableProps }
+							{ ...provided.dragHandleProps }
+						>
+							<div className="widget-header">
+								<h3>{ widgetTitle }</h3>
+								<div className="widget-actions">
+									<button
+										className="button button-small widget-toggle"
+										onClick={ this.toggleCollapse }
+										title={ collapsed ? 'Expand' : 'Collapse' }
+									>
+										<span className="dashicons dashicons-{ collapsed ? 'arrow-down-alt2' : 'arrow-up-alt2' }"></span>
+									</button>
+								</div>
+							</div>
+							{ ! collapsed && (
+								<div className="widget-content">
+									<p>Unknown widget type: { widgetType }</p>
+								</div>
+							) }
 						</div>
 					) }
-				</div>
+				</Draggable>
 			);
 		}
 
 		return (
-			<div className={ `widget widget-${ widgetType } ${ collapsed ? 'collapsed' : '' }` }>
-				<div className="widget-header">
-					<h3>{ widgetTitle }</h3>
-					<div className="widget-actions">
+			<Draggable draggableId={ widget.id } index={ index }>
+				{ ( provided, snapshot ) => (
+					<div
+						className={ `widget widget-${ widgetType } ${
+							collapsed ? 'collapsed' : ''
+						} ${ snapshot.isDragging ? 'dragging' : '' }` }
+						ref={ provided.innerRef }
+						{ ...provided.draggableProps }
+						{ ...provided.dragHandleProps }
+					>
+						<div className="widget-header">
+							<h3>{ widgetTitle }</h3>
+							<div className="widget-actions">
+								{ ! collapsed && (
+									<button
+										className="button button-small widget-settings"
+										onClick={ this.openWidgetSettings }
+										title="Settings"
+									>
+										<span className="dashicons dashicons-admin-generic"></span>
+									</button>
+								) }
+								<button
+									className="button button-small widget-toggle"
+									onClick={ this.toggleCollapse }
+									title={ collapsed ? 'Expand' : 'Collapse' }
+								>
+									<span
+										className={ `dashicons dashicons-${
+											collapsed ? 'arrow-down-alt2' : 'arrow-up-alt2'
+										}` }
+									></span>
+								</button>
+							</div>
+						</div>
 						{ ! collapsed && (
-							<button
-								className="button button-small widget-settings"
-								onClick={ this.openWidgetSettings }
-								title="Settings"
-							>
-								<span className="dashicons dashicons-admin-generic"></span>
-							</button>
-						) }
-						<button
-							className="button button-small widget-toggle"
-							onClick={ this.toggleCollapse }
-							title={ collapsed ? 'Expand' : 'Collapse' }
-						>
-							<span
-								className={ `dashicons dashicons-${
-									collapsed ? 'arrow-down-alt2' : 'arrow-up-alt2'
-								}` }
-							></span>
-						</button>
-					</div>
-				</div>
-				{ ! collapsed && (
-					<div className="widget-content">
-						{ showSettings && widgetType === 'links' && (
-							<div className="widget-settings-panel">
-								<WidgetSettingsForm
-									schema={ widgets[ widgetType ]?.settings_schema }
-									values={ widget.settings || {} }
-									onChange={ this.handleSettingsChange }
+							<div className="widget-content">
+								{ showSettings && widgetType === 'links' && (
+									<div className="widget-settings-panel">
+										<WidgetSettingsForm
+											schema={ widgets[ widgetType ]?.settings_schema }
+											values={ widget.settings || {} }
+											onChange={ this.handleSettingsChange }
+										/>
+									</div>
+								) }
+								<WidgetContent
+									widget={ { ...widget, type: widgetType } }
+									widgetData={ widgetData }
 								/>
 							</div>
 						) }
-						<WidgetContent
-							widget={ { ...widget, type: widgetType } }
-							widgetData={ widgetData }
-						/>
 					</div>
 				) }
-			</div>
+			</Draggable>
 		);
 	}
 }

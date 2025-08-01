@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import { Droppable } from '@hello-pangea/dnd';
 import Widget from './Widget';
 
 class Column extends Component {
@@ -7,17 +8,33 @@ class Column extends Component {
 
 		return (
 			<div className={ `dashboard-column column-${ column.width }` }>
-				<div className="column-content">
-					{ columnWidgets && columnWidgets.length > 0 ? (
-						columnWidgets.map( ( widget ) => (
-							<Widget key={ widget.id } widget={ widget } widgets={ widgets } />
-						) )
-					) : (
-						<div className="empty-column">
-							<p>No widgets in this column</p>
+				<Droppable droppableId={ column.id }>
+					{ ( provided, snapshot ) => (
+						<div
+							className={ `column-content ${
+								snapshot.isDraggingOver ? 'dragging-over' : ''
+							}` }
+							ref={ provided.innerRef }
+							{ ...provided.droppableProps }
+						>
+							{ columnWidgets && columnWidgets.length > 0 ? (
+								columnWidgets.map( ( widget, index ) => (
+									<Widget
+										key={ widget.id }
+										widget={ widget }
+										widgets={ widgets }
+										index={ index }
+									/>
+								) )
+							) : (
+								<div className="empty-column">
+									<p>No widgets in this column</p>
+								</div>
+							) }
+							{ provided.placeholder }
 						</div>
 					) }
-				</div>
+				</Droppable>
 			</div>
 		);
 	}
