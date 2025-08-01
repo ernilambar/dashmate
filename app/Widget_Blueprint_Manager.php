@@ -28,24 +28,12 @@ class Widget_Blueprint_Manager {
 			'name'            => 'HTML Widget',
 			'description'     => 'Display HTML content',
 			'icon'            => 'editor-code',
-			'settings_schema' => [
-				'allow_scripts' => [
-					'type'        => 'checkbox',
-					'label'       => 'Allow Scripts',
-					'description' => 'Allow JavaScript execution',
-					'default'     => false,
-				],
-			],
+			'settings_schema' => [],
 			'output_schema'   => [
-				'html_content'  => [
+				'html_content' => [
 					'type'        => 'string',
 					'required'    => true,
 					'description' => 'HTML content to render',
-				],
-				'allow_scripts' => [
-					'type'        => 'boolean',
-					'required'    => true,
-					'description' => 'Whether scripts are allowed',
 				],
 			],
 		],

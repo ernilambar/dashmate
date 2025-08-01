@@ -83,9 +83,9 @@ class Widget extends Component {
 			<Draggable draggableId={ widget.id } index={ index }>
 				{ ( provided, snapshot ) => (
 					<div
-						className={ `widget widget-basic ${
-							collapsed ? 'collapsed' : ''
-						} ${ snapshot.isDragging ? 'dragging' : '' }` }
+						className={ `widget widget-basic ${ collapsed ? 'collapsed' : '' } ${
+							snapshot.isDragging ? 'dragging' : ''
+						}` }
 						ref={ provided.innerRef }
 						{ ...provided.draggableProps }
 						{ ...provided.dragHandleProps }
@@ -239,15 +239,18 @@ class Widget extends Component {
 								{ widgetTitle }
 							</h3>
 							<div className="widget-actions">
-								{ ! collapsed && (
-									<button
-										className="button button-small widget-settings"
-										onClick={ this.openWidgetSettings }
-										title="Settings"
-									>
-										<span className="dashicons dashicons-admin-generic"></span>
-									</button>
-								) }
+								{ ! collapsed &&
+									widgets[ widgetType ]?.settings_schema &&
+									Object.keys( widgets[ widgetType ].settings_schema ).length >
+										0 && (
+										<button
+											className="button button-small widget-settings"
+											onClick={ this.openWidgetSettings }
+											title="Settings"
+										>
+											<span className="dashicons dashicons-admin-generic"></span>
+										</button>
+									) }
 								<button
 									className="button button-small widget-toggle"
 									onClick={ this.toggleCollapse }
@@ -263,15 +266,18 @@ class Widget extends Component {
 						</div>
 						{ ! collapsed && (
 							<div className="widget-content">
-								{ showSettings && widgetType === 'links' && (
-									<div className="widget-settings-panel">
-										<WidgetSettingsForm
-											schema={ widgets[ widgetType ]?.settings_schema }
-											values={ widget.settings || {} }
-											onChange={ this.handleSettingsChange }
-										/>
-									</div>
-								) }
+								{ showSettings &&
+									widgets[ widgetType ]?.settings_schema &&
+									Object.keys( widgets[ widgetType ].settings_schema ).length >
+										0 && (
+										<div className="widget-settings-panel">
+											<WidgetSettingsForm
+												schema={ widgets[ widgetType ]?.settings_schema }
+												values={ widget.settings || {} }
+												onChange={ this.handleSettingsChange }
+											/>
+										</div>
+									) }
 								<WidgetContent
 									widget={ { ...widget, type: widgetType } }
 									widgetData={ widgetData }
