@@ -24,10 +24,28 @@ class Loader {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-		// Initialize widget system.
+		add_filter( 'plugin_action_links_' . DASHMATE_BASE_FILENAME, [ $this, 'customize_plugin_links' ] );
+
 		Widget_Initializer::init();
 
 		new API_Main();
 		new Admin_Page();
+	}
+
+	/**
+	 * Customize plugin action links.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $actions Action links.
+	 * @return array Modified action links.
+	 */
+	public function customize_plugin_links( $actions ) {
+		return array_merge(
+			[
+				'settings' => '<a href="' . esc_url( add_query_arg( [ 'page' => 'dashmate-settings' ], admin_url( 'options-general.php' ) ) ) . '">' . esc_html__( 'Settings', 'dashmate' ) . '</a>',
+			],
+			$actions
+		);
 	}
 }
