@@ -26,6 +26,14 @@ class Loader {
 	public function __construct() {
 		add_filter( 'plugin_action_links_' . DASHMATE_BASE_FILENAME, [ $this, 'customize_plugin_links' ] );
 
+		add_filter(
+			'linkit_menu_pages',
+			function ( $pages ) {
+				$pages [] = 'dashboard_page_dashmate';
+				return $pages;
+			}
+		);
+
 		Widget_Initializer::init();
 
 		new API_Main();

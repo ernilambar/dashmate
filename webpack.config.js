@@ -9,7 +9,6 @@ module.exports = {
 	...defaultConfig,
 	entry: {
 		index: './resources/index.js',
-		common: './resources/common.js',
 	},
 	output: {
 		...defaultConfig.output,
