@@ -4,8 +4,64 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c0679aea3253c3ec30ae6cf0e0216140",
+    "content-hash": "ca0e9f644776d64a6deda8de87771b9e",
     "packages": [
+        {
+            "name": "ernilambar/optify",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "/Users/nilambar/Code/projects/optify",
+                "reference": "082c825608410841737e9ae126ae13b52d22aee5"
+            },
+            "require": {
+                "php": ">=7.4"
+            },
+            "require-dev": {
+                "dealerdirect/phpcodesniffer-composer-installer": "^1",
+                "ernilambar/coding-standard": "^1",
+                "php-parallel-lint/php-parallel-lint": "^1.4",
+                "phpcompatibility/php-compatibility": "dev-develop#9013cd039fe5740953f9fdeebd19d901b80e26f2",
+                "slevomat/coding-standard": "^8",
+                "wp-coding-standards/wpcs": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Nilambar\\Optify\\": "src/"
+                }
+            },
+            "scripts": {
+                "format": [
+                    "@php ./vendor/bin/phpcbf --report-full --report-summary"
+                ],
+                "lint": [
+                    "@lint-php",
+                    "@phpcs"
+                ],
+                "lint-php": [
+                    "@php ./vendor/bin/parallel-lint --colors --exclude .git --exclude vendor ."
+                ],
+                "phpcs": [
+                    "@php ./vendor/bin/phpcs --report-full --report-summary"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nilambar Sharma",
+                    "email": "nilambar@outlook.com",
+                    "homepage": "https://www.nilambar.net/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A flexible WordPress panel system for React-based options",
+            "transport-options": {
+                "relative": false
+            }
+        },
         {
             "name": "symfony/deprecation-contracts",
             "version": "v2.5.4",

@@ -7,6 +7,10 @@
 
 namespace Nilambar\Dashmate\Admin;
 
+use Nilambar\Dashmate\Panels\SettingsPanel;
+use Nilambar\Optify\Optify;
+use Nilambar\Optify\Panel_Manager;
+
 /**
  * Admin_Page class.
  *
@@ -22,6 +26,7 @@ class Admin_Page {
 	public function __construct() {
 		add_action( 'admin_menu', [ $this, 'add_page' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'load_assets' ] );
+		add_action( 'init', [ $this, 'register_settings' ] );
 	}
 
 	/**
@@ -38,6 +43,39 @@ class Admin_Page {
 			function () {
 				echo '<div class="wrap"><div id="dashmate-app">Loading...</div></wrap>';
 			}
+		);
+
+		add_options_page(
+			esc_html__( 'Dashmate', 'dashmate' ),
+			esc_html__( 'Dashmate', 'dashmate' ),
+			'manage_options',
+			'dashmate-settings',
+			function () {
+				echo '<div class="wrap">';
+				Panel_Manager::render_panel(
+					'dashmate-settings',
+					[
+						'show_title' => true,
+						'display'    => 'inline',
+					]
+				);
+				echo '</wrap>';
+			}
+		);
+	}
+
+	/**
+	 * Register settings
+	 *
+	 * @since 1.0.0
+	 */
+	public function register_settings() {
+		Optify::register_panel( 'dashmate-settings', SettingsPanel::class );
+
+		Optify::init( 'dashmate', 'v1', DASHMATE_BASE_FILEPATH );
+		Optify::load_assets(
+			DASHMATE_DIR . '/vendor/ernilambar/optify/',
+			DASHMATE_URL . '/vendor/ernilambar/optify/'
 		);
 	}
 

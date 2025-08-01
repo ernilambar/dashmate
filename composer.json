@@ -4,6 +4,7 @@
   "license": "GPL-2.0-or-later",
   "require": {
     "php": ">=7.4",
+    "ernilambar/optify": "*",
     "symfony/yaml": "^5.4"
   },
   "require-dev": {
@@ -21,6 +22,12 @@
       "Nilambar\\Dashmate\\": "app/"
     }
   },
+  "repositories": [
+		{
+			"type": "path",
+			"url": "/Users/nilambar/Code/projects/optify"
+		}
+	],
   "config": {
     "allow-plugins": {
       "dealerdirect/phpcodesniffer-composer-installer": true,
