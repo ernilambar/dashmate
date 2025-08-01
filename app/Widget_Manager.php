@@ -18,14 +18,7 @@ use WP_Error;
  */
 class Widget_Manager {
 
-	/**
-	 * Dashboard data file path.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var string
-	 */
-	private static $dashboard_file = 'dashboard.json';
+
 
 	/**
 	 * Create a new widget instance.
@@ -353,34 +346,57 @@ class Widget_Manager {
 	}
 
 	/**
-	 * Get dashboard data.
+	 * Get dashboard data from WordPress options.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @return array|WP_Error
 	 */
 	private static function get_dashboard_data() {
-		$file_path = DASHMATE_DIR . '/data/' . self::$dashboard_file;
+		$data = get_option( 'dashmate_dashboard_data', null );
 
-		if ( ! file_exists( $file_path ) ) {
-			return new WP_Error( 'file_not_found', 'Dashboard file not found' );
-		}
-
-		$content = file_get_contents( $file_path );
-		if ( false === $content ) {
-			return new WP_Error( 'file_read_error', 'Could not read dashboard file' );
-		}
-
-		$data = json_decode( $content, true );
 		if ( null === $data ) {
-			return new WP_Error( 'json_decode_error', 'Invalid JSON in dashboard file' );
+			// Trigger Widget_Initializer to create default data.
+			Widget_Initializer::create_default_widgets();
+
+			// Get the data again after initialization.
+			$data = get_option( 'dashmate_dashboard_data', null );
+
+			if ( null === $data ) {
+				return [
+					'layout'         => [
+						'columns' => [],
+					],
+					'widgets'        => [],
+					'column_widgets' => [],
+				];
+			}
+		}
+
+		// Ensure we always return the new structure.
+		if ( ! isset( $data['layout'] ) || ! isset( $data['widgets'] ) ) {
+			// Trigger Widget_Initializer to create default data.
+			Widget_Initializer::create_default_widgets();
+
+			// Get the data again after initialization.
+			$data = get_option( 'dashmate_dashboard_data', null );
+
+			if ( null === $data || ! isset( $data['layout'] ) || ! isset( $data['widgets'] ) ) {
+				return [
+					'layout'         => [
+						'columns' => [],
+					],
+					'widgets'        => [],
+					'column_widgets' => [],
+				];
+			}
 		}
 
 		return $data;
 	}
 
 	/**
-	 * Save dashboard data.
+	 * Save dashboard data to WordPress options.
 	 *
 	 * @since 1.0.0
 	 *
@@ -389,16 +405,10 @@ class Widget_Manager {
 	 * @return bool|WP_Error
 	 */
 	private static function save_dashboard_data( $data ) {
-		$file_path = DASHMATE_DIR . '/data/' . self::$dashboard_file;
+		$result = update_option( 'dashmate_dashboard_data', $data, false );
 
-		$json = json_encode( $data, JSON_PRETTY_PRINT );
-		if ( false === $json ) {
-			return new WP_Error( 'json_encode_error', 'Could not encode dashboard data' );
-		}
-
-		$result = file_put_contents( $file_path, $json );
 		if ( false === $result ) {
-			return new WP_Error( 'file_write_error', 'Could not write dashboard file' );
+			return new WP_Error( 'option_save_error', 'Could not save dashboard data to WordPress options' );
 		}
 
 		return true;
