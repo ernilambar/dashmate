@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Nilambar\Dashmate;
 
+use Nilambar\Dashmate\Utils\YML_Utils;
+
 /**
  * Widget_Initializer class.
  *
@@ -37,33 +39,10 @@ class Widget_Initializer {
 	 * @return array
 	 */
 	private static function get_default_layout() {
-		return [
-			'layout'         => [
-				'columns' => [
-					[
-						'id'    => 'col-1',
-						'order' => 1,
-						'width' => '33.33%',
-					],
-					[
-						'id'    => 'col-2',
-						'order' => 2,
-						'width' => '33.33%',
-					],
-					[
-						'id'    => 'col-3',
-						'order' => 3,
-						'width' => '33.33%',
-					],
-				],
-			],
-			'widgets'        => [],
-			'column_widgets' => [
-				'col-1' => [],
-				'col-2' => [],
-				'col-3' => [],
-			],
-		];
+		$default_file = DASHMATE_DIR . 'data/layouts/default.yml';
+		$layout_data  = YML_Utils::load_from_file( $default_file );
+
+		return $layout_data ?? [];
 	}
 
 	/**
@@ -74,42 +53,10 @@ class Widget_Initializer {
 	 * @return array
 	 */
 	private static function get_default_widgets() {
-		return [
-			[
-				'id'        => 'sales-overview',
-				'column_id' => 'col-1',
-				'position'  => 1,
-				'settings'  => [
-					'showHeaders' => true,
-					'stripedRows' => true,
-				],
-			],
-			[
-				'id'        => 'welcome-html-1',
-				'column_id' => 'col-1',
-				'position'  => 2,
-				'settings'  => [
-					'allow_scripts' => false,
-				],
-			],
-			[
-				'id'        => 'quick-links-1',
-				'column_id' => 'col-2',
-				'position'  => 1,
-				'settings'  => [
-					'hideIcon'  => false,
-					'linkStyle' => 'list',
-				],
-			],
-			[
-				'id'        => 'weekly-tickets',
-				'column_id' => 'col-3',
-				'position'  => 1,
-				'settings'  => [
-					'hideCaption' => false,
-				],
-			],
-		];
+		$default_file = DASHMATE_DIR . 'data/layouts/default.yml';
+		$layout_data  = YML_Utils::load_from_file( $default_file );
+
+		return $layout_data['widgets'] ?? [];
 	}
 
 	/**
@@ -120,11 +67,10 @@ class Widget_Initializer {
 	 * @return array
 	 */
 	private static function get_default_column_widgets() {
-		return [
-			'col-1' => [ 'sales-overview', 'welcome-html-1' ],
-			'col-2' => [ 'quick-links-1' ],
-			'col-3' => [ 'weekly-tickets' ],
-		];
+		$default_file = DASHMATE_DIR . 'data/layouts/default.yml';
+		$layout_data  = YML_Utils::load_from_file( $default_file );
+
+		return $layout_data['column_widgets'] ?? [];
 	}
 
 	/**

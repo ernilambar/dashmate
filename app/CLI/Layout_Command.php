@@ -7,7 +7,7 @@
 
 namespace Nilambar\Dashmate\CLI;
 
-use Symfony\Component\Yaml\Yaml;
+use Nilambar\Dashmate\Utils\Layout_Utils;
 use WP_CLI;
 
 /**
@@ -40,15 +40,12 @@ final class Layout_Command {
 
 		$assoc_args = wp_parse_args( $assoc_args, $defaults );
 
-		$dashboard_data = get_option( 'dashmate_dashboard_data' );
-
-		if ( false === $dashboard_data ) {
-			WP_CLI::error( 'No dashboard data found with key "dashmate_dashboard_data".' );
+		if ( ! Layout_Utils::has_layout_data() ) {
+			WP_CLI::error( 'No dashboard data found.' );
 			return;
 		}
 
-		$yaml        = new Yaml();
-		$yaml_output = $yaml->dump( $dashboard_data, 4, 2 );
+		$yaml_output = Layout_Utils::export_to_string();
 
 		if ( false === $yaml_output ) {
 			WP_CLI::error( 'Failed to encode dashboard data as YAML.' );
@@ -123,34 +120,11 @@ final class Layout_Command {
 			return;
 		}
 
-		// Read file content.
-		$file_content = file_get_contents( $file_path );
-
-		if ( false === $file_content ) {
-			WP_CLI::error( sprintf( 'Failed to read file "%s".', $file_path ) );
-			return;
-		}
-
-		// Parse YAML content.
-		$yaml = new Yaml();
-
-		try {
-			$dashboard_data = $yaml->parse( $file_content );
-		} catch ( \Exception $e ) {
-			WP_CLI::error( sprintf( 'Failed to parse YAML file: %s', $e->getMessage() ) );
-			return;
-		}
-
-		if ( null === $dashboard_data ) {
-			WP_CLI::error( 'YAML file is empty or invalid.' );
-			return;
-		}
-
-		// Update WordPress option.
-		$result = update_option( 'dashmate_dashboard_data', $dashboard_data );
+		// Import layout from file.
+		$result = Layout_Utils::import_from_file( $file_path );
 
 		if ( false === $result ) {
-			WP_CLI::error( 'Failed to update dashboard data in database.' );
+			WP_CLI::error( sprintf( 'Failed to import layout from file "%s".', $file_path ) );
 			return;
 		}
 
