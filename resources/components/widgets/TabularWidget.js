@@ -17,8 +17,9 @@ class TabularWidget extends React.Component {
 	};
 
 	render() {
-		const { data } = this.props;
+		const { data, settings = {} } = this.props;
 		const { tables } = data || {};
+		const { showHeaders = true, stripedRows = true } = settings;
 
 		return (
 			<div className="tabular-widget">
@@ -29,29 +30,36 @@ class TabularWidget extends React.Component {
 						onClick={ () => this.handleTableClick( table, tableIndex ) }
 					>
 						{ table.title && <h4 className="table-title">{ table.title }</h4> }
-						<table className="wp-list-table widefat fixed striped">
-							<thead>
-								<tr>
-									{ ( table.headers || [] ).map( ( header, index ) => (
-										<th key={ index }>{ header.text }</th>
+						<div className="table-container">
+							<table className="wp-list-table widefat fixed striped">
+								{ showHeaders && table.headers && table.headers.length > 0 && (
+									<thead>
+										<tr>
+											{ table.headers.map( ( header, index ) => (
+												<th key={ index }>{ header.text }</th>
+											) ) }
+										</tr>
+									</thead>
+								) }
+								<tbody>
+									{ ( table.rows || [] ).map( ( row, rowIndex ) => (
+										<tr
+											key={ rowIndex }
+											className={
+												stripedRows && rowIndex % 2 === 1 ? 'alternate' : ''
+											}
+											onClick={ () =>
+												this.handleRowClick( row, rowIndex, tableIndex )
+											}
+										>
+											{ ( row.cells || [] ).map( ( cell, cellIndex ) => (
+												<td key={ cellIndex }>{ cell.text }</td>
+											) ) }
+										</tr>
 									) ) }
-								</tr>
-							</thead>
-							<tbody>
-								{ ( table.rows || [] ).map( ( row, rowIndex ) => (
-									<tr
-										key={ rowIndex }
-										onClick={ () =>
-											this.handleRowClick( row, rowIndex, tableIndex )
-										}
-									>
-										{ ( row.cells || [] ).map( ( cell, cellIndex ) => (
-											<td key={ cellIndex }>{ cell.text }</td>
-										) ) }
-									</tr>
-								) ) }
-							</tbody>
-						</table>
+								</tbody>
+							</table>
+						</div>
 					</div>
 				) ) }
 			</div>

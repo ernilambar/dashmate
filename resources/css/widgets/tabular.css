@@ -1,0 +1,125 @@
+/* Tabular Widget Styles */
+.tabular-widget {
+	padding: 0;
+}
+
+.tabular-table {
+	margin-bottom: 30px;
+	background: #fff;
+	border-radius: 8px;
+	overflow: hidden;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tabular-table:last-child {
+	margin-bottom: 0;
+}
+
+.tabular-widget .table-title {
+	margin: 0;
+	padding: 20px 20px 15px 20px;
+	font-size: 16px;
+	font-weight: 600;
+	color: #23282d;
+	border-bottom: 1px solid #f0f0f0;
+	background: #f9f9f9;
+}
+
+.table-container {
+	overflow-x: auto;
+}
+
+.tabular-widget table {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 0;
+}
+
+.tabular-widget th {
+	background: #f9f9f9;
+	padding: 12px 16px;
+	text-align: left;
+	font-weight: 600;
+	font-size: 13px;
+	color: #23282d;
+	border-bottom: 1px solid #e1e1e1;
+	white-space: nowrap;
+}
+
+.tabular-widget td {
+	padding: 12px 16px;
+	border-bottom: 1px solid #f0f0f0;
+	font-size: 13px;
+	color: #444;
+	vertical-align: middle;
+}
+
+.tabular-widget tr:hover {
+	background: #f9f9f9;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+}
+
+.tabular-widget tr.alternate {
+	background: #fafafa;
+}
+
+.tabular-widget tr.alternate:hover {
+	background: #f0f0f0;
+}
+
+/* Status styling */
+.tabular-widget td:nth-child(3) {
+	font-weight: 500;
+}
+
+.tabular-widget td:nth-child(3):contains("Completed"),
+.tabular-widget td:nth-child(3):contains("Active") {
+	color: #46b450;
+}
+
+.tabular-widget td:nth-child(3):contains("Processing"),
+.tabular-widget td:nth-child(3):contains("Pending") {
+	color: #ffb900;
+}
+
+.tabular-widget td:nth-child(3):contains("Cancelled"),
+.tabular-widget td:nth-child(3):contains("Inactive") {
+	color: #dc3232;
+}
+
+/* Actions column styling */
+.tabular-widget td:last-child {
+	color: #0073aa;
+	font-weight: 500;
+}
+
+.tabular-widget td:last-child:hover {
+	color: #005a87;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+	.tabular-widget .table-title {
+		padding: 15px;
+		font-size: 14px;
+	}
+
+	.tabular-widget th,
+	.tabular-widget td {
+		padding: 10px 12px;
+		font-size: 12px;
+	}
+
+	.table-container {
+		font-size: 12px;
+	}
+}
+
+@media (max-width: 480px) {
+	.tabular-widget th,
+	.tabular-widget td {
+		padding: 8px 10px;
+		font-size: 11px;
+	}
+}

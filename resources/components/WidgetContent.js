@@ -3,7 +3,7 @@ import HtmlWidget from './widgets/HtmlWidget';
 // import IconboxWidget from './widgets/IconboxWidget'; // For reference
 import ProgressCirclesWidget from './widgets/ProgressCirclesWidget';
 import Links from './widgets/Links';
-// import TabularWidget from './widgets/TabularWidget'; // For reference
+import TabularWidget from './widgets/TabularWidget';
 
 class WidgetContent extends Component {
 	constructor( props ) {
@@ -60,7 +60,7 @@ class WidgetContent extends Component {
 
 	render() {
 		const { loading, error, data } = this.state;
-		const { widget } = this.props;
+		const { widget, settings = {} } = this.props;
 
 		if ( loading ) {
 			return <div className="widget-loading">Loading...</div>;
@@ -73,15 +73,21 @@ class WidgetContent extends Component {
 		// Route to appropriate widget component
 		switch ( widget.type ) {
 			case 'html':
-				return <HtmlWidget widgetId={ widget.id } data={ data } />;
+				return <HtmlWidget widgetId={ widget.id } data={ data } settings={ settings } />;
 			case 'links':
-				return <Links widgetId={ widget.id } data={ data } />;
+				return <Links widgetId={ widget.id } data={ data } settings={ settings } />;
 			case 'progress-circles':
-				return <ProgressCirclesWidget widgetId={ widget.id } data={ data } />;
+				return (
+					<ProgressCirclesWidget
+						widgetId={ widget.id }
+						data={ data }
+						settings={ settings }
+					/>
+				);
+			case 'tabular':
+				return <TabularWidget widgetId={ widget.id } data={ data } settings={ settings } />;
 			// case 'iconbox':
-			// 	return <IconboxWidget widgetId={ widget.id } data={ data } />;
-			// case 'tabular':
-			// 	return <TabularWidget widgetId={ widget.id } data={ data } />;
+			// 	return <IconboxWidget widgetId={ widget.id } data={ data } settings={ settings } />;
 			default:
 				return <p>Unknown widget type: { widget.type }</p>;
 		}

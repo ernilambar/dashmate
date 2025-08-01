@@ -76,9 +76,18 @@ class Widget_Initializer {
 	private static function get_default_widgets() {
 		return [
 			[
-				'id'        => 'welcome-html-1',
+				'id'        => 'sales-overview',
 				'column_id' => 'col-1',
 				'position'  => 1,
+				'settings'  => [
+					'showHeaders' => true,
+					'stripedRows' => true,
+				],
+			],
+			[
+				'id'        => 'welcome-html-1',
+				'column_id' => 'col-1',
+				'position'  => 2,
 				'settings'  => [
 					'allow_scripts' => false,
 				],
@@ -112,7 +121,7 @@ class Widget_Initializer {
 	 */
 	private static function get_default_column_widgets() {
 		return [
-			'col-1' => [ 'welcome-html-1' ],
+			'col-1' => [ 'sales-overview', 'welcome-html-1' ],
 			'col-2' => [ 'quick-links-1' ],
 			'col-3' => [ 'weekly-tickets' ],
 		];

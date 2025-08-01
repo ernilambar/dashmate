@@ -9,8 +9,6 @@ declare(strict_types=1);
 
 namespace Nilambar\Dashmate\API;
 
-use Nilambar\Dashmate\Widget_Registry;
-
 /**
  * API_Main class.
  *

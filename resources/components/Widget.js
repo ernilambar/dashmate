@@ -333,6 +333,7 @@ class Widget extends Component {
 								<WidgetContent
 									widget={ { ...widget, type: widgetType } }
 									widgetData={ widgetData }
+									settings={ widget.settings || {} }
 								/>
 							</div>
 						) }

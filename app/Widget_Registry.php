@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Nilambar\Dashmate;
 
 use Nilambar\Dashmate\Widgets\Quick_Links_Widget;
+use Nilambar\Dashmate\Widgets\Sales_Widget;
 use Nilambar\Dashmate\Widgets\Weekly_Tickets_Widget;
 use Nilambar\Dashmate\Widgets\Welcome_HTML_Widget;
 
@@ -39,6 +40,7 @@ class Widget_Registry {
 		Widget_Dispatcher::register_widget( new Welcome_HTML_Widget( 'welcome-html-1' ) );
 		Widget_Dispatcher::register_widget( new Quick_Links_Widget( 'quick-links-1' ) );
 		Widget_Dispatcher::register_widget( new Weekly_Tickets_Widget( 'weekly-tickets' ) );
+		Widget_Dispatcher::register_widget( new Sales_Widget( 'sales-overview' ) );
 	}
 
 	/**

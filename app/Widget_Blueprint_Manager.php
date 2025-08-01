@@ -92,6 +92,32 @@ class Widget_Blueprint_Manager {
 				],
 			],
 		],
+		'tabular'          => [
+			'name'            => 'Tabular Widget',
+			'description'     => 'Display multiple tables with data',
+			'icon'            => 'editor-table',
+			'settings_schema' => [
+				'showHeaders' => [
+					'type'        => 'checkbox',
+					'label'       => 'Show Headers',
+					'description' => 'Show table headers',
+					'default'     => true,
+				],
+				'stripedRows' => [
+					'type'        => 'checkbox',
+					'label'       => 'Striped Rows',
+					'description' => 'Alternate row colors',
+					'default'     => true,
+				],
+			],
+			'output_schema'   => [
+				'tables' => [
+					'type'        => 'array',
+					'required'    => true,
+					'description' => 'Array of table objects',
+				],
+			],
+		],
 	];
 
 	/**
