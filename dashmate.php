@@ -30,5 +30,8 @@ if ( file_exists( DASHMATE_DIR . '/vendor/autoload.php' ) ) {
 	require_once DASHMATE_DIR . '/vendor/autoload.php';
 }
 
+// Load CLI.
+require_once DASHMATE_DIR . '/cli.php';
+
 // Init.
 new Loader();
