@@ -8,6 +8,8 @@
 namespace Nilambar\Dashmate\Admin;
 
 use Nilambar\Dashmate\Panels\SettingsPanel;
+use Nilambar\Linkit\Utils\Icon as Linkit_Icon;
+use Nilambar\Linkit\Utils\Utils as Linkit_Utils;
 use Nilambar\Optify\Optify;
 use Nilambar\Optify\Panel_Manager;
 
@@ -42,7 +44,9 @@ class Admin_Page {
 			'dashmate',
 			function () {
 				echo '<div class="wrap">';
-				echo '<h1>' . esc_html__( 'Dashmate', 'dashmate' ) . '</h1>';
+				echo '<h1>' . esc_html__( 'Dashmate', 'dashmate' );
+				$this->render_review_links();
+				echo '</h1> ';
 				echo '<div id="dashmate-app">Loading...</div>';
 				echo '</wrap>';
 			}
@@ -127,5 +131,34 @@ class Admin_Page {
 				'restUrl' => rest_url( 'dashmate/v1/' ),
 			]
 		);
+	}
+
+	protected function render_review_links() {
+		if ( ! class_exists( Linkit_Utils::class, false ) ) {
+			return;
+		}
+
+		$qlinks = Linkit_Utils::get_all_links();
+
+		$qlinks = array_slice( $qlinks, 0, 10 );
+
+		if ( empty( $qlinks ) ) {
+			return;
+		}
+
+		// Add Open Links button.
+		echo '<a href="#" class="button button-secondary" style="margin-left: 10px;">Open Links</a>';
+
+		echo '<div class="linkit-menu-links-container">';
+
+		foreach ( $qlinks as $link ) {
+			$icon = ( array_key_exists( 'icon', $link ) && ! empty( $link['icon'] ) ) ? $link['icon'] : 'external';
+
+			echo '<a class="linkit-menu-link linkit-qlink-item" href="' . esc_url( $link['url'] ) . '" target="_blank">';
+			echo '<span class="linkit-qlink-item"><span class="linkit-qlink-icon">' . Linkit_Icon::get( $icon ) . '</span><span class="linkit-qlink-title">' . esc_html( $link['title'] ) . '</span></span>';
+			echo '</a>';
+		}
+
+		echo '</div>';
 	}
 }
