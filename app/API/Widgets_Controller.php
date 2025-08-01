@@ -207,6 +207,9 @@ class Widgets_Controller extends Base_Controller {
 			return $content;
 		}
 
+		// Add widget type to the response so frontend doesn't need to guess
+		$content['type'] = $widget->get_blueprint_type();
+
 		return $this->success_response( $content );
 	}
 
@@ -234,6 +237,9 @@ class Widgets_Controller extends Base_Controller {
 		if ( is_wp_error( $content ) ) {
 			return $content;
 		}
+
+		// Add widget type to the response
+		$content['type'] = $widget->get_blueprint_type();
 
 		return $this->success_response( $content );
 	}
@@ -263,6 +269,9 @@ class Widgets_Controller extends Base_Controller {
 		if ( is_wp_error( $content ) ) {
 			return $content;
 		}
+
+		// Add widget type to the response
+		$content['type'] = $widget->get_blueprint_type();
 
 		return $this->success_response( $content );
 	}

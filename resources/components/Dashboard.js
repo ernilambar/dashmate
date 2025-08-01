@@ -103,9 +103,9 @@ class Dashboard extends Component {
 
 		// Remove widget from source column
 		if ( updatedColumnWidgets[ source.droppableId ] ) {
-			updatedColumnWidgets[ source.droppableId ] = updatedColumnWidgets[ source.droppableId ].filter(
-				( widgetId ) => widgetId !== draggableId
-			);
+			updatedColumnWidgets[ source.droppableId ] = updatedColumnWidgets[
+				source.droppableId
+			].filter( ( widgetId ) => widgetId !== draggableId );
 		}
 
 		// Add widget to destination column at the correct position
@@ -187,9 +187,13 @@ class Dashboard extends Component {
 							columns.map( ( column ) => {
 								// Get widgets for this column using column_widgets structure
 								const columnWidgetIds = columnWidgets[ column.id ] || [];
-								const columnWidgetsList = columnWidgetIds.map( ( widgetId ) => {
-									return allWidgets.find( ( widget ) => widget.id === widgetId );
-								} ).filter( Boolean );
+								const columnWidgetsList = columnWidgetIds
+									.map( ( widgetId ) => {
+										return allWidgets.find(
+											( widget ) => widget.id === widgetId
+										);
+									} )
+									.filter( Boolean );
 
 								return (
 									<Column

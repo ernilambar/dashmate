@@ -39,6 +39,42 @@ class Widget extends Component {
 		}
 	}
 
+	renderErrorWidget( error ) {
+		const { widget, index } = this.props;
+
+		return (
+			<Draggable draggableId={ widget.id } index={ index }>
+				{ ( provided, snapshot ) => (
+					<div
+						className={ `widget widget-error ${
+							snapshot.isDragging ? 'dragging' : ''
+						}` }
+						ref={ provided.innerRef }
+						{ ...provided.draggableProps }
+						{ ...provided.dragHandleProps }
+					>
+						<div className="widget-header">
+							<h3>
+								<span className="dashicons dashicons-warning"></span>
+								Widget Error
+							</h3>
+						</div>
+						<div className="widget-content">
+							<div className="widget-error-message">
+								<p>
+									<strong>Error:</strong> { error.message }
+								</p>
+								<p>
+									<strong>Widget ID:</strong> { widget.id }
+								</p>
+							</div>
+						</div>
+					</div>
+				) }
+			</Draggable>
+		);
+	}
+
 	toggleCollapse = () => {
 		this.setState( ( prevState ) => ( {
 			collapsed: ! prevState.collapsed,
@@ -85,52 +121,25 @@ class Widget extends Component {
 		const { widget, widgets, index } = this.props;
 		const { collapsed, widgetData, loading, showSettings } = this.state;
 
-		// Get widget type from widget ID since JSON no longer contains type field.
-		const getWidgetType = ( widgetId ) => {
-			if ( widgetId.includes( 'html' ) ) {
-				return 'html';
-			}
-			if ( widgetId.includes( 'links' ) ) {
-				return 'links';
-			}
-			return 'unknown';
-		};
-
-		const widgetType = getWidgetType( widget.id );
+		// Get widget type from API response instead of guessing from ID
+		const widgetType = widgetData?.type;
 		const widgetTitle = widgetData?.title || widget.id;
+		const widgetIcon = widgetData?.icon || '';
+
+		// Validate that we have a widget type and it's supported
+		if ( ! widgetType ) {
+			return this.renderErrorWidget(
+				new Error( `No widget type found for widget: ${ widget.id }` )
+			);
+		}
 
 		if ( ! widgets || ! widgets[ widgetType ] ) {
-			return (
-				<Draggable draggableId={ widget.id } index={ index }>
-					{ ( provided, snapshot ) => (
-						<div
-							className={ `widget widget-unknown ${
-								snapshot.isDragging ? 'dragging' : ''
-							}` }
-							ref={ provided.innerRef }
-							{ ...provided.draggableProps }
-							{ ...provided.dragHandleProps }
-						>
-							<div className="widget-header">
-								<h3>{ widgetTitle }</h3>
-								<div className="widget-actions">
-									<button
-										className="button button-small widget-toggle"
-										onClick={ this.toggleCollapse }
-										title={ collapsed ? 'Expand' : 'Collapse' }
-									>
-										<span className="dashicons dashicons-{ collapsed ? 'arrow-down-alt2' : 'arrow-up-alt2' }"></span>
-									</button>
-								</div>
-							</div>
-							{ ! collapsed && (
-								<div className="widget-content">
-									<p>Unknown widget type: { widgetType }</p>
-								</div>
-							) }
-						</div>
-					) }
-				</Draggable>
+			return this.renderErrorWidget(
+				new Error(
+					`Widget type '${ widgetType }' is not registered. Available types: ${ Object.keys(
+						widgets || {}
+					).join( ', ' ) }`
+				)
 			);
 		}
 
@@ -146,7 +155,14 @@ class Widget extends Component {
 						{ ...provided.dragHandleProps }
 					>
 						<div className="widget-header">
-							<h3>{ widgetTitle }</h3>
+							<h3>
+								{ widgetIcon && (
+									<span
+										className={ `dashicons dashicons-${ widgetIcon }` }
+									></span>
+								) }
+								{ widgetTitle }
+							</h3>
 							<div className="widget-actions">
 								{ ! collapsed && (
 									<button

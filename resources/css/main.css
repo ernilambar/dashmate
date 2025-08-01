@@ -144,6 +144,17 @@
 	font-weight: 600;
 	color: #23282d;
 	flex: 1;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.widget-header h3 .dashicons {
+	font-size: 16px;
+	width: 16px;
+	height: 16px;
+	line-height: 1;
+	color: #0073aa;
 }
 
 .widget-actions {
@@ -188,6 +199,31 @@
 
 .widget-error {
 	color: #d63638;
+}
+
+.widget-error .widget-header {
+	background: #fef7f1;
+	border-color: #d63638;
+}
+
+.widget-error .widget-header h3 {
+	color: #d63638;
+}
+
+.widget-error-message {
+	padding: 15px;
+	background: #fef7f1;
+	border: 1px solid #d63638;
+	border-radius: 4px;
+}
+
+.widget-error-message p {
+	margin: 0 0 10px 0;
+	font-size: 13px;
+}
+
+.widget-error-message p:last-child {
+	margin-bottom: 0;
 }
 
 /* HTML Widget */
