@@ -1,0 +1,43 @@
+---
+layout:
+  columns:
+    - id: col-1
+      order: 1
+      width: 33.33%
+    - id: col-2
+      order: 2
+      width: 33.33%
+    - id: col-3
+      order: 3
+      width: 33.33%
+widgets:
+  - id: sales-overview
+    column_id: col-1
+    position: 1
+    settings:
+      showHeaders: true
+      stripedRows: true
+  - id: welcome-html-1
+    column_id: col-1
+    position: 2
+    settings:
+      allow_scripts: false
+  - id: weekly-tickets
+    column_id: col-2
+    position: 1
+    settings:
+      hideCaption: false
+  - id: quick-links-1
+    column_id: col-2
+    position: 2
+    settings:
+      hideIcon: false
+      linkStyle: list
+column_widgets:
+  col-1:
+    - weekly-tickets
+    - quick-links-1
+  col-2:
+    - sales-overview
+  col-3:
+    - welcome-html-1
