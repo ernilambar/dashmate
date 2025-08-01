@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Nilambar\Dashmate\Widgets;
 
 use Nilambar\Dashmate\Abstract_Widget;
+use Nilambar\Dashmate\Utils\Review_Utils;
 
 /**
  * Weekly_Tickets_Widget class.
@@ -26,7 +27,7 @@ class Weekly_Tickets_Widget extends Abstract_Widget {
 	 * @param string $id Widget instance ID.
 	 */
 	public function __construct( $id ) {
-		parent::__construct( $id, 'progress-circles', 'Progress Widget' );
+		parent::__construct( $id, 'progress-circles', 'Weekly Tickets' );
 
 		$this->description = 'Display progress circles';
 		$this->icon        = 'feedback';
@@ -45,33 +46,7 @@ class Weekly_Tickets_Widget extends Abstract_Widget {
 	public function get_content( $widget_id = null, $settings = [] ) {
 		$settings = $this->merge_settings_with_defaults( $settings );
 
-		$circles = [
-			[
-				'percentage' => 90,
-				'value'      => 70,
-				'caption'    => 'W:43',
-			],
-			[
-				'percentage' => 110,
-				'value'      => 110,
-				'caption'    => 'W:43',
-			],
-			[
-				'percentage' => 0,
-				'value'      => 'Zero',
-				'caption'    => 'W:43',
-			],
-			[
-				'percentage' => 45,
-				'value'      => '',
-				'caption'    => 'caption chha',
-			],
-			[
-				'percentage' => 85,
-				'value'      => 223,
-				'caption'    => 'W:45',
-			],
-		];
+		$circles = Review_Utils::prepare_review_stats( $settings );
 
 		return [
 			'items' => $circles,
