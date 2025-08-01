@@ -83,7 +83,7 @@
 				<element value="linkit" />
 				<element value="snippo" />
 				<element value="ticktor" />
-				<element value="yantra" />
+				<element value="groundify" />
 			</property>
 			<property name="new_text_domain" value="dashmate" />
 		</properties>
