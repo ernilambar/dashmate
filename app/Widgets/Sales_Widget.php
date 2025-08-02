@@ -100,43 +100,33 @@ class Sales_Widget extends Abstract_Widget {
 			],
 			'rows'    => [
 				[
-					'cells' => [
+					'cells'   => [
 						[ 'text' => '#1001' ],
 						[ 'text' => 'Premium Theme License' ],
 						[ 'text' => 'Completed' ],
-						[ 'text' => 'View | Edit' ],
+						[ 'text' => '' ], // Empty for actions column
+					],
+					'actions' => [
+						'sync' => [
+							'title' => 'Sync Order',
+						],
 					],
 				],
 				[
-					'cells' => [
+					'cells'   => [
 						[ 'text' => '#1002' ],
 						[ 'text' => 'Plugin Bundle' ],
 						[ 'text' => 'Processing' ],
-						[ 'text' => 'View | Edit' ],
+						[ 'text' => '' ],
 					],
-				],
-				[
-					'cells' => [
-						[ 'text' => '#1003' ],
-						[ 'text' => 'Support Package' ],
-						[ 'text' => 'Pending' ],
-						[ 'text' => 'View | Edit' ],
-					],
-				],
-				[
-					'cells' => [
-						[ 'text' => '#1004' ],
-						[ 'text' => 'Custom Development' ],
-						[ 'text' => 'Completed' ],
-						[ 'text' => 'View | Edit' ],
-					],
-				],
-				[
-					'cells' => [
-						[ 'text' => '#1005' ],
-						[ 'text' => 'Hosting Service' ],
-						[ 'text' => 'Cancelled' ],
-						[ 'text' => 'View | Edit' ],
+					'actions' => [
+						'delete' => [
+							'requires_confirmation' => true,
+							'message'               => 'Are you sure you want to delete this order?',
+						],
+						'sync'   => [
+							'title' => 'Sync Order',
+						],
 					],
 				],
 			],
@@ -153,43 +143,33 @@ class Sales_Widget extends Abstract_Widget {
 			],
 			'rows'    => [
 				[
-					'cells' => [
+					'cells'   => [
 						[ 'text' => '#P001' ],
 						[ 'text' => 'WordPress Theme Pro' ],
 						[ 'text' => 'Active' ],
-						[ 'text' => 'View | Edit' ],
+						[ 'text' => '' ],
+					],
+					'actions' => [
+						'sync' => [
+							'title' => 'Sync Product',
+						],
 					],
 				],
 				[
-					'cells' => [
+					'cells'   => [
 						[ 'text' => '#P002' ],
 						[ 'text' => 'SEO Plugin Bundle' ],
 						[ 'text' => 'Active' ],
-						[ 'text' => 'View | Edit' ],
+						[ 'text' => '' ],
 					],
-				],
-				[
-					'cells' => [
-						[ 'text' => '#P003' ],
-						[ 'text' => 'Security Plugin' ],
-						[ 'text' => 'Active' ],
-						[ 'text' => 'View | Edit' ],
-					],
-				],
-				[
-					'cells' => [
-						[ 'text' => '#P004' ],
-						[ 'text' => 'Backup Solution' ],
-						[ 'text' => 'Inactive' ],
-						[ 'text' => 'View | Edit' ],
-					],
-				],
-				[
-					'cells' => [
-						[ 'text' => '#P005' ],
-						[ 'text' => 'Performance Plugin' ],
-						[ 'text' => 'Active' ],
-						[ 'text' => 'View | Edit' ],
+					'actions' => [
+						'delete' => [
+							'requires_confirmation' => true,
+							'message'               => 'Are you sure you want to delete this product?',
+						],
+						'sync'   => [
+							'title' => 'Sync Product',
+						],
 					],
 				],
 			],
