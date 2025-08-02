@@ -424,6 +424,34 @@ class TabularWidget extends React.Component {
 		return classes.join( ' ' );
 	};
 
+	/**
+	 * Get header class name.
+	 *
+	 * @param {number} headerIndex Header index.
+	 * @param {number} totalHeaders Total number of headers.
+	 * @param {Array} headers Table headers.
+	 * @returns {string} Header class name.
+	 */
+	getHeaderClassName = ( headerIndex, totalHeaders, headers = [] ) => {
+		const classes = [];
+
+		// Add header-based classes
+		if ( headers[ headerIndex ] && headers[ headerIndex ].text ) {
+			const headerText = headers[ headerIndex ].text.toLowerCase().replace( /\s+/g, '-' );
+			classes.push( `column-${ headerText }` );
+		}
+
+		if ( headerIndex === 0 ) {
+			classes.push( 'first-column' );
+		}
+
+		if ( headerIndex === totalHeaders - 1 ) {
+			classes.push( 'action-column', 'last-column' );
+		}
+
+		return classes.join( ' ' );
+	};
+
 	render() {
 		const { data, settings = {} } = this.props;
 		const { tables } = data || {};
@@ -444,7 +472,16 @@ class TabularWidget extends React.Component {
 									<thead>
 										<tr>
 											{ table.headers.map( ( header, index ) => (
-												<th key={ index }>{ header.text }</th>
+												<th
+													key={ index }
+													className={ this.getHeaderClassName(
+														index,
+														table.headers.length,
+														table.headers
+													) }
+												>
+													{ header.text }
+												</th>
 											) ) }
 										</tr>
 									</thead>

@@ -46,7 +46,7 @@
 	padding: 4px 8px;
 	text-align: left;
 	font-weight: 500;
-	font-size: 11px;
+	font-size: 12px;
 	color: #1d2327;
 	border-bottom: 1px solid #dcdcde;
 	white-space: nowrap;
@@ -109,6 +109,22 @@
 	padding: 4px 2px !important;
 }
 
+/* Status column specific styling */
+.tabular-widget td.column-status,
+.tabular-widget th.column-status {
+	width: 80px !important;
+	max-width: 80px !important;
+	min-width: 80px !important;
+	text-align: center;
+}
+.tabular-widget td.column-activity,
+.tabular-widget th.column-activity {
+	width: 80px !important;
+	max-width: 80px !important;
+	min-width: 80px !important;
+	text-align: center;
+}
+
 /* Linked cells styling */
 .tabular-widget .cell-link {
 	color: #007cba;
@@ -164,22 +180,22 @@
 }
 
 .tabular-widget .action-btn svg {
-	width: 12px;
-	height: 12px;
+	width: 14px;
+	height: 14px;
 	transition: transform 0.2s ease;
 }
 
 .tabular-widget .action-btn .dashicons {
-	font-size: 12px;
-	width: 12px;
-	height: 12px;
+	font-size: 14px;
+	width: 14px;
+	height: 14px;
 	line-height: 1;
 }
 
 /* Loading spinner */
 .tabular-widget .loading-spinner {
-	width: 12px;
-	height: 12px;
+	width: 14px;
+	height: 14px;
 	border: 1px solid #dcdcde;
 	border-top: 1px solid #007cba;
 	border-radius: 50%;
