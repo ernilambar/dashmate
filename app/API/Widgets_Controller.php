@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace Nilambar\Dashmate\API;
 
-use Nilambar\Dashmate\Widget_Blueprint_Manager;
+use Nilambar\Dashmate\Widget_Template_Registry;
 use Nilambar\Dashmate\Widget_Dispatcher;
 use WP_Error;
 use WP_REST_Request;
@@ -166,7 +166,7 @@ class Widgets_Controller extends Base_Controller {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public function get_widgets( $request ) {
-		$data = Widget_Blueprint_Manager::get_widget_blueprints_for_frontend();
+		$data = Widget_Dispatcher::get_widget_types_for_frontend();
 
 		return $this->success_response( $data );
 	}
@@ -201,14 +201,14 @@ class Widgets_Controller extends Base_Controller {
 		$settings    = $widget_data['settings'] ?? [];
 
 		// Get content using the new system.
-		$content = Widget_Dispatcher::get_widget_content( $widget->get_blueprint_type(), $widget_id, $settings );
+		$content = Widget_Dispatcher::get_widget_content( $widget->get_template_type(), $widget_id, $settings );
 
 		if ( is_wp_error( $content ) ) {
 			return $content;
 		}
 
 		// Add widget type to the response so frontend doesn't need to guess
-		$content['type'] = $widget->get_blueprint_type();
+		$content['type'] = $widget->get_template_type();
 
 		return $this->success_response( $content );
 	}
@@ -232,14 +232,14 @@ class Widgets_Controller extends Base_Controller {
 			return $this->error_response( 'Widget not found: ' . $widget_id, 404, 'widget_not_found' );
 		}
 
-		$content = Widget_Dispatcher::get_widget_content( $widget->get_blueprint_type(), $widget_id );
+		$content = Widget_Dispatcher::get_widget_content( $widget->get_template_type(), $widget_id );
 
 		if ( is_wp_error( $content ) ) {
 			return $content;
 		}
 
 		// Add widget type to the response
-		$content['type'] = $widget->get_blueprint_type();
+		$content['type'] = $widget->get_template_type();
 
 		return $this->success_response( $content );
 	}
@@ -264,14 +264,14 @@ class Widgets_Controller extends Base_Controller {
 			return $this->error_response( 'Widget not found: ' . $widget_id, 404, 'widget_not_found' );
 		}
 
-		$content = Widget_Dispatcher::get_widget_content( $widget->get_blueprint_type(), $widget_id, $settings );
+		$content = Widget_Dispatcher::get_widget_content( $widget->get_template_type(), $widget_id, $settings );
 
 		if ( is_wp_error( $content ) ) {
 			return $content;
 		}
 
 		// Add widget type to the response
-		$content['type'] = $widget->get_blueprint_type();
+		$content['type'] = $widget->get_template_type();
 
 		return $this->success_response( $content );
 	}
@@ -334,8 +334,6 @@ class Widgets_Controller extends Base_Controller {
 		return ! empty( $widget_id ) && preg_match( '/^[a-zA-Z0-9_-]+$/', $widget_id );
 	}
 
-
-
 	/**
 	 * Find widget by ID in dashboard data.
 	 *
@@ -356,124 +354,5 @@ class Widgets_Controller extends Base_Controller {
 		}
 
 		return null;
-	}
-
-	/**
-	 * Update widget settings.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $widget_id      Widget ID.
-	 * @param array  $settings      New settings.
-	 * @param array  $dashboard_data Dashboard data.
-	 *
-	 * @return bool
-	 */
-	private function update_widget_settings( $widget_id, $settings, &$dashboard_data ) {
-		if ( ! isset( $dashboard_data['columns'] ) ) {
-			return false;
-		}
-
-		foreach ( $dashboard_data['columns'] as &$column ) {
-			if ( ! isset( $column['widgets'] ) ) {
-				continue;
-			}
-
-			foreach ( $column['widgets'] as &$widget ) {
-				if ( isset( $widget['id'] ) && $widget['id'] === $widget_id ) {
-					$widget['settings'] = $settings;
-					return true;
-				}
-			}
-		}
-
-		return false;
-	}
-
-	/**
-	 * Get widget data by type.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $widget_type Widget type.
-	 * @param array  $settings   Widget settings.
-	 *
-	 * @return array
-	 */
-	private function get_widget_data_by_type( $widget_type, $settings ) {
-		// This method should not exist in controller.
-		// Data should come from the widget itself via Widget_Dispatcher.
-		return [];
-	}
-
-	/**
-	 * Get widget content by type.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $widget_type Widget type.
-	 * @param string $widget_id   Widget ID.
-	 *
-	 * @return array|WP_Error
-	 */
-	private function get_widget_content_by_type( $widget_type, $widget_id = null ) {
-		// Get widget by ID and get its blueprint type.
-		$widget = Widget_Dispatcher::get_widget( $widget_id );
-
-		if ( null === $widget ) {
-			return new \WP_Error( 'unknown_widget', 'Unknown widget: ' . $widget_id );
-		}
-
-		// Get the blueprint type from the widget.
-		$blueprint_type = $widget->get_blueprint_type();
-
-		// Use the new widget system.
-		$content = Widget_Dispatcher::get_widget_content( $blueprint_type, $widget_id );
-
-		if ( is_wp_error( $content ) ) {
-			return $content;
-		}
-
-		// Add widget ID to content.
-		$content['id']   = $widget_id;
-		$content['type'] = $blueprint_type;
-
-		return $content;
-	}
-
-	/**
-	 * Get widget content by type with settings.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $widget_type Widget type.
-	 * @param string $widget_id   Widget ID.
-	 * @param array  $settings    Widget settings.
-	 *
-	 * @return array|WP_Error
-	 */
-	private function get_widget_content_by_type_with_settings( $widget_type, $widget_id, $settings ) {
-		// Get widget by ID and get its blueprint type.
-		$widget = Widget_Dispatcher::get_widget( $widget_id );
-
-		if ( null === $widget ) {
-			return new \WP_Error( 'unknown_widget', 'Unknown widget: ' . $widget_id );
-		}
-
-		// Get the blueprint type from the widget.
-		$blueprint_type = $widget->get_blueprint_type();
-
-		// Use the new widget system with settings.
-		$content = Widget_Dispatcher::get_widget_content( $blueprint_type, $widget_id, $settings );
-
-		if ( is_wp_error( $content ) ) {
-			return $content;
-		}
-
-		// Add widget ID to content.
-		$content['id']   = $widget_id;
-		$content['type'] = $blueprint_type;
-
-		return $content;
 	}
 }

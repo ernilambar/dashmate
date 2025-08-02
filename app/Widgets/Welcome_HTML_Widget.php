@@ -27,9 +27,45 @@ class Welcome_HTML_Widget extends Abstract_Widget {
 	 */
 	public function __construct( $id ) {
 		parent::__construct( $id, 'html', 'Welcome HTML Widget' );
+	}
 
+	/**
+	 * Define widget configuration.
+	 *
+	 * @since 1.0.0
+	 */
+	protected function define_widget() {
 		$this->description = 'Display welcome message with HTML content';
 		$this->icon        = 'editor-code';
+
+		$this->settings_schema = [
+			'allow_scripts' => [
+				'type'        => 'checkbox',
+				'label'       => 'Allow Scripts',
+				'description' => 'Allow JavaScript execution in HTML content',
+				'default'     => false,
+			],
+			'content' => [
+				'type'        => 'textarea',
+				'label'       => 'HTML Content',
+				'description' => 'Enter HTML content to display',
+				'default'     => '<h3>Welcome to Dashmate!</h3>
+<p>This is a custom HTML widget. You can add any HTML content here.</p>
+<ul>
+	<li>Feature 1</li>
+	<li>Feature 2</li>
+	<li>Feature 3</li>
+</ul>',
+			],
+		];
+
+		$this->output_schema = [
+			'html_content' => [
+				'type'        => 'string',
+				'required'    => true,
+				'description' => 'HTML content to render',
+			],
+		];
 	}
 
 	/**
@@ -47,7 +83,7 @@ class Welcome_HTML_Widget extends Abstract_Widget {
 		$settings = $this->merge_settings_with_defaults( $settings );
 
 		return [
-			'html_content'  => '<h3>Welcome to Dashmate!</h3>
+			'html_content'  => $settings['content'] ?? '<h3>Welcome to Dashmate!</h3>
 				<p>This is a custom HTML widget. You can add any HTML content here.</p>
 				<ul>
 					<li>Feature 1</li>

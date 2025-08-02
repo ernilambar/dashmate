@@ -27,9 +27,49 @@ class Quick_Links_Widget extends Abstract_Widget {
 	 */
 	public function __construct( $id ) {
 		parent::__construct( $id, 'links', 'Quick Links Widget' );
+	}
 
+	/**
+	 * Define widget configuration.
+	 *
+	 * @since 1.0.0
+	 */
+	protected function define_widget() {
 		$this->description = 'Display quick access links to WordPress admin pages';
 		$this->icon        = 'admin-links';
+
+		$this->settings_schema = [
+			'hideIcon'  => [
+				'type'        => 'checkbox',
+				'label'       => 'Hide Icons',
+				'description' => 'Hide link icons',
+				'default'     => false,
+			],
+			'linkStyle' => [
+				'type'    => 'select',
+				'label'   => 'Link Style',
+				'description' => 'Choose how links are displayed',
+				'options' => [
+					[
+						'value' => 'list',
+						'label' => 'List',
+					],
+					[
+						'value' => 'grid',
+						'label' => 'Grid',
+					],
+				],
+				'default' => 'list',
+			],
+		];
+
+		$this->output_schema = [
+			'links' => [
+				'type'        => 'array',
+				'required'    => true,
+				'description' => 'Array of link objects',
+			],
+		];
 	}
 
 	/**

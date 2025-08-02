@@ -17,22 +17,13 @@ namespace Nilambar\Dashmate;
 abstract class Abstract_Widget {
 
 	/**
-	 * Widget type identifier.
+	 * Widget template type.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @var string
 	 */
-	protected $type;
-
-	/**
-	 * Widget blueprint type.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var string
-	 */
-	protected $blueprint_type;
+	protected $template_type;
 
 	/**
 	 * Widget instance ID.
@@ -94,18 +85,31 @@ abstract class Abstract_Widget {
 	 * @since 1.0.0
 	 *
 	 * @param string $id             Widget instance ID.
-	 * @param string $blueprint_type Widget blueprint type.
+	 * @param string $template_type  Widget template type.
 	 * @param string $name           Widget name.
 	 */
-	public function __construct( $id, $blueprint_type, $name ) {
-		$this->id              = $id;
-		$this->blueprint_type  = $blueprint_type;
-		$this->name            = $name;
-		$this->description     = '';
-		$this->icon            = '';
+	public function __construct( $id, $template_type, $name ) {
+		$this->id             = $id;
+		$this->template_type  = $template_type;
+		$this->name           = $name;
+		$this->description    = '';
+		$this->icon           = '';
 		$this->settings_schema = [];
 		$this->output_schema   = [];
+
+		// Define widget configuration.
+		$this->define_widget();
 	}
+
+	/**
+	 * Define widget configuration.
+	 *
+	 * Each widget must implement this method to define its own
+	 * settings schema, output schema, description, and icon.
+	 *
+	 * @since 1.0.0
+	 */
+	abstract protected function define_widget();
 
 	/**
 	 * Get widget content.
@@ -120,25 +124,14 @@ abstract class Abstract_Widget {
 	abstract public function get_content( $widget_id = null, $settings = [] );
 
 	/**
-	 * Get widget type.
+	 * Get widget template type.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @return string
 	 */
-	public function get_type() {
-		return $this->type;
-	}
-
-	/**
-	 * Get widget blueprint type.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return string
-	 */
-	public function get_blueprint_type() {
-		return $this->blueprint_type;
+	public function get_template_type() {
+		return $this->template_type;
 	}
 
 	/**
@@ -193,14 +186,6 @@ abstract class Abstract_Widget {
 	 * @return array
 	 */
 	public function get_settings_schema() {
-		// Get blueprint settings schema if available.
-		if ( ! empty( $this->blueprint_type ) ) {
-			$blueprint = Widget_Blueprint_Manager::get_widget_blueprint( $this->blueprint_type );
-			if ( $blueprint && isset( $blueprint['settings_schema'] ) ) {
-				return $blueprint['settings_schema'];
-			}
-		}
-
 		return $this->settings_schema ?? [];
 	}
 
@@ -212,14 +197,6 @@ abstract class Abstract_Widget {
 	 * @return array
 	 */
 	public function get_output_schema() {
-		// Get blueprint output schema if available.
-		if ( ! empty( $this->blueprint_type ) ) {
-			$blueprint = Widget_Blueprint_Manager::get_widget_blueprint( $this->blueprint_type );
-			if ( $blueprint && isset( $blueprint['output_schema'] ) ) {
-				return $blueprint['output_schema'];
-			}
-		}
-
 		return $this->output_schema ?? [];
 	}
 
@@ -231,24 +208,11 @@ abstract class Abstract_Widget {
 	 * @return array
 	 */
 	public function get_definition() {
-		// Get blueprint definition if available.
-		if ( ! empty( $this->blueprint_type ) ) {
-			$blueprint = Widget_Blueprint_Manager::get_widget_blueprint( $this->blueprint_type );
-			if ( $blueprint ) {
-				return [
-					'name'            => $blueprint['name'],
-					'description'     => $blueprint['description'],
-					'icon'            => $blueprint['icon'],
-					'settings_schema' => $blueprint['settings_schema'],
-					'output_schema'   => $blueprint['output_schema'],
-				];
-			}
-		}
-
 		return [
 			'name'            => $this->name,
 			'description'     => $this->description,
 			'icon'            => $this->icon,
+			'template_type'   => $this->template_type,
 			'settings_schema' => $this->settings_schema,
 			'output_schema'   => $this->output_schema,
 		];
@@ -390,7 +354,7 @@ abstract class Abstract_Widget {
 
 		// Validate output against schema.
 		if ( ! $this->validate_output( $content ) ) {
-			return new \WP_Error( 'invalid_output', 'Widget output does not match schema for widget type: ' . $this->type );
+			return new \WP_Error( 'invalid_output', 'Widget output does not match schema for widget type: ' . $this->template_type );
 		}
 
 		return $content;
@@ -490,6 +454,7 @@ abstract class Abstract_Widget {
 			'name'             => $this->name,
 			'description'      => $this->description,
 			'icon'             => $this->icon,
+			'template_type'    => $this->template_type,
 			'settings_schema'  => $this->settings_schema,
 			'output_schema'    => $this->output_schema,
 			'essential_fields' => $this->get_essential_fields(),

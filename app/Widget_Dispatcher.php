@@ -176,8 +176,30 @@ class Widget_Dispatcher {
 		$widget_types = [];
 		$widgets      = self::get_widgets();
 
-		foreach ( $widgets as $type => $widget ) {
-			$widget_types[ $type ] = $widget->get_definition();
+		// First, get all available template types from the registry
+		$templates = \Nilambar\Dashmate\Widget_Template_Registry::get_templates();
+
+		// Initialize with all available template types
+		foreach ( $templates as $template_type => $template_config ) {
+			$widget_types[ $template_type ] = [
+				'name'            => $template_config['component'],
+				'description'     => 'Widget using ' . $template_type . ' template',
+				'icon'            => 'admin-generic',
+				'template_type'   => $template_type,
+				'settings_schema' => [],
+				'output_schema'   => [],
+				'capabilities'    => $template_config['capabilities'] ?? [],
+			];
+		}
+
+		// Then, update with actual widget definitions where available
+		foreach ( $widgets as $id => $widget ) {
+			$template_type = $widget->get_template_type();
+
+			if ( isset( $widget_types[ $template_type ] ) ) {
+				// Update with actual widget definition
+				$widget_types[ $template_type ] = $widget->get_definition();
+			}
 		}
 
 		return $widget_types;
@@ -188,16 +210,16 @@ class Widget_Dispatcher {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $type Widget type.
+	 * @param string $id Widget ID.
 	 *
 	 * @return bool
 	 */
-	public static function unregister_widget( $type ) {
-		if ( ! self::is_widget_registered( $type ) ) {
+	public static function unregister_widget( $id ) {
+		if ( ! self::is_widget_registered( $id ) ) {
 			return false;
 		}
 
-		unset( self::$widgets[ $type ] );
+		unset( self::$widgets[ $id ] );
 
 		return true;
 	}
