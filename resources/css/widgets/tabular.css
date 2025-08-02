@@ -77,18 +77,11 @@
 }
 
 /* Column width control */
-.tabular-widget th:nth-child(1),
-.tabular-widget td:nth-child(1) {
+.tabular-widget th:first-child,
+.tabular-widget td:first-child {
 	width: 40px;
 	max-width: 40px;
 	min-width: 40px;
-}
-
-.tabular-widget th:nth-child(2),
-.tabular-widget td:nth-child(2) {
-	width: 200px;
-	max-width: 200px;
-	min-width: 200px;
 }
 
 .tabular-widget th:last-child,
@@ -97,6 +90,23 @@
 	max-width: 60px;
 	min-width: 60px;
 	text-align: center;
+}
+
+/* Middle columns - flexible width */
+.tabular-widget th:not(:first-child):not(:last-child),
+.tabular-widget td:not(:first-child):not(:last-child) {
+	width: auto;
+	min-width: 100px;
+}
+
+/* Action column specific styling */
+.tabular-widget td.action-column,
+.tabular-widget th.action-column {
+	width: 60px !important;
+	max-width: 60px !important;
+	min-width: 60px !important;
+	text-align: center;
+	padding: 4px 2px !important;
 }
 
 /* Linked cells styling */
@@ -124,11 +134,39 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	position: relative;
+	transition: all 0.2s ease;
+	min-width: 16px;
+	min-height: 16px;
+}
+
+.tabular-widget .action-btn:hover {
+	background: #f0f0f1;
+	color: #007cba;
+}
+
+.tabular-widget .action-btn:disabled {
+	cursor: not-allowed;
+	opacity: 0.5;
+	color: #a0a5aa;
+}
+
+.tabular-widget .action-btn.loading {
+	cursor: wait;
+}
+
+.tabular-widget .action-btn.success {
+	color: #00a32a;
+}
+
+.tabular-widget .action-btn.error {
+	color: #d63638;
 }
 
 .tabular-widget .action-btn svg {
 	width: 12px;
 	height: 12px;
+	transition: transform 0.2s ease;
 }
 
 .tabular-widget .action-btn .dashicons {
@@ -136,6 +174,74 @@
 	width: 12px;
 	height: 12px;
 	line-height: 1;
+}
+
+/* Loading spinner */
+.tabular-widget .loading-spinner {
+	width: 12px;
+	height: 12px;
+	border: 1px solid #dcdcde;
+	border-top: 1px solid #007cba;
+	border-radius: 50%;
+	animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+/* Action result indicators */
+.tabular-widget .action-result {
+	position: absolute;
+	top: -2px;
+	right: -2px;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	font-size: 6px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	animation: fadeIn 0.3s ease;
+}
+
+.tabular-widget .action-result.success {
+	background: #00a32a;
+	color: white;
+}
+
+.tabular-widget .action-result.error {
+	background: #d63638;
+	color: white;
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: scale(0.8);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
+/* Action button specific styles */
+.tabular-widget .action-btn.delete-btn:hover {
+	color: #d63638;
+}
+
+.tabular-widget .action-btn.sync-btn:hover {
+	color: #00a32a;
+}
+
+.tabular-widget .action-btn.sync-btn.loading svg {
+	animation: spin 1s linear infinite;
 }
 
 /* Responsive design */
