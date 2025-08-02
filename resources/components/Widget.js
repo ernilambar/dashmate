@@ -168,7 +168,6 @@ class Widget extends Component {
 
 	handleSettingsChange = async ( newSettings, needsRefresh = false ) => {
 		// Update widget settings in the parent component
-		console.log( 'Settings changed:', newSettings, 'needsRefresh:', needsRefresh );
 
 		// Update local widget settings immediately for instant feedback
 		this.props.widget.settings = { ...this.props.widget.settings, ...newSettings };
@@ -192,7 +191,6 @@ class Widget extends Component {
 			const result = await response.json();
 
 			if ( result.success ) {
-				console.log( 'Settings saved successfully' );
 				// Only reload widget data if refresh is needed
 				if ( needsRefresh ) {
 					this.loadWidgetData();
@@ -201,7 +199,7 @@ class Widget extends Component {
 				console.error( 'Failed to save settings:', result );
 			}
 		} catch ( error ) {
-			console.error( 'Error saving settings:', error );
+			// Handle error silently or log to server
 		}
 	};
 

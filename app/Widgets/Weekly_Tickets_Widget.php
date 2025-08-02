@@ -47,14 +47,14 @@ class Weekly_Tickets_Widget extends Abstract_Widget {
 				'default'     => 4,
 				'min'         => 1,
 				'max'         => 8,
-				'refresh' => true, // This field triggers data refetch
+				'refresh'     => true, // This field triggers data refetch
 			],
 			'hideCaption'   => [
 				'type'        => 'checkbox',
 				'label'       => 'Hide Caption',
 				'description' => 'Hide captions below progress circles',
 				'default'     => false,
-				'refresh' => false, // This field is handled by React
+				'refresh'     => false, // This field is handled by React
 			],
 
 		];
@@ -80,9 +80,8 @@ class Weekly_Tickets_Widget extends Abstract_Widget {
 	 */
 	public function get_content( $widget_id = null, $settings = [] ) {
 		$settings = $this->merge_settings_with_defaults( $settings );
-		$circles_number = absint( $settings['circlesNumber'] ?? 4 );
 
-		$circles = Review_Utils::prepare_review_stats( $settings, $circles_number );
+		$circles = Review_Utils::prepare_review_stats( $settings );
 
 		return [
 			'items' => $circles,

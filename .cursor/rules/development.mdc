@@ -37,7 +37,13 @@ alwaysApply: true
   Dependencies
   - WordPress (latest stable version)
   - Composer for dependency management (when building advanced plugins or themes)
-  - pnpm used for package manager
+  - **pnpm** used for package manager (always use `pnpm` commands instead of `npm`)
+
+  Package Management
+  - This project uses **pnpm** as the package manager
+  - Always use `pnpm` commands instead of `npm` commands
+  - Use `pnpm install`, `pnpm run build`, `pnpm run dev`, etc.
+  - Never use `npm` commands in this project
 
   Things to remember
   - This project uses Post CSS. Nested CSS is encouraged but only to two levels.

@@ -9,15 +9,15 @@ class TabularWidget extends React.Component {
 	}
 
 	handleTableClick = ( table, tableIndex ) => {
-		console.log( 'TabularWidget table clicked:', table, tableIndex );
+		// Handle table click if needed
 	};
 
 	handleRowClick = ( row, rowIndex, tableIndex ) => {
-		console.log( 'TabularWidget row clicked:', row, rowIndex, tableIndex );
+		// Handle row click if needed
 	};
 
 	handleActionClick = ( action, row, rowIndex, tableIndex ) => {
-		console.log( 'TabularWidget action clicked:', action, row, rowIndex, tableIndex );
+		// Handle action click if needed
 	};
 
 	/**
@@ -87,7 +87,6 @@ class TabularWidget extends React.Component {
 					rel="noopener noreferrer"
 					onClick={ ( e ) => {
 						e.stopPropagation();
-						console.log( 'ID clicked:', cell.text );
 					} }
 				>
 					{ cell.text }
@@ -103,7 +102,6 @@ class TabularWidget extends React.Component {
 					rel="noopener noreferrer"
 					onClick={ ( e ) => {
 						e.stopPropagation();
-						console.log( 'Title clicked:', cell.text );
 					} }
 				>
 					{ cell.text }

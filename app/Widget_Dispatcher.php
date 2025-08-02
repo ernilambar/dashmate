@@ -246,7 +246,16 @@ class Widget_Dispatcher {
 		// Find the widget and update its settings.
 		foreach ( $widgets as $index => $widget ) {
 			if ( isset( $widget['id'] ) && $widget['id'] === $widget_id ) {
-				$widgets[ $index ]['settings'] = array_merge( $widget['settings'] ?? [], $settings );
+				$current_settings = $widget['settings'] ?? [];
+				$new_settings     = array_merge( $current_settings, $settings );
+
+				// Check if there are actual changes
+				if ( $current_settings === $new_settings ) {
+					// No changes made, return success without saving
+					return true;
+				}
+
+				$widgets[ $index ]['settings'] = $new_settings;
 				return self::save_dashboard_data( $dashboard_data );
 			}
 		}

@@ -12,7 +12,13 @@ export default function WidgetSettingsForm( { schema, values, onChange } ) {
 	}, [ values ] );
 
 	const handleFieldChange = ( key, newValue ) => {
-		setLocalValues( { ...localValues, [ key ]: newValue } );
+		const newLocalValues = { ...localValues, [ key ]: newValue };
+		setLocalValues( newLocalValues );
+
+		// For fields that don't require refresh, apply changes immediately
+		if ( schema[ key ]?.refresh !== true ) {
+			onChange( newLocalValues, false );
+		}
 	};
 
 	const handleSave = async () => {
@@ -20,14 +26,30 @@ export default function WidgetSettingsForm( { schema, values, onChange } ) {
 		setSaveMessage( '' );
 
 		try {
-			// Check which fields have changed and if any require refresh
+			// Only save fields that require refresh (have changed and refresh: true)
 			const changedFields = Object.keys( localValues ).filter(
 				( key ) => localValues[ key ] !== values[ key ]
 			);
 
-			const needsRefresh = changedFields.some( ( key ) => schema[ key ]?.refresh === true );
+			const refreshFields = changedFields.filter(
+				( key ) => schema[ key ]?.refresh === true
+			);
+			const needsRefresh = refreshFields.length > 0;
 
-			await onChange( localValues, needsRefresh );
+			// If no fields have changed, treat as success
+			if ( changedFields.length === 0 ) {
+				setSaveMessage( 'Settings are already up to date!' );
+				setTimeout( () => setSaveMessage( '' ), 3000 );
+				return;
+			}
+
+			// Create settings object with only the fields that need to be saved
+			const settingsToSave = {};
+			refreshFields.forEach( ( key ) => {
+				settingsToSave[ key ] = localValues[ key ];
+			} );
+
+			await onChange( settingsToSave, needsRefresh );
 			setSaveMessage( 'Settings saved successfully!' );
 			setTimeout( () => setSaveMessage( '' ), 3000 );
 		} catch ( error ) {
@@ -166,22 +188,6 @@ export default function WidgetSettingsForm( { schema, values, onChange } ) {
 			</form>
 
 			<div style={ { marginTop: 16, textAlign: 'right' } }>
-				{ saveMessage && (
-					<div
-						style={ {
-							marginBottom: 8,
-							padding: 8,
-							backgroundColor: saveMessage.includes( 'Error' )
-								? '#ffebee'
-								: '#e8f5e8',
-							color: saveMessage.includes( 'Error' ) ? '#c62828' : '#2e7d32',
-							borderRadius: 4,
-							fontSize: '12px',
-						} }
-					>
-						{ saveMessage }
-					</div>
-				) }
 				<button
 					type="button"
 					onClick={ handleSave }
@@ -198,6 +204,22 @@ export default function WidgetSettingsForm( { schema, values, onChange } ) {
 				>
 					{ isSaving ? 'Saving...' : 'Save Settings' }
 				</button>
+				{ saveMessage && (
+					<div
+						style={ {
+							marginTop: 8,
+							padding: 8,
+							backgroundColor: saveMessage.includes( 'Error' )
+								? '#ffebee'
+								: '#e8f5e8',
+							color: saveMessage.includes( 'Error' ) ? '#c62828' : '#2e7d32',
+							borderRadius: 4,
+							fontSize: '12px',
+						} }
+					>
+						{ saveMessage }
+					</div>
+				) }
 			</div>
 		</div>
 	);

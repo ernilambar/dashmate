@@ -50,11 +50,7 @@ class Review_Utils {
 			++$output[ $week_number ];
 		}
 
-		// Sort by week number in ascending order.
 		ksort( $output );
-
-		// Return only the latest 4 weeks (last 4 entries).
-		$output = array_slice( $output, -4, null, true );
 
 		return $output;
 	}
@@ -64,17 +60,16 @@ class Review_Utils {
 	 *
 	 * @since 1.0.0
 	 * @param array $settings Settings.
-	 * @param int   $circles_number Number of circles to display.
 	 * @return array An array of review details formatted for React app.
 	 */
-	public static function prepare_review_stats( $settings, $circles_number = 4 ): array {
+	public static function prepare_review_stats( $settings ): array {
 		$output = [];
 
 		$week_totals   = self::get_review_details();
 		$target_number = 60;
 
-		// Get hideCaption setting, default to false if not set.
-		$hide_caption = isset( $settings['hideCaption'] ) ? (bool) $settings['hideCaption'] : false;
+		// Get circlesNumber setting, default to 4 if not set.
+		$circles_number = isset( $settings['circlesNumber'] ) ? absint( $settings['circlesNumber'] ) : 4;
 
 		// Transform week totals into the format expected by React app.
 		foreach ( $week_totals as $week => $total_tickets ) {
@@ -83,12 +78,12 @@ class Review_Utils {
 			$output[] = [
 				'percentage' => min( 100, $percent ),
 				'value'      => $total_tickets,
-				'caption'    => $hide_caption ? '' : "W: {$week}",
+				'caption'    => "W: {$week}",
 			];
 		}
 
-		// Limit the output to the requested number of circles.
-		$output = array_slice( $output, 0, $circles_number );
+		// Return only the last $circles_number items from the array.
+		$output = array_slice( $output, -$circles_number );
 
 		return $output;
 	}

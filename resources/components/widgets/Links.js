@@ -23,7 +23,6 @@ class Links extends React.Component {
 
 		// Check if data prop changed (when settings are saved and content is refetched)
 		if ( prevProps.data !== this.props.data ) {
-			console.log( 'QuickLinksWidget: Data updated', this.props.data );
 			// Data has been updated by parent component, no need to update state
 			// as we'll use props.data directly in render
 		}
@@ -37,15 +36,14 @@ class Links extends React.Component {
 			if ( result.success ) {
 				this.setState( { widgetSchemas: result.data } );
 			} else {
-				console.error( 'Failed to fetch widget schemas:', result );
+				// Handle error silently or log to server
 			}
 		} catch ( error ) {
-			console.error( 'Error fetching widget schemas:', error );
+			// Handle error silently or log to server
 		}
 	};
 
 	handleLinkClick = ( link ) => {
-		console.log( 'QuickLinksWidget link clicked:', link );
 		window.open( link.url, '_blank' );
 	};
 

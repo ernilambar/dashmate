@@ -33,7 +33,7 @@ class ProgressCirclesWidget extends React.Component {
 	};
 
 	handleCircleClick = ( index, item ) => {
-		console.log( 'ProgressCircle clicked:', item );
+		// Handle circle click if needed
 	};
 
 	renderProgressCircle = ( item, index ) => {
