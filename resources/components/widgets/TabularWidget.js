@@ -200,7 +200,6 @@ class TabularWidget extends React.Component {
 		// Build request data
 		const requestData = {
 			id: id,
-			action: 'sync',
 			widget_id: this.props.widgetId,
 			row_data: row,
 			row_index: rowIndex,
