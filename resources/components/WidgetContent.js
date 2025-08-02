@@ -27,7 +27,6 @@ class WidgetContent extends Component {
 	componentDidUpdate( prevProps ) {
 		// Check if widgetData prop changed (when settings are saved and content is refetched)
 		if ( prevProps.widgetData !== this.props.widgetData ) {
-			console.log( 'WidgetContent: widgetData updated', this.props.widgetData );
 			if ( this.props.widgetData ) {
 				this.setState( { data: this.props.widgetData, loading: false } );
 			}

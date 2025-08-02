@@ -9,7 +9,7 @@ class HtmlWidget extends React.Component {
 	}
 
 	handleClick = () => {
-		console.log( 'HtmlWidget clicked:', this.props.data );
+		// Handle HTML widget click if needed
 	};
 
 	handleMouseEnter = () => {

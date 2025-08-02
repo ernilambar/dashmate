@@ -12,7 +12,6 @@ class IconboxWidget extends React.Component {
 	handleClick = () => {
 		this.setState( { isClicked: true } );
 		setTimeout( () => this.setState( { isClicked: false } ), 200 );
-		console.log( 'IconboxWidget clicked:', this.props.data );
 	};
 
 	handleMouseEnter = () => {
