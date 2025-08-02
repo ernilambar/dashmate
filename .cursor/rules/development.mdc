@@ -73,3 +73,13 @@ alwaysApply: true
   8. Use WordPress's hook system for modular and extensible code.
   9. Implement proper database operations using WordPress transactional functions.
   10. Use WordPress's WP_Cron API for scheduling tasks.
+
+  WordPress REST API Standards
+  - Follow WordPress REST API response format:
+    - Success: `{ success: true, message: '...', data: {...} }`
+    - Error: Use `WP_Error` with proper status codes
+  - Use WordPress sanitization functions for input validation
+  - Include proper nonce verification for security
+  - Implement proper error handling with try-catch blocks
+  - Use descriptive endpoint names and HTTP methods appropriately
+  - Follow WordPress coding standards for REST API development
