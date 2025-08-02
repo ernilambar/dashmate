@@ -27,9 +27,53 @@ class Sales_Widget extends Abstract_Widget {
 	 */
 	public function __construct( $id ) {
 		parent::__construct( $id, 'tabular', esc_html__( 'Sales Overview', 'dashmate' ) );
+	}
 
+	/**
+	 * Define widget configuration.
+	 *
+	 * @since 1.0.0
+	 */
+	protected function define_widget() {
 		$this->description = 'Display sales data in tables';
 		$this->icon        = 'editor-table';
+
+		$this->settings_schema = [
+			'showHeaders' => [
+				'type'        => 'checkbox',
+				'label'       => 'Show Headers',
+				'description' => 'Show table headers',
+				'default'     => true,
+			],
+			'stripedRows' => [
+				'type'        => 'checkbox',
+				'label'       => 'Striped Rows',
+				'description' => 'Alternate row colors',
+				'default'     => true,
+			],
+			'showPagination' => [
+				'type'        => 'checkbox',
+				'label'       => 'Show Pagination',
+				'description' => 'Show pagination controls',
+				'default'     => true,
+			],
+			'itemsPerPage' => [
+				'type'        => 'number',
+				'label'       => 'Items Per Page',
+				'description' => 'Number of items to show per page',
+				'default'     => 10,
+				'min'         => 5,
+				'max'         => 50,
+			],
+		];
+
+		$this->output_schema = [
+			'tables' => [
+				'type'        => 'array',
+				'required'    => true,
+				'description' => 'Array of table objects',
+			],
+		];
 	}
 
 	/**

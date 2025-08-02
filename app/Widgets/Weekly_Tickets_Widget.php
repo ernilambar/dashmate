@@ -28,9 +28,51 @@ class Weekly_Tickets_Widget extends Abstract_Widget {
 	 */
 	public function __construct( $id ) {
 		parent::__construct( $id, 'progress-circles', esc_html__( 'Weekly Tickets', 'dashmate' ) );
+	}
 
-		$this->description = 'Display progress circles';
+	/**
+	 * Define widget configuration.
+	 *
+	 * @since 1.0.0
+	 */
+	protected function define_widget() {
+		$this->description = 'Display progress circles for weekly ticket statistics';
 		$this->icon        = 'feedback';
+
+		$this->settings_schema = [
+			'hideCaption' => [
+				'type'        => 'checkbox',
+				'label'       => 'Hide Caption',
+				'description' => 'Hide circle caption',
+				'default'     => false,
+			],
+			'showAnimation' => [
+				'type'        => 'checkbox',
+				'label'       => 'Show Animation',
+				'description' => 'Enable circle animation',
+				'default'     => true,
+			],
+			'colorScheme' => [
+				'type'        => 'select',
+				'label'       => 'Color Scheme',
+				'description' => 'Choose color scheme for circles',
+				'options'     => [
+					['value' => 'default', 'label' => 'Default'],
+					['value' => 'blue', 'label' => 'Blue'],
+					['value' => 'green', 'label' => 'Green'],
+					['value' => 'orange', 'label' => 'Orange'],
+				],
+				'default'     => 'default',
+			],
+		];
+
+		$this->output_schema = [
+			'items' => [
+				'type'        => 'array',
+				'required'    => true,
+				'description' => 'Array of circle objects',
+			],
+		];
 	}
 
 	/**

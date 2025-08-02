@@ -48,12 +48,11 @@ class Widget_Registry {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $type Widget type.
-	 * @param string $id   Widget instance ID.
+	 * @param string $id Widget instance ID.
 	 *
 	 * @return Abstract_Widget|null
 	 */
-	public static function create_widget_instance( $type, $id ) {
-		return Widget_Dispatcher::create_widget_instance( $type, $id );
+	public static function create_widget_instance( $id ) {
+		return Widget_Dispatcher::get_widget( $id );
 	}
 }
