@@ -39,13 +39,13 @@ class Sales_Widget extends Abstract_Widget {
 		$this->icon        = 'editor-table';
 
 		$this->settings_schema = [
-			'showHeaders' => [
+			'showHeaders'    => [
 				'type'        => 'checkbox',
 				'label'       => 'Show Headers',
 				'description' => 'Show table headers',
 				'default'     => true,
 			],
-			'stripedRows' => [
+			'stripedRows'    => [
 				'type'        => 'checkbox',
 				'label'       => 'Striped Rows',
 				'description' => 'Alternate row colors',
@@ -57,7 +57,7 @@ class Sales_Widget extends Abstract_Widget {
 				'description' => 'Show pagination controls',
 				'default'     => true,
 			],
-			'itemsPerPage' => [
+			'itemsPerPage'   => [
 				'type'        => 'number',
 				'label'       => 'Items Per Page',
 				'description' => 'Number of items to show per page',

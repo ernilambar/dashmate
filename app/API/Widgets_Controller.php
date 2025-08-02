@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace Nilambar\Dashmate\API;
 
-use Nilambar\Dashmate\Widget_Template_Registry;
 use Nilambar\Dashmate\Widget_Dispatcher;
 use WP_Error;
 use WP_REST_Request;

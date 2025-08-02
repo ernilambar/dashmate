@@ -46,10 +46,10 @@ class Quick_Links_Widget extends Abstract_Widget {
 				'default'     => false,
 			],
 			'linkStyle' => [
-				'type'    => 'select',
-				'label'   => 'Link Style',
+				'type'        => 'select',
+				'label'       => 'Link Style',
 				'description' => 'Choose how links are displayed',
-				'options' => [
+				'options'     => [
 					[
 						'value' => 'list',
 						'label' => 'List',
@@ -59,7 +59,7 @@ class Quick_Links_Widget extends Abstract_Widget {
 						'label' => 'Grid',
 					],
 				],
-				'default' => 'list',
+				'default'     => 'list',
 			],
 		];
 

@@ -89,11 +89,11 @@ abstract class Abstract_Widget {
 	 * @param string $name           Widget name.
 	 */
 	public function __construct( $id, $template_type, $name ) {
-		$this->id             = $id;
-		$this->template_type  = $template_type;
-		$this->name           = $name;
-		$this->description    = '';
-		$this->icon           = '';
+		$this->id              = $id;
+		$this->template_type   = $template_type;
+		$this->name            = $name;
+		$this->description     = '';
+		$this->icon            = '';
 		$this->settings_schema = [];
 		$this->output_schema   = [];
 

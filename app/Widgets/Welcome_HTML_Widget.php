@@ -45,7 +45,7 @@ class Welcome_HTML_Widget extends Abstract_Widget {
 				'description' => 'Allow JavaScript execution in HTML content',
 				'default'     => false,
 			],
-			'content' => [
+			'content'       => [
 				'type'        => 'textarea',
 				'label'       => 'HTML Content',
 				'description' => 'Enter HTML content to display',
