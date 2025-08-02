@@ -49,7 +49,8 @@ class Admin_Page {
 				echo '<h1>' . esc_html__( 'Dashmate', 'dashmate' ) . '</h1>';
 				echo '<div id="dashmate-app">Loading...</div>';
 				echo '</wrap>';
-			}
+			},
+			0
 		);
 
 		add_options_page(
