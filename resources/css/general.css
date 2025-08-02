@@ -211,6 +211,71 @@
 	}
 }
 
+/* Settings save status animations for cog icon */
+.widget-settings.settings-success .dashicons {
+	animation: settingsSuccess 2s ease-in-out;
+	color: #46b450;
+}
+
+.widget-settings.settings-error .dashicons {
+	animation: settingsError 2s ease-in-out;
+	color: #d63638;
+}
+
+@keyframes settingsSuccess {
+	0% {
+		transform: scale(1);
+		color: inherit;
+	}
+	20% {
+		transform: scale(1.2);
+		color: #46b450;
+	}
+	40% {
+		transform: scale(1);
+		color: #46b450;
+	}
+	60% {
+		transform: scale(1.1);
+		color: #46b450;
+	}
+	80% {
+		transform: scale(1);
+		color: #46b450;
+	}
+	100% {
+		transform: scale(1);
+		color: inherit;
+	}
+}
+
+@keyframes settingsError {
+	0% {
+		transform: scale(1);
+		color: inherit;
+	}
+	20% {
+		transform: scale(1.2);
+		color: #d63638;
+	}
+	40% {
+		transform: scale(1);
+		color: #d63638;
+	}
+	60% {
+		transform: scale(1.1);
+		color: #d63638;
+	}
+	80% {
+		transform: scale(1);
+		color: #d63638;
+	}
+	100% {
+		transform: scale(1);
+		color: inherit;
+	}
+}
+
 .widget.collapsed .widget-content {
 	display: none;
 }

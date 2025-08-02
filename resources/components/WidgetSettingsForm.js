@@ -1,10 +1,9 @@
 import React from 'react';
 
 // Renders a form based on a widget schema and current values
-export default function WidgetSettingsForm( { schema, values, onChange } ) {
+export default function WidgetSettingsForm( { schema, values, onChange, onClose, onSaveStatus } ) {
 	const [ localValues, setLocalValues ] = React.useState( values );
 	const [ isSaving, setIsSaving ] = React.useState( false );
-	const [ saveMessage, setSaveMessage ] = React.useState( '' );
 
 	// Update local values when props change
 	React.useEffect( () => {
@@ -23,7 +22,6 @@ export default function WidgetSettingsForm( { schema, values, onChange } ) {
 
 	const handleSave = async () => {
 		setIsSaving( true );
-		setSaveMessage( '' );
 
 		try {
 			// Only save fields that require refresh (have changed and refresh: true)
@@ -38,8 +36,14 @@ export default function WidgetSettingsForm( { schema, values, onChange } ) {
 
 			// If no fields have changed, treat as success
 			if ( changedFields.length === 0 ) {
-				setSaveMessage( 'Settings are already up to date!' );
-				setTimeout( () => setSaveMessage( '' ), 3000 );
+				// Notify parent component of success status
+				if ( onSaveStatus ) {
+					onSaveStatus( 'success' );
+				}
+				// Close the settings form immediately
+				if ( onClose ) {
+					onClose();
+				}
 				return;
 			}
 
@@ -50,11 +54,19 @@ export default function WidgetSettingsForm( { schema, values, onChange } ) {
 			} );
 
 			await onChange( settingsToSave, needsRefresh );
-			setSaveMessage( 'Settings saved successfully!' );
-			setTimeout( () => setSaveMessage( '' ), 3000 );
+			// Notify parent component of success status
+			if ( onSaveStatus ) {
+				onSaveStatus( 'success' );
+			}
+			// Close the settings form immediately
+			if ( onClose ) {
+				onClose();
+			}
 		} catch ( error ) {
-			setSaveMessage( 'Error saving settings' );
-			setTimeout( () => setSaveMessage( '' ), 3000 );
+			// Notify parent component of error status
+			if ( onSaveStatus ) {
+				onSaveStatus( 'error' );
+			}
 		} finally {
 			setIsSaving( false );
 		}
@@ -204,22 +216,6 @@ export default function WidgetSettingsForm( { schema, values, onChange } ) {
 				>
 					{ isSaving ? 'Saving...' : 'Save Settings' }
 				</button>
-				{ saveMessage && (
-					<div
-						style={ {
-							marginTop: 8,
-							padding: 8,
-							backgroundColor: saveMessage.includes( 'Error' )
-								? '#ffebee'
-								: '#e8f5e8',
-							color: saveMessage.includes( 'Error' ) ? '#c62828' : '#2e7d32',
-							borderRadius: 4,
-							fontSize: '12px',
-						} }
-					>
-						{ saveMessage }
-					</div>
-				) }
 			</div>
 		</div>
 	);

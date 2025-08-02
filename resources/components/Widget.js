@@ -14,6 +14,7 @@ class Widget extends Component {
 			reloading: false,
 			fadeState: 'normal', // 'normal', 'fading', 'faded'
 			settingsVersion: 0, // Force re-render when settings change
+			settingsSaveStatus: null, // 'success', 'error', null
 		};
 	}
 
@@ -191,21 +192,56 @@ class Widget extends Component {
 			const result = await response.json();
 
 			if ( result.success ) {
+				// Set success status for cog icon animation
+				this.setState( { settingsSaveStatus: 'success' } );
+				// Clear status after animation duration
+				setTimeout( () => {
+					this.setState( { settingsSaveStatus: null } );
+				}, 2000 );
+
 				// Only reload widget data if refresh is needed
 				if ( needsRefresh ) {
 					this.loadWidgetData();
 				}
 			} else {
+				// Set error status for cog icon animation
+				this.setState( { settingsSaveStatus: 'error' } );
+				// Clear status after animation duration
+				setTimeout( () => {
+					this.setState( { settingsSaveStatus: null } );
+				}, 2000 );
 				console.error( 'Failed to save settings:', result );
 			}
 		} catch ( error ) {
+			// Set error status for cog icon animation
+			this.setState( { settingsSaveStatus: 'error' } );
+			// Clear status after animation duration
+			setTimeout( () => {
+				this.setState( { settingsSaveStatus: null } );
+			}, 2000 );
 			// Handle error silently or log to server
 		}
 	};
 
+	handleSettingsSaveStatus = ( status ) => {
+		this.setState( { settingsSaveStatus: status } );
+		// Clear status after animation duration
+		setTimeout( () => {
+			this.setState( { settingsSaveStatus: null } );
+		}, 2000 );
+	};
+
 	render() {
 		const { widget, widgets, index } = this.props;
-		const { collapsed, widgetData, loading, showSettings, reloading, fadeState } = this.state;
+		const {
+			collapsed,
+			widgetData,
+			loading,
+			showSettings,
+			reloading,
+			fadeState,
+			settingsSaveStatus,
+		} = this.state;
 
 		// Show loading state while data is being fetched
 		if ( loading ) {
@@ -298,7 +334,11 @@ class Widget extends Component {
 									Object.keys( widgets[ widgetType ].settings_schema ).length >
 										0 && (
 										<button
-											className="button button-small widget-settings"
+											className={ `button button-small widget-settings ${
+												settingsSaveStatus
+													? `settings-${ settingsSaveStatus }`
+													: ''
+											}` }
 											onClick={ this.openWidgetSettings }
 											title="Settings"
 										>
@@ -333,6 +373,8 @@ class Widget extends Component {
 												schema={ widgets[ widgetType ]?.settings_schema }
 												values={ widget.settings || {} }
 												onChange={ this.handleSettingsChange }
+												onClose={ this.openWidgetSettings }
+												onSaveStatus={ this.handleSettingsSaveStatus }
 											/>
 										</div>
 									) }
