@@ -64,9 +64,10 @@ class Review_Utils {
 	 *
 	 * @since 1.0.0
 	 * @param array $settings Settings.
+	 * @param int   $circles_number Number of circles to display.
 	 * @return array An array of review details formatted for React app.
 	 */
-	public static function prepare_review_stats( $settings ): array {
+	public static function prepare_review_stats( $settings, $circles_number = 4 ): array {
 		$output = [];
 
 		$week_totals   = self::get_review_details();
@@ -85,6 +86,9 @@ class Review_Utils {
 				'caption'    => $hide_caption ? '' : "W: {$week}",
 			];
 		}
+
+		// Limit the output to the requested number of circles.
+		$output = array_slice( $output, 0, $circles_number );
 
 		return $output;
 	}

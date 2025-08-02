@@ -40,42 +40,23 @@ class Weekly_Tickets_Widget extends Abstract_Widget {
 		$this->icon        = 'feedback';
 
 		$this->settings_schema = [
+			'circlesNumber' => [
+				'type'        => 'number',
+				'label'       => 'Circles Number',
+				'description' => 'Number of progress circles to display',
+				'default'     => 4,
+				'min'         => 1,
+				'max'         => 8,
+				'refresh' => true, // This field triggers data refetch
+			],
 			'hideCaption'   => [
 				'type'        => 'checkbox',
 				'label'       => 'Hide Caption',
-				'description' => 'Hide circle caption',
+				'description' => 'Hide captions below progress circles',
 				'default'     => false,
+				'refresh' => false, // This field is handled by React
 			],
-			'showAnimation' => [
-				'type'        => 'checkbox',
-				'label'       => 'Show Animation',
-				'description' => 'Enable circle animation',
-				'default'     => true,
-			],
-			'colorScheme'   => [
-				'type'        => 'select',
-				'label'       => 'Color Scheme',
-				'description' => 'Choose color scheme for circles',
-				'options'     => [
-					[
-						'value' => 'default',
-						'label' => 'Default',
-					],
-					[
-						'value' => 'blue',
-						'label' => 'Blue',
-					],
-					[
-						'value' => 'green',
-						'label' => 'Green',
-					],
-					[
-						'value' => 'orange',
-						'label' => 'Orange',
-					],
-				],
-				'default'     => 'default',
-			],
+
 		];
 
 		$this->output_schema = [
@@ -99,8 +80,9 @@ class Weekly_Tickets_Widget extends Abstract_Widget {
 	 */
 	public function get_content( $widget_id = null, $settings = [] ) {
 		$settings = $this->merge_settings_with_defaults( $settings );
+		$circles_number = absint( $settings['circlesNumber'] ?? 4 );
 
-		$circles = Review_Utils::prepare_review_stats( $settings );
+		$circles = Review_Utils::prepare_review_stats( $settings, $circles_number );
 
 		return [
 			'items' => $circles,

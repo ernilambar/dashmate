@@ -13,6 +13,7 @@ class Widget extends Component {
 			showSettings: false,
 			reloading: false,
 			fadeState: 'normal', // 'normal', 'fading', 'faded'
+			settingsVersion: 0, // Force re-render when settings change
 		};
 	}
 
@@ -165,9 +166,14 @@ class Widget extends Component {
 		this.setState( { showSettings: ! this.state.showSettings } );
 	};
 
-	handleSettingsChange = async ( newSettings ) => {
+	handleSettingsChange = async ( newSettings, needsRefresh = false ) => {
 		// Update widget settings in the parent component
-		console.log( 'Settings changed:', newSettings );
+		console.log( 'Settings changed:', newSettings, 'needsRefresh:', needsRefresh );
+
+		// Update local widget settings immediately for instant feedback
+		this.props.widget.settings = { ...this.props.widget.settings, ...newSettings };
+		// Force re-render by updating settings version
+		this.setState( { settingsVersion: this.state.settingsVersion + 1 } );
 
 		try {
 			const response = await fetch(
@@ -187,8 +193,10 @@ class Widget extends Component {
 
 			if ( result.success ) {
 				console.log( 'Settings saved successfully' );
-				// Reload widget data to reflect the new settings
-				this.loadWidgetData();
+				// Only reload widget data if refresh is needed
+				if ( needsRefresh ) {
+					this.loadWidgetData();
+				}
 			} else {
 				console.error( 'Failed to save settings:', result );
 			}

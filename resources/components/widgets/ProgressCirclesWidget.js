@@ -39,8 +39,10 @@ class ProgressCirclesWidget extends React.Component {
 	renderProgressCircle = ( item, index ) => {
 		const { currentValues } = this.state;
 		const { percentage, value, caption } = item;
+		const { settings = {} } = this.props;
 
 		const currentValue = currentValues[ index ] || 0;
+		const hideCaption = settings.hideCaption || false;
 
 		// Responsive radius calculation - smaller circles for smaller containers
 		const baseRadius = 40;
@@ -98,7 +100,9 @@ class ProgressCirclesWidget extends React.Component {
 					</svg>
 					{ value && <div className="progress-circle-label">{ value }</div> }
 				</div>
-				{ caption && <div className="progress-circle-caption">{ caption }</div> }
+				{ caption && ! hideCaption && (
+					<div className="progress-circle-caption">{ caption }</div>
+				) }
 			</div>
 		);
 	};

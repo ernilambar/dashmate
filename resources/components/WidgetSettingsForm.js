@@ -20,7 +20,14 @@ export default function WidgetSettingsForm( { schema, values, onChange } ) {
 		setSaveMessage( '' );
 
 		try {
-			await onChange( localValues );
+			// Check which fields have changed and if any require refresh
+			const changedFields = Object.keys( localValues ).filter(
+				( key ) => localValues[ key ] !== values[ key ]
+			);
+
+			const needsRefresh = changedFields.some( ( key ) => schema[ key ]?.refresh === true );
+
+			await onChange( localValues, needsRefresh );
 			setSaveMessage( 'Settings saved successfully!' );
 			setTimeout( () => setSaveMessage( '' ), 3000 );
 		} catch ( error ) {
@@ -83,6 +90,21 @@ export default function WidgetSettingsForm( { schema, values, onChange } ) {
 								</option>
 							) ) }
 						</select>
+					</div>
+				);
+			case 'number':
+				return (
+					<div key={ key } style={ { marginBottom: 12 } }>
+						<label>{ fieldSchema.label }</label>
+						<input
+							type="number"
+							min={ fieldSchema.min }
+							max={ fieldSchema.max }
+							value={ value || fieldSchema.default || '' }
+							onChange={ ( e ) =>
+								handleFieldChange( key, parseInt( e.target.value ) || 0 )
+							}
+						/>
 					</div>
 				);
 			case 'repeater':
