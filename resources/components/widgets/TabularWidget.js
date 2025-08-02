@@ -99,6 +99,34 @@ class TabularWidget extends React.Component {
 	};
 
 	/**
+	 * Extract ID from row data.
+	 *
+	 * @param {Object} row Row data.
+	 * @return {string} Extracted ID.
+	 */
+	extractIdFromRow = ( row ) => {
+		if ( ! row.cells || ! row.cells[ 0 ] || ! row.cells[ 0 ].text ) {
+			throw new Error( 'Could not extract ID from row data' );
+		}
+
+		const cellText = row.cells[ 0 ].text;
+
+		// Try to extract ID from HTML link
+		const linkMatch = cellText.match( /<a[^>]*>(\d+)<\/a>/ );
+		if ( linkMatch ) {
+			return linkMatch[ 1 ]; // Extract the number inside the link
+		}
+
+		// Fallback: try to extract just the number
+		const numberMatch = cellText.match( /(\d+)/ );
+		if ( numberMatch ) {
+			return numberMatch[ 1 ];
+		}
+
+		throw new Error( 'Could not extract ID from row data' );
+	};
+
+	/**
 	 * Handle delete action with confirmation.
 	 */
 	handleDeleteAction = async ( row, rowIndex, tableIndex ) => {
@@ -120,10 +148,14 @@ class TabularWidget extends React.Component {
 
 		console.log( 'Delete action:', { row, rowIndex, tableIndex } );
 
+		// Extract ID from the first cell
+		const id = this.extractIdFromRow( row );
+
 		// Build request data
 		const requestData = {
-			widget_id: this.props.widgetId,
+			id: id,
 			action: 'delete',
+			widget_id: this.props.widgetId,
 			row_data: row,
 			row_index: rowIndex,
 			table_index: tableIndex,
@@ -162,10 +194,14 @@ class TabularWidget extends React.Component {
 
 		console.log( 'Sync action:', { row, rowIndex, tableIndex } );
 
+		// Extract ID from the first cell
+		const id = this.extractIdFromRow( row );
+
 		// Build request data
 		const requestData = {
-			widget_id: this.props.widgetId,
+			id: id,
 			action: 'sync',
+			widget_id: this.props.widgetId,
 			row_data: row,
 			row_index: rowIndex,
 			table_index: tableIndex,
