@@ -1,0 +1,31 @@
+/**
+ * Settings page styles
+ *
+ * @package Dashmate
+ */
+
+.dashmate-reset-layout-section {
+	background: #fff;
+	border: 1px solid #ccd0d4;
+	border-radius: 4px;
+	margin-top: 30px;
+	padding: 20px;
+
+	& h2 {
+		margin-bottom: 15px;
+		margin-top: 0;
+	}
+
+	& p {
+		margin-bottom: 15px;
+	}
+}
+
+#dashmate-reset-layout-btn {
+	margin-top: 10px;
+}
+
+#dashmate-reset-status {
+	display: none;
+	margin-top: 10px;
+}

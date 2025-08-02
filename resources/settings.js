@@ -4,6 +4,8 @@
  * @package Dashmate
  */
 
+import './css/settings.css';
+
 document.addEventListener( 'DOMContentLoaded', function () {
 	'use strict';
 

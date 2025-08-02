@@ -10,9 +10,9 @@ namespace Nilambar\Dashmate\Admin;
 use Nilambar\Dashmate\Core\Option;
 use Nilambar\Dashmate\Panels\SettingsPanel;
 use Nilambar\Dashmate\Utils\YML_Utils;
+use Nilambar\Dashmate\View\View;
 use Nilambar\Dashmate\Widget_Initializer;
 use Nilambar\Optify\Optify;
-use Nilambar\Optify\Panel_Manager;
 
 /**
  * Admin_Page class.
@@ -45,10 +45,7 @@ class Admin_Page {
 			'manage_options',
 			'dashmate',
 			function () {
-				echo '<div class="wrap">';
-				echo '<h1>' . esc_html__( 'Dashmate', 'dashmate' ) . '</h1>';
-				echo '<div id="dashmate-app">Loading...</div>';
-				echo '</wrap>';
+				View::render( 'pages/app' );
 			},
 			0
 		);
@@ -59,27 +56,7 @@ class Admin_Page {
 			'manage_options',
 			'dashmate-settings',
 			function () {
-				echo '<div class="wrap">';
-				echo '<h1>' . esc_html__( 'Dashmate Settings', 'dashmate' ) . '</h1>';
-				Panel_Manager::render_panel(
-					'dashmate-settings',
-					[
-						'show_title' => false,
-						'display'    => 'inline',
-					]
-				);
-
-				// Add reset layout section.
-				echo '<div class="dashmate-reset-layout-section" style="margin-top: 30px; padding: 20px; background: #fff; border: 1px solid #ccd0d4; border-radius: 4px;">';
-				echo '<h2>' . esc_html__( 'Reset Layout', 'dashmate' ) . '</h2>';
-				echo '<p>' . esc_html__( 'Click the button below to reset the dashboard layout to the default configuration. This will override all current widget positions and settings.', 'dashmate' ) . '</p>';
-				echo '<button type="button" id="dashmate-reset-layout-btn" class="button button-secondary" style="margin-top: 10px;">';
-				echo esc_html__( 'Reset Layout', 'dashmate' );
-				echo '</button>';
-				echo '<div id="dashmate-reset-status" style="margin-top: 10px; display: none;"></div>';
-				echo '</div>';
-
-				echo '</div>';
+				View::render( 'pages/settings' );
 			}
 		);
 	}
@@ -124,7 +101,6 @@ class Admin_Page {
 	 * @since 1.0.0
 	 */
 	private function load_dashboard_assets() {
-		// Load app assets.
 		$asset_file_name = DASHMATE_DIR . '/assets/index.asset.php';
 
 		if ( file_exists( $asset_file_name ) ) {
@@ -152,31 +128,28 @@ class Admin_Page {
 	 * @since 1.0.0
 	 */
 	private function load_settings_assets() {
-		// Load built settings script.
 		$asset_file_name = DASHMATE_DIR . '/assets/settings.asset.php';
 
 		if ( file_exists( $asset_file_name ) ) {
 			$asset_file = include $asset_file_name;
-			wp_enqueue_script( 'dashmate-settings', DASHMATE_URL . '/assets/settings.js', $asset_file['dependencies'], $asset_file['version'], true );
-		} else {
-			// Fallback if asset file doesn't exist yet.
-			wp_enqueue_script( 'dashmate-settings', DASHMATE_URL . '/assets/settings.js', [], DASHMATE_VERSION, true );
-		}
 
-		wp_localize_script(
-			'dashmate-settings',
-			'dashmateSettings',
-			[
-				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-				'nonce'   => wp_create_nonce( 'dashmate_reset_layout' ),
-				'strings' => [
-					'confirmReset' => esc_html__( 'Are you sure you want to reset the layout? This will override all current widget positions and settings.', 'dashmate' ),
-					'resetting'    => esc_html__( 'Resetting layout...', 'dashmate' ),
-					'success'      => esc_html__( 'Layout reset successfully!', 'dashmate' ),
-					'error'        => esc_html__( 'An error occurred while resetting the layout.', 'dashmate' ),
-				],
-			]
-		);
+			wp_enqueue_style( 'dashmate-settings', DASHMATE_URL . '/assets/settings.css', [], $asset_file['version'] );
+			wp_enqueue_script( 'dashmate-settings', DASHMATE_URL . '/assets/settings.js', $asset_file['dependencies'], $asset_file['version'], true );
+			wp_localize_script(
+				'dashmate-settings',
+				'dashmateSettings',
+				[
+					'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+					'nonce'   => wp_create_nonce( 'dashmate_reset_layout' ),
+					'strings' => [
+						'confirmReset' => esc_html__( 'Are you sure you want to reset the layout? This will override all current widget positions and settings.', 'dashmate' ),
+						'resetting'    => esc_html__( 'Resetting layout...', 'dashmate' ),
+						'success'      => esc_html__( 'Layout reset successfully!', 'dashmate' ),
+						'error'        => esc_html__( 'An error occurred while resetting the layout.', 'dashmate' ),
+					],
+				]
+			);
+		}
 	}
 
 	/**
