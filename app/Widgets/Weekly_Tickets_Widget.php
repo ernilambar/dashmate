@@ -40,7 +40,7 @@ class Weekly_Tickets_Widget extends Abstract_Widget {
 		$this->icon        = 'feedback';
 
 		$this->settings_schema = [
-			'hideCaption' => [
+			'hideCaption'   => [
 				'type'        => 'checkbox',
 				'label'       => 'Hide Caption',
 				'description' => 'Hide circle caption',
@@ -52,15 +52,27 @@ class Weekly_Tickets_Widget extends Abstract_Widget {
 				'description' => 'Enable circle animation',
 				'default'     => true,
 			],
-			'colorScheme' => [
+			'colorScheme'   => [
 				'type'        => 'select',
 				'label'       => 'Color Scheme',
 				'description' => 'Choose color scheme for circles',
 				'options'     => [
-					['value' => 'default', 'label' => 'Default'],
-					['value' => 'blue', 'label' => 'Blue'],
-					['value' => 'green', 'label' => 'Green'],
-					['value' => 'orange', 'label' => 'Orange'],
+					[
+						'value' => 'default',
+						'label' => 'Default',
+					],
+					[
+						'value' => 'blue',
+						'label' => 'Blue',
+					],
+					[
+						'value' => 'green',
+						'label' => 'Green',
+					],
+					[
+						'value' => 'orange',
+						'label' => 'Orange',
+					],
 				],
 				'default'     => 'default',
 			],

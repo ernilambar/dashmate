@@ -25,30 +25,30 @@ class Widget_Template_Registry {
 	 */
 	private static $templates = [
 		'html'             => [
-			'component'     => 'HtmlWidget',
-			'capabilities'  => ['html-content', 'script-support'],
+			'component'        => 'HtmlWidget',
+			'capabilities'     => [ 'html-content', 'script-support' ],
 			'default_settings' => [
 				'allow_scripts' => false,
 			],
 		],
 		'links'            => [
-			'component'     => 'LinksWidget',
-			'capabilities'  => ['grid', 'list', 'icons'],
+			'component'        => 'LinksWidget',
+			'capabilities'     => [ 'grid', 'list', 'icons' ],
 			'default_settings' => [
 				'hideIcon'  => false,
 				'linkStyle' => 'list',
 			],
 		],
 		'progress-circles' => [
-			'component'     => 'ProgressCirclesWidget',
-			'capabilities'  => ['animation', 'color-coding'],
+			'component'        => 'ProgressCirclesWidget',
+			'capabilities'     => [ 'animation', 'color-coding' ],
 			'default_settings' => [
 				'hideCaption' => false,
 			],
 		],
 		'tabular'          => [
-			'component'     => 'TabularWidget',
-			'capabilities'  => ['sorting', 'pagination', 'filtering', 'search'],
+			'component'        => 'TabularWidget',
+			'capabilities'     => [ 'sorting', 'pagination', 'filtering', 'search' ],
 			'default_settings' => [
 				'showHeaders' => true,
 				'stripedRows' => true,
@@ -160,8 +160,8 @@ class Widget_Template_Registry {
 
 		foreach ( $templates as $type => $template ) {
 			$frontend_templates[ $type ] = [
-				'component'     => $template['component'],
-				'capabilities'  => $template['capabilities'],
+				'component'        => $template['component'],
+				'capabilities'     => $template['capabilities'],
 				'default_settings' => $template['default_settings'],
 			];
 		}

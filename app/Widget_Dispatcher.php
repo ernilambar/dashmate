@@ -177,7 +177,7 @@ class Widget_Dispatcher {
 		$widgets      = self::get_widgets();
 
 		// First, get all available template types from the registry
-		$templates = \Nilambar\Dashmate\Widget_Template_Registry::get_templates();
+		$templates = Widget_Template_Registry::get_templates();
 
 		// Initialize with all available template types
 		foreach ( $templates as $template_type => $template_config ) {

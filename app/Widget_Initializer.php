@@ -32,6 +32,29 @@ class Widget_Initializer {
 	}
 
 	/**
+	 * Get default layout file path.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string
+	 */
+	public static function get_default_layout_file_path() {
+		$default_path = DASHMATE_DIR . '/data/layouts/default.yml';
+
+		/**
+		 * Filter the default layout file path.
+		 *
+		 * This filter allows other plugins and addons to customize the default layout file path.
+		 * The file can be in any format supported by the layout system (YML, JSON, etc.).
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param string $default_path Default layout file path.
+		 */
+		return apply_filters( 'dashmate_default_layout_file', $default_path );
+	}
+
+	/**
 	 * Get default layout structure.
 	 *
 	 * @since 1.0.0
@@ -39,7 +62,7 @@ class Widget_Initializer {
 	 * @return array
 	 */
 	private static function get_default_layout() {
-		$default_file = DASHMATE_DIR . 'data/layouts/default.yml';
+		$default_file = self::get_default_layout_file_path();
 		$layout_data  = YML_Utils::load_from_file( $default_file );
 
 		return $layout_data ?? [];
@@ -53,7 +76,7 @@ class Widget_Initializer {
 	 * @return array
 	 */
 	private static function get_default_widgets() {
-		$default_file = DASHMATE_DIR . 'data/layouts/default.yml';
+		$default_file = self::get_default_layout_file_path();
 		$layout_data  = YML_Utils::load_from_file( $default_file );
 
 		return $layout_data['widgets'] ?? [];
@@ -67,7 +90,7 @@ class Widget_Initializer {
 	 * @return array
 	 */
 	private static function get_default_column_widgets() {
-		$default_file = DASHMATE_DIR . 'data/layouts/default.yml';
+		$default_file = self::get_default_layout_file_path();
 		$layout_data  = YML_Utils::load_from_file( $default_file );
 
 		return $layout_data['column_widgets'] ?? [];
