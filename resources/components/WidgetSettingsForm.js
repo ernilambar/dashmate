@@ -47,9 +47,9 @@ export default function WidgetSettingsForm( { schema, values, onChange, onClose,
 				return;
 			}
 
-			// Create settings object with only the fields that need to be saved
+			// Create settings object with all changed fields
 			const settingsToSave = {};
-			refreshFields.forEach( ( key ) => {
+			changedFields.forEach( ( key ) => {
 				settingsToSave[ key ] = localValues[ key ];
 			} );
 
@@ -130,15 +130,48 @@ export default function WidgetSettingsForm( { schema, values, onChange, onClose,
 				return (
 					<div key={ key } style={ { marginBottom: 12 } }>
 						<label>{ fieldSchema.label }</label>
-						<input
-							type="number"
-							min={ fieldSchema.min }
-							max={ fieldSchema.max }
-							value={ value || fieldSchema.default || '' }
-							onChange={ ( e ) =>
-								handleFieldChange( key, parseInt( e.target.value ) || 0 )
-							}
-						/>
+						<div style={ { display: 'flex', gap: '8px', alignItems: 'center' } }>
+							<input
+								type="number"
+								min={ fieldSchema.min }
+								max={ fieldSchema.max }
+								value={ value || fieldSchema.default || '' }
+								onChange={ ( e ) =>
+									handleFieldChange( key, parseInt( e.target.value ) || 0 )
+								}
+								style={ { flex: 1 } }
+							/>
+							{ fieldSchema.presets && fieldSchema.presets.length > 0 && (
+								<div style={ { display: 'flex', gap: '4px' } }>
+									{ fieldSchema.presets.map( ( preset ) => (
+										<button
+											key={ preset }
+											type="button"
+											onClick={ () => handleFieldChange( key, preset ) }
+											style={ {
+												padding: '4px 8px',
+												fontSize: '12px',
+												border: '1px solid #ddd',
+												backgroundColor:
+													( value || fieldSchema.default ) === preset
+														? '#0073aa'
+														: '#f8f9fa',
+												color:
+													( value || fieldSchema.default ) === preset
+														? 'white'
+														: '#333',
+												borderRadius: '3px',
+												cursor: 'pointer',
+												transition: 'all 0.2s ease',
+											} }
+											title={ `Set to ${ preset }` }
+										>
+											{ preset }
+										</button>
+									) ) }
+								</div>
+							) }
+						</div>
 					</div>
 				);
 			case 'repeater':
