@@ -66,7 +66,7 @@ class TabularWidget extends React.Component {
 	};
 
 	/**
-	 * Render cell content with special handling for ID and Title.
+	 * Render cell content with special handling for actions column.
 	 *
 	 * @param {Object} cell Cell data.
 	 * @param {number} cellIndex Cell index.
@@ -76,44 +76,25 @@ class TabularWidget extends React.Component {
 	 * @returns {JSX.Element} Cell content.
 	 */
 	renderCell = ( cell, cellIndex, row, rowIndex, tableIndex ) => {
-		// Check if this is an ID or Title column (assuming first two columns)
-		if ( cellIndex === 0 ) {
-			// ID column - make it an external link
-			return (
-				<a
-					href={ `https://example.com/id/${ cell.text }` }
-					className="cell-link"
-					target="_blank"
-					rel="noopener noreferrer"
-					onClick={ ( e ) => {
-						e.stopPropagation();
-					} }
-				>
-					{ cell.text }
-				</a>
-			);
-		} else if ( cellIndex === 1 ) {
-			// Title column - make it an external link
-			return (
-				<a
-					href={ `https://example.com/title/${ encodeURIComponent( cell.text ) }` }
-					className="cell-link"
-					target="_blank"
-					rel="noopener noreferrer"
-					onClick={ ( e ) => {
-						e.stopPropagation();
-					} }
-				>
-					{ cell.text }
-				</a>
-			);
-		} else if ( cellIndex === row.cells.length - 1 ) {
+		// Check if this is the last column for actions
+		if ( cellIndex === row.cells.length - 1 ) {
 			// Last column - render actions
 			return this.renderActions( row, rowIndex, tableIndex );
 		}
 
-		// Default cell rendering
-		return cell.text;
+		// Get the cell content
+		const cellContent = cell.text || cell.value || cell.content || '';
+
+		// Check if the content contains HTML tags
+		const hasHtmlTags = /<[^>]*>/g.test( cellContent );
+
+		if ( hasHtmlTags ) {
+			// Render HTML content properly
+			return <span dangerouslySetInnerHTML={ { __html: cellContent } } />;
+		}
+
+		// Render plain text content
+		return cellContent;
 	};
 
 	render() {
@@ -153,7 +134,12 @@ class TabularWidget extends React.Component {
 											}
 										>
 											{ ( row.cells || [] ).map( ( cell, cellIndex ) => (
-												<td key={ cellIndex }>
+												<td
+													key={ cellIndex }
+													className={
+														cellIndex === 0 ? 'first-column' : ''
+													}
+												>
 													{ this.renderCell(
 														cell,
 														cellIndex,

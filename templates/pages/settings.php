@@ -7,7 +7,9 @@
 
 use Nilambar\Optify\Panel_Manager;
 
+use Nilambar\Dashmate\Widget_Initializer;
 ?>
+
 <div class="wrap">
 	<h1><?php echo esc_html__( 'Dashmate Settings', 'dashmate' ); ?></h1>
 	<?php
@@ -24,6 +26,7 @@ use Nilambar\Optify\Panel_Manager;
 	<div class="dashmate-reset-layout-section">
 		<h2><?php echo esc_html__( 'Reset Layout', 'dashmate' ); ?></h2>
 		<p><?php echo esc_html__( 'Click the button below to reset the dashboard layout to the default configuration. This will override all current widget positions and settings.', 'dashmate' ); ?></p>
+		<p><?php echo sprintf( esc_html__( 'Default layout file: %s', 'dashmate' ), esc_html(Widget_Initializer::get_default_layout_file_path()) ); ?></p>
 		<button type="button" id="dashmate-reset-layout-btn" class="button button-secondary">
 			<?php echo esc_html__( 'Reset Layout', 'dashmate' ); ?>
 		</button>

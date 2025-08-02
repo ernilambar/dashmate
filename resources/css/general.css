@@ -467,26 +467,6 @@
 	background: #f9f9f9;
 }
 
-/* Tabular Widget */
-.tabular-widget {
-	padding: 10px;
-}
-
-.tabular-table {
-	margin-bottom: 30px;
-}
-
-.tabular-table:last-child {
-	margin-bottom: 0;
-}
-
-.tabular-widget .table-title {
-	margin-bottom: 15px;
-	font-size: 16px;
-	font-weight: 600;
-	color: #333;
-}
-
 /* Loading and Error States */
 .loading,
 .error,
