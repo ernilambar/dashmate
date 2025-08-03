@@ -219,14 +219,22 @@ class Widget_Dispatcher {
 			];
 		}
 
-		// Then, update with actual widget definitions where available
+		// Then, create individual widget entries with their own schemas
 		foreach ( $widgets as $id => $widget ) {
 			$template_type = $widget->get_template_type();
-
-			if ( isset( $widget_types[ $template_type ] ) ) {
-				// Update with actual widget definition
-				$widget_types[ $template_type ] = $widget->get_definition();
-			}
+			$widget_definition = $widget->get_definition();
+			
+			// Create a unique key for this widget using its ID
+			$widget_key = $id;
+			
+			// Add the widget with its own schema
+			$widget_types[ $widget_key ] = array_merge(
+				$widget_definition,
+				[
+					'template_type' => $template_type,
+					'widget_id'     => $id,
+				]
+			);
 		}
 
 		return $widget_types;
