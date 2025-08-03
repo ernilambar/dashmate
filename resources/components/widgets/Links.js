@@ -23,7 +23,6 @@ class Links extends React.Component {
 
 		// Check if settings prop changed (when settings are updated from parent)
 		if ( prevProps.settings !== this.props.settings ) {
-			console.log( 'Links: Settings prop changed:', this.props.settings );
 			this.setState( { settings: this.props.settings || {} } );
 		}
 
@@ -54,8 +53,6 @@ class Links extends React.Component {
 	};
 
 	handleSettingsChange = ( newSettings, needsRefresh = false ) => {
-		console.log( 'Links: handleSettingsChange called with:', newSettings, 'needsRefresh:', needsRefresh );
-
 		// Update local state immediately for instant feedback
 		this.setState( { settings: { ...this.state.settings, ...newSettings } } );
 
@@ -82,16 +79,6 @@ class Links extends React.Component {
 
 		// Ensure links is always an array
 		const safeLinks = Array.isArray( links ) ? links : [];
-
-		// Debug: Show if component is rendering
-		console.log( 'Links widget rendering with:', {
-			data,
-			settings,
-			links: safeLinks,
-			linkStyle,
-			hideIcon,
-			className: `quick-links-list quick-links-${ linkStyle }`
-		} );
 
 		return (
 			<div className="quick-links-widget">

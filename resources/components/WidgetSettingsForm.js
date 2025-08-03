@@ -11,14 +11,11 @@ export default function WidgetSettingsForm( { schema, values, onChange, onClose,
 	}, [ values ] );
 
 	const handleFieldChange = ( key, newValue ) => {
-		console.log( 'WidgetSettingsForm: handleFieldChange called with:', key, newValue );
-
 		const newLocalValues = { ...localValues, [ key ]: newValue };
 		setLocalValues( newLocalValues );
 
 		// For fields that don't require refresh, apply changes immediately
 		if ( schema[ key ]?.refresh !== true ) {
-			console.log( 'WidgetSettingsForm: Applying immediate change for field:', key, newValue );
 			onChange( newLocalValues, false );
 		}
 	};
@@ -226,8 +223,6 @@ export default function WidgetSettingsForm( { schema, values, onChange, onClose,
 					</div>
 				);
 			case 'buttonset':
-				// Debug logging
-				console.log( 'Rendering buttonset field:', key, fieldSchema );
 				return (
 					<div key={ key } style={ { marginBottom: 12 } }>
 						<label>{ fieldSchema.label }</label>
@@ -238,12 +233,6 @@ export default function WidgetSettingsForm( { schema, values, onChange, onClose,
 								fieldSchema.choices.map( ( choice, index ) => {
 									const isActive =
 										( value || fieldSchema.default ) === choice.value;
-									console.log(
-										'Rendering choice:',
-										choice,
-										'isActive:',
-										isActive
-									);
 
 									return (
 										<button

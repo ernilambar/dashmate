@@ -51,7 +51,7 @@ class Dashboard extends Component {
 				this.setState( { widgets: data.data } );
 			}
 		} catch ( error ) {
-			console.error( 'Error loading widgets:', error );
+			// Handle error silently
 		}
 	}
 
@@ -72,11 +72,9 @@ class Dashboard extends Component {
 				this.setState( { dashboard: data.data } );
 				return true;
 			} else {
-				console.error( 'Failed to save dashboard:', data );
 				return false;
 			}
 		} catch ( error ) {
-			console.error( 'Error saving dashboard:', error );
 			return false;
 		}
 	}
@@ -137,12 +135,10 @@ class Dashboard extends Component {
 			const data = await response.json();
 
 			if ( ! data.success ) {
-				console.error( 'Failed to save widget positions:', data );
 				// Reload dashboard to revert changes
 				this.loadDashboard();
 			}
 		} catch ( error ) {
-			console.error( 'Error saving widget positions:', error );
 			// Reload dashboard to revert changes
 			this.loadDashboard();
 		}

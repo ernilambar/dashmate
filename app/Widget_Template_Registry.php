@@ -43,7 +43,7 @@ class Widget_Template_Registry {
 			'component'        => 'ProgressCirclesWidget',
 			'capabilities'     => [ 'animation', 'color-coding' ],
 			'default_settings' => [
-				'hideCaption' => false,
+				'hide_caption' => false,
 			],
 		],
 		'tabular'          => [

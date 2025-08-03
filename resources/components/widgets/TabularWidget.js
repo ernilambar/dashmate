@@ -51,7 +51,6 @@ class TabularWidget extends React.Component {
 					await this.handleSyncAction( row, rowIndex, tableIndex );
 					break;
 				default:
-					console.warn( `Unknown action: ${ action }` );
 					throw new Error( `Unknown action: ${ action }` );
 			}
 
@@ -66,8 +65,6 @@ class TabularWidget extends React.Component {
 				},
 			} ) );
 		} catch ( error ) {
-			console.error( `Error handling ${ action } action:`, error );
-
 			// Set error state
 			this.setState( ( prevState ) => ( {
 				actionResults: {
@@ -146,8 +143,6 @@ class TabularWidget extends React.Component {
 			}
 		}
 
-		console.log( 'Delete action:', { row, rowIndex, tableIndex } );
-
 		// Extract ID from the first cell
 		const id = this.extractIdFromRow( row );
 
@@ -161,8 +156,6 @@ class TabularWidget extends React.Component {
 			table_index: tableIndex,
 			timestamp: new Date().toISOString(),
 		};
-
-		console.log( 'Calling external delete endpoint:', actionConfig.endpoint, requestData );
 
 		// Call external API endpoint
 		const response = await fetch( actionConfig.endpoint, {
@@ -179,7 +172,6 @@ class TabularWidget extends React.Component {
 		}
 
 		const result = await response.json();
-		console.log( 'Delete action completed successfully:', result );
 	};
 
 	/**
@@ -191,8 +183,6 @@ class TabularWidget extends React.Component {
 		if ( ! actionConfig || ! actionConfig.endpoint ) {
 			throw new Error( 'Sync action not configured for this row' );
 		}
-
-		console.log( 'Sync action:', { row, rowIndex, tableIndex } );
 
 		// Extract ID from the first cell
 		const id = this.extractIdFromRow( row );
@@ -206,8 +196,6 @@ class TabularWidget extends React.Component {
 			table_index: tableIndex,
 			timestamp: new Date().toISOString(),
 		};
-
-		console.log( 'Calling external sync endpoint:', actionConfig.endpoint, requestData );
 
 		// Call external API endpoint
 		const response = await fetch( actionConfig.endpoint, {
@@ -224,7 +212,6 @@ class TabularWidget extends React.Component {
 		}
 
 		const result = await response.json();
-		console.log( 'Sync action completed successfully:', result );
 	};
 
 	/**
