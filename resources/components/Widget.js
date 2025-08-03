@@ -365,7 +365,9 @@ class Widget extends Component {
 										<div className="widget-settings-panel">
 											<WidgetSettingsForm
 												schema={ widgetSchema.settings_schema }
-												values={ widget.settings || {} }
+												values={
+													widgetData?.settings || widget.settings || {}
+												}
 												onChange={ this.handleSettingsChange }
 												onClose={ this.openWidgetSettings }
 												onSaveStatus={ this.handleSettingsSaveStatus }
@@ -375,7 +377,7 @@ class Widget extends Component {
 								<WidgetContent
 									widget={ { ...widget, type: widgetType } }
 									widgetData={ widgetData }
-									settings={ widget.settings || {} }
+									settings={ widgetData?.settings || widget.settings || {} }
 									onSettingsChange={ this.handleSettingsChange }
 								/>
 							</div>
