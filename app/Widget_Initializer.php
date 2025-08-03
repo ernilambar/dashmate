@@ -39,7 +39,7 @@ class Widget_Initializer {
 	 * @return string
 	 */
 	public static function get_default_layout_file_path() {
-		$default_path = DASHMATE_DIR . '/data/layouts/default.yml';
+		$default_path = DASHMATE_DIR . '/layouts/default.yml';
 
 		/**
 		 * Filter the default layout file path.
