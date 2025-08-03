@@ -49,7 +49,7 @@ class Quick_Links_Widget extends Abstract_Widget {
 				'type'        => 'select',
 				'label'       => 'Link Style',
 				'description' => 'Choose how links are displayed',
-				'options'     => [
+				'choices'     => [
 					[
 						'value' => 'list',
 						'label' => 'List',

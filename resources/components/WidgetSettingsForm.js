@@ -118,11 +118,13 @@ export default function WidgetSettingsForm( { schema, values, onChange, onClose,
 							value={ value || fieldSchema.default }
 							onChange={ ( e ) => handleFieldChange( key, e.target.value ) }
 						>
-							{ fieldSchema.options.map( ( opt ) => (
-								<option key={ opt.value } value={ opt.value }>
-									{ opt.label }
-								</option>
-							) ) }
+							{ fieldSchema.choices &&
+								Array.isArray( fieldSchema.choices ) &&
+								fieldSchema.choices.map( ( choice ) => (
+									<option key={ choice.value } value={ choice.value }>
+										{ choice.label }
+									</option>
+								) ) }
 						</select>
 					</div>
 				);
@@ -130,7 +132,7 @@ export default function WidgetSettingsForm( { schema, values, onChange, onClose,
 				return (
 					<div key={ key } style={ { marginBottom: 12 } }>
 						<label>{ fieldSchema.label }</label>
-						<div style={ { display: 'flex', gap: '8px', alignItems: 'center' } }>
+						<div className="number-with-choices">
 							<input
 								type="number"
 								min={ fieldSchema.min }
@@ -139,36 +141,130 @@ export default function WidgetSettingsForm( { schema, values, onChange, onClose,
 								onChange={ ( e ) =>
 									handleFieldChange( key, parseInt( e.target.value ) || 0 )
 								}
-								style={ { flex: 1 } }
 							/>
-							{ fieldSchema.presets && fieldSchema.presets.length > 0 && (
-								<div style={ { display: 'flex', gap: '4px' } }>
-									{ fieldSchema.presets.map( ( preset ) => (
+							{ fieldSchema.choices &&
+								Array.isArray( fieldSchema.choices ) &&
+								fieldSchema.choices.length > 0 && (
+									<div className="number-choices">
+										{ fieldSchema.choices.map( ( choice ) => {
+											// Support both simple values and {value, label} objects
+											const choiceValue =
+												typeof choice === 'object' ? choice.value : choice;
+											const choiceLabel =
+												typeof choice === 'object' ? choice.label : choice;
+											const isActive =
+												( value || fieldSchema.default ) === choiceValue;
+
+											return (
+												<button
+													key={ choiceValue }
+													type="button"
+													onClick={ () =>
+														handleFieldChange( key, choiceValue )
+													}
+													className={ isActive ? 'active' : '' }
+													title={ `Set to ${ choiceLabel }` }
+												>
+													{ choiceLabel }
+												</button>
+											);
+										} ) }
+									</div>
+								) }
+						</div>
+					</div>
+				);
+			case 'radio':
+				return (
+					<div key={ key } style={ { marginBottom: 12 } }>
+						<label>{ fieldSchema.label }</label>
+						<div style={ { marginTop: 4 } }>
+							{ fieldSchema.choices &&
+								Array.isArray( fieldSchema.choices ) &&
+								fieldSchema.choices.length > 0 &&
+								fieldSchema.choices.map( ( choice ) => (
+									<label
+										key={ choice.value }
+										style={ {
+											display: 'block',
+											marginBottom: 4,
+											cursor: 'pointer',
+										} }
+									>
+										<input
+											type="radio"
+											name={ key }
+											value={ choice.value }
+											checked={
+												( value || fieldSchema.default ) === choice.value
+											}
+											onChange={ ( e ) =>
+												handleFieldChange( key, e.target.value )
+											}
+											style={ { marginRight: 6 } }
+										/>
+										{ choice.label }
+									</label>
+								) ) }
+							{ ( ! fieldSchema.choices ||
+								! Array.isArray( fieldSchema.choices ) ||
+								fieldSchema.choices.length === 0 ) && (
+								<div
+									style={ {
+										color: '#666',
+										fontStyle: 'italic',
+										fontSize: '12px',
+									} }
+								>
+									No choices defined for radio field
+								</div>
+							) }
+						</div>
+					</div>
+				);
+			case 'buttonset':
+				// Debug logging
+				console.log( 'Rendering buttonset field:', key, fieldSchema );
+				return (
+					<div key={ key } style={ { marginBottom: 12 } }>
+						<label>{ fieldSchema.label }</label>
+						<div className="buttonset-container">
+							{ fieldSchema.choices &&
+								Array.isArray( fieldSchema.choices ) &&
+								fieldSchema.choices.length > 0 &&
+								fieldSchema.choices.map( ( choice, index ) => {
+									const isActive =
+										( value || fieldSchema.default ) === choice.value;
+									console.log(
+										'Rendering choice:',
+										choice,
+										'isActive:',
+										isActive
+									);
+
+									return (
 										<button
-											key={ preset }
+											key={ choice.value }
 											type="button"
-											onClick={ () => handleFieldChange( key, preset ) }
-											style={ {
-												padding: '4px 8px',
-												fontSize: '12px',
-												border: '1px solid #ddd',
-												backgroundColor:
-													( value || fieldSchema.default ) === preset
-														? '#0073aa'
-														: '#f8f9fa',
-												color:
-													( value || fieldSchema.default ) === preset
-														? 'white'
-														: '#333',
-												borderRadius: '3px',
-												cursor: 'pointer',
-												transition: 'all 0.2s ease',
-											} }
-											title={ `Set to ${ preset }` }
+											onClick={ () => handleFieldChange( key, choice.value ) }
+											className={ isActive ? 'active' : '' }
+											title={ choice.label }
 										>
-											{ preset }
+											{ choice.label }
 										</button>
-									) ) }
+									);
+								} ) }
+							{ ( ! fieldSchema.choices ||
+								! Array.isArray( fieldSchema.choices ) ||
+								fieldSchema.choices.length === 0 ) && (
+								<div
+									style={ {
+										color: '#666',
+										fontStyle: 'italic',
+										fontSize: '12px',
+									} }
+								>
+									No choices defined for buttonset field
 								</div>
 							) }
 						</div>
