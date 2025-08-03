@@ -22,7 +22,7 @@ class HtmlWidget extends React.Component {
 
 	render() {
 		const { data } = this.props;
-		const { html_content, allow_scripts } = data || {};
+		const { html_content } = data || {};
 		const { isHovered } = this.state;
 
 		return (
@@ -38,11 +38,6 @@ class HtmlWidget extends React.Component {
 						__html: html_content || '<p>No HTML content provided</p>',
 					} }
 				/>
-				{ allow_scripts && (
-					<div className="html-scripts-notice">
-						<small>Scripts are enabled for this widget</small>
-					</div>
-				) }
 			</div>
 		);
 	}
