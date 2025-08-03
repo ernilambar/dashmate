@@ -6,7 +6,10 @@
 
 import './css/settings.css';
 
-document.addEventListener( 'DOMContentLoaded', function () {
+/**
+ * Initialize settings functionality.
+ */
+function initSettings() {
 	'use strict';
 
 	const applyButton = document.getElementById( 'dashmate-apply-layout-btn' );
@@ -16,16 +19,35 @@ document.addEventListener( 'DOMContentLoaded', function () {
 		return;
 	}
 
+	/**
+	 * Show notice with specified type and content.
+	 *
+	 * @param {string} type - Notice type (success, error, warning, info).
+	 * @param {string} title - Notice title.
+	 * @param {string} message - Notice message.
+	 */
+	function showNotice( type, title, message ) {
+		const markup = '<p><strong>' + title + '</strong></p><p>' + message + '</p>';
+		statusDiv.className = 'notice notice-' + type;
+		statusDiv.innerHTML = markup;
+		statusDiv.style.display = 'block';
+	}
+
 	// Apply layout button functionality.
 	applyButton.addEventListener( 'click', function ( e ) {
 		e.preventDefault();
 
 		// Get selected layout.
 		const layoutSelect = document.getElementById( 'dashmate-layout' );
-		const selectedLayout = layoutSelect ? layoutSelect.value : 'default';
+		const selectedLayout = layoutSelect ? layoutSelect.value : '';
 
-		// Confirm action.
-		if ( ! confirm( dashmateSettings.strings.confirmApply ) ) {
+		// Validate layout selection.
+		if ( ! selectedLayout ) {
+			showNotice(
+				'error',
+				dashmateSettings.strings.error,
+				dashmateSettings.strings.selectLayout
+			);
 			return;
 		}
 
@@ -52,33 +74,17 @@ document.addEventListener( 'DOMContentLoaded', function () {
 			.then( ( response ) => response.json() )
 			.then( ( data ) => {
 				if ( data.success ) {
-					statusDiv.className = 'notice notice-success';
-					statusDiv.innerHTML =
-						'<p><strong>' +
-						dashmateSettings.strings.success +
-						'</strong></p><p>' +
-						data.data +
-						'</p>';
+					showNotice( 'success', dashmateSettings.strings.success, data.data );
 				} else {
-					statusDiv.className = 'notice notice-error';
-					statusDiv.innerHTML =
-						'<p><strong>' +
-						dashmateSettings.strings.error +
-						'</strong></p><p>' +
-						( data.data || 'Unknown error occurred.' ) +
-						'</p>';
+					showNotice(
+						'error',
+						dashmateSettings.strings.error,
+						data.data || dashmateSettings.strings.unknownError
+					);
 				}
-				statusDiv.style.display = 'block';
 			} )
 			.catch( ( error ) => {
-				statusDiv.className = 'notice notice-error';
-				statusDiv.innerHTML =
-					'<p><strong>' +
-					dashmateSettings.strings.error +
-					'</strong></p><p>' +
-					error.message +
-					'</p>';
-				statusDiv.style.display = 'block';
+				showNotice( 'error', dashmateSettings.strings.error, error.message );
 			} )
 			.finally( () => {
 				// Re-enable button and restore original text.
@@ -86,4 +92,7 @@ document.addEventListener( 'DOMContentLoaded', function () {
 				applyButton.innerHTML = dashmateSettings.strings.applyLayout;
 			} );
 	} );
-} );
+}
+
+// Initialize settings when DOM is ready.
+document.addEventListener( 'DOMContentLoaded', initSettings );
