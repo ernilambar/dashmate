@@ -176,8 +176,8 @@ class Admin_Page {
 			// Get layout details from Layout_Manager.
 			$layout = Layout_Manager::get_layout( $layout_slug );
 
-			if ( null === $layout ) {
-				wp_send_json_error( esc_html__( 'Selected layout not found.', 'dashmate' ) );
+			if ( is_wp_error( $layout ) ) {
+				wp_send_json_error( $layout->get_error_message() );
 			}
 
 			// Check if layout file exists.
