@@ -9,8 +9,6 @@ declare(strict_types=1);
 
 namespace Nilambar\Dashmate;
 
-use Nilambar\Dashmate\Utils\YML_Utils;
-
 /**
  * Widget_Initializer class.
  *
@@ -39,61 +37,7 @@ class Widget_Initializer {
 	 * @return string
 	 */
 	public static function get_default_layout_file_path() {
-		$default_path = DASHMATE_DIR . '/layouts/default.yml';
-
-		/**
-		 * Filter the default layout file path.
-		 *
-		 * This filter allows other plugins and addons to customize the default layout file path.
-		 * The file can be in any format supported by the layout system (YML, JSON, etc.).
-		 *
-		 * @since 1.0.0
-		 *
-		 * @param string $default_path Default layout file path.
-		 */
-		return apply_filters( 'dashmate_default_layout_file', $default_path );
-	}
-
-	/**
-	 * Get default layout structure.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return array
-	 */
-	private static function get_default_layout() {
-		$default_file = self::get_default_layout_file_path();
-		$layout_data  = YML_Utils::load_from_file( $default_file );
-
-		return $layout_data ?? [];
-	}
-
-	/**
-	 * Get default widgets.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return array
-	 */
-	private static function get_default_widgets() {
-		$default_file = self::get_default_layout_file_path();
-		$layout_data  = YML_Utils::load_from_file( $default_file );
-
-		return $layout_data['widgets'] ?? [];
-	}
-
-	/**
-	 * Get default column widgets mapping.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return array
-	 */
-	private static function get_default_column_widgets() {
-		$default_file = self::get_default_layout_file_path();
-		$layout_data  = YML_Utils::load_from_file( $default_file );
-
-		return $layout_data['column_widgets'] ?? [];
+		return Layout_Manager::get_default_layout_file_path();
 	}
 
 	/**
@@ -112,7 +56,13 @@ class Widget_Initializer {
 		$existing_columns = $dashboard_data['layout']['columns'] ?? [];
 		if ( empty( $existing_columns ) ) {
 			// Create three columns if none exist.
-			$default_layout                      = self::get_default_layout();
+			$default_layout = Layout_Manager::get_default_layout();
+
+			if ( is_wp_error( $default_layout ) ) {
+				error_log( 'Dashmate: Failed to get default layout: ' . $default_layout->get_error_message() );
+				return;
+			}
+
 			$dashboard_data['layout']['columns'] = $default_layout['layout']['columns'];
 			$dashboard_data['column_widgets']    = $default_layout['column_widgets'];
 
@@ -158,8 +108,18 @@ class Widget_Initializer {
 		}
 
 		// Create default widgets only if none exist.
-		$default_widgets        = self::get_default_widgets();
-		$default_column_widgets = self::get_default_column_widgets();
+		$default_widgets        = Layout_Manager::get_default_widgets();
+		$default_column_widgets = Layout_Manager::get_default_column_widgets();
+
+		if ( is_wp_error( $default_widgets ) ) {
+			error_log( 'Dashmate: Failed to get default widgets: ' . $default_widgets->get_error_message() );
+			return;
+		}
+
+		if ( is_wp_error( $default_column_widgets ) ) {
+			error_log( 'Dashmate: Failed to get default column widgets: ' . $default_column_widgets->get_error_message() );
+			return;
+		}
 
 		$dashboard_data['widgets']        = $default_widgets;
 		$dashboard_data['column_widgets'] = $default_column_widgets;
