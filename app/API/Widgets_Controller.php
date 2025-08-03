@@ -199,6 +199,9 @@ class Widgets_Controller extends Base_Controller {
 		$widget_data = $this->find_widget_by_id( $widget_id, $dashboard_data );
 		$settings    = $widget_data['settings'] ?? [];
 
+		// Merge settings with defaults to ensure frontend gets complete settings
+		$merged_settings = $widget->merge_settings_with_defaults( $settings );
+
 		// Get content using the new system.
 		$content = Widget_Dispatcher::get_widget_content( $widget->get_template_type(), $widget_id, $settings );
 
@@ -206,8 +209,9 @@ class Widgets_Controller extends Base_Controller {
 			return $content;
 		}
 
-		// Add widget type to the response so frontend doesn't need to guess
-		$content['type'] = $widget->get_template_type();
+		// Add widget type and merged settings to the response
+		$content['type']     = $widget->get_template_type();
+		$content['settings'] = $merged_settings;
 
 		return $this->success_response( $content );
 	}

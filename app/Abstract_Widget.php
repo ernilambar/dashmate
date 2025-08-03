@@ -330,7 +330,7 @@ abstract class Abstract_Widget {
 	 *
 	 * @return array
 	 */
-	protected function merge_settings_with_defaults( $settings ) {
+	public function merge_settings_with_defaults( $settings ) {
 		return wp_parse_args( $settings, $this->get_default_settings() );
 	}
 

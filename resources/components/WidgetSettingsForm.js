@@ -271,8 +271,12 @@ export default function WidgetSettingsForm( { schema, values, onChange, onClose,
 								Array.isArray( fieldSchema.choices ) &&
 								fieldSchema.choices.length > 0 &&
 								fieldSchema.choices.map( ( choice ) => {
-									// Ensure value is always an array
-									const currentValue = Array.isArray( value ) ? value : [];
+									// Ensure value is always an array, use default if value is not provided
+									const currentValue = Array.isArray( value )
+										? value
+										: Array.isArray( fieldSchema.default )
+										? fieldSchema.default
+										: [];
 									const isChecked = currentValue.includes( choice.value );
 
 									return (
