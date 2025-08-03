@@ -116,12 +116,11 @@ abstract class Abstract_Widget {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $widget_id Widget ID.
-	 * @param array  $settings  Widget settings.
+	 * @param array $settings Widget settings.
 	 *
 	 * @return array
 	 */
-	abstract public function get_content( $widget_id = null, $settings = [] );
+	abstract public function get_content( array $settings = [] ): array;
 
 	/**
 	 * Get widget template type.
@@ -340,14 +339,13 @@ abstract class Abstract_Widget {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $widget_id Widget ID.
-	 * @param array  $settings  Widget settings.
+	 * @param array $settings Widget settings.
 	 *
 	 * @return array|WP_Error
 	 */
-	public function get_validated_content( $widget_id = null, $settings = [] ) {
+	public function get_validated_content( array $settings = [] ) {
 		// Get content from the widget implementation.
-		$content = $this->get_content( $widget_id, $settings );
+		$content = $this->get_content( $settings );
 
 		// Add universal fields (title and icon) if not already present.
 		$content = $this->add_universal_fields( $content );

@@ -9,10 +9,10 @@ declare(strict_types=1);
 
 namespace Nilambar\Dashmate;
 
-use Nilambar\Dashmate\Widgets\Quick_Links_Widget;
-use Nilambar\Dashmate\Widgets\Sales_Widget;
-use Nilambar\Dashmate\Widgets\Weekly_Targets_Widget;
-use Nilambar\Dashmate\Widgets\Welcome_HTML_Widget;
+use Nilambar\Dashmate\Widgets\Sample_HTML;
+use Nilambar\Dashmate\Widgets\Sample_Links;
+use Nilambar\Dashmate\Widgets\Sample_Progress_Circles;
+use Nilambar\Dashmate\Widgets\Sample_Tabular;
 
 /**
  * Widget_Registry class.
@@ -37,10 +37,10 @@ class Widget_Registry {
 	 */
 	private static function register_default_widgets() {
 		// Register widget instances.
-		Widget_Dispatcher::register_widget( new Welcome_HTML_Widget( 'welcome-html-1' ) );
-		Widget_Dispatcher::register_widget( new Quick_Links_Widget( 'quick-links-1' ) );
-		Widget_Dispatcher::register_widget( new Weekly_Targets_Widget( 'weekly-targets' ) );
-		Widget_Dispatcher::register_widget( new Sales_Widget( 'sales-overview' ) );
+		Widget_Dispatcher::register_widget( new Sample_HTML( 'sample-html' ) );
+		Widget_Dispatcher::register_widget( new Sample_Links( 'sample-links' ) );
+		Widget_Dispatcher::register_widget( new Sample_Progress_Circles( 'sample-progress-circles' ) );
+		Widget_Dispatcher::register_widget( new Sample_Tabular( 'sample-tabular' ) );
 	}
 
 	/**
