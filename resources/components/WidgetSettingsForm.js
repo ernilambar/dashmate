@@ -262,6 +262,62 @@ export default function WidgetSettingsForm( { schema, values, onChange, onClose,
 						</div>
 					</div>
 				);
+			case 'multi-check':
+				return (
+					<div key={ key } style={ { marginBottom: 12 } }>
+						<label>{ fieldSchema.label }</label>
+						<div style={ { marginTop: 4 } }>
+							{ fieldSchema.choices &&
+								Array.isArray( fieldSchema.choices ) &&
+								fieldSchema.choices.length > 0 &&
+								fieldSchema.choices.map( ( choice ) => {
+									// Ensure value is always an array
+									const currentValue = Array.isArray( value ) ? value : [];
+									const isChecked = currentValue.includes( choice.value );
+
+									return (
+										<label
+											key={ choice.value }
+											style={ {
+												display: 'block',
+												marginBottom: 4,
+												cursor: 'pointer',
+											} }
+										>
+											<input
+												type="checkbox"
+												value={ choice.value }
+												checked={ isChecked }
+												onChange={ ( e ) => {
+													const newValue = e.target.checked
+														? [ ...currentValue, choice.value ]
+														: currentValue.filter(
+																( v ) => v !== choice.value
+														  );
+													handleFieldChange( key, newValue );
+												} }
+												style={ { marginRight: 6 } }
+											/>
+											{ choice.label }
+										</label>
+									);
+								} ) }
+							{ ( ! fieldSchema.choices ||
+								! Array.isArray( fieldSchema.choices ) ||
+								fieldSchema.choices.length === 0 ) && (
+								<div
+									style={ {
+										color: '#666',
+										fontStyle: 'italic',
+										fontSize: '12px',
+									} }
+								>
+									No choices defined for multi-check field
+								</div>
+							) }
+						</div>
+					</div>
+				);
 			case 'repeater':
 				return (
 					<div key={ key } style={ { marginBottom: 12 } }>
