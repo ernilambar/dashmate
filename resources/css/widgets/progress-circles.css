@@ -52,7 +52,6 @@
 .progress-circle-item {
 	text-align: center;
 	cursor: pointer;
-	transition: transform 0.2s ease;
 	display: flex;
 	flex-direction: column;
 	align-items: center;

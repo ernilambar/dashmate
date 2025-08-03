@@ -27,7 +27,7 @@
 	align-items: center;
 	justify-content: space-between;
 	cursor: grab;
-	transition: all 0.2s ease;
+	transition: box-shadow 0.2s ease;
 }
 
 .sortable-field-container .sortable-item:hover {
