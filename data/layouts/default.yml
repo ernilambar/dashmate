@@ -35,9 +35,9 @@ widgets:
           linkStyle: list
 column_widgets:
     col-1:
+        - sales-overview
+        - welcome-html-1
+    col-2:
         - weekly-tickets
         - quick-links-1
-    col-2:
-        - sales-overview
-    col-3:
-        - welcome-html-1
+    col-3: []

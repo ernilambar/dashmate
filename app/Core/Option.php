@@ -54,7 +54,8 @@ class Option {
 		return apply_filters(
 			'dashmate_option_defaults',
 			[
-				'max_columns' => '3',
+				'max_columns'      => '3',
+				'inactive_widgets' => [],
 			]
 		);
 	}
