@@ -221,7 +221,7 @@ class Widget_Dispatcher {
 
 		// Then, create individual widget entries with their own schemas
 		foreach ( $widgets as $id => $widget ) {
-			$template_type = $widget->get_template_type();
+			$template_type     = $widget->get_template_type();
 			$widget_definition = $widget->get_definition();
 
 			// Create a unique key for this widget using its ID
