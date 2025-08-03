@@ -363,6 +363,15 @@ export default function WidgetSettingsForm( { schema, values, onChange, onClose,
 						</button>
 					</div>
 				);
+			case 'hidden':
+				return (
+					<input
+						key={ key }
+						type="hidden"
+						value={ value || fieldSchema.default || '' }
+						onChange={ ( e ) => handleFieldChange( key, e.target.value ) }
+					/>
+				);
 			default:
 				return null;
 		}
