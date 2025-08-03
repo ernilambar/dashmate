@@ -210,7 +210,6 @@ class Widget extends Component {
 				setTimeout( () => {
 					this.setState( { settingsSaveStatus: null } );
 				}, 2000 );
-				console.error( 'Failed to save settings:', result );
 			}
 		} catch ( error ) {
 			// Set error status for cog icon animation
@@ -277,17 +276,11 @@ class Widget extends Component {
 
 		// Validate that we have a widget type and it's supported
 		if ( ! widgetType ) {
-			console.warn( `No widget type found for widget: ${ widget.id }` );
 			// Fallback to a basic widget display
 			return this.renderBasicWidget();
 		}
 
 		if ( ! widgets || ! widgets[ widgetType ] ) {
-			console.warn(
-				`Widget type '${ widgetType }' is not registered. Available types: ${ Object.keys(
-					widgets || {}
-				).join( ', ' ) }`
-			);
 			// Fallback to a basic widget display
 			return this.renderBasicWidget();
 		}

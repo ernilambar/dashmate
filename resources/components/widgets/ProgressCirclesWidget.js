@@ -42,7 +42,7 @@ class ProgressCirclesWidget extends React.Component {
 		const { settings = {} } = this.props;
 
 		const currentValue = currentValues[ index ] || 0;
-		const hideCaption = settings.hideCaption || false;
+		const hideCaption = settings.hide_caption || false;
 
 		// Responsive radius calculation - smaller circles for smaller containers
 		const baseRadius = 40;

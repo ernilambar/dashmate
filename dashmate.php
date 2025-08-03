@@ -23,7 +23,6 @@ define( 'DASHMATE_BASE_FILEPATH', __FILE__ );
 define( 'DASHMATE_BASE_FILENAME', plugin_basename( __FILE__ ) );
 define( 'DASHMATE_DIR', rtrim( plugin_dir_path( __FILE__ ), '/' ) );
 define( 'DASHMATE_URL', rtrim( plugin_dir_url( __FILE__ ), '/' ) );
-define( 'DASHMATE_REVIEWS_FILE', '/Users/nilambar/Documents/reviews.json' );
 
 // Include autoload.
 if ( file_exists( DASHMATE_DIR . '/vendor/autoload.php' ) ) {
