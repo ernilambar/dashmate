@@ -1,0 +1,26 @@
+layout:
+    columns:
+        - id: col-1
+          order: 1
+          width: 50%
+        - id: col-2
+          order: 2
+          width: 50%
+widgets:
+    - id: claims-plugins
+      column_id: col-1
+      position: 1
+      settings:
+          showHeaders: true
+          stripedRows: true
+    - id: verbose-plugins
+      column_id: col-2
+      position: 1
+      settings:
+          showHeaders: true
+          stripedRows: true
+column_widgets:
+    col-1:
+        - claims-plugins
+    col-2:
+        - verbose-plugins
