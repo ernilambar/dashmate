@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Nilambar\Dashmate;
 
+use Nilambar\Dashmate\Core\Option;
+
 /**
  * Widget_Dispatcher class.
  *
@@ -112,6 +114,31 @@ class Widget_Dispatcher {
 	}
 
 	/**
+	 * Get active widgets (excluding inactive ones).
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_active_widgets() {
+		$all_widgets = self::get_widgets();
+
+		// Get inactive widgets from plugin options.
+		$inactive_widgets = Option::get( 'inactive_widgets' );
+		$inactive_widgets = is_array( $inactive_widgets ) ? $inactive_widgets : [];
+
+		// Filter out inactive widgets.
+		$active_widgets = [];
+		foreach ( $all_widgets as $id => $widget ) {
+			if ( ! in_array( $id, $inactive_widgets, true ) ) {
+				$active_widgets[ $id ] = $widget;
+			}
+		}
+
+		return $active_widgets;
+	}
+
+	/**
 	 * Get a specific widget.
 	 *
 	 * @since 1.0.0
@@ -121,7 +148,7 @@ class Widget_Dispatcher {
 	 * @return Abstract_Widget|null
 	 */
 	public static function get_widget( $id ) {
-		$widgets = self::get_widgets();
+		$widgets = self::get_active_widgets();
 		return $widgets[ $id ] ?? null;
 	}
 
@@ -135,7 +162,7 @@ class Widget_Dispatcher {
 	 * @return bool
 	 */
 	public static function is_widget_registered( $id ) {
-		$widgets = self::get_widgets();
+		$widgets = self::get_active_widgets();
 		return isset( $widgets[ $id ] );
 	}
 
@@ -174,7 +201,7 @@ class Widget_Dispatcher {
 	 */
 	public static function get_widget_types_for_frontend() {
 		$widget_types = [];
-		$widgets      = self::get_widgets();
+		$widgets      = self::get_active_widgets();
 
 		// First, get all available template types from the registry
 		$templates = Widget_Template_Registry::get_templates();

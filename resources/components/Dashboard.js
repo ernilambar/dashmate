@@ -167,10 +167,24 @@ class Dashboard extends Component {
 			);
 		}
 
-		// Get columns from the new structure
-		const columns = dashboard?.layout?.columns || [];
-		const allWidgets = dashboard?.widgets || [];
-		const columnWidgets = dashboard?.column_widgets || {};
+		// Ensure dashboard is an object
+		if ( ! dashboard || typeof dashboard !== 'object' ) {
+			return (
+				<div className="dashmate-app">
+					<div className="error">
+						<p>Invalid dashboard data</p>
+					</div>
+				</div>
+			);
+		}
+
+		// Get columns from the new structure with proper type checking
+		const columns = Array.isArray( dashboard?.layout?.columns ) ? dashboard.layout.columns : [];
+		const allWidgets = Array.isArray( dashboard?.widgets ) ? dashboard.widgets : [];
+		const columnWidgets =
+			dashboard?.column_widgets && typeof dashboard.column_widgets === 'object'
+				? dashboard.column_widgets
+				: {};
 
 		// Determine if we should use grid layout (more than max columns)
 		const maxColumns = window.dashmateApiSettings?.config?.maxColumns || 2;
@@ -183,26 +197,46 @@ class Dashboard extends Component {
 				<DragDropContext onDragEnd={ this.handleDragEnd }>
 					<div className={ dashboardContentClass }>
 						{ columns.length > 0 ? (
-							columns.map( ( column ) => {
-								// Get widgets for this column using column_widgets structure
-								const columnWidgetIds = columnWidgets[ column.id ] || [];
-								const columnWidgetsList = columnWidgetIds
-									.map( ( widgetId ) => {
-										return allWidgets.find(
-											( widget ) => widget.id === widgetId
-										);
-									} )
-									.filter( Boolean );
+							columns
+								.map( ( column ) => {
+									// Ensure column is an object with an id
+									if ( ! column || typeof column !== 'object' || ! column.id ) {
+										return null;
+									}
 
-								return (
-									<Column
-										key={ column.id }
-										column={ column }
-										widgets={ widgets }
-										columnWidgets={ columnWidgetsList }
-									/>
-								);
-							} )
+									// Get widgets for this column using column_widgets structure with robust error handling
+									const columnWidgetIds = Array.isArray(
+										columnWidgets[ column.id ]
+									)
+										? columnWidgets[ column.id ]
+										: [];
+									const columnWidgetsList = columnWidgetIds
+										.map( ( widgetId ) => {
+											// Ensure widgetId is a string
+											if ( typeof widgetId !== 'string' ) {
+												return null;
+											}
+
+											// Ensure allWidgets is an array before calling find
+											if ( ! Array.isArray( allWidgets ) ) {
+												return null;
+											}
+											return allWidgets.find(
+												( widget ) => widget && widget.id === widgetId
+											);
+										} )
+										.filter( Boolean );
+
+									return (
+										<Column
+											key={ column.id }
+											column={ column }
+											widgets={ widgets }
+											columnWidgets={ columnWidgetsList }
+										/>
+									);
+								} )
+								.filter( Boolean ) // Remove any null columns
 						) : (
 							<div className="empty-dashboard">
 								<p>No dashboard columns found</p>
