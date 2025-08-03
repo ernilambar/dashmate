@@ -29,6 +29,7 @@ $all_layouts = Layout_Manager::get_layouts();
 		<p><?php echo esc_html__( 'Select a layout from the dropdown below and click the button to apply it to your dashboard. This will override all current widget positions and settings.', 'dashmate' ); ?></p>
 		<p>
 			<select id="dashmate-layout">
+				<option value=""><?php echo esc_html__( '&mdash; Select &mdash;', 'dashmate' ); ?></option>
 				<?php foreach ( $all_layouts as $layout_key => $layout ) : ?>
 					<option value="<?php echo esc_attr( $layout_key ); ?>"><?php echo esc_html( $layout['title'] ); ?></option>
 				<?php endforeach; ?>

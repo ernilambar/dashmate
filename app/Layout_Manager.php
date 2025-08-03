@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Nilambar\Dashmate;
 
 use Nilambar\Dashmate\Utils\YML_Utils;
+use WP_Error;
 
 /**
  * Layout_Manager class.

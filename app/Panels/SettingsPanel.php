@@ -44,10 +44,9 @@ class SettingsPanel extends Abstract_Panel {
 		$widget_choices = [];
 
 		if ( ! empty( $all_widgets ) ) {
-			$widget_keys = array_keys( $all_widgets );
-			foreach ( $widget_keys as $key ) {
+			foreach ( $all_widgets as $key => $widget ) {
 				$widget_choices[] = [
-					'label' => $key,
+					'label' => esc_html( $widget->get_name() . ' (' . $key . ')' ),
 					'value' => $key,
 				];
 			}

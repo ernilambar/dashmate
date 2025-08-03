@@ -147,6 +147,8 @@ class Admin_Page {
 						'success'      => esc_html__( 'Layout applied successfully!', 'dashmate' ),
 						'error'        => esc_html__( 'An error occurred while applying the layout.', 'dashmate' ),
 						'applyLayout'  => esc_html__( 'Apply Layout', 'dashmate' ),
+						'selectLayout' => esc_html__( 'Please select a layout before applying.', 'dashmate' ),
+						'unknownError' => esc_html__( 'Unknown error occurred.', 'dashmate' ),
 					],
 				]
 			);
