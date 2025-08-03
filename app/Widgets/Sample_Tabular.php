@@ -48,6 +48,31 @@ class Sample_Tabular extends Abstract_Widget {
 				'max'         => 10,
 				'refresh'     => true,
 			],
+			'visible_columns' => [
+				'type'        => 'sortable',
+				'label'       => esc_html__( 'Visible Columns', 'dashmate' ),
+				'description' => esc_html__( 'Drag to reorder columns and toggle to show/hide', 'dashmate' ),
+				'default'     => ['id', 'title', 'status', 'actions'],
+				'refresh'     => true,
+				'choices'     => [
+					[
+						'value' => 'id',
+						'label' => esc_html__( 'ID', 'dashmate' ),
+					],
+					[
+						'value' => 'title',
+						'label' => esc_html__( 'Title', 'dashmate' ),
+					],
+					[
+						'value' => 'status',
+						'label' => esc_html__( 'Status', 'dashmate' ),
+					],
+					[
+						'value' => 'actions',
+						'label' => esc_html__( 'Actions', 'dashmate' ),
+					],
+				],
+			],
 		];
 
 		$this->output_schema = [
@@ -71,23 +96,37 @@ class Sample_Tabular extends Abstract_Widget {
 	public function get_content( array $settings = [] ): array {
 		$settings = $this->merge_settings_with_defaults( $settings );
 
+		// Get visible columns setting.
+		$visible_columns = $settings['visible_columns'] ?? ['id', 'title', 'status', 'actions'];
+
+		// Define all available columns.
+		$all_columns = [
+			'id'      => esc_html__( 'ID', 'dashmate' ),
+			'title'   => esc_html__( 'Title', 'dashmate' ),
+			'status'  => esc_html__( 'Status', 'dashmate' ),
+			'actions' => esc_html__( 'Actions', 'dashmate' ),
+		];
+
+		// Filter headers based on visible columns.
+		$filtered_headers = [];
+		foreach ( $visible_columns as $column_key ) {
+			if ( isset( $all_columns[ $column_key ] ) ) {
+				$filtered_headers[] = [ 'text' => $all_columns[ $column_key ] ];
+			}
+		}
+
 		// Sample data for products table.
 		$products = [
 			'title'   => esc_html__( 'Sample Products', 'dashmate' ),
-			'headers' => [
-				[ 'text' => esc_html__( 'ID', 'dashmate' ) ],
-				[ 'text' => esc_html__( 'Title', 'dashmate' ) ],
-				[ 'text' => esc_html__( 'Status', 'dashmate' ) ],
-				[ 'text' => esc_html__( 'Actions', 'dashmate' ) ],
-			],
+			'headers' => $filtered_headers,
 			'rows'    => [
 				[
-					'cells'   => [
-						[ 'text' => '<a href="https://wordpress.org/plugins/woocommerce/" target="_blank">#001</a>' ],
-						[ 'text' => '<a href="https://woocommerce.com/" target="_blank">WooCommerce</a>' ],
-						[ 'text' => esc_html__( 'Active', 'dashmate' ) ],
-						[ 'text' => '' ],
-					],
+					'cells'   => $this->filter_cells_by_columns( [
+						'id'      => [ 'text' => '<a href="https://wordpress.org/plugins/woocommerce/" target="_blank">#001</a>' ],
+						'title'   => [ 'text' => '<a href="https://woocommerce.com/" target="_blank">WooCommerce</a>' ],
+						'status'  => [ 'text' => esc_html__( 'Active', 'dashmate' ) ],
+						'actions' => [ 'text' => '' ],
+					], $visible_columns ),
 					'actions' => [
 						'sync' => [
 							'title' => esc_html__( 'Sync Product', 'dashmate' ),
@@ -95,12 +134,12 @@ class Sample_Tabular extends Abstract_Widget {
 					],
 				],
 				[
-					'cells'   => [
-						[ 'text' => '<a href="https://wordpress.org/plugins/contact-form-7/" target="_blank">#002</a>' ],
-						[ 'text' => '<a href="https://contactform7.com/" target="_blank">Contact Form 7</a>' ],
-						[ 'text' => esc_html__( 'Active', 'dashmate' ) ],
-						[ 'text' => '' ],
-					],
+					'cells'   => $this->filter_cells_by_columns( [
+						'id'      => [ 'text' => '<a href="https://wordpress.org/plugins/contact-form-7/" target="_blank">#002</a>' ],
+						'title'   => [ 'text' => '<a href="https://contactform7.com/" target="_blank">Contact Form 7</a>' ],
+						'status'  => [ 'text' => esc_html__( 'Active', 'dashmate' ) ],
+						'actions' => [ 'text' => '' ],
+					], $visible_columns ),
 					'actions' => [
 						'sync' => [
 							'title' => esc_html__( 'Sync Product', 'dashmate' ),
@@ -108,12 +147,12 @@ class Sample_Tabular extends Abstract_Widget {
 					],
 				],
 				[
-					'cells'   => [
-						[ 'text' => '<a href="https://wordpress.org/plugins/yoast-seo/" target="_blank">#003</a>' ],
-						[ 'text' => '<a href="https://yoast.com/" target="_blank">Yoast SEO</a>' ],
-						[ 'text' => esc_html__( 'Active', 'dashmate' ) ],
-						[ 'text' => '' ],
-					],
+					'cells'   => $this->filter_cells_by_columns( [
+						'id'      => [ 'text' => '<a href="https://wordpress.org/plugins/yoast-seo/" target="_blank">#003</a>' ],
+						'title'   => [ 'text' => '<a href="https://yoast.com/" target="_blank">Yoast SEO</a>' ],
+						'status'  => [ 'text' => esc_html__( 'Active', 'dashmate' ) ],
+						'actions' => [ 'text' => '' ],
+					], $visible_columns ),
 					'actions' => [
 						'sync' => [
 							'title' => esc_html__( 'Sync Product', 'dashmate' ),
@@ -126,20 +165,15 @@ class Sample_Tabular extends Abstract_Widget {
 		// Sample data for orders table.
 		$orders = [
 			'title'   => esc_html__( 'Sample Orders', 'dashmate' ),
-			'headers' => [
-				[ 'text' => esc_html__( 'ID', 'dashmate' ) ],
-				[ 'text' => esc_html__( 'Title', 'dashmate' ) ],
-				[ 'text' => esc_html__( 'Status', 'dashmate' ) ],
-				[ 'text' => esc_html__( 'Actions', 'dashmate' ) ],
-			],
+			'headers' => $filtered_headers,
 			'rows'    => [
 				[
-					'cells'   => [
-						[ 'text' => '<a href="https://example.com/order/1001" target="_blank">#1001</a>' ],
-						[ 'text' => '<a href="https://example.com/product/premium-theme" target="_blank">Premium Theme License</a>' ],
-						[ 'text' => esc_html__( 'Completed', 'dashmate' ) ],
-						[ 'text' => '' ],
-					],
+					'cells'   => $this->filter_cells_by_columns( [
+						'id'      => [ 'text' => '<a href="https://example.com/order/1001" target="_blank">#1001</a>' ],
+						'title'   => [ 'text' => '<a href="https://example.com/product/premium-theme" target="_blank">Premium Theme License</a>' ],
+						'status'  => [ 'text' => esc_html__( 'Completed', 'dashmate' ) ],
+						'actions' => [ 'text' => '' ],
+					], $visible_columns ),
 					'actions' => [
 						'sync' => [
 							'title' => esc_html__( 'Sync Order', 'dashmate' ),
@@ -147,12 +181,12 @@ class Sample_Tabular extends Abstract_Widget {
 					],
 				],
 				[
-					'cells'   => [
-						[ 'text' => '<a href="https://example.com/order/1002" target="_blank">#1002</a>' ],
-						[ 'text' => '<a href="https://example.com/product/plugin-bundle" target="_blank">Plugin Bundle</a>' ],
-						[ 'text' => esc_html__( 'Processing', 'dashmate' ) ],
-						[ 'text' => '' ],
-					],
+					'cells'   => $this->filter_cells_by_columns( [
+						'id'      => [ 'text' => '<a href="https://example.com/order/1002" target="_blank">#1002</a>' ],
+						'title'   => [ 'text' => '<a href="https://example.com/product/plugin-bundle" target="_blank">Plugin Bundle</a>' ],
+						'status'  => [ 'text' => esc_html__( 'Processing', 'dashmate' ) ],
+						'actions' => [ 'text' => '' ],
+					], $visible_columns ),
 					'actions' => [
 						'sync' => [
 							'title' => esc_html__( 'Sync Order', 'dashmate' ),
@@ -160,12 +194,12 @@ class Sample_Tabular extends Abstract_Widget {
 					],
 				],
 				[
-					'cells'   => [
-						[ 'text' => '<a href="https://example.com/order/1003" target="_blank">#1003</a>' ],
-						[ 'text' => '<a href="https://example.com/product/seo-plugin" target="_blank">SEO Plugin</a>' ],
-						[ 'text' => esc_html__( 'Completed', 'dashmate' ) ],
-						[ 'text' => '' ],
-					],
+					'cells'   => $this->filter_cells_by_columns( [
+						'id'      => [ 'text' => '<a href="https://example.com/order/1003" target="_blank">#1003</a>' ],
+						'title'   => [ 'text' => '<a href="https://example.com/product/seo-plugin" target="_blank">SEO Plugin</a>' ],
+						'status'  => [ 'text' => esc_html__( 'Completed', 'dashmate' ) ],
+						'actions' => [ 'text' => '' ],
+					], $visible_columns ),
 					'actions' => [
 						'sync' => [
 							'title' => esc_html__( 'Sync Order', 'dashmate' ),
@@ -189,5 +223,24 @@ class Sample_Tabular extends Abstract_Widget {
 				$orders,
 			],
 		];
+	}
+
+	/**
+	 * Filter cells by visible columns.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $cells All cells data.
+	 * @param array $visible_columns Array of visible column keys.
+	 * @return array Filtered cells array.
+	 */
+	private function filter_cells_by_columns( array $cells, array $visible_columns ): array {
+		$filtered_cells = [];
+		foreach ( $visible_columns as $column_key ) {
+			if ( isset( $cells[ $column_key ] ) ) {
+				$filtered_cells[] = $cells[ $column_key ];
+			}
+		}
+		return $filtered_cells;
 	}
 }

@@ -1,0 +1,103 @@
+/* Sortable Field Styles */
+.sortable-field-container {
+	margin-bottom: 12px;
+}
+
+.sortable-field-container label {
+	display: block;
+	margin-bottom: 8px;
+	font-weight: 500;
+	color: #333;
+}
+
+.sortable-field-container .sortable-list {
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	min-height: 50px;
+	background-color: #f9f9f9;
+}
+
+.sortable-field-container .sortable-item {
+	padding: 12px;
+	margin: 4px;
+	background-color: white;
+	border: 1px solid #e0e0e0;
+	border-radius: 4px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	cursor: grab;
+	transition: all 0.2s ease;
+}
+
+.sortable-field-container .sortable-item:hover {
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.sortable-field-container .sortable-item.dragging {
+	background-color: #e3f2fd;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+	opacity: 0.9;
+}
+
+.sortable-field-container .sortable-item.disabled {
+	opacity: 0.6;
+}
+
+.sortable-field-container .sortable-item.disabled .item-label {
+	font-weight: 300;
+	color: #999;
+}
+
+.sortable-field-container .drag-handle {
+	width: 20px;
+	height: 20px;
+	margin-right: 12px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #666;
+	font-size: 12px;
+	cursor: grab;
+}
+
+.sortable-field-container .item-content {
+	display: flex;
+	align-items: center;
+	flex: 1;
+}
+
+.sortable-field-container .item-label {
+	font-weight: normal;
+	color: #333;
+}
+
+.sortable-field-container .item-toggle {
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+	margin-left: 12px;
+}
+
+.sortable-field-container .item-toggle input[type="checkbox"] {
+	margin-right: 8px;
+}
+
+.sortable-field-container .item-toggle span {
+	font-size: 12px;
+	color: #666;
+}
+
+.sortable-field-container .help-text {
+	margin-top: 8px;
+	font-size: 12px;
+	color: #666;
+	font-style: italic;
+}
+
+.sortable-field-container .empty-state {
+	padding: 20px;
+	text-align: center;
+	color: #666;
+	font-style: italic;
+}
