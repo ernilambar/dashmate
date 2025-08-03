@@ -9,25 +9,29 @@ import './css/settings.css';
 document.addEventListener( 'DOMContentLoaded', function () {
 	'use strict';
 
-	const resetButton = document.getElementById( 'dashmate-reset-layout-btn' );
-	const statusDiv = document.getElementById( 'dashmate-reset-status' );
+	const applyButton = document.getElementById( 'dashmate-apply-layout-btn' );
+	const statusDiv = document.getElementById( 'dashmate-apply-status' );
 
-	if ( ! resetButton || ! statusDiv ) {
+	if ( ! applyButton || ! statusDiv ) {
 		return;
 	}
 
-	// Reset layout button functionality.
-	resetButton.addEventListener( 'click', function ( e ) {
+	// Apply layout button functionality.
+	applyButton.addEventListener( 'click', function ( e ) {
 		e.preventDefault();
 
+		// Get selected layout.
+		const layoutSelect = document.getElementById( 'dashmate-layout' );
+		const selectedLayout = layoutSelect ? layoutSelect.value : 'default';
+
 		// Confirm action.
-		if ( ! confirm( dashmateSettings.strings.confirmReset ) ) {
+		if ( ! confirm( dashmateSettings.strings.confirmApply ) ) {
 			return;
 		}
 
 		// Disable button and show loading state.
-		resetButton.disabled = true;
-		resetButton.innerHTML = dashmateSettings.strings.resetting;
+		applyButton.disabled = true;
+		applyButton.innerHTML = dashmateSettings.strings.applying;
 
 		// Clear previous status.
 		statusDiv.className = '';
@@ -40,8 +44,9 @@ document.addEventListener( 'DOMContentLoaded', function () {
 				'Content-Type': 'application/x-www-form-urlencoded',
 			},
 			body: new URLSearchParams( {
-				action: 'dashmate_reset_layout',
+				action: 'dashmate_apply_layout',
 				nonce: dashmateSettings.nonce,
+				layout: selectedLayout,
 			} ),
 		} )
 			.then( ( response ) => response.json() )
@@ -77,8 +82,8 @@ document.addEventListener( 'DOMContentLoaded', function () {
 			} )
 			.finally( () => {
 				// Re-enable button and restore original text.
-				resetButton.disabled = false;
-				resetButton.innerHTML = 'Reset Layout';
+				applyButton.disabled = false;
+				applyButton.innerHTML = dashmateSettings.strings.applyLayout;
 			} );
 	} );
 } );

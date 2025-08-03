@@ -5,8 +5,10 @@
  * @package Dashmate
  */
 
-use Nilambar\Dashmate\Widget_Initializer;
+use Nilambar\Dashmate\Layout_Manager;
 use Nilambar\Optify\Panel_Manager;
+
+$all_layouts = Layout_Manager::get_layouts();
 ?>
 
 <div class="wrap">
@@ -21,14 +23,20 @@ use Nilambar\Optify\Panel_Manager;
 	);
 	?>
 
-	<!-- Add reset layout section. -->
-	<div class="dashmate-reset-layout-section">
-		<h2><?php echo esc_html__( 'Reset Layout', 'dashmate' ); ?></h2>
-		<p><?php echo esc_html__( 'Click the button below to reset the dashboard layout to the default configuration. This will override all current widget positions and settings.', 'dashmate' ); ?></p>
-		<p><?php printf( esc_html__( 'Default layout file: %s', 'dashmate' ), esc_html( Widget_Initializer::get_default_layout_file_path() ) ); ?></p>
-		<button type="button" id="dashmate-reset-layout-btn" class="button button-secondary">
-			<?php echo esc_html__( 'Reset Layout', 'dashmate' ); ?>
+	<!-- Add apply layout section. -->
+	<div class="dashmate-apply-layout-section">
+		<h2><?php echo esc_html__( 'Apply Layout', 'dashmate' ); ?></h2>
+		<p><?php echo esc_html__( 'Select a layout from the dropdown below and click the button to apply it to your dashboard. This will override all current widget positions and settings.', 'dashmate' ); ?></p>
+		<p>
+			<select id="dashmate-layout">
+				<?php foreach ( $all_layouts as $layout_key => $layout ) : ?>
+					<option value="<?php echo esc_attr( $layout_key ); ?>"><?php echo esc_html( $layout['title'] ); ?></option>
+				<?php endforeach; ?>
+			</select>
+		</p>
+		<button type="button" id="dashmate-apply-layout-btn" class="button button-secondary">
+			<?php echo esc_html__( 'Apply Layout', 'dashmate' ); ?>
 		</button>
-		<div id="dashmate-reset-status"></div>
+		<div id="dashmate-apply-status"></div>
 	</div>
 </div>
