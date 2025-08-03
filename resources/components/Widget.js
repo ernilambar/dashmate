@@ -77,9 +77,8 @@ class Widget extends Component {
 						}` }
 						ref={ provided.innerRef }
 						{ ...provided.draggableProps }
-						{ ...provided.dragHandleProps }
 					>
-						<div className="widget-header">
+						<div className="widget-header" { ...provided.dragHandleProps }>
 							<h3>
 								<span className="dashicons dashicons-warning"></span>
 								Widget Error
@@ -118,9 +117,8 @@ class Widget extends Component {
 						}` }
 						ref={ provided.innerRef }
 						{ ...provided.draggableProps }
-						{ ...provided.dragHandleProps }
 					>
-						<div className="widget-header">
+						<div className="widget-header" { ...provided.dragHandleProps }>
 							<h3>
 								<span className="dashicons dashicons-admin-generic"></span>
 								{ widget.id }
@@ -253,9 +251,8 @@ class Widget extends Component {
 							}` }
 							ref={ provided.innerRef }
 							{ ...provided.draggableProps }
-							{ ...provided.dragHandleProps }
 						>
-							<div className="widget-header">
+							<div className="widget-header" { ...provided.dragHandleProps }>
 								<h3>Loading...</h3>
 							</div>
 							<div className="widget-content">
@@ -297,9 +294,8 @@ class Widget extends Component {
 						} ${ snapshot.isDragging ? 'dragging' : '' }` }
 						ref={ provided.innerRef }
 						{ ...provided.draggableProps }
-						{ ...provided.dragHandleProps }
 					>
-						<div className="widget-header">
+						<div className="widget-header" { ...provided.dragHandleProps }>
 							<h3>
 								{ widgetIcon && (
 									<span

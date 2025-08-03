@@ -456,6 +456,173 @@ All dashboard data is stored in WordPress options:
   }
   ```
 
+## Field Types
+
+The following field types are supported in widget settings schemas:
+
+### Text Field
+```json
+{
+  "type": "text",
+  "label": "Field Label",
+  "description": "Optional description",
+  "default": "default value"
+}
+```
+
+### URL Field
+```json
+{
+  "type": "url",
+  "label": "URL Field",
+  "description": "Enter a valid URL",
+  "default": "https://example.com"
+}
+```
+
+### Checkbox Field
+```json
+{
+  "type": "checkbox",
+  "label": "Enable Feature",
+  "description": "Check to enable this feature",
+  "default": false
+}
+```
+
+### Select Field
+```json
+{
+  "type": "select",
+  "label": "Choose Option",
+  "description": "Select from available options",
+  "default": "option1",
+  "choices": [
+    {
+      "value": "option1",
+      "label": "Option 1"
+    },
+    {
+      "value": "option2",
+      "label": "Option 2"
+    }
+  ]
+}
+```
+
+### Number Field
+```json
+{
+  "type": "number",
+  "label": "Number Input",
+  "description": "Enter a number",
+  "default": 5,
+  "min": 1,
+  "max": 10,
+  "choices": [
+    {
+      "value": 1,
+      "label": "One"
+    },
+    {
+      "value": 5,
+      "label": "Five"
+    }
+  ]
+}
+```
+
+### Radio Field
+```json
+{
+  "type": "radio",
+  "label": "Choose One",
+  "description": "Select one option",
+  "default": "option1",
+  "choices": [
+    {
+      "value": "option1",
+      "label": "Option 1"
+    },
+    {
+      "value": "option2",
+      "label": "Option 2"
+    }
+  ]
+}
+```
+
+### Buttonset Field
+```json
+{
+  "type": "buttonset",
+  "label": "Choose Style",
+  "description": "Select display style",
+  "default": "list",
+  "choices": [
+    {
+      "value": "list",
+      "label": "List"
+    },
+    {
+      "value": "grid",
+      "label": "Grid"
+    }
+  ]
+}
+```
+
+### Multi-Check Field
+```json
+{
+  "type": "multi-check",
+  "label": "Select Items",
+  "description": "Choose multiple items",
+  "default": ["item1", "item2"],
+  "choices": [
+    {
+      "value": "item1",
+      "label": "Item 1"
+    },
+    {
+      "value": "item2",
+      "label": "Item 2"
+    }
+  ]
+}
+```
+
+### Sortable Field
+```json
+{
+  "type": "sortable",
+  "label": "Sortable Items",
+  "description": "Drag to reorder and toggle to enable/disable items",
+  "default": ["item1", "item2"],
+  "choices": [
+    {
+      "value": "item1",
+      "label": "Item 1"
+    },
+    {
+      "value": "item2",
+      "label": "Item 2"
+    },
+    {
+      "value": "item3",
+      "label": "Item 3"
+    }
+  ]
+}
+```
+
+The sortable field provides:
+- **Drag and drop reordering**: Users can drag items to change their order
+- **Toggle functionality**: Each item has a checkbox to enable/disable it
+- **Vertical-only dragging**: Items can only be dragged vertically
+- **Array output**: The saved value is an array of enabled item values in the specified order
+- **Visual feedback**: Disabled items are visually dimmed, and dragging provides visual feedback
+
 ## Development Notes
 
 - All endpoints currently allow all requests for development purposes

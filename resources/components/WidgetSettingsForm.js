@@ -1,4 +1,5 @@
 import React from 'react';
+import SortableField from './SortableField';
 
 // Renders a form based on a widget schema and current values
 export default function WidgetSettingsForm( { schema, values, onChange, onClose, onSaveStatus } ) {
@@ -321,6 +322,22 @@ export default function WidgetSettingsForm( { schema, values, onChange, onClose,
 							) }
 						</div>
 					</div>
+				);
+			case 'sortable':
+				return (
+					<SortableField
+						key={ key }
+						label={ fieldSchema.label }
+						choices={ fieldSchema.choices || [] }
+						value={
+							Array.isArray( value )
+								? value
+								: Array.isArray( fieldSchema.default )
+								? fieldSchema.default
+								: []
+						}
+						onChange={ ( newValue ) => handleFieldChange( key, newValue ) }
+					/>
 				);
 			case 'repeater':
 				return (
