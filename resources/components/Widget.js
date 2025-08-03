@@ -280,8 +280,8 @@ class Widget extends Component {
 			return this.renderBasicWidget();
 		}
 
-		// Get widget schema using widget ID instead of template type
-		const widgetSchema = widgets[ widget.id ] || widgets[ widgetType ];
+		// Get widget schema using widget ID
+		const widgetSchema = widgets[ widget.id ];
 
 		if ( ! widgetSchema ) {
 			// Fallback to a basic widget display
@@ -327,8 +327,7 @@ class Widget extends Component {
 								) }
 								{ ! collapsed &&
 									widgetSchema?.settings_schema &&
-									Object.keys( widgetSchema.settings_schema ).length >
-										0 && (
+									Object.keys( widgetSchema.settings_schema ).length > 0 && (
 										<button
 											className={ `button button-small widget-settings ${
 												settingsSaveStatus
@@ -362,8 +361,7 @@ class Widget extends Component {
 							>
 								{ showSettings &&
 									widgetSchema?.settings_schema &&
-									Object.keys( widgetSchema.settings_schema ).length >
-										0 && (
+									Object.keys( widgetSchema.settings_schema ).length > 0 && (
 										<div className="widget-settings-panel">
 											<WidgetSettingsForm
 												schema={ widgetSchema.settings_schema }

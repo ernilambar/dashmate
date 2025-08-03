@@ -223,10 +223,10 @@ class Widget_Dispatcher {
 		foreach ( $widgets as $id => $widget ) {
 			$template_type = $widget->get_template_type();
 			$widget_definition = $widget->get_definition();
-			
+
 			// Create a unique key for this widget using its ID
 			$widget_key = $id;
-			
+
 			// Add the widget with its own schema
 			$widget_types[ $widget_key ] = array_merge(
 				$widget_definition,
