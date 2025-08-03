@@ -21,6 +21,12 @@ class Links extends React.Component {
 			// Widget ID changed, but data will be fetched by parent component
 		}
 
+		// Check if settings prop changed (when settings are updated from parent)
+		if ( prevProps.settings !== this.props.settings ) {
+			console.log( 'Links: Settings prop changed:', this.props.settings );
+			this.setState( { settings: this.props.settings || {} } );
+		}
+
 		// Check if data prop changed (when settings are saved and content is refetched)
 		if ( prevProps.data !== this.props.data ) {
 			// Data has been updated by parent component, no need to update state
@@ -47,9 +53,16 @@ class Links extends React.Component {
 		window.open( link.url, '_blank' );
 	};
 
-	handleSettingsChange = ( newSettings ) => {
-		this.setState( { settings: newSettings } );
-		// Here you could also save settings to backend
+	handleSettingsChange = ( newSettings, needsRefresh = false ) => {
+		console.log( 'Links: handleSettingsChange called with:', newSettings, 'needsRefresh:', needsRefresh );
+
+		// Update local state immediately for instant feedback
+		this.setState( { settings: { ...this.state.settings, ...newSettings } } );
+
+		// Propagate changes to parent component if onChange prop is provided
+		if ( this.props.onSettingsChange ) {
+			this.props.onSettingsChange( newSettings, needsRefresh );
+		}
 	};
 
 	render() {
@@ -57,9 +70,10 @@ class Links extends React.Component {
 		const { data } = this.props; // Use data from props instead of state
 		const schema = widgetSchemas?.[ 'links' ]?.settings_schema;
 
-		// Handle nested data structure: data.links contains {links, linkStyle, hideIcon}
-		const linksData = data?.links || {};
-		const { links, linkStyle, hideIcon } = linksData;
+		// Get links from data and settings from widget settings
+		const links = data?.links || [];
+		const linkStyle = settings?.display_style || 'list';
+		const hideIcon = settings?.hide_icon || false;
 
 		// Show loading if data is not available yet
 		if ( ! data ) {
@@ -69,9 +83,19 @@ class Links extends React.Component {
 		// Ensure links is always an array
 		const safeLinks = Array.isArray( links ) ? links : [];
 
+		// Debug: Show if component is rendering
+		console.log( 'Links widget rendering with:', {
+			data,
+			settings,
+			links: safeLinks,
+			linkStyle,
+			hideIcon,
+			className: `quick-links-list quick-links-${ linkStyle }`
+		} );
+
 		return (
 			<div className="quick-links-widget">
-				<div className={ `quick-links-list quick-links-${ linkStyle || 'list' }` }>
+				<div className={ `quick-links-${ linkStyle }` }>
 					{ safeLinks.map( ( link, index ) => (
 						<div
 							key={ index }

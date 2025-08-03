@@ -57,6 +57,13 @@ class WidgetContent extends Component {
 		}
 	}
 
+	handleSettingsChange = ( newSettings, needsRefresh = false ) => {
+		// Propagate settings changes to parent Widget component
+		if ( this.props.onSettingsChange ) {
+			this.props.onSettingsChange( newSettings, needsRefresh );
+		}
+	};
+
 	render() {
 		const { loading, error, data } = this.state;
 		const { widget, settings = {} } = this.props;
@@ -74,7 +81,14 @@ class WidgetContent extends Component {
 			case 'html':
 				return <HtmlWidget widgetId={ widget.id } data={ data } settings={ settings } />;
 			case 'links':
-				return <Links widgetId={ widget.id } data={ data } settings={ settings } />;
+				return (
+					<Links
+						widgetId={ widget.id }
+						data={ data }
+						settings={ settings }
+						onSettingsChange={ this.handleSettingsChange }
+					/>
+				);
 			case 'progress-circles':
 				return (
 					<ProgressCirclesWidget

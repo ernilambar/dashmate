@@ -11,11 +11,14 @@ export default function WidgetSettingsForm( { schema, values, onChange, onClose,
 	}, [ values ] );
 
 	const handleFieldChange = ( key, newValue ) => {
+		console.log( 'WidgetSettingsForm: handleFieldChange called with:', key, newValue );
+
 		const newLocalValues = { ...localValues, [ key ]: newValue };
 		setLocalValues( newLocalValues );
 
 		// For fields that don't require refresh, apply changes immediately
 		if ( schema[ key ]?.refresh !== true ) {
+			console.log( 'WidgetSettingsForm: Applying immediate change for field:', key, newValue );
 			onChange( newLocalValues, false );
 		}
 	};
