@@ -8,10 +8,10 @@
 namespace Nilambar\Dashmate\Admin;
 
 use Nilambar\Dashmate\Core\Option;
+use Nilambar\Dashmate\Layout_Manager;
 use Nilambar\Dashmate\Panels\SettingsPanel;
 use Nilambar\Dashmate\Utils\YML_Utils;
 use Nilambar\Dashmate\View\View;
-use Nilambar\Dashmate\Widget_Initializer;
 use Nilambar\Optify\Optify;
 
 /**
@@ -30,7 +30,7 @@ class Admin_Page {
 		add_action( 'admin_menu', [ $this, 'add_page' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'load_assets' ] );
 		add_action( 'init', [ $this, 'register_settings' ] );
-		add_action( 'wp_ajax_dashmate_reset_layout', [ $this, 'handle_reset_layout' ] );
+		add_action( 'wp_ajax_dashmate_apply_layout', [ $this, 'handle_apply_layout' ] );
 	}
 
 	/**
@@ -140,12 +140,13 @@ class Admin_Page {
 				'dashmateSettings',
 				[
 					'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-					'nonce'   => wp_create_nonce( 'dashmate_reset_layout' ),
+					'nonce'   => wp_create_nonce( 'dashmate_apply_layout' ),
 					'strings' => [
-						'confirmReset' => esc_html__( 'Are you sure you want to reset the layout? This will override all current widget positions and settings.', 'dashmate' ),
-						'resetting'    => esc_html__( 'Resetting layout...', 'dashmate' ),
-						'success'      => esc_html__( 'Layout reset successfully!', 'dashmate' ),
-						'error'        => esc_html__( 'An error occurred while resetting the layout.', 'dashmate' ),
+						'confirmApply' => esc_html__( 'Are you sure you want to apply this layout? This will override all current widget positions and settings.', 'dashmate' ),
+						'applying'     => esc_html__( 'Applying layout...', 'dashmate' ),
+						'success'      => esc_html__( 'Layout applied successfully!', 'dashmate' ),
+						'error'        => esc_html__( 'An error occurred while applying the layout.', 'dashmate' ),
+						'applyLayout'  => esc_html__( 'Apply Layout', 'dashmate' ),
 					],
 				]
 			);
@@ -153,13 +154,13 @@ class Admin_Page {
 	}
 
 	/**
-	 * Handle reset layout AJAX request.
+	 * Handle apply layout AJAX request.
 	 *
 	 * @since 1.0.0
 	 */
-	public function handle_reset_layout() {
+	public function handle_apply_layout() {
 		// Check nonce for security.
-		if ( ! wp_verify_nonce( $_POST['nonce'] ?? '', 'dashmate_reset_layout' ) ) {
+		if ( ! wp_verify_nonce( $_POST['nonce'] ?? '', 'dashmate_apply_layout' ) ) {
 			wp_die( esc_html__( 'Security check failed.', 'dashmate' ) );
 		}
 
@@ -168,19 +169,27 @@ class Admin_Page {
 			wp_die( esc_html__( 'You do not have permission to perform this action.', 'dashmate' ) );
 		}
 
-		try {
-			// Import layout from default file.
-			$default_file = Widget_Initializer::get_default_layout_file_path();
+		// Get the selected layout.
+		$layout_slug = sanitize_text_field( $_POST['layout'] ?? 'default' );
 
-			if ( ! file_exists( $default_file ) ) {
-				wp_send_json_error( esc_html__( 'Default layout file not found at: ' . $default_file, 'dashmate' ) );
+		try {
+			// Get layout details from Layout_Manager.
+			$layout = Layout_Manager::get_layout( $layout_slug );
+
+			if ( null === $layout ) {
+				wp_send_json_error( esc_html__( 'Selected layout not found.', 'dashmate' ) );
 			}
 
-			// Load layout data from default file.
-			$layout_data = YML_Utils::load_from_file( $default_file );
+			// Check if layout file exists.
+			if ( ! file_exists( $layout['path'] ) ) {
+				wp_send_json_error( esc_html__( 'Layout file not found at: ' . $layout['path'], 'dashmate' ) );
+			}
+
+			// Load layout data from file.
+			$layout_data = YML_Utils::load_from_file( $layout['path'] );
 
 			if ( null === $layout_data ) {
-				wp_send_json_error( esc_html__( 'Failed to load default layout data.', 'dashmate' ) );
+				wp_send_json_error( esc_html__( 'Failed to load layout data.', 'dashmate' ) );
 			}
 
 			// Delete the existing option and add the new layout data.
@@ -191,9 +200,9 @@ class Admin_Page {
 				wp_send_json_error( esc_html__( 'Failed to update dashboard data.', 'dashmate' ) );
 			}
 
-			wp_send_json_success( esc_html__( 'Layout reset successfully! The dashboard has been restored to its default configuration.', 'dashmate' ) );
+			wp_send_json_success( esc_html__( 'Layout applied successfully! The dashboard has been updated with the selected layout.', 'dashmate' ) );
 		} catch ( \Exception $e ) {
-			wp_send_json_error( esc_html__( 'An error occurred while resetting the layout: ', 'dashmate' ) . $e->getMessage() );
+			wp_send_json_error( esc_html__( 'An error occurred while applying the layout: ', 'dashmate' ) . $e->getMessage() );
 		}
 	}
 }
