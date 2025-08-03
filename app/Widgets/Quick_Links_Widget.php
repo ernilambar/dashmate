@@ -26,7 +26,7 @@ class Quick_Links_Widget extends Abstract_Widget {
 	 * @param string $id Widget instance ID.
 	 */
 	public function __construct( $id ) {
-		parent::__construct( $id, 'links', 'Quick Links Widget' );
+		parent::__construct( $id, 'links', esc_html__( 'Quick Links Widget', 'dashmate' ) );
 	}
 
 	/**
@@ -35,31 +35,33 @@ class Quick_Links_Widget extends Abstract_Widget {
 	 * @since 1.0.0
 	 */
 	protected function define_widget() {
-		$this->description = 'Display quick access links to WordPress admin pages';
+		$this->description = 'Display quick access links';
 		$this->icon        = 'admin-links';
 
 		$this->settings_schema = [
-			'hideIcon'  => [
+			'hide_icon'     => [
 				'type'        => 'checkbox',
 				'label'       => 'Hide Icons',
 				'description' => 'Hide link icons',
 				'default'     => false,
+				'refresh'     => false,
 			],
-			'linkStyle' => [
-				'type'        => 'select',
+			'display_style' => [
+				'type'        => 'buttonset',
 				'label'       => 'Link Style',
 				'description' => 'Choose how links are displayed',
+				'default'     => 'list',
+				'refresh'     => false,
 				'choices'     => [
 					[
 						'value' => 'list',
-						'label' => 'List',
+						'label' => esc_html__( 'List', 'dashmate' ),
 					],
 					[
 						'value' => 'grid',
-						'label' => 'Grid',
+						'label' => esc_html__( 'Grid', 'dashmate' ),
 					],
 				],
-				'default'     => 'list',
 			],
 		];
 
@@ -67,7 +69,7 @@ class Quick_Links_Widget extends Abstract_Widget {
 			'links' => [
 				'type'        => 'array',
 				'required'    => true,
-				'description' => 'Array of link objects',
+				'description' => 'Array of link objects with display settings',
 			],
 		];
 	}
@@ -83,10 +85,8 @@ class Quick_Links_Widget extends Abstract_Widget {
 	 * @return array
 	 */
 	public function get_content( $widget_id = null, $settings = [] ) {
-		// Merge settings with defaults.
 		$settings = $this->merge_settings_with_defaults( $settings );
 
-		// Get links based on settings.
 		$links = $this->get_links( $settings );
 
 		return [
@@ -104,72 +104,21 @@ class Quick_Links_Widget extends Abstract_Widget {
 	 * @return array
 	 */
 	private function get_links( $settings ) {
-		// Define admin menu items with their icons and capabilities
-		$admin_menu_items = [
-			'themes.php'          => [
-				'title' => 'Appearance',
-				'icon'  => 'dashicons-admin-appearance',
-				'cap'   => 'switch_themes',
+		$links = [
+			[
+				'title' => esc_html__( 'Home Page', 'dashmate' ),
+				'url'   => home_url( '/' ),
+				'icon'  => 'dashicons-admin-site',
 			],
-			'plugins.php'         => [
-				'title' => 'Plugins',
-				'icon'  => 'dashicons-admin-plugins',
-				'cap'   => 'activate_plugins',
-			],
-			'tools.php'           => [
-				'title' => 'Tools',
-				'icon'  => 'dashicons-admin-tools',
-				'cap'   => 'manage_options',
-			],
-			'options-general.php' => [
-				'title' => 'Settings',
-				'icon'  => 'dashicons-admin-settings',
-				'cap'   => 'manage_options',
+			[
+				'title' => esc_html__( 'Administration', 'dashmate' ),
+				'url'   => admin_url( '/' ),
+				'icon'  => 'dashicons-admin-home',
 			],
 		];
 
-		$all_links = [];
+		$links = apply_filters( 'dashmate_quick_links', $links );
 
-		// Check if we're in an API context (no user logged in)
-		$is_api_request = defined( 'REST_REQUEST' ) && REST_REQUEST;
-
-		// Build links based on user capabilities or provide all links for API requests
-		foreach ( $admin_menu_items as $page => $item ) {
-			if ( $is_api_request || current_user_can( $item['cap'] ) ) {
-				$all_links[] = [
-					'title' => $item['title'],
-					'url'   => admin_url( $page ),
-					'icon'  => $item['icon'],
-				];
-			}
-		}
-
-		/**
-		 * Filter the quick links.
-		 *
-		 * This filter allows other plugins to add or modify quick links.
-		 *
-		 * @since 1.0.0
-		 *
-		 * @param array $links Array of quick links.
-		 */
-		$all_links = apply_filters( 'dashmate_quick_links', $all_links );
-
-		// Hide icons if setting is enabled.
-		$hide_icon = $settings['hideIcon'] ?? false;
-		if ( $hide_icon ) {
-			foreach ( $all_links as &$link ) {
-				unset( $link['icon'] );
-			}
-		}
-
-		// Add link style to the output so frontend can apply appropriate CSS.
-		$link_style = $settings['linkStyle'] ?? 'list';
-
-		return [
-			'links'     => array_values( $all_links ),
-			'linkStyle' => $link_style,
-			'hideIcon'  => $hide_icon,
-		];
+		return array_values( $links );
 	}
 }

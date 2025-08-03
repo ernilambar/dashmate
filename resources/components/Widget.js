@@ -382,6 +382,7 @@ class Widget extends Component {
 									widget={ { ...widget, type: widgetType } }
 									widgetData={ widgetData }
 									settings={ widget.settings || {} }
+									onSettingsChange={ this.handleSettingsChange }
 								/>
 							</div>
 						) }
