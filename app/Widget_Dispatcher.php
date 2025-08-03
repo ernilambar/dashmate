@@ -177,7 +177,7 @@ class Widget_Dispatcher {
 	 *
 	 * @return array|WP_Error
 	 */
-	public static function get_widget_content( $type, $widget_id = null, $settings = [] ) {
+	public static function get_widget_content( $type, $widget_id, $settings = [] ) {
 		// Get widget by ID.
 		$widget = self::get_widget( $widget_id );
 
@@ -186,7 +186,7 @@ class Widget_Dispatcher {
 		}
 
 		try {
-			return $widget->get_validated_content( $widget_id, $settings );
+			return $widget->get_validated_content( $settings );
 		} catch ( \Exception $e ) {
 			return new \WP_Error( 'widget_error', 'Widget error: ' . $e->getMessage() );
 		}
