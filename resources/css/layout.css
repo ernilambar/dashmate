@@ -1,0 +1,30 @@
+.yaml-container {
+	margin-top: 20px;
+}
+
+.yaml-header {
+	margin-bottom: 10px;
+}
+
+#dashmate-layout-content {
+	background: #f6f8fa;
+	border: 1px solid #e1e4e8;
+	border-radius: 6px;
+	padding: 16px;
+	overflow-x: auto;
+}
+
+#dashmate-layout-content pre {
+	margin: 0;
+	white-space: pre-wrap;
+	word-wrap: break-word;
+	font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+	font-size: 13px;
+	line-height: 1.45;
+}
+
+#dashmate-layout-content code {
+	background: transparent;
+	padding: 0;
+	border: none;
+}

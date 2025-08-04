@@ -10,6 +10,7 @@ module.exports = {
 	entry: {
 		index: './resources/index.js',
 		settings: './resources/settings.js',
+		layout: './resources/layout.js',
 	},
 	output: {
 		...defaultConfig.output,
