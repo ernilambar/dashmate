@@ -25,34 +25,16 @@ class Widget_Template_Registry {
 	 */
 	private static $templates = [
 		'html'             => [
-			'component'        => 'HtmlWidget',
-			'capabilities'     => [ 'html-content', 'script-support' ],
-			'default_settings' => [
-				'allow_scripts' => false,
-			],
+			'component' => 'HtmlWidget',
 		],
 		'links'            => [
-			'component'        => 'LinksWidget',
-			'capabilities'     => [ 'grid', 'list', 'icons' ],
-			'default_settings' => [
-				'hideIcon'  => false,
-				'linkStyle' => 'list',
-			],
+			'component' => 'LinksWidget',
 		],
 		'progress-circles' => [
-			'component'        => 'ProgressCirclesWidget',
-			'capabilities'     => [ 'animation', 'color-coding' ],
-			'default_settings' => [
-				'hide_caption' => false,
-			],
+			'component' => 'ProgressCirclesWidget',
 		],
 		'tabular'          => [
-			'component'        => 'TabularWidget',
-			'capabilities'     => [ 'sorting', 'pagination', 'filtering', 'search' ],
-			'default_settings' => [
-				'showHeaders' => true,
-				'stripedRows' => true,
-			],
+			'component' => 'TabularWidget',
 		],
 	];
 
@@ -105,69 +87,7 @@ class Widget_Template_Registry {
 		return isset( $templates[ $template_type ] );
 	}
 
-	/**
-	 * Get template capabilities.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $template_type Template type.
-	 *
-	 * @return array
-	 */
-	public static function get_template_capabilities( $template_type ) {
-		$template = self::get_template( $template_type );
-		return $template['capabilities'] ?? [];
-	}
 
-	/**
-	 * Get template default settings.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $template_type Template type.
-	 *
-	 * @return array
-	 */
-	public static function get_template_default_settings( $template_type ) {
-		$template = self::get_template( $template_type );
-		return $template['default_settings'] ?? [];
-	}
-
-	/**
-	 * Get template component name.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $template_type Template type.
-	 *
-	 * @return string|null
-	 */
-	public static function get_template_component( $template_type ) {
-		$template = self::get_template( $template_type );
-		return $template['component'] ?? null;
-	}
-
-	/**
-	 * Get widget templates for frontend.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return array
-	 */
-	public static function get_templates_for_frontend() {
-		$templates          = self::get_templates();
-		$frontend_templates = [];
-
-		foreach ( $templates as $type => $template ) {
-			$frontend_templates[ $type ] = [
-				'component'        => $template['component'],
-				'capabilities'     => $template['capabilities'],
-				'default_settings' => $template['default_settings'],
-			];
-		}
-
-		return $frontend_templates;
-	}
 
 	/**
 	 * Register a new template.

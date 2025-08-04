@@ -26,26 +26,16 @@ class Widget_Type_Manager {
 	private static $widget_types = [];
 
 	/**
-	 * Content handlers for widget types.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var array
-	 */
-	private static $content_handlers = [];
-
-	/**
 	 * Register a new widget type.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string   $type        Widget type identifier.
-	 * @param array    $definition  Widget definition.
-	 * @param callable $content_handler Content handler callback.
+	 * @param string $type       Widget type identifier.
+	 * @param array  $definition Widget definition.
 	 *
 	 * @return bool
 	 */
-	public static function register_widget_type( $type, $definition, $content_handler = null ) {
+	public static function register_widget_type( $type, $definition ) {
 		if ( empty( $type ) || ! is_string( $type ) ) {
 			return false;
 		}
@@ -60,11 +50,6 @@ class Widget_Type_Manager {
 
 		// Register widget type.
 		self::$widget_types[ $type ] = $definition;
-
-		// Register content handler if provided.
-		if ( is_callable( $content_handler ) ) {
-			self::$content_handlers[ $type ] = $content_handler;
-		}
 
 		return true;
 	}
@@ -119,70 +104,6 @@ class Widget_Type_Manager {
 	}
 
 	/**
-	 * Get content for a widget type.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $type      Widget type.
-	 * @param string $widget_id Widget ID.
-	 * @param array  $settings  Widget settings.
-	 *
-	 * @return array|WP_Error
-	 */
-	public static function get_widget_content( $type, $widget_id = null, $settings = [] ) {
-		if ( ! self::is_widget_type_registered( $type ) ) {
-			return new \WP_Error( 'unknown_widget_type', 'Unknown widget type: ' . $type );
-		}
-
-		// Check if content handler exists.
-		if ( ! isset( self::$content_handlers[ $type ] ) ) {
-			// Try to get content via filter for external widget types.
-			$filtered_content = apply_filters( 'dashmate_widget_content_' . $type, null, $widget_id, $settings );
-
-			if ( null !== $filtered_content ) {
-				return $filtered_content;
-			}
-
-			return new \WP_Error( 'no_content_handler', 'No content handler registered for widget type: ' . $type );
-		}
-
-		// Call the content handler.
-		$handler = self::$content_handlers[ $type ];
-		return call_user_func( $handler, $widget_id, $settings );
-	}
-
-	/**
-	 * Get all content handlers.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return array
-	 */
-	public static function get_content_handlers() {
-		return self::$content_handlers;
-	}
-
-	/**
-	 * Unregister a widget type.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $type Widget type.
-	 *
-	 * @return bool
-	 */
-	public static function unregister_widget_type( $type ) {
-		if ( ! self::is_widget_type_registered( $type ) ) {
-			return false;
-		}
-
-		unset( self::$widget_types[ $type ] );
-		unset( self::$content_handlers[ $type ] );
-
-		return true;
-	}
-
-	/**
 	 * Get widget types as JSON for frontend.
 	 *
 	 * @since 1.0.0
@@ -195,11 +116,10 @@ class Widget_Type_Manager {
 
 		foreach ( $filtered_widget_types as $type => $definition ) {
 			$widget_types[ $type ] = [
-				'name'                => $definition['name'],
-				'description'         => $definition['description'],
-				'icon'                => $definition['icon'],
-				'settings_schema'     => $definition['settings_schema'],
-				'has_content_handler' => isset( self::$content_handlers[ $type ] ),
+				'name'            => $definition['name'],
+				'description'     => $definition['description'],
+				'icon'            => $definition['icon'],
+				'settings_schema' => $definition['settings_schema'],
 			];
 		}
 

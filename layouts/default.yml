@@ -13,24 +13,20 @@ layout:
 widgets:
     - id: sample-html
       column_id: col-1
-      position: 1
       settings:
           allow_scripts: false
     - id: sample-links
       column_id: col-2
-      position: 1
       settings:
           hide_icon: false
           display_style: list
     - id: sample-progress-circles
       column_id: col-3
-      position: 1
       settings:
           circles_number: 4
           hide_caption: false
     - id: sample-tabular
       column_id: col-1
-      position: 2
       settings:
           max_items: 5
 column_widgets:

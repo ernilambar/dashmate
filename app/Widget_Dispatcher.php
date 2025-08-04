@@ -215,7 +215,6 @@ class Widget_Dispatcher {
 				'template_type'   => $template_type,
 				'settings_schema' => [],
 				'output_schema'   => [],
-				'capabilities'    => $template_config['capabilities'] ?? [],
 			];
 		}
 

@@ -166,16 +166,8 @@ class Widget_Manager {
 	 * @return array|WP_Error
 	 */
 	public static function get_widget_content( $widget_id, $settings = [] ) {
-		$widget = self::get_widget( $widget_id );
-
-		if ( ! $widget ) {
-			return new WP_Error( 'widget_not_found', 'Widget not found: ' . $widget_id );
-		}
-
-		$type            = $widget['type'];
-		$widget_settings = array_merge( $widget['settings'] ?? [], $settings );
-
-		return Widget_Type_Manager::get_widget_content( $type, $widget_id, $widget_settings );
+		// Use the new Widget_Dispatcher system instead of the legacy Widget_Type_Manager.
+		return Widget_Dispatcher::get_widget_content( '', $widget_id, $settings );
 	}
 
 	/**
