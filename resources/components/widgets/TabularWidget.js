@@ -454,7 +454,7 @@ class TabularWidget extends React.Component {
 					>
 						{ table.title && <h4 className="table-title">{ table.title }</h4> }
 						<div className="table-container">
-							<table className="wp-list-table widefat fixed striped">
+							<table className="striped">
 								{ showHeaders && table.headers && table.headers.length > 0 && (
 									<thead>
 										<tr>
