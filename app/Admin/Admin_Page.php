@@ -53,16 +53,6 @@ class Admin_Page {
 		);
 
 		// Add child pages.
-		add_submenu_page(
-			'dashmate',
-			esc_html__( 'Dashboard', 'dashmate' ),
-			esc_html__( 'Dashboard', 'dashmate' ),
-			'manage_options',
-			'dashmate',
-			function () {
-				View::render( 'pages/app' );
-			}
-		);
 
 		add_submenu_page(
 			'dashmate',
