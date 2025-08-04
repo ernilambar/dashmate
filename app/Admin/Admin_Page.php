@@ -7,11 +7,9 @@
 
 namespace Nilambar\Dashmate\Admin;
 
-use Nilambar\Dashmate\Core\Option;
 use Nilambar\Dashmate\Layout_Manager;
 use Nilambar\Dashmate\Panels\SettingsPanel;
 use Nilambar\Dashmate\Utils\YML_Utils;
-use Nilambar\Dashmate\View\View;
 use Nilambar\Optify\Optify;
 
 /**
@@ -27,54 +25,20 @@ class Admin_Page {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-		add_action( 'admin_menu', [ $this, 'add_page' ] );
-		add_action( 'admin_enqueue_scripts', [ $this, 'load_assets' ] );
+		add_action( 'init', [ $this, 'register_pages' ] );
 		add_action( 'init', [ $this, 'register_settings' ] );
 		add_action( 'wp_ajax_dashmate_apply_layout', [ $this, 'handle_apply_layout' ] );
 	}
 
 	/**
-	 * Add page.
+	 * Register settings
 	 *
 	 * @since 1.0.0
 	 */
-	public function add_page() {
-		// Add parent menu page.
-		add_menu_page(
-			esc_html__( 'Dashmate', 'dashmate' ),
-			esc_html__( 'Dashmate', 'dashmate' ),
-			'manage_options',
-			'dashmate',
-			function () {
-				View::render( 'pages/app' );
-			},
-			'dashicons-admin-home',
-			0
-		);
-
-		// Add child pages.
-
-		add_submenu_page(
-			'dashmate',
-			esc_html__( 'Settings', 'dashmate' ),
-			esc_html__( 'Settings', 'dashmate' ),
-			'manage_options',
-			'dashmate-settings',
-			function () {
-				View::render( 'pages/settings' );
-			}
-		);
-
-		add_submenu_page(
-			'dashmate',
-			esc_html__( 'Layout', 'dashmate' ),
-			esc_html__( 'Layout', 'dashmate' ),
-			'manage_options',
-			'dashmate-layout',
-			function () {
-				View::render( 'pages/layout' );
-			}
-		);
+	public function register_pages() {
+			new Dashmate_Page();
+			new Layout_Page();
+			new Settings_Page();
 	}
 
 	/**
@@ -89,106 +53,6 @@ class Admin_Page {
 			DASHMATE_DIR . '/vendor/ernilambar/optify/',
 			DASHMATE_URL . '/vendor/ernilambar/optify/'
 		);
-	}
-
-	/**
-	 * Load assets.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $hook Current admin page hook.
-	 */
-	public function load_assets( $hook ) {
-		// Load assets for main dashboard page.
-		if ( 'toplevel_page_dashmate' === $hook ) {
-			$this->load_dashboard_assets();
-		}
-
-		// Load assets for settings page.
-		if ( 'dashmate_page_dashmate-settings' === $hook ) {
-			$this->load_settings_assets();
-		}
-
-		// Load assets for layout page.
-		if ( 'dashmate_page_dashmate-layout' === $hook ) {
-			$this->load_layout_assets();
-		}
-	}
-
-	/**
-	 * Load dashboard assets.
-	 *
-	 * @since 1.0.0
-	 */
-	private function load_dashboard_assets() {
-		$asset_file_name = DASHMATE_DIR . '/assets/index.asset.php';
-
-		if ( file_exists( $asset_file_name ) ) {
-			$asset_file = include $asset_file_name;
-
-			wp_enqueue_style( 'dashmate-main', DASHMATE_URL . '/assets/index.css', [], $asset_file['version'] );
-			wp_enqueue_script( 'dashmate-main', DASHMATE_URL . '/assets/index.js', $asset_file['dependencies'], $asset_file['version'], true );
-			wp_localize_script(
-				'dashmate-main',
-				'dashmateApiSettings',
-				[
-					'nonce'   => wp_create_nonce( 'wp_rest' ),
-					'restUrl' => rest_url( 'dashmate/v1/' ),
-					'config'  => [
-						'maxColumns' => absint( Option::get( 'max_columns' ) ),
-					],
-				]
-			);
-		}
-	}
-
-	/**
-	 * Load settings page assets.
-	 *
-	 * @since 1.0.0
-	 */
-	private function load_settings_assets() {
-		$asset_file_name = DASHMATE_DIR . '/assets/settings.asset.php';
-
-		if ( file_exists( $asset_file_name ) ) {
-			$asset_file = include $asset_file_name;
-
-			wp_enqueue_style( 'dashmate-settings', DASHMATE_URL . '/assets/settings.css', [], $asset_file['version'] );
-			wp_enqueue_script( 'dashmate-settings', DASHMATE_URL . '/assets/settings.js', $asset_file['dependencies'], $asset_file['version'], true );
-			wp_localize_script(
-				'dashmate-settings',
-				'dashmateSettings',
-				[
-					'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-					'nonce'   => wp_create_nonce( 'dashmate_apply_layout' ),
-					'strings' => [
-						'confirmApply' => esc_html__( 'Are you sure you want to apply this layout? This will override all current widget positions and settings.', 'dashmate' ),
-						'applying'     => esc_html__( 'Applying layout...', 'dashmate' ),
-						'success'      => esc_html__( 'Layout applied successfully!', 'dashmate' ),
-						'error'        => esc_html__( 'An error occurred while applying the layout.', 'dashmate' ),
-						'applyLayout'  => esc_html__( 'Apply Layout', 'dashmate' ),
-						'selectLayout' => esc_html__( 'Please select a layout before applying.', 'dashmate' ),
-						'unknownError' => esc_html__( 'Unknown error occurred.', 'dashmate' ),
-					],
-				]
-			);
-		}
-	}
-
-	/**
-	 * Load layout page assets.
-	 *
-	 * @since 1.0.0
-	 */
-	private function load_layout_assets() {
-		$asset_file_name = DASHMATE_DIR . '/assets/layout.asset.php';
-
-		if ( file_exists( $asset_file_name ) ) {
-			$asset_file = include $asset_file_name;
-
-			wp_enqueue_style( 'dashmate-layout', DASHMATE_URL . '/assets/layout.css', [], $asset_file['version'] );
-			wp_enqueue_script( 'dashmate-layout', DASHMATE_URL . '/assets/layout.js', $asset_file['dependencies'], $asset_file['version'], true );
-		}
 	}
 
 	/**
