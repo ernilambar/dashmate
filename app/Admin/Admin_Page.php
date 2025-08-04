@@ -111,7 +111,7 @@ class Admin_Page {
 
 		// Load assets for layout page.
 		if ( 'dashmate_page_dashmate-layout' === $hook ) {
-			$this->load_settings_assets();
+			$this->load_layout_assets();
 		}
 	}
 
@@ -172,6 +172,22 @@ class Admin_Page {
 					],
 				]
 			);
+		}
+	}
+
+	/**
+	 * Load layout page assets.
+	 *
+	 * @since 1.0.0
+	 */
+	private function load_layout_assets() {
+		$asset_file_name = DASHMATE_DIR . '/assets/layout.asset.php';
+
+		if ( file_exists( $asset_file_name ) ) {
+			$asset_file = include $asset_file_name;
+
+			wp_enqueue_style( 'dashmate-layout', DASHMATE_URL . '/assets/layout.css', [], $asset_file['version'] );
+			wp_enqueue_script( 'dashmate-layout', DASHMATE_URL . '/assets/layout.js', $asset_file['dependencies'], $asset_file['version'], true );
 		}
 	}
 
