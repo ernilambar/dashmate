@@ -59,6 +59,16 @@ class Admin_Page {
 				View::render( 'pages/settings' );
 			}
 		);
+
+		add_options_page(
+			esc_html__( 'Dashmate Layout', 'dashmate' ),
+			esc_html__( 'Dashmate Layout', 'dashmate' ),
+			'manage_options',
+			'dashmate-layout',
+			function () {
+				View::render( 'pages/layout' );
+			}
+		);
 	}
 
 	/**
