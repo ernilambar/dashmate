@@ -253,7 +253,9 @@ class Widget extends Component {
 							{ ...provided.draggableProps }
 						>
 							<div className="widget-header" { ...provided.dragHandleProps }>
-								<h3>Loading...</h3>
+								<h3>
+									<span className="dashicons dashicons-update-alt widget-loading-icon"></span>
+								</h3>
 							</div>
 							<div className="widget-content">
 								<div className="widget-loading">

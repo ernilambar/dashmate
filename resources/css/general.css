@@ -149,6 +149,8 @@
 	border-radius: 6px 6px 0 0;
 	cursor: grab;
 	position: relative;
+	min-height: 32px; /* Ensure consistent height */
+	box-sizing: border-box;
 }
 
 .widget-header::before {
@@ -177,28 +179,48 @@
 	align-items: center;
 	gap: 8px;
 	margin-left: 20px; /* Make room for the drag handle */
+	min-height: 20px; /* Ensure consistent height for text area */
+	line-height: 1.2; /* Consistent line height */
 }
 
+/* Ensure consistent spacing when icon is not present */
 .widget-header h3 .dashicons {
 	font-size: 16px;
 	width: 16px;
 	height: 16px;
 	line-height: 1;
 	color: #0073aa;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0; /* Prevent icon from shrinking */
+}
+
+/* Add placeholder for missing icon to prevent layout shift */
+.widget-header h3:not(:has(.dashicons))::before {
+	content: "";
+	width: 16px;
+	height: 16px;
+	flex-shrink: 0;
 }
 
 .widget-actions {
 	display: flex;
 	gap: 4px;
+	align-items: center;
+	min-height: 20px; /* Ensure consistent height */
 }
 
 .widget-toggle,
 .widget-settings,
 .widget-reload {
-	padding: 4px 6px !important;
-	min-width: auto !important;
-	height: auto !important;
-	line-height: 1 !important;
+	padding: 4px 6px;
+	min-width: auto;
+	height: 20px; /* Fixed height for consistency */
+	line-height: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .widget-toggle .dashicons,
@@ -208,6 +230,9 @@
 	width: 16px;
 	height: 16px;
 	line-height: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .widget-reload.reloading .dashicons {
@@ -312,13 +337,29 @@
 .widget-loading,
 .widget-error {
 	text-align: center;
-	padding: 20px;
 	color: #666;
 }
 
+/* Ensure loading state maintains consistent header height */
 .widget-loading .widget-header {
+	min-height: 32px;
+	display: flex;
+	align-items: center;
 	background: #f8f9fa;
 	border-color: #dee2e6;
+}
+
+.widget-loading .widget-header h3 {
+	min-height: 20px;
+	display: flex;
+	align-items: center;
+	margin-left: 20px; /* Keep the same margin as normal widgets */
+}
+
+/* Spinning loading icon */
+.widget-loading-icon {
+	animation: spin 1s linear infinite;
+	color: #0073aa;
 }
 
 .widget-loading .widget-header h3 {
@@ -332,6 +373,15 @@
 .widget-error .widget-header {
 	background: #fef7f1;
 	border-color: #d63638;
+	min-height: 32px;
+	display: flex;
+	align-items: center;
+}
+
+.widget-error .widget-header h3 {
+	min-height: 20px;
+	display: flex;
+	align-items: center;
 }
 
 .widget-error .widget-header h3 {
