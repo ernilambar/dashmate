@@ -39,7 +39,7 @@ class Sample_Tabular extends Abstract_Widget {
 		$this->icon        = 'editor-table';
 
 		$this->settings_schema = [
-			'max_items' => [
+			'max_items'       => [
 				'type'        => 'number',
 				'label'       => esc_html__( 'Items Per Page', 'dashmate' ),
 				'description' => esc_html__( 'Number of items to show per page', 'dashmate' ),
@@ -52,7 +52,7 @@ class Sample_Tabular extends Abstract_Widget {
 				'type'        => 'sortable',
 				'label'       => esc_html__( 'Visible Columns', 'dashmate' ),
 				'description' => esc_html__( 'Drag to reorder columns and toggle to show/hide', 'dashmate' ),
-				'default'     => ['id', 'title', 'status', 'actions'],
+				'default'     => [ 'id', 'title', 'status', 'actions' ],
 				'refresh'     => true,
 				'choices'     => [
 					[
@@ -97,7 +97,7 @@ class Sample_Tabular extends Abstract_Widget {
 		$settings = $this->merge_settings_with_defaults( $settings );
 
 		// Get visible columns setting.
-		$visible_columns = $settings['visible_columns'] ?? ['id', 'title', 'status', 'actions'];
+		$visible_columns = $settings['visible_columns'] ?? [ 'id', 'title', 'status', 'actions' ];
 
 		// Define all available columns.
 		$all_columns = [
@@ -121,12 +121,15 @@ class Sample_Tabular extends Abstract_Widget {
 			'headers' => $filtered_headers,
 			'rows'    => [
 				[
-					'cells'   => $this->filter_cells_by_columns( [
-						'id'      => [ 'text' => '<a href="https://wordpress.org/plugins/woocommerce/" target="_blank">#001</a>' ],
-						'title'   => [ 'text' => '<a href="https://woocommerce.com/" target="_blank">WooCommerce</a>' ],
-						'status'  => [ 'text' => esc_html__( 'Active', 'dashmate' ) ],
-						'actions' => [ 'text' => '' ],
-					], $visible_columns ),
+					'cells'   => $this->filter_cells_by_columns(
+						[
+							'id'      => [ 'text' => '<a href="https://wordpress.org/plugins/woocommerce/" target="_blank">#001</a>' ],
+							'title'   => [ 'text' => '<a href="https://woocommerce.com/" target="_blank">WooCommerce</a>' ],
+							'status'  => [ 'text' => esc_html__( 'Active', 'dashmate' ) ],
+							'actions' => [ 'text' => '' ],
+						],
+						$visible_columns
+					),
 					'actions' => [
 						'sync' => [
 							'title' => esc_html__( 'Sync Product', 'dashmate' ),
@@ -134,12 +137,15 @@ class Sample_Tabular extends Abstract_Widget {
 					],
 				],
 				[
-					'cells'   => $this->filter_cells_by_columns( [
-						'id'      => [ 'text' => '<a href="https://wordpress.org/plugins/contact-form-7/" target="_blank">#002</a>' ],
-						'title'   => [ 'text' => '<a href="https://contactform7.com/" target="_blank">Contact Form 7</a>' ],
-						'status'  => [ 'text' => esc_html__( 'Active', 'dashmate' ) ],
-						'actions' => [ 'text' => '' ],
-					], $visible_columns ),
+					'cells'   => $this->filter_cells_by_columns(
+						[
+							'id'      => [ 'text' => '<a href="https://wordpress.org/plugins/contact-form-7/" target="_blank">#002</a>' ],
+							'title'   => [ 'text' => '<a href="https://contactform7.com/" target="_blank">Contact Form 7</a>' ],
+							'status'  => [ 'text' => esc_html__( 'Active', 'dashmate' ) ],
+							'actions' => [ 'text' => '' ],
+						],
+						$visible_columns
+					),
 					'actions' => [
 						'sync' => [
 							'title' => esc_html__( 'Sync Product', 'dashmate' ),
@@ -147,12 +153,15 @@ class Sample_Tabular extends Abstract_Widget {
 					],
 				],
 				[
-					'cells'   => $this->filter_cells_by_columns( [
-						'id'      => [ 'text' => '<a href="https://wordpress.org/plugins/yoast-seo/" target="_blank">#003</a>' ],
-						'title'   => [ 'text' => '<a href="https://yoast.com/" target="_blank">Yoast SEO</a>' ],
-						'status'  => [ 'text' => esc_html__( 'Active', 'dashmate' ) ],
-						'actions' => [ 'text' => '' ],
-					], $visible_columns ),
+					'cells'   => $this->filter_cells_by_columns(
+						[
+							'id'      => [ 'text' => '<a href="https://wordpress.org/plugins/yoast-seo/" target="_blank">#003</a>' ],
+							'title'   => [ 'text' => '<a href="https://yoast.com/" target="_blank">Yoast SEO</a>' ],
+							'status'  => [ 'text' => esc_html__( 'Active', 'dashmate' ) ],
+							'actions' => [ 'text' => '' ],
+						],
+						$visible_columns
+					),
 					'actions' => [
 						'sync' => [
 							'title' => esc_html__( 'Sync Product', 'dashmate' ),
@@ -168,12 +177,15 @@ class Sample_Tabular extends Abstract_Widget {
 			'headers' => $filtered_headers,
 			'rows'    => [
 				[
-					'cells'   => $this->filter_cells_by_columns( [
-						'id'      => [ 'text' => '<a href="https://example.com/order/1001" target="_blank">#1001</a>' ],
-						'title'   => [ 'text' => '<a href="https://example.com/product/premium-theme" target="_blank">Premium Theme License</a>' ],
-						'status'  => [ 'text' => esc_html__( 'Completed', 'dashmate' ) ],
-						'actions' => [ 'text' => '' ],
-					], $visible_columns ),
+					'cells'   => $this->filter_cells_by_columns(
+						[
+							'id'      => [ 'text' => '<a href="https://example.com/order/1001" target="_blank">#1001</a>' ],
+							'title'   => [ 'text' => '<a href="https://example.com/product/premium-theme" target="_blank">Premium Theme License</a>' ],
+							'status'  => [ 'text' => esc_html__( 'Completed', 'dashmate' ) ],
+							'actions' => [ 'text' => '' ],
+						],
+						$visible_columns
+					),
 					'actions' => [
 						'sync' => [
 							'title' => esc_html__( 'Sync Order', 'dashmate' ),
@@ -181,12 +193,15 @@ class Sample_Tabular extends Abstract_Widget {
 					],
 				],
 				[
-					'cells'   => $this->filter_cells_by_columns( [
-						'id'      => [ 'text' => '<a href="https://example.com/order/1002" target="_blank">#1002</a>' ],
-						'title'   => [ 'text' => '<a href="https://example.com/product/plugin-bundle" target="_blank">Plugin Bundle</a>' ],
-						'status'  => [ 'text' => esc_html__( 'Processing', 'dashmate' ) ],
-						'actions' => [ 'text' => '' ],
-					], $visible_columns ),
+					'cells'   => $this->filter_cells_by_columns(
+						[
+							'id'      => [ 'text' => '<a href="https://example.com/order/1002" target="_blank">#1002</a>' ],
+							'title'   => [ 'text' => '<a href="https://example.com/product/plugin-bundle" target="_blank">Plugin Bundle</a>' ],
+							'status'  => [ 'text' => esc_html__( 'Processing', 'dashmate' ) ],
+							'actions' => [ 'text' => '' ],
+						],
+						$visible_columns
+					),
 					'actions' => [
 						'sync' => [
 							'title' => esc_html__( 'Sync Order', 'dashmate' ),
@@ -194,12 +209,15 @@ class Sample_Tabular extends Abstract_Widget {
 					],
 				],
 				[
-					'cells'   => $this->filter_cells_by_columns( [
-						'id'      => [ 'text' => '<a href="https://example.com/order/1003" target="_blank">#1003</a>' ],
-						'title'   => [ 'text' => '<a href="https://example.com/product/seo-plugin" target="_blank">SEO Plugin</a>' ],
-						'status'  => [ 'text' => esc_html__( 'Completed', 'dashmate' ) ],
-						'actions' => [ 'text' => '' ],
-					], $visible_columns ),
+					'cells'   => $this->filter_cells_by_columns(
+						[
+							'id'      => [ 'text' => '<a href="https://example.com/order/1003" target="_blank">#1003</a>' ],
+							'title'   => [ 'text' => '<a href="https://example.com/product/seo-plugin" target="_blank">SEO Plugin</a>' ],
+							'status'  => [ 'text' => esc_html__( 'Completed', 'dashmate' ) ],
+							'actions' => [ 'text' => '' ],
+						],
+						$visible_columns
+					),
 					'actions' => [
 						'sync' => [
 							'title' => esc_html__( 'Sync Order', 'dashmate' ),

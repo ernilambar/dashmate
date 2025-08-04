@@ -83,7 +83,7 @@ class SettingsPanel extends Abstract_Panel {
 				'label'   => esc_html__( 'Inactive Widgets', 'dashmate' ),
 				'type'    => 'multi-check',
 				'default' => Option::defaults( 'inactive_widgets' ),
-				'choices' => $widget_choices ?? [],
+				'choices' => $widget_choices,
 			],
 		];
 	}

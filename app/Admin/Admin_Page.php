@@ -67,10 +67,9 @@ class Admin_Page {
 	 * @since 1.0.0
 	 */
 	public function register_settings() {
-		Optify::register_panel( 'dashmate-settings', SettingsPanel::class );
-
-		Optify::init( 'dashmate', 'v1', DASHMATE_BASE_FILEPATH );
-		Optify::load_assets(
+		$optify = Optify::get_instance( 'dashmate', 'v1', DASHMATE_BASE_FILEPATH );
+		$optify->register_panel( 'dashmate-settings', SettingsPanel::class );
+		$optify->load_assets(
 			DASHMATE_DIR . '/vendor/ernilambar/optify/',
 			DASHMATE_URL . '/vendor/ernilambar/optify/'
 		);
