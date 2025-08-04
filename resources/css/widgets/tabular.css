@@ -276,6 +276,14 @@
 	animation: spin 1s linear infinite;
 }
 
+/* Empty container styling */
+.tabular-widget .empty-container {
+	padding: 0;
+	text-align: left;
+	color: #646970;
+	font-size: 10px;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
 	.tabular-widget .table-title {

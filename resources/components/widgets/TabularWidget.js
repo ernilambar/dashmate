@@ -446,69 +446,88 @@ class TabularWidget extends React.Component {
 
 		return (
 			<div className="tabular-widget">
-				{ ( tables || [] ).map( ( table, tableIndex ) => (
-					<div
-						key={ tableIndex }
-						className="tabular-table"
-						onClick={ () => this.handleTableClick( table, tableIndex ) }
-					>
-						{ table.title && <h4 className="table-title">{ table.title }</h4> }
-						<div className="table-container">
-							<table className="striped">
-								{ showHeaders && table.headers && table.headers.length > 0 && (
-									<thead>
-										<tr>
-											{ table.headers.map( ( header, index ) => (
-												<th
-													key={ index }
-													className={ this.getHeaderClassName(
-														index,
-														table.headers.length,
-														table.headers
-													) }
+				{ ( tables || [] ).map( ( table, tableIndex ) => {
+					const hasRows = table.rows && table.rows.length > 0;
+					const hasHeaders = table.headers && table.headers.length > 0;
+
+					return (
+						<div
+							key={ tableIndex }
+							className="tabular-table"
+							onClick={ () => this.handleTableClick( table, tableIndex ) }
+						>
+							{ table.title && <h4 className="table-title">{ table.title }</h4> }
+							{ hasRows ? (
+								<div className="table-container">
+									<table className="striped">
+										{ showHeaders && hasHeaders && (
+											<thead>
+												<tr>
+													{ table.headers.map( ( header, index ) => (
+														<th
+															key={ index }
+															className={ this.getHeaderClassName(
+																index,
+																table.headers.length,
+																table.headers
+															) }
+														>
+															{ header.text }
+														</th>
+													) ) }
+												</tr>
+											</thead>
+										) }
+										<tbody>
+											{ table.rows.map( ( row, rowIndex ) => (
+												<tr
+													key={ rowIndex }
+													className={
+														stripedRows && rowIndex % 2 === 1
+															? 'alternate'
+															: ''
+													}
+													onClick={ () =>
+														this.handleRowClick(
+															row,
+															rowIndex,
+															tableIndex
+														)
+													}
 												>
-													{ header.text }
-												</th>
-											) ) }
-										</tr>
-									</thead>
-								) }
-								<tbody>
-									{ ( table.rows || [] ).map( ( row, rowIndex ) => (
-										<tr
-											key={ rowIndex }
-											className={
-												stripedRows && rowIndex % 2 === 1 ? 'alternate' : ''
-											}
-											onClick={ () =>
-												this.handleRowClick( row, rowIndex, tableIndex )
-											}
-										>
-											{ ( row.cells || [] ).map( ( cell, cellIndex ) => (
-												<td
-													key={ cellIndex }
-													className={ this.getCellClassName(
-														cellIndex,
-														row.cells.length,
-														table.headers
+													{ ( row.cells || [] ).map(
+														( cell, cellIndex ) => (
+															<td
+																key={ cellIndex }
+																className={ this.getCellClassName(
+																	cellIndex,
+																	row.cells.length,
+																	table.headers
+																) }
+															>
+																{ this.renderCell(
+																	cell,
+																	cellIndex,
+																	row,
+																	rowIndex,
+																	tableIndex
+																) }
+															</td>
+														)
 													) }
-												>
-													{ this.renderCell(
-														cell,
-														cellIndex,
-														row,
-														rowIndex,
-														tableIndex
-													) }
-												</td>
+												</tr>
 											) ) }
-										</tr>
-									) ) }
-								</tbody>
-							</table>
+										</tbody>
+									</table>
+								</div>
+							) : (
+								<div className="empty-container">
+									<p>No data available</p>
+								</div>
+							) }
 						</div>
-					</div>
-				) ) }
+					);
+				} ) }
 			</div>
 		);
 	}
