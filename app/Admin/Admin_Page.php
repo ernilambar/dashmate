@@ -39,7 +39,8 @@ class Admin_Page {
 	 * @since 1.0.0
 	 */
 	public function add_page() {
-		add_dashboard_page(
+		// Add parent menu page.
+		add_menu_page(
 			esc_html__( 'Dashmate', 'dashmate' ),
 			esc_html__( 'Dashmate', 'dashmate' ),
 			'manage_options',
@@ -47,12 +48,26 @@ class Admin_Page {
 			function () {
 				View::render( 'pages/app' );
 			},
+			'dashicons-admin-home',
 			0
 		);
 
-		add_options_page(
-			esc_html__( 'Dashmate', 'dashmate' ),
-			esc_html__( 'Dashmate', 'dashmate' ),
+		// Add child pages.
+		add_submenu_page(
+			'dashmate',
+			esc_html__( 'Dashboard', 'dashmate' ),
+			esc_html__( 'Dashboard', 'dashmate' ),
+			'manage_options',
+			'dashmate',
+			function () {
+				View::render( 'pages/app' );
+			}
+		);
+
+		add_submenu_page(
+			'dashmate',
+			esc_html__( 'Settings', 'dashmate' ),
+			esc_html__( 'Settings', 'dashmate' ),
 			'manage_options',
 			'dashmate-settings',
 			function () {
@@ -60,9 +75,10 @@ class Admin_Page {
 			}
 		);
 
-		add_options_page(
-			esc_html__( 'Dashmate Layout', 'dashmate' ),
-			esc_html__( 'Dashmate Layout', 'dashmate' ),
+		add_submenu_page(
+			'dashmate',
+			esc_html__( 'Layout', 'dashmate' ),
+			esc_html__( 'Layout', 'dashmate' ),
 			'manage_options',
 			'dashmate-layout',
 			function () {
@@ -93,13 +109,18 @@ class Admin_Page {
 	 * @param string $hook Current admin page hook.
 	 */
 	public function load_assets( $hook ) {
-		// Load assets for dashboard page.
-		if ( 'dashboard_page_dashmate' === $hook ) {
+		// Load assets for main dashboard page.
+		if ( 'toplevel_page_dashmate' === $hook ) {
 			$this->load_dashboard_assets();
 		}
 
 		// Load assets for settings page.
-		if ( 'settings_page_dashmate-settings' === $hook ) {
+		if ( 'dashmate_page_dashmate-settings' === $hook ) {
+			$this->load_settings_assets();
+		}
+
+		// Load assets for layout page.
+		if ( 'dashmate_page_dashmate-layout' === $hook ) {
 			$this->load_settings_assets();
 		}
 	}
