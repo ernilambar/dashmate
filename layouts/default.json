@@ -51,15 +51,8 @@
 		}
 	],
 	"column_widgets": {
-		"col-1": [
-			"sample-tabular"
-		],
-		"col-2": [
-			"sample-progress-circles"
-		],
-		"col-3": [
-			"sample-links",
-			"sample-html"
-		]
+		"col-1": [ "sample-tabular" ],
+		"col-2": [ "sample-progress-circles" ],
+		"col-3": [ "sample-links", "sample-html" ]
 	}
 }

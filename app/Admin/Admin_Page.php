@@ -9,6 +9,7 @@ namespace Nilambar\Dashmate\Admin;
 
 use Nilambar\Dashmate\Layout_Manager;
 use Nilambar\Dashmate\Panels\SettingsPanel;
+use Nilambar\Dashmate\Utils\JSON_Utils;
 use Nilambar\Optify\Optify;
 
 /**

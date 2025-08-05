@@ -10,7 +10,7 @@ import { copyToClipboard } from './js/utils.js';
 /**
  * Copy layout content to clipboard.
  */
-async function copyLayoutContent() {
+function copyLayoutContent() {
 	const layoutElement = document.getElementById( 'dashmate-layout-content' );
 	const codeElement = layoutElement.querySelector( 'code' );
 
@@ -18,43 +18,45 @@ async function copyLayoutContent() {
 		const layoutText = codeElement.textContent || codeElement.innerText;
 		const button = event.target;
 
-		const success = await copyToClipboard( layoutText );
+		// Use the copyToClipboard function
+		copyToClipboard( layoutText )
+			.then( ( success ) => {
+				if ( success ) {
+					// Show success feedback.
+					const originalText = button.textContent;
+					const originalBackgroundColor = button.style.backgroundColor;
+					const originalColor = button.style.color;
 
-		if ( success ) {
-			// Show success feedback.
-			const originalText = button.textContent;
-			const originalBackgroundColor = button.style.backgroundColor;
-			const originalColor = button.style.color;
+					button.textContent = 'Copied!';
+					button.style.backgroundColor = '#46b450';
+					button.style.color = '#fff';
 
-			button.textContent = 'Copied!';
-			button.style.backgroundColor = '#46b450';
-			button.style.color = '#fff';
+					setTimeout( () => {
+						button.textContent = originalText;
+						button.style.backgroundColor = originalBackgroundColor;
+						button.style.color = originalColor;
+					}, 2000 );
 
-			setTimeout( () => {
-				button.textContent = originalText;
-				button.style.backgroundColor = originalBackgroundColor;
-				button.style.color = originalColor;
-			}, 2000 );
+				} else {
+					// Show error feedback.
+					const originalText = button.textContent;
+					const originalBackgroundColor = button.style.backgroundColor;
+					const originalColor = button.style.color;
 
-			console.log( 'Layout content copied successfully' );
-		} else {
-			// Show error feedback.
-			const originalText = button.textContent;
-			const originalBackgroundColor = button.style.backgroundColor;
-			const originalColor = button.style.color;
+					button.textContent = 'Failed!';
+					button.style.backgroundColor = '#dc3232';
+					button.style.color = '#fff';
 
-			button.textContent = 'Failed!';
-			button.style.backgroundColor = '#dc3232';
-			button.style.color = '#fff';
-
-			setTimeout( () => {
-				button.textContent = originalText;
-				button.style.backgroundColor = originalBackgroundColor;
-				button.style.color = originalColor;
-			}, 2000 );
-
-			console.error( 'Failed to copy layout content' );
-		}
+					setTimeout( () => {
+						button.textContent = originalText;
+						button.style.backgroundColor = originalBackgroundColor;
+						button.style.color = originalColor;
+					}, 2000 );
+				}
+			} )
+			.catch( ( error ) => {
+				// Silent error handling
+			} );
 	}
 }
 
