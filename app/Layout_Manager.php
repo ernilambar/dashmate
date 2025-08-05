@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Nilambar\Dashmate;
 
+use Exception;
 use WP_Error;
 
 /**
@@ -40,7 +41,19 @@ class Layout_Manager {
 		 *
 		 * @param array $layouts Array of registered layouts.
 		 */
-		return apply_filters( 'dashmate_layouts', $layouts );
+		$layouts = apply_filters( 'dashmate_layouts', $layouts );
+
+		foreach ( $layouts as $key => $layout ) {
+			if ( !array_key_exists( 'path', $layout ) ) {
+				throw new Exception( esc_html( 'Layout file path not provided.' ) );
+			}
+
+			if ( ! file_exists( $layout['path'] ) ) {
+				throw new Exception( esc_html( "Layout file \"{$layout['path']}\" does not exist." ) );
+			}
+		}
+
+		return $layouts;
 	}
 
 	/**
