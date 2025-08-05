@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace Nilambar\Dashmate;
 
-use Nilambar\Dashmate\Utils\YML_Utils;
 use WP_Error;
 
 /**
@@ -30,7 +29,7 @@ class Layout_Manager {
 		$layouts = [
 			'default' => [
 				'title' => esc_html__( 'Default', 'dashmate' ),
-				'path'  => DASHMATE_DIR . '/layouts/default.yml',
+				'path'  => DASHMATE_DIR . '/layouts/default.json',
 			],
 		];
 
@@ -91,7 +90,7 @@ class Layout_Manager {
 
 		if ( is_wp_error( $default_layout ) ) {
 			// Fallback to hardcoded path if default layout not found.
-			return DASHMATE_DIR . '/layouts/default.yml';
+			return DASHMATE_DIR . '/layouts/default.json';
 		}
 
 		return $default_layout['path'];
@@ -113,10 +112,20 @@ class Layout_Manager {
 			return $layout;
 		}
 
-		$layout_data = YML_Utils::load_from_file( $layout['path'] );
+		if ( ! file_exists( $layout['path'] ) || ! is_readable( $layout['path'] ) ) {
+			return new WP_Error( 'layout_load_error', esc_html__( 'Layout file does not exist or is not readable: ', 'dashmate' ) . $layout['path'] );
+		}
 
-		if ( null === $layout_data ) {
-			return new WP_Error( 'layout_load_error', esc_html__( 'Failed to load layout data from file: ', 'dashmate' ) . $layout['path'] );
+		$file_content = file_get_contents( $layout['path'] );
+
+		if ( false === $file_content ) {
+			return new WP_Error( 'layout_load_error', esc_html__( 'Failed to read layout file: ', 'dashmate' ) . $layout['path'] );
+		}
+
+		$layout_data = JSON_Utils::decode_from_json( $file_content );
+
+		if ( is_wp_error( $layout_data ) ) {
+			return new WP_Error( 'layout_load_error', esc_html__( 'Failed to parse layout data from file: ', 'dashmate' ) . $layout['path'] . ' - ' . $layout_data->get_error_message() );
 		}
 
 		return $layout_data;
