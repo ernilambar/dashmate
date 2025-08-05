@@ -407,8 +407,4 @@ class Widget_Dispatcher {
 
 		return $column_widgets;
 	}
-
-
-
-
 }

@@ -92,8 +92,6 @@ class Widgets_Controller extends Base_Controller {
 			]
 		);
 
-
-
 		// Get widget content by widget ID.
 		register_rest_route(
 			$this->get_namespace(),
