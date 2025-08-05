@@ -36,7 +36,6 @@ function copyLayoutContent() {
 						button.style.backgroundColor = originalBackgroundColor;
 						button.style.color = originalColor;
 					}, 2000 );
-
 				} else {
 					// Show error feedback.
 					const originalText = button.textContent;
