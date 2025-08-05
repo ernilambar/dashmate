@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Nilambar\Dashmate\Utils;
 
+use WP_Error;
+
 /**
  * Layout_Utils class.
  *
