@@ -11,17 +11,6 @@ use Nilambar\Optify\Panel_Manager;
 $all_layouts = Layout_Manager::get_layouts();
 ?>
 
-<?php
-Panel_Manager::render_panel(
-	'dashmate-settings',
-	[
-		'show_title' => false,
-		'display'    => 'inline',
-	]
-);
-?>
-
-<!-- Add apply layout section. -->
 <div class="dashmate-apply-layout-section">
 	<h2><?php echo esc_html__( 'Apply Layout', 'dashmate' ); ?></h2>
 	<p><?php echo esc_html__( 'Select a layout from the dropdown below and click the button to apply it to your dashboard. This will override all current widget positions and settings.', 'dashmate' ); ?></p>
@@ -39,4 +28,14 @@ Panel_Manager::render_panel(
 	<div id="dashmate-apply-status"></div>
 </div>
 
+<h2><?php echo esc_html__( 'General Settings', 'dashmate' ); ?></h2>
 
+<?php
+Panel_Manager::render_panel(
+	'dashmate-settings',
+	[
+		'show_title' => false,
+		'display'    => 'inline',
+	]
+);
+?>
