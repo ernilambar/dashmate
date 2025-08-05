@@ -57,7 +57,7 @@ class Settings_Page extends Abstract_Admin_Page {
 					'ajaxUrl' => admin_url( 'admin-ajax.php' ),
 					'nonce'   => wp_create_nonce( 'dashmate_apply_layout' ),
 					'strings' => [
-						'confirmApply' => esc_html__( 'Are you sure you want to apply this layout? This will override all current widget positions and settings.', 'dashmate' ),
+						'confirmApply' => esc_html__( 'Are you sure you want to apply this layout? This will override all current widget settings.', 'dashmate' ),
 						'applying'     => esc_html__( 'Applying layout...', 'dashmate' ),
 						'success'      => esc_html__( 'Layout applied successfully!', 'dashmate' ),
 						'error'        => esc_html__( 'An error occurred while applying the layout.', 'dashmate' ),

@@ -170,71 +170,7 @@ class Widget_Manager {
 		return Widget_Dispatcher::get_widget_content( '', $widget_id, $settings );
 	}
 
-	/**
-	 * Move widget to different column.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $widget_id  Widget ID.
-	 * @param string $column_id  Target column ID.
-	 * @param int    $position   Position in column (optional).
-	 *
-	 * @return bool|WP_Error
-	 */
-	public static function move_widget( $widget_id, $column_id, $position = null ) {
-		$dashboard_data = self::get_dashboard_data();
 
-		if ( is_wp_error( $dashboard_data ) ) {
-			return $dashboard_data;
-		}
-
-		// Find widget and remove it from current location.
-		$widget         = null;
-		$widget_removed = false;
-
-		foreach ( $dashboard_data['columns'] ?? [] as &$column ) {
-			if ( isset( $column['widgets'] ) ) {
-				foreach ( $column['widgets'] as $key => $column_widget ) {
-					if ( isset( $column_widget['id'] ) && $column_widget['id'] === $widget_id ) {
-						$widget = $column_widget;
-						unset( $column['widgets'][ $key ] );
-						$widget_removed = true;
-						break 2;
-					}
-				}
-			}
-		}
-
-		if ( ! $widget_removed ) {
-			return new WP_Error( 'widget_not_found', 'Widget not found: ' . $widget_id );
-		}
-
-		// Find target column.
-		$target_column = null;
-		foreach ( $dashboard_data['columns'] ?? [] as &$column ) {
-			if ( isset( $column['id'] ) && $column['id'] === $column_id ) {
-				$target_column = &$column;
-				break;
-			}
-		}
-
-		if ( ! $target_column ) {
-			return new WP_Error( 'column_not_found', 'Column not found: ' . $column_id );
-		}
-
-		// Add widget to target column.
-		if ( ! isset( $target_column['widgets'] ) ) {
-			$target_column['widgets'] = [];
-		}
-
-		if ( $position !== null && is_numeric( $position ) ) {
-			array_splice( $target_column['widgets'], $position, 0, [ $widget ] );
-		} else {
-			$target_column['widgets'][] = $widget;
-		}
-
-		return self::save_dashboard_data( $dashboard_data );
-	}
 
 		/**
 		 * Generate unique widget ID.
