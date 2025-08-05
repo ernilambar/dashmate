@@ -134,111 +134,194 @@ Reorders widgets across columns using a column_widgets structure.
 }
 ```
 
-### Layouts Endpoints
+## Layouts Endpoints
 
-#### GET `/layouts`
-Retrieves all available layouts with their metadata and URLs to individual layout endpoints.
+### Get All Layouts
+**GET** `/wp-json/dashmate/v1/layouts`
+
+Returns a list of all available layouts including the current layout from options.
 
 **Response:**
 ```json
 {
   "success": true,
   "data": {
+    "current": {
+      "id": "current",
+      "title": "Current Layout",
+      "type": "options",
+      "url": "http://example.com/wp-json/dashmate/v1/layouts/current"
+    },
     "default": {
+      "id": "default",
       "title": "Default",
+      "type": "file",
       "path": "/path/to/layouts/default.json",
-      "url": "https://griha.local/wp-json/dashmate/v1/layouts/default"
+      "url": "http://example.com/wp-json/dashmate/v1/layouts/default"
     }
   }
 }
 ```
 
-#### GET `/layouts/{layout_key}`
-Retrieves complete layout data for a specific layout.
+### Get Specific Layout
+**GET** `/wp-json/dashmate/v1/layouts/{layout_key}`
+
+Returns the layout data for a specific layout key.
 
 **Parameters:**
-- `layout_key` (string, required): Layout key (alphanumeric, hyphens, underscores)
+- `layout_key` (string, required): The layout identifier (e.g., "current", "default")
+
+**Examples:**
+
+#### Get Current Layout from Options
+**GET** `/wp-json/dashmate/v1/layouts/current`
+
+Returns the current layout data stored in WordPress options.
 
 **Response:**
 ```json
 {
   "success": true,
   "data": {
-    "$schema": "../data/schemas/dashmate.json",
     "layout": {
-      "columns": [
-        {
-          "id": "col-1",
-          "order": 1
-        },
-        {
-          "id": "col-2",
-          "order": 2
-        },
-        {
-          "id": "col-3",
-          "order": 3
-        }
-      ]
+      "columns": [...]
     },
-    "widgets": [
-      {
-        "id": "sample-html",
-        "column_id": "col-1",
-        "settings": {
-          "allow_scripts": false
-        }
-      },
-      {
-        "id": "sample-links",
-        "column_id": "col-2",
-        "settings": {
-          "hide_icon": false,
-          "display_style": "list"
-        }
-      },
-      {
-        "id": "sample-progress-circles",
-        "column_id": "col-3",
-        "settings": {
-          "circles_number": 4,
-          "hide_caption": false
-        }
-      },
-      {
-        "id": "sample-tabular",
-        "column_id": "col-1",
-        "settings": {
-          "max_items": 5
-        }
-      }
-    ],
-    "column_widgets": {
-      "col-1": ["sample-tabular"],
-      "col-2": ["sample-progress-circles"],
-      "col-3": ["sample-links", "sample-html"]
-    }
+    "widgets": [...],
+    "column_widgets": {...}
   }
 }
 ```
 
-**Error Responses:**
+#### Get Default Layout from File
+**GET** `/wp-json/dashmate/v1/layouts/default`
 
-Layout not found (404):
+Returns the default layout data from the JSON file.
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "layout": {
+      "columns": [...]
+    },
+    "widgets": [...],
+    "column_widgets": {...}
+  }
+}
+```
+
+### Apply Layout
+**POST** `/wp-json/dashmate/v1/layouts/{layout_key}/apply`
+
+Applies a specific layout to the current dashboard configuration.
+
+**Parameters:**
+- `layout_key` (string, required): The layout identifier to apply (e.g., "default", "minimal-layout")
+
+**Examples:**
+
+#### Apply Default Layout
+**POST** `/wp-json/dashmate/v1/layouts/default/apply`
+
+Applies the default layout to the current dashboard.
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "message": "Layout \"Default\" applied successfully!",
+    "layout_key": "default"
+  }
+}
+```
+
+#### Apply Custom Layout
+**POST** `/wp-json/dashmate/v1/layouts/custom-layout/apply`
+
+Applies a custom layout to the current dashboard.
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "message": "Layout \"Custom Layout\" applied successfully!",
+    "layout_key": "custom-layout"
+  }
+}
+```
+
+## Layout Types
+
+### Options-based Layouts
+- **Type**: `options`
+- **Source**: WordPress options table
+- **Example**: `current` layout
+- **Use Case**: Current dashboard configuration
+- **Access**: Read-only (cannot be applied)
+
+### File-based Layouts
+- **Type**: `file`
+- **Source**: JSON files in `/layouts/` directory
+- **Example**: `default` layout
+- **Use Case**: Predefined layout templates
+- **Access**: Can be applied to dashboard
+
+## Error Responses
+
+### Layout Not Found
 ```json
 {
   "success": false,
-  "message": "Layout not found: non-existent",
+  "message": "Layout not found: invalid_key",
   "code": "layout_not_found"
 }
 ```
 
-Layout retrieval error (500):
+### Current Layout Read-only
 ```json
 {
   "success": false,
-  "message": "Layout file does not exist: /path/to/missing/layout.json",
-  "code": "layouts_retrieval_error"
+  "message": "Cannot apply current layout as it is read-only.",
+  "code": "current_layout_readonly"
+}
+```
+
+### Current Layout Not Found
+```json
+{
+  "success": false,
+  "message": "No layout data found",
+  "code": "current_layout_not_found"
+}
+```
+
+### Layout Apply Failed
+```json
+{
+  "success": false,
+  "message": "Failed to update dashboard data",
+  "code": "layout_apply_failed"
+}
+```
+
+### JSON Conversion Failed
+```json
+{
+  "success": false,
+  "message": "Failed to convert layout data to JSON",
+  "code": "layout_json_conversion_failed"
+}
+```
+
+### Invalid Layout Data
+```json
+{
+  "success": false,
+  "message": "Invalid layout data structure.",
+  "code": "invalid_layout_data"
 }
 ```
 

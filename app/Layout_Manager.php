@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Nilambar\Dashmate;
 
 use Nilambar\Dashmate\Utils\JSON_Utils;
+use Nilambar\Dashmate\Utils\Layout_Utils;
 use WP_Error;
 
 /**
@@ -28,9 +29,14 @@ class Layout_Manager {
 	 */
 	public static function get_layouts() {
 		$layouts = [
+			'current' => [
+				'title' => esc_html__( 'Current Layout', 'dashmate' ),
+				'type'  => 'options',
+			],
 			'default' => [
 				'title' => esc_html__( 'Default', 'dashmate' ),
 				'path'  => DASHMATE_DIR . '/layouts/default.json',
+				'type'  => 'file',
 			],
 		];
 
@@ -46,6 +52,11 @@ class Layout_Manager {
 		foreach ( $layouts as $key => $layout ) {
 			// Automatically add id field based on the array key.
 			$layouts[ $key ]['id'] = $key;
+
+			// Skip path validation for options-based layouts.
+			if ( 'options' === ( $layout['type'] ?? 'file' ) ) {
+				continue;
+			}
 
 			if ( ! array_key_exists( 'path', $layout ) ) {
 				return new WP_Error( 'layout_path_missing', esc_html__( 'Layout file path not provided.', 'dashmate' ) );
@@ -136,6 +147,11 @@ class Layout_Manager {
 			return $layout;
 		}
 
+		// Handle options-based layouts.
+		if ( 'options' === ( $layout['type'] ?? 'file' ) ) {
+			return self::get_current_layout_data();
+		}
+
 		if ( ! file_exists( $layout['path'] ) || ! is_readable( $layout['path'] ) ) {
 			return new WP_Error( 'layout_load_error', esc_html__( 'Layout file does not exist or is not readable: ', 'dashmate' ) . $layout['path'] );
 		}
@@ -150,6 +166,28 @@ class Layout_Manager {
 
 		if ( is_wp_error( $layout_data ) ) {
 			return new WP_Error( 'layout_load_error', esc_html__( 'Failed to parse layout data from file: ', 'dashmate' ) . $layout['path'] . ' - ' . $layout_data->get_error_message() );
+		}
+
+		return $layout_data;
+	}
+
+	/**
+	 * Get current layout data from options.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return array|WP_Error
+	 */
+	public static function get_current_layout_data() {
+		$layout_data = Layout_Utils::get_layout_data();
+
+		if ( is_wp_error( $layout_data ) ) {
+			return $layout_data;
+		}
+
+		// Ensure we return the expected structure.
+		if ( ! is_array( $layout_data ) ) {
+			return new WP_Error( 'invalid_layout_data', esc_html__( 'Invalid layout data structure.', 'dashmate' ) );
 		}
 
 		return $layout_data;
