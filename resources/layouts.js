@@ -7,6 +7,7 @@
 import { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import LayoutPreview from './components/LayoutPreview';
+import JsonHighlight from './components/JsonHighlight';
 import './css/layouts.css';
 
 const LayoutsApp = () => {
@@ -116,7 +117,7 @@ const LayoutsApp = () => {
 			const data = await response.json();
 
 			if ( data.success ) {
-				// Decode HTML entities in the message
+				// Decode HTML entities in the message.
 				const decodedMessage = decodeHTMLEntities( data.data.message );
 				setMessage( { type: 'success', text: decodedMessage } );
 			} else {
@@ -131,7 +132,7 @@ const LayoutsApp = () => {
 		}
 	};
 
-	// Function to decode HTML entities
+	// Function to decode HTML entities.
 	const decodeHTMLEntities = ( text ) => {
 		const textarea = document.createElement( 'textarea' );
 		textarea.innerHTML = text;
@@ -251,9 +252,7 @@ const LayoutsApp = () => {
 							{ settings.strings?.loadingData || 'Loading layout data...' }
 						</div>
 					) : layoutData ? (
-						<pre className="dashmate-layouts-json-content">
-							<code>{ JSON.stringify( layoutData, null, 2 ) }</code>
-						</pre>
+						<JsonHighlight data={ layoutData } />
 					) : (
 						<div className="dashmate-layouts-json-no-data">
 							{ settings.strings?.noDataAvailable || 'No layout data available' }
