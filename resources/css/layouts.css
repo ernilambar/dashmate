@@ -49,10 +49,7 @@
 	align-items: center;
 	gap: 15px;
 	margin-bottom: 20px;
-	padding: 15px;
-	background: #fff;
-	border: 1px solid #ddd;
-	border-radius: 4px;
+	padding: 0;
 }
 
 .dashmate-layouts-selector {
@@ -85,26 +82,15 @@
 }
 
 .dashmate-layouts-content {
-	background: #fff;
-	border: 1px solid #ddd;
-	border-radius: 4px;
 	overflow: hidden;
 }
 
 .dashmate-layouts-header {
 	display: flex;
-	justify-content: space-between;
+	justify-content: flex-start;
 	align-items: center;
-	padding: 12px 15px;
-	border-bottom: 1px solid #ddd;
-	background: #f9f9f9;
-}
-
-.dashmate-layouts-header-title {
+	padding: 0;
 	margin: 0;
-	font-size: 14px;
-	font-weight: 600;
-	color: #333;
 }
 
 .dashmate-layouts-header-copy-btn {
@@ -113,11 +99,11 @@
 }
 
 .dashmate-layouts-json {
-	padding: 15px;
-	background: #f6f8fa;
+	padding: 0;
 	min-height: 300px;
 	max-height: 500px;
 	overflow-y: auto;
+	margin-top: 10px;
 }
 
 .dashmate-layouts-json-content {
@@ -128,7 +114,10 @@
 	font-size: 12px;
 	line-height: 1.4;
 	color: #24292e;
-	background: transparent;
+	background: #f6f8fa;
+	border: 1px solid #e1e4e8;
+	border-radius: 6px;
+	padding: 16px;
 }
 
 .dashmate-layouts-json-content code {
@@ -147,54 +136,26 @@
 
 /* Layout Preview Styles */
 .dashmate-layout-preview {
-	background: #fff;
-	border: 1px solid #ddd;
-	border-radius: 4px;
 	margin-bottom: 20px;
-	overflow: hidden;
-	max-width: 900px;
-}
-
-.dashmate-layout-preview-header {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	padding: 12px 15px;
-	border-bottom: 1px solid #ddd;
-	background: #f9f9f9;
-}
-
-.dashmate-layout-preview-header h4 {
-	margin: 0;
-	font-size: 14px;
-	font-weight: 600;
-	color: #333;
-}
-
-.dashmate-layout-preview-layout-name {
-	font-size: 12px;
-	color: #666;
-	background: #e9ecef;
-	padding: 2px 8px;
-	border-radius: 3px;
+	max-width: 800px;
 }
 
 .dashmate-layout-preview-content {
 	display: flex;
-	gap: 12px;
-	padding: 15px;
+	gap: 16px;
+	padding-left: 0;
 	min-height: 150px;
-	max-width: 800px;
-	margin: 0 auto;
+	max-width: 600px;
+	margin: 0;
 }
 
 .dashmate-layout-preview-column {
 	flex: 1;
 	min-width: 0;
-	background: #f8f9fa;
-	border: 1px solid #e9ecef;
-	border-radius: 4px;
-	padding: 10px;
+	background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
+	border-radius: 6px;
+	padding: 12px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .dashmate-layout-preview-widgets {
@@ -206,13 +167,19 @@
 .dashmate-layout-preview-widget {
 	display: flex;
 	align-items: center;
-	padding: 6px 8px;
+	padding: 8px 12px;
 	background: #fff;
-	border: 1px solid #dee2e6;
-	border-radius: 3px;
+	border-radius: 4px;
 	font-size: 11px;
 	color: #495057;
-	margin-bottom: 6px;
+	margin-bottom: 8px;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+	transition: all 0.2s ease;
+}
+
+.dashmate-layout-preview-widget:hover {
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+	transform: translateY(-1px);
 }
 
 .dashmate-layout-preview-widget:last-child {
@@ -224,18 +191,18 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-	color: #6c757d;
+	color: #495057;
 }
 
 .dashmate-layout-preview-empty-widget {
 	text-align: center;
-	padding: 20px 10px;
+	padding: 24px 12px;
 	color: #adb5bd;
 	font-size: 11px;
 	font-style: italic;
-	background: #fff;
-	border: 1px dashed #dee2e6;
-	border-radius: 3px;
+	background: rgba(255, 255, 255, 0.6);
+	border-radius: 4px;
+	border: 1px dashed rgba(173, 181, 189, 0.3);
 }
 
 .dashmate-layout-preview-empty {
