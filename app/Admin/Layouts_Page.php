@@ -64,7 +64,7 @@ class Layouts_Page extends Abstract_Admin_Page {
 						'loadingData'       => esc_html__( 'Loading layout data...', 'dashmate' ),
 						'applying'          => esc_html__( 'Applying...', 'dashmate' ),
 						'applyLayout'       => esc_html__( 'Apply Layout', 'dashmate' ),
-						'copyJson'          => esc_html__( 'Copy JSON', 'dashmate' ),
+						'copyJson'          => esc_html__( 'Copy', 'dashmate' ),
 						'layoutJsonContent' => esc_html__( 'Layout Content', 'dashmate' ),
 						'selectLayout'      => esc_html__( 'Select Layout:', 'dashmate' ),
 						'noDataAvailable'   => esc_html__( 'No layout data available', 'dashmate' ),

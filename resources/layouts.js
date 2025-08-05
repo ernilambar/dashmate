@@ -27,7 +27,6 @@ const LayoutsApp = () => {
 
 	// Fetch layout data when selected layout changes.
 	useEffect( () => {
-		console.log( 'LayoutsApp - selectedLayout changed to:', selectedLayout );
 		if ( selectedLayout ) {
 			fetchLayoutData( selectedLayout );
 		}
@@ -55,7 +54,6 @@ const LayoutsApp = () => {
 	};
 
 	const fetchLayoutData = async ( layoutKey ) => {
-		console.log( 'LayoutsApp - fetching layout data for:', layoutKey );
 		try {
 			setLoading( true );
 			const response = await fetch( `${ settings.restUrl }layouts/${ layoutKey }` );
@@ -65,7 +63,6 @@ const LayoutsApp = () => {
 				);
 			}
 			const data = await response.json();
-			console.log( 'LayoutsApp - fetched layout data:', data );
 			if ( data.success ) {
 				setLayoutData( data.data );
 			} else {
@@ -238,16 +235,13 @@ const LayoutsApp = () => {
 
 			<div className="dashmate-layouts-content">
 				<div className="dashmate-layouts-header">
-					<h3 className="dashmate-layouts-header-title">
-						{ settings.strings?.layoutJsonContent || 'Layout JSON Content' }
-					</h3>
 					<button
 						type="button"
 						className="button button-secondary dashmate-layouts-header-copy-btn"
 						onClick={ copyToClipboard }
 						disabled={ ! layoutData || loading }
 					>
-						{ settings.strings?.copyJson || 'Copy JSON' }
+						{ settings.strings?.copyJson || 'Copy' }
 					</button>
 				</div>
 
