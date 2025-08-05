@@ -121,7 +121,6 @@ class Dashboard_Controller extends Base_Controller {
 			$layout_columns[] = [
 				'id'    => $column['id'] ?? 'col-' . ( $index + 1 ),
 				'order' => $index + 1,
-				'width' => $column['width'] ?? '50%',
 			];
 		}
 
@@ -227,11 +226,6 @@ class Dashboard_Controller extends Base_Controller {
 		foreach ( $columns as $column ) {
 			if ( ! isset( $column['id'] ) ) {
 				return new WP_Error( 'invalid_column', 'Each column must have an id' );
-			}
-
-			// Width is optional, but if provided it should be a string
-			if ( isset( $column['width'] ) && ! is_string( $column['width'] ) ) {
-				return new WP_Error( 'invalid_width', 'Column width must be a string' );
 			}
 		}
 

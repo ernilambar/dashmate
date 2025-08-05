@@ -44,7 +44,7 @@ class Layout_Manager {
 		$layouts = apply_filters( 'dashmate_layouts', $layouts );
 
 		foreach ( $layouts as $key => $layout ) {
-			if ( !array_key_exists( 'path', $layout ) ) {
+			if ( ! array_key_exists( 'path', $layout ) ) {
 				throw new Exception( esc_html( 'Layout file path not provided.' ) );
 			}
 

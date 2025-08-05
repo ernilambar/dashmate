@@ -7,7 +7,7 @@ class Column extends Component {
 		const { column, widgets, columnWidgets } = this.props;
 
 		return (
-			<div className={ `dashboard-column column-${ column.width }` }>
+			<div className="dashboard-column">
 				<Droppable droppableId={ column.id }>
 					{ ( provided, snapshot ) => (
 						<div

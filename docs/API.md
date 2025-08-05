@@ -52,8 +52,7 @@ Retrieves the complete dashboard data including layout, widgets, and column widg
       "columns": [
         {
           "id": "col-1",
-          "order": 1,
-          "width": "50%"
+          "order": 1
         }
       ]
     },
@@ -81,12 +80,10 @@ Updates the dashboard layout with new column configuration.
 {
   "columns": [
     {
-      "id": "col-1",
-      "width": "50%"
+      "id": "col-1"
     },
     {
-      "id": "col-2",
-      "width": "50%"
+      "id": "col-2"
     }
   ]
 }
@@ -101,13 +98,11 @@ Updates the dashboard layout with new column configuration.
       "columns": [
         {
           "id": "col-1",
-          "order": 1,
-          "width": "50%"
+          "order": 1
         },
         {
           "id": "col-2",
-          "order": 2,
-          "width": "50%"
+          "order": 2
         }
       ]
     },
@@ -311,7 +306,6 @@ Retrieves all columns from the dashboard.
     {
       "id": "col-1",
       "title": "Main Column",
-      "width": "50%",
       "widgets": []
     }
   ]
@@ -324,8 +318,7 @@ Creates a new column.
 **Request Body:**
 ```json
 {
-  "title": "New Column",
-  "width": "full"
+  "title": "New Column"
 }
 ```
 
@@ -336,7 +329,6 @@ Creates a new column.
   "data": {
     "id": "col-abc123",
     "title": "New Column",
-    "width": "full",
     "widgets": []
   }
 }
@@ -355,7 +347,6 @@ Retrieves a specific column by ID.
   "data": {
     "id": "col-1",
     "title": "Main Column",
-    "width": "50%",
     "widgets": []
   }
 }
@@ -370,8 +361,7 @@ Updates a specific column.
 **Request Body:**
 ```json
 {
-  "title": "Updated Column Title",
-  "width": "75%"
+  "title": "Updated Column Title"
 }
 ```
 
@@ -382,7 +372,6 @@ Updates a specific column.
   "data": {
     "id": "col-1",
     "title": "Updated Column Title",
-    "width": "75%",
     "widgets": []
   }
 }
@@ -438,7 +427,6 @@ The API supports the following widget types:
 | `widget_not_found` | Widget not found | 404 |
 | `column_not_found` | Column not found | 404 |
 | `invalid_column` | Column data is invalid | 400 |
-| `invalid_width` | Column width is invalid | 400 |
 | `internal_error` | Internal server error | 500 |
 
 ## Data Storage

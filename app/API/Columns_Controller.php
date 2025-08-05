@@ -55,11 +55,6 @@ class Columns_Controller extends Base_Controller {
 							'required' => true,
 							'type'     => 'string',
 						],
-						'width' => [
-							'required' => false,
-							'type'     => 'string',
-							'default'  => 'full',
-						],
 					],
 				],
 			]
@@ -91,10 +86,6 @@ class Columns_Controller extends Base_Controller {
 							'validate_callback' => [ $this, 'validate_column_id' ],
 						],
 						'title' => [
-							'required' => false,
-							'type'     => 'string',
-						],
-						'width' => [
 							'required' => false,
 							'type'     => 'string',
 						],
@@ -147,7 +138,6 @@ class Columns_Controller extends Base_Controller {
 	 */
 	public function create_column( $request ) {
 		$title = $request->get_param( 'title' );
-		$width = $request->get_param( 'width' );
 
 		// Get current dashboard data.
 		$dashboard_data = $this->get_dashboard_data();
@@ -164,7 +154,6 @@ class Columns_Controller extends Base_Controller {
 		$new_column = [
 			'id'      => $column_id,
 			'title'   => $title,
-			'width'   => $width,
 			'widgets' => [],
 		];
 
@@ -220,7 +209,6 @@ class Columns_Controller extends Base_Controller {
 	public function update_column( $request ) {
 		$column_id = $request->get_param( 'id' );
 		$title     = $request->get_param( 'title' );
-		$width     = $request->get_param( 'width' );
 
 		$dashboard_data = $this->get_dashboard_data();
 
@@ -234,7 +222,7 @@ class Columns_Controller extends Base_Controller {
 			return $this->error_response( 'Column not found: ' . $column_id, 404, 'column_not_found' );
 		}
 
-		$this->update_column_data( $column_id, $title, $width, $dashboard_data );
+		$this->update_column_data( $column_id, $title, $dashboard_data );
 
 		$result = update_option( 'dashmate_dashboard_data', $dashboard_data, false );
 
@@ -324,12 +312,11 @@ class Columns_Controller extends Base_Controller {
 	 *
 	 * @param string $column_id      Column ID.
 	 * @param string $title          Column title.
-	 * @param string $width          Column width.
 	 * @param array  $dashboard_data Dashboard data.
 	 *
 	 * @return bool
 	 */
-	private function update_column_data( $column_id, $title, $width, &$dashboard_data ) {
+	private function update_column_data( $column_id, $title, &$dashboard_data ) {
 		if ( ! isset( $dashboard_data['columns'] ) ) {
 			return false;
 		}
@@ -338,9 +325,6 @@ class Columns_Controller extends Base_Controller {
 			if ( isset( $column['id'] ) && $column['id'] === $column_id ) {
 				if ( null !== $title ) {
 					$column['title'] = $title;
-				}
-				if ( null !== $width ) {
-					$column['width'] = $width;
 				}
 				return true;
 			}
