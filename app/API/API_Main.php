@@ -34,5 +34,6 @@ class API_Main {
 		new Dashboard_Controller();
 		new Widgets_Controller();
 		new Columns_Controller();
+		new Layouts_Controller();
 	}
 }

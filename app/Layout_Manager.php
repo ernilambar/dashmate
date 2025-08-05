@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Nilambar\Dashmate;
 
 use Exception;
+use Nilambar\Dashmate\Utils\JSON_Utils;
 use WP_Error;
 
 /**
@@ -24,7 +25,7 @@ class Layout_Manager {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return array
+	 * @return array|WP_Error
 	 */
 	public static function get_layouts() {
 		$layouts = [
@@ -44,12 +45,15 @@ class Layout_Manager {
 		$layouts = apply_filters( 'dashmate_layouts', $layouts );
 
 		foreach ( $layouts as $key => $layout ) {
+			// Automatically add id field based on the array key.
+			$layouts[ $key ]['id'] = $key;
+
 			if ( ! array_key_exists( 'path', $layout ) ) {
-				throw new Exception( esc_html( 'Layout file path not provided.' ) );
+				return new WP_Error( 'layout_path_missing', esc_html__( 'Layout file path not provided.', 'dashmate' ) );
 			}
 
 			if ( ! file_exists( $layout['path'] ) ) {
-				throw new Exception( esc_html( "Layout file \"{$layout['path']}\" does not exist." ) );
+				return new WP_Error( 'layout_file_not_found', esc_html__( 'Layout file does not exist: ', 'dashmate' ) . $layout['path'] );
 			}
 		}
 
@@ -67,6 +71,10 @@ class Layout_Manager {
 	 */
 	public static function get_layout( $slug ) {
 		$layouts = self::get_layouts();
+
+		if ( is_wp_error( $layouts ) ) {
+			return $layouts;
+		}
 
 		if ( ! isset( $layouts[ $slug ] ) ) {
 			return new WP_Error( 'layout_not_found', esc_html__( 'Layout not found: ', 'dashmate' ) . $slug );
@@ -86,6 +94,10 @@ class Layout_Manager {
 	 */
 	public static function layout_exists( $slug ) {
 		$layouts = self::get_layouts();
+
+		if ( is_wp_error( $layouts ) ) {
+			return false;
+		}
 
 		return isset( $layouts[ $slug ] );
 	}
