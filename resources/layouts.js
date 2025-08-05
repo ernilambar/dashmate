@@ -4,14 +4,14 @@
  * @package Dashmate
  */
 
-import './css/layout.css';
+import './css/layouts.css';
 import { copyToClipboard } from './js/utils.js';
 
 /**
  * Copy layout content to clipboard.
  */
 function copyLayoutContent() {
-	const layoutElement = document.getElementById( 'dashmate-layout-content' );
+	const layoutElement = document.getElementById( 'dashmate-layouts-content' );
 	const codeElement = layoutElement.querySelector( 'code' );
 
 	if ( codeElement ) {

@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace Nilambar\Dashmate;
 
-use Exception;
 use Nilambar\Dashmate\Utils\JSON_Utils;
 use WP_Error;
 

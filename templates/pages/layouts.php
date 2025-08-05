@@ -20,7 +20,7 @@ if ( is_wp_error( $output ) ) {
 			Copy Layout
 		</button>
 	</div>
-	<div id="dashmate-layout-content">
+	<div id="dashmate-layouts-content">
 		<pre><code><?php echo $output; ?></code></pre>
 	</div>
 </div>
