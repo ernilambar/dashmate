@@ -139,7 +139,7 @@ Reorders widgets across columns using a column_widgets structure.
 ### Get All Layouts
 **GET** `/wp-json/dashmate/v1/layouts`
 
-Returns a list of all available layouts including the current layout from options.
+Returns a list of all available layouts including the current layout from options, with layout data included for immediate use.
 
 **Response:**
 ```json
@@ -150,18 +150,32 @@ Returns a list of all available layouts including the current layout from option
       "id": "current",
       "title": "Current Layout",
       "type": "options",
-      "url": "http://example.com/wp-json/dashmate/v1/layouts/current"
+      "layoutData": {
+        "layout": {
+          "columns": [...]
+        },
+        "widgets": [...],
+        "column_widgets": {...}
+      }
     },
     "default": {
       "id": "default",
       "title": "Default",
       "type": "file",
       "path": "/path/to/layouts/default.json",
-      "url": "http://example.com/wp-json/dashmate/v1/layouts/default"
+      "layoutData": {
+        "layout": {
+          "columns": [...]
+        },
+        "widgets": [...],
+        "column_widgets": {...}
+      }
     }
   }
 }
 ```
+
+**Note:** The `layoutData` field contains the complete layout structure including columns, widgets, and column_widgets mappings. This eliminates the need for separate API calls to fetch individual layout data.
 
 ### Get Specific Layout
 **GET** `/wp-json/dashmate/v1/layouts/{layout_key}`

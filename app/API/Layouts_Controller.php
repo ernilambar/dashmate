@@ -124,19 +124,26 @@ class Layouts_Controller extends Base_Controller {
 
 		$layouts_data = [];
 		foreach ( $layouts as $key => $layout ) {
-			$layout_data = [
+			// Get layout data for each layout.
+			$layout_data = Layout_Manager::get_layout_data( $key );
+
+			$layout_response = [
 				'id'    => $layout['id'],
 				'title' => $layout['title'],
 				'type'  => $layout['type'] ?? 'file',
-				'url'   => rest_url( $this->get_namespace() . '/layouts/' . $key ),
 			];
 
 			// Add path for file-based layouts.
 			if ( 'file' === ( $layout['type'] ?? 'file' ) && isset( $layout['path'] ) ) {
-				$layout_data['path'] = $layout['path'];
+				$layout_response['path'] = $layout['path'];
 			}
 
-			$layouts_data[ $key ] = $layout_data;
+			// Add layout data if available.
+			if ( ! is_wp_error( $layout_data ) ) {
+				$layout_response['layoutData'] = $layout_data;
+			}
+
+			$layouts_data[ $key ] = $layout_response;
 		}
 
 		return $this->success_response( $layouts_data );
