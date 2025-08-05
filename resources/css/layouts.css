@@ -98,6 +98,14 @@
 	font-size: 12px;
 }
 
+.dashmate-layouts-title {
+	margin: 0;
+	font-size: 14px;
+	font-weight: 600;
+	color: #333;
+	flex-grow: 1;
+}
+
 .dashmate-layouts-json {
 	padding: 0;
 	min-height: 300px;
@@ -210,4 +218,24 @@
 	padding: 40px 20px;
 	color: #6c757d;
 	font-style: italic;
+}
+
+/* JSON Syntax Highlighting */
+.json-key {
+	color: #d63200;
+	font-weight: 600;
+}
+
+.json-string {
+	color: #006d75;
+}
+
+.json-value {
+	color: #003eb3;
+	font-weight: 500;
+}
+
+.json-bracket {
+	color: #6a737d;
+	font-weight: 500;
 }
