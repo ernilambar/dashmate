@@ -61,7 +61,7 @@ Retrieves the complete dashboard data including layout, widgets, and column widg
         "id": "widget-1",
         "type": "html",
         "column_id": "col-1",
-        "position": 1,
+
         "settings": {}
       }
     ],
@@ -223,29 +223,7 @@ Updates widget settings for a specific widget.
 }
 ```
 
-#### PUT `/widgets/{id}/move`
-Moves a widget to a new column and position.
 
-**Parameters:**
-- `id` (string, required): Widget ID (alphanumeric, hyphens, underscores)
-
-**Request Body:**
-```json
-{
-  "column_id": "col-2",
-  "position": 1
-}
-```
-
-**Response:**
-```json
-{
-  "success": true,
-  "data": {
-    "message": "Widget moved successfully"
-  }
-}
-```
 
 #### GET `/widgets/content/{widget_id}`
 Retrieves widget content for a specific widget.
@@ -616,5 +594,5 @@ The sortable field provides:
 - All endpoints currently allow all requests for development purposes
 - Widget content is generated dynamically based on widget type and settings
 - Column and widget IDs must be alphanumeric with hyphens and underscores allowed
-- Position values are 1-based (not 0-based)
+- Widget order is determined by array position in column_widgets structure
 - Widget settings are validated against widget-specific schemas

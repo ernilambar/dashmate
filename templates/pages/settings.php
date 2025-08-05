@@ -13,7 +13,7 @@ $all_layouts = Layout_Manager::get_layouts();
 
 <div class="dashmate-apply-layout-section">
 	<h2><?php echo esc_html__( 'Apply Layout', 'dashmate' ); ?></h2>
-	<p><?php echo esc_html__( 'Select a layout from the dropdown below and click the button to apply it to your dashboard. This will override all current widget positions and settings.', 'dashmate' ); ?></p>
+	<p><?php echo esc_html__( 'Select a layout from the dropdown below and click the button to apply it to your dashboard. This will override all current widget settings.', 'dashmate' ); ?></p>
 	<p>
 		<select id="dashmate-layout">
 			<option value=""><?php echo esc_html__( '&mdash; Select &mdash;', 'dashmate' ); ?></option>

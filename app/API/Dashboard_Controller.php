@@ -172,18 +172,17 @@ class Dashboard_Controller extends Base_Controller {
 				}
 			}
 
-			// Update widgets with new column_id and position based on column_widgets.
+			// Update widgets with new column_id based on column_widgets.
 			$updated_widgets        = [];
 			$updated_column_widgets = [];
 
 			foreach ( $column_widgets as $column_id => $widget_ids ) {
 				$updated_column_widgets[ $column_id ] = $widget_ids;
 
-				foreach ( $widget_ids as $position => $widget_id ) {
+				foreach ( $widget_ids as $widget_id ) {
 					if ( isset( $existing_widgets_by_id[ $widget_id ] ) ) {
 						$widget              = $existing_widgets_by_id[ $widget_id ];
 						$widget['column_id'] = $column_id;
-						$widget['position']  = $position + 1; // Convert to 1-based position.
 						$updated_widgets[]   = $widget;
 					}
 				}
@@ -200,7 +199,7 @@ class Dashboard_Controller extends Base_Controller {
 
 			$result = update_option( 'dashmate_dashboard_data', $dashboard_data, true );
 			if ( false === $result ) {
-				return $this->error_response( 'Unable to save widget positions', 500, 'save_error' );
+				return $this->error_response( 'Unable to save widget order', 500, 'save_error' );
 			}
 
 			return $this->success_response( [ 'message' => 'Widgets reordered successfully' ] );
