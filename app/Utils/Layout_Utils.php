@@ -80,7 +80,19 @@ class Layout_Utils {
 		$data = get_option( self::OPTION_KEY );
 
 		if ( false === $data ) {
-			return new WP_Error( 'no_layout_data', 'No layout data found' );
+			// Initialize default data if none exists.
+			$default_data = [
+				'layout'         => [
+					'columns' => [],
+				],
+				'widgets'        => [],
+				'column_widgets' => [],
+			];
+
+			// Save the default data.
+			update_option( self::OPTION_KEY, $default_data );
+
+			return $default_data;
 		}
 
 		return $data;
