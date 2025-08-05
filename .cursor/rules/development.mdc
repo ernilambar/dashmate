@@ -23,7 +23,9 @@ alwaysApply: true
   - Implement proper error handling and logging:
     - Use WordPress debug logging features.
     - Create custom error handlers when necessary.
-    - Use try-catch blocks for expected exceptions.
+    - Use WordPress error handling patterns (WP_Error objects) instead of try-catch blocks with Exception.
+    - Use `is_wp_error()` to check for errors and handle them appropriately.
+    - Return `WP_Error` objects for error conditions instead of throwing exceptions.
   - Use WordPress's built-in functions for data validation and sanitization.
   - Implement proper nonce verification for form submissions.
   - Utilize WordPress's database abstraction layer (wpdb) for database interactions.
@@ -80,6 +82,7 @@ alwaysApply: true
     - Error: Use `WP_Error` with proper status codes
   - Use WordPress sanitization functions for input validation
   - Include proper nonce verification for security
-  - Implement proper error handling with try-catch blocks
+  - Implement proper error handling using WP_Error objects instead of try-catch blocks
+  - Use `is_wp_error()` to check for errors in REST API responses
   - Use descriptive endpoint names and HTTP methods appropriately
   - Follow WordPress coding standards for REST API development

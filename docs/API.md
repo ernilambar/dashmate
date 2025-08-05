@@ -134,6 +134,114 @@ Reorders widgets across columns using a column_widgets structure.
 }
 ```
 
+### Layouts Endpoints
+
+#### GET `/layouts`
+Retrieves all available layouts with their metadata and URLs to individual layout endpoints.
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "default": {
+      "title": "Default",
+      "path": "/path/to/layouts/default.json",
+      "url": "https://griha.local/wp-json/dashmate/v1/layouts/default"
+    }
+  }
+}
+```
+
+#### GET `/layouts/{layout_key}`
+Retrieves complete layout data for a specific layout.
+
+**Parameters:**
+- `layout_key` (string, required): Layout key (alphanumeric, hyphens, underscores)
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "$schema": "../data/schemas/dashmate.json",
+    "layout": {
+      "columns": [
+        {
+          "id": "col-1",
+          "order": 1
+        },
+        {
+          "id": "col-2",
+          "order": 2
+        },
+        {
+          "id": "col-3",
+          "order": 3
+        }
+      ]
+    },
+    "widgets": [
+      {
+        "id": "sample-html",
+        "column_id": "col-1",
+        "settings": {
+          "allow_scripts": false
+        }
+      },
+      {
+        "id": "sample-links",
+        "column_id": "col-2",
+        "settings": {
+          "hide_icon": false,
+          "display_style": "list"
+        }
+      },
+      {
+        "id": "sample-progress-circles",
+        "column_id": "col-3",
+        "settings": {
+          "circles_number": 4,
+          "hide_caption": false
+        }
+      },
+      {
+        "id": "sample-tabular",
+        "column_id": "col-1",
+        "settings": {
+          "max_items": 5
+        }
+      }
+    ],
+    "column_widgets": {
+      "col-1": ["sample-tabular"],
+      "col-2": ["sample-progress-circles"],
+      "col-3": ["sample-links", "sample-html"]
+    }
+  }
+}
+```
+
+**Error Responses:**
+
+Layout not found (404):
+```json
+{
+  "success": false,
+  "message": "Layout not found: non-existent",
+  "code": "layout_not_found"
+}
+```
+
+Layout retrieval error (500):
+```json
+{
+  "success": false,
+  "message": "Layout file does not exist: /path/to/missing/layout.json",
+  "code": "layouts_retrieval_error"
+}
+```
+
 ### Widgets Endpoints
 
 #### GET `/widgets`
@@ -405,6 +513,9 @@ The API supports the following widget types:
 | `widget_not_found` | Widget not found | 404 |
 | `column_not_found` | Column not found | 404 |
 | `invalid_column` | Column data is invalid | 400 |
+| `layout_not_found` | Layout not found | 404 |
+| `layouts_retrieval_error` | Failed to retrieve layouts list | 500 |
+| `layout_retrieval_error` | Failed to retrieve layout data | 500 |
 | `internal_error` | Internal server error | 500 |
 
 ## Data Storage
