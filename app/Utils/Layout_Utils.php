@@ -26,41 +26,45 @@ class Layout_Utils {
 	const OPTION_KEY = 'dashmate_dashboard_data';
 
 	/**
-	 * Export layout to YAML file.
+	 * Save layout to JSON file.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $file_path File path to export to.
-	 * @return bool True on success, false on failure.
+	 * @param string $file_path File path to save to.
+	 * @return bool|WP_Error True on success, WP_Error on failure.
 	 */
-	public static function export_to_file( string $file_path ): bool {
+	public static function save_layout_to_file( string $file_path ) {
 		$dashboard_data = get_option( self::OPTION_KEY );
 
 		if ( false === $dashboard_data ) {
-			return false;
+			return new WP_Error( 'no_dashboard_data', 'No dashboard data found' );
 		}
 
-		return YML_Utils::save_to_file( $file_path, $dashboard_data );
+		return JSON_Utils::save_json_to_file( $file_path, $dashboard_data );
 	}
 
 	/**
-	 * Import layout from YAML file.
+	 * Set layout from JSON file.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $file_path File path to import from.
-	 * @return bool True on success, false on failure.
+	 * @param string $file_path File path to set layout from.
+	 * @return bool|WP_Error True on success, WP_Error on failure.
 	 */
-	public static function import_from_file( string $file_path ): bool {
-		$dashboard_data = YML_Utils::load_from_file( $file_path );
+	public static function set_layout_from_file( string $file_path ) {
+		$dashboard_data = JSON_Utils::parse_file( $file_path );
 
-		if ( null === $dashboard_data ) {
-			return false;
+		if ( is_wp_error( $dashboard_data ) ) {
+			return $dashboard_data;
 		}
 
 		$result = update_option( self::OPTION_KEY, $dashboard_data );
 
-		return false !== $result;
+		if ( false === $result ) {
+			return new WP_Error( 'update_option_failed', 'Failed to update dashboard data' );
+		}
+
+		return true;
 	}
 
 	/**
@@ -68,10 +72,16 @@ class Layout_Utils {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return mixed Layout data or false if not found.
+	 * @return mixed|WP_Error Layout data or WP_Error if not found.
 	 */
 	public static function get_layout_data() {
-		return get_option( self::OPTION_KEY );
+		$data = get_option( self::OPTION_KEY );
+
+		if ( false === $data ) {
+			return new WP_Error( 'no_layout_data', 'No layout data found' );
+		}
+
+		return $data;
 	}
 
 	/**
@@ -81,46 +91,50 @@ class Layout_Utils {
 	 *
 	 * @return bool True if layout data exists, false otherwise.
 	 */
-	public static function has_layout_data(): bool {
+	public static function layout_exists(): bool {
 		$data = get_option( self::OPTION_KEY );
 		return false !== $data;
 	}
 
 	/**
-	 * Export layout to YAML string.
+	 * Get layout as JSON string.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return string|false YAML string or false on failure.
+	 * @return string|WP_Error JSON string or WP_Error on failure.
 	 */
-	public static function export_to_string() {
+	public static function get_layout_json() {
 		$dashboard_data = get_option( self::OPTION_KEY );
 
 		if ( false === $dashboard_data ) {
-			return false;
+			return new WP_Error( 'no_dashboard_data', 'No dashboard data found' );
 		}
 
-		return YML_Utils::to_yaml( $dashboard_data );
+		return JSON_Utils::encode_to_json( $dashboard_data );
 	}
 
 	/**
-	 * Import layout from YAML string.
+	 * Set layout from JSON string.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $yaml_string YAML string to import.
-	 * @return bool True on success, false on failure.
+	 * @param string $json_string JSON string to set layout from.
+	 * @return bool|WP_Error True on success, WP_Error on failure.
 	 */
-	public static function import_from_string( string $yaml_string ): bool {
-		$dashboard_data = YML_Utils::from_yaml( $yaml_string );
+	public static function set_layout_from_json( string $json_string ) {
+		$dashboard_data = JSON_Utils::decode_from_json( $json_string );
 
-		if ( null === $dashboard_data ) {
-			return false;
+		if ( is_wp_error( $dashboard_data ) ) {
+			return $dashboard_data;
 		}
 
 		$result = update_option( self::OPTION_KEY, $dashboard_data );
 
-		return false !== $result;
+		if ( false === $result ) {
+			return new WP_Error( 'update_option_failed', 'Failed to update dashboard data' );
+		}
+
+		return true;
 	}
 
 	/**
@@ -128,10 +142,16 @@ class Layout_Utils {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return bool True on success, false on failure.
+	 * @return bool|WP_Error True on success, WP_Error on failure.
 	 */
-	public static function delete_layout_data(): bool {
-		return delete_option( self::OPTION_KEY );
+	public static function delete_layout_data() {
+		$result = delete_option( self::OPTION_KEY );
+
+		if ( false === $result ) {
+			return new WP_Error( 'delete_option_failed', 'Failed to delete layout data' );
+		}
+
+		return true;
 	}
 
 	/**
@@ -141,7 +161,7 @@ class Layout_Utils {
 	 *
 	 * @return array Layout data as array.
 	 */
-	public static function get_layout_data_as_array(): array {
+	public static function get_layout_array(): array {
 		$data = get_option( self::OPTION_KEY );
 
 		if ( false === $data ) {

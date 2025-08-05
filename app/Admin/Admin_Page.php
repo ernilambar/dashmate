@@ -9,7 +9,6 @@ namespace Nilambar\Dashmate\Admin;
 
 use Nilambar\Dashmate\Layout_Manager;
 use Nilambar\Dashmate\Panels\SettingsPanel;
-use Nilambar\Dashmate\Utils\YML_Utils;
 use Nilambar\Optify\Optify;
 
 /**
@@ -88,10 +87,14 @@ class Admin_Page {
 			}
 
 			// Load layout data from file.
-			$layout_data = YML_Utils::load_from_file( $layout['path'] );
+			if ( ! file_exists( $layout['path'] ) || ! is_readable( $layout['path'] ) ) {
+				wp_send_json_error( esc_html__( 'Layout file does not exist or is not readable.', 'dashmate' ) );
+			}
 
-			if ( null === $layout_data ) {
-				wp_send_json_error( esc_html__( 'Failed to load layout data.', 'dashmate' ) );
+			$layout_data = JSON_Utils::parse_file( $layout['path'] );
+
+			if ( is_wp_error( $layout_data ) ) {
+				wp_send_json_error( esc_html__( 'Failed to load layout data: ', 'dashmate' ) . $layout_data->get_error_message() );
 			}
 
 			// Delete the existing option and add the new layout data.

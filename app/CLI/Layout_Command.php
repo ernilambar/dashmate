@@ -45,10 +45,10 @@ final class Layout_Command {
 			return;
 		}
 
-		$yaml_output = Layout_Utils::export_to_string();
+		$output = Layout_Utils::get_layout_json();
 
-		if ( false === $yaml_output ) {
-			WP_CLI::error( 'Failed to encode dashboard data as YAML.' );
+		if ( is_wp_error( $output ) ) {
+			WP_CLI::error( $output->get_error_message() );
 			return;
 		}
 
@@ -71,10 +71,10 @@ final class Layout_Command {
 		}
 
 		// Create file path.
-		$file_path = trailingslashit( $export_dir ) . 'layout.yml';
+		$file_path = trailingslashit( $export_dir ) . 'layout.json';
 
-		// Write YAML to file.
-		$result = file_put_contents( $file_path, $yaml_output );
+		// Write data to file.
+		$result = file_put_contents( $file_path, $output );
 
 		if ( false === $result ) {
 			WP_CLI::error( sprintf( 'Failed to write file "%s".', $file_path ) );
@@ -90,7 +90,7 @@ final class Layout_Command {
 	 * ## OPTIONS
 	 *
 	 * <file>
-	 * : Path to the YAML file to import.
+	 * : Path to the JSON file to import.
 	 *
 	 * @since 1.0.0
 	 *
@@ -120,11 +120,11 @@ final class Layout_Command {
 			return;
 		}
 
-		// Import layout from file.
-		$result = Layout_Utils::import_from_file( $file_path );
+		// Set layout from file.
+		$result = Layout_Utils::set_layout_from_file( $file_path );
 
-		if ( false === $result ) {
-			WP_CLI::error( sprintf( 'Failed to import layout from file "%s".', $file_path ) );
+		if ( is_wp_error( $result ) ) {
+			WP_CLI::error( sprintf( 'Failed to import layout from file "%s": %s', $file_path, $result->get_error_message() ) );
 			return;
 		}
 

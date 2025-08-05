@@ -8,17 +8,17 @@ import './css/layout.css';
 import { copyToClipboard } from './js/utils.js';
 
 /**
- * Copy YAML content to clipboard.
+ * Copy layout content to clipboard.
  */
-async function copyYamlContent() {
-	const yamlElement = document.getElementById( 'dashmate-layout-content' );
-	const codeElement = yamlElement.querySelector( 'code' );
+async function copyLayoutContent() {
+	const layoutElement = document.getElementById( 'dashmate-layout-content' );
+	const codeElement = layoutElement.querySelector( 'code' );
 
 	if ( codeElement ) {
-		const yamlText = codeElement.textContent || codeElement.innerText;
+		const layoutText = codeElement.textContent || codeElement.innerText;
 		const button = event.target;
 
-		const success = await copyToClipboard( yamlText );
+		const success = await copyToClipboard( layoutText );
 
 		if ( success ) {
 			// Show success feedback.
@@ -36,7 +36,7 @@ async function copyYamlContent() {
 				button.style.color = originalColor;
 			}, 2000 );
 
-			console.log( 'YAML content copied successfully' );
+			console.log( 'Layout content copied successfully' );
 		} else {
 			// Show error feedback.
 			const originalText = button.textContent;
@@ -53,10 +53,10 @@ async function copyYamlContent() {
 				button.style.color = originalColor;
 			}, 2000 );
 
-			console.error( 'Failed to copy YAML content' );
+			console.error( 'Failed to copy layout content' );
 		}
 	}
 }
 
 // Make function globally available.
-window.copyYamlContent = copyYamlContent;
+window.copyLayoutContent = copyLayoutContent;

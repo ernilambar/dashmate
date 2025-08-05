@@ -4,8 +4,7 @@
   "license": "GPL-2.0-or-later",
   "require": {
     "php": ">=7.4",
-    "ernilambar/optify": "*",
-    "symfony/yaml": "^5.4"
+    "ernilambar/optify": "*"
   },
   "require-dev": {
     "dealerdirect/phpcodesniffer-composer-installer": "^1",
