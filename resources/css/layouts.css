@@ -1,30 +1,146 @@
-.layout-container {
-	margin-top: 20px;
+.dashmate-layouts {
+	margin: 20px 0;
 }
 
-.layout-header {
-	margin-bottom: 10px;
+.dashmate-layouts-message {
+	padding: 8px 12px;
+	margin-bottom: 15px;
+	border-radius: 3px;
+	border-left: 3px solid;
+	position: relative;
 }
 
-#dashmate-layouts-content {
+.dashmate-layouts-message--success {
+	background-color: #d4edda;
+	border-color: #28a745;
+	color: #155724;
+}
+
+.dashmate-layouts-message--error {
+	background-color: #f8d7da;
+	border-color: #dc3545;
+	color: #721c24;
+}
+
+.dashmate-layouts-message-close {
+	position: absolute;
+	right: 8px;
+	top: 50%;
+	transform: translateY(-50%);
+	background: none;
+	border: none;
+	font-size: 16px;
+	cursor: pointer;
+	color: inherit;
+	padding: 0;
+	width: 18px;
+	height: 18px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.dashmate-layouts-message-close:hover {
+	opacity: 0.7;
+}
+
+.dashmate-layouts-controls {
+	display: flex;
+	align-items: center;
+	gap: 15px;
+	margin-bottom: 20px;
+	padding: 15px;
+	background: #fff;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+}
+
+.dashmate-layouts-selector {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.dashmate-layouts-selector-label {
+	font-weight: 600;
+	color: #333;
+}
+
+.dashmate-layouts-selector-dropdown {
+	padding: 6px 10px;
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	font-size: 14px;
+	min-width: 180px;
+}
+
+.dashmate-layouts-apply-btn {
+	padding: 6px 12px;
+	font-size: 14px;
+}
+
+.dashmate-layouts-apply-btn:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
+.dashmate-layouts-content {
+	background: #fff;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	overflow: hidden;
+}
+
+.dashmate-layouts-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 12px 15px;
+	border-bottom: 1px solid #ddd;
+	background: #f9f9f9;
+}
+
+.dashmate-layouts-header-title {
+	margin: 0;
+	font-size: 14px;
+	font-weight: 600;
+	color: #333;
+}
+
+.dashmate-layouts-header-copy-btn {
+	padding: 4px 8px;
+	font-size: 12px;
+}
+
+.dashmate-layouts-json {
+	padding: 15px;
 	background: #f6f8fa;
-	border: 1px solid #e1e4e8;
-	border-radius: 6px;
-	padding: 16px;
-	overflow-x: auto;
+	min-height: 300px;
+	max-height: 500px;
+	overflow-y: auto;
 }
 
-#dashmate-layouts-content pre {
+.dashmate-layouts-json-content {
 	margin: 0;
 	white-space: pre-wrap;
 	word-wrap: break-word;
 	font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-	font-size: 13px;
-	line-height: 1.45;
+	font-size: 12px;
+	line-height: 1.4;
+	color: #24292e;
+	background: transparent;
 }
 
-#dashmate-layouts-content code {
+.dashmate-layouts-json-content code {
 	background: transparent;
 	padding: 0;
 	border: none;
+}
+
+.dashmate-layouts-json-loading,
+.dashmate-layouts-json-no-data {
+	text-align: center;
+	padding: 20px;
+	color: #666;
+	font-style: italic;
 }
