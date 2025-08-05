@@ -9,11 +9,13 @@ import { createRoot } from 'react-dom/client';
 import LayoutPreview from './components/LayoutPreview';
 import JsonHighlight from './components/JsonHighlight';
 import './css/layouts.css';
+import './css/layout-preview.css';
 
 const LayoutsApp = () => {
 	const [ layouts, setLayouts ] = useState( [] );
 	const [ selectedLayout, setSelectedLayout ] = useState( 'current' );
 	const [ layoutData, setLayoutData ] = useState( null );
+	const [ layoutDataMap, setLayoutDataMap ] = useState( {} );
 	const [ loading, setLoading ] = useState( true );
 	const [ applying, setApplying ] = useState( false );
 	const [ message, setMessage ] = useState( { type: '', text: '' } );
@@ -35,13 +37,19 @@ const LayoutsApp = () => {
 
 	const fetchLayouts = async () => {
 		try {
-			const response = await fetch( `${ settings.restUrl }layouts` );
+			// Ensure REST URL ends with slash
+			const restUrl = settings.restUrl.endsWith( '/' )
+				? settings.restUrl
+				: settings.restUrl + '/';
+			const response = await fetch( `${ restUrl }layouts` );
 			if ( ! response.ok ) {
 				throw new Error( settings.strings?.failedToFetch || 'Failed to fetch layouts' );
 			}
 			const data = await response.json();
 			if ( data.success ) {
 				setLayouts( data.data );
+				// Fetch layout data for each layout
+				fetchAllLayoutData( data.data );
 			} else {
 				throw new Error(
 					data.message || settings.strings?.failedToFetch || 'Failed to fetch layouts'
@@ -54,10 +62,38 @@ const LayoutsApp = () => {
 		}
 	};
 
+	const fetchAllLayoutData = async ( layoutsData ) => {
+		const dataMap = {};
+		// Ensure REST URL ends with slash
+		const restUrl = settings.restUrl.endsWith( '/' )
+			? settings.restUrl
+			: settings.restUrl + '/';
+		const promises = Object.entries( layoutsData ).map( async ( [ key, layout ] ) => {
+			try {
+				const response = await fetch( `${ restUrl }layouts/${ key }` );
+				if ( response.ok ) {
+					const data = await response.json();
+					if ( data.success ) {
+						dataMap[ key ] = data.data;
+					}
+				}
+			} catch ( error ) {
+				console.warn( `Failed to fetch layout data for ${ key }:`, error );
+			}
+		} );
+
+		await Promise.all( promises );
+		setLayoutDataMap( dataMap );
+	};
+
 	const fetchLayoutData = async ( layoutKey ) => {
 		try {
 			setLoading( true );
-			const response = await fetch( `${ settings.restUrl }layouts/${ layoutKey }` );
+			// Ensure REST URL ends with slash
+			const restUrl = settings.restUrl.endsWith( '/' )
+				? settings.restUrl
+				: settings.restUrl + '/';
+			const response = await fetch( `${ restUrl }layouts/${ layoutKey }` );
 			if ( ! response.ok ) {
 				throw new Error(
 					settings.strings?.failedToFetchData || 'Failed to fetch layout data'
@@ -105,14 +141,17 @@ const LayoutsApp = () => {
 				headers[ 'X-WP-Nonce' ] = settings.nonce;
 			}
 
-			const response = await fetch(
-				`${ settings.restUrl }layouts/${ selectedLayout }/apply`,
-				{
-					method: 'POST',
-					headers: headers,
-					credentials: 'same-origin',
-				}
-			);
+			// Ensure REST URL ends with slash
+			const restUrl = settings.restUrl.endsWith( '/' )
+				? settings.restUrl
+				: settings.restUrl + '/';
+			const applyUrl = `${ restUrl }layouts/${ selectedLayout }/apply`;
+
+			const response = await fetch( applyUrl, {
+				method: 'POST',
+				headers: headers,
+				credentials: 'same-origin',
+			} );
 
 			const data = await response.json();
 
@@ -157,8 +196,8 @@ const LayoutsApp = () => {
 		}
 	};
 
-	const handleLayoutChange = ( event ) => {
-		setSelectedLayout( event.target.value );
+	const handleLayoutSelect = ( layoutKey ) => {
+		setSelectedLayout( layoutKey );
 	};
 
 	const clearMessage = () => {
@@ -202,22 +241,9 @@ const LayoutsApp = () => {
 
 			<div className="dashmate-layouts-controls">
 				<div className="dashmate-layouts-selector">
-					<label htmlFor="layout-select" className="dashmate-layouts-selector-label">
+					<label className="dashmate-layouts-selector-label">
 						{ settings.strings?.selectLayout || 'Select Layout:' }
 					</label>
-					<select
-						id="layout-select"
-						className="dashmate-layouts-selector-dropdown"
-						value={ selectedLayout }
-						onChange={ handleLayoutChange }
-						disabled={ loading }
-					>
-						{ Object.entries( layouts ).map( ( [ key, layout ] ) => (
-							<option key={ key } value={ key }>
-								{ layout.title }
-							</option>
-						) ) }
-					</select>
 				</div>
 
 				<button
@@ -232,7 +258,23 @@ const LayoutsApp = () => {
 				</button>
 			</div>
 
-			<LayoutPreview layoutData={ layoutData } selectedLayout={ selectedLayout } />
+			{ /* Layout Grid */ }
+			<div className="dashmate-layouts-grid">
+				{ Object.entries( layouts ).map( ( [ key, layout ] ) => (
+					<div
+						key={ key }
+						className={ `dashmate-layout-grid-item ${
+							selectedLayout === key ? 'dashmate-layout-grid-item--selected' : ''
+						}` }
+						onClick={ () => handleLayoutSelect( key ) }
+					>
+						<div className="dashmate-layout-grid-item-header">
+							<h4 className="dashmate-layout-grid-item-title">{ layout.title }</h4>
+						</div>
+						<LayoutPreview layoutData={ layoutDataMap[ key ] } selectedLayout={ key } />
+					</div>
+				) ) }
+			</div>
 
 			<div className="dashmate-layouts-content">
 				<div className="dashmate-layouts-header">

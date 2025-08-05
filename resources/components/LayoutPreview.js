@@ -8,8 +8,8 @@ const LayoutPreview = ( { layoutData, selectedLayout } ) => {
 
 	if ( ! layoutData || ! columns || ! widgets || ! column_widgets ) {
 		return (
-			<div className="dashmate-layout-preview">
-				<div className="dashmate-layout-preview-empty">
+			<div className="layout-preview">
+				<div className="layout-preview-empty">
 					<p>No layout data available for preview</p>
 				</div>
 			</div>
@@ -17,8 +17,8 @@ const LayoutPreview = ( { layoutData, selectedLayout } ) => {
 	}
 
 	return (
-		<div className="dashmate-layout-preview">
-			<div className="dashmate-layout-preview-content">
+		<div className="layout-preview">
+			<div className="layout-preview-content">
 				{ columns.map( ( column ) => {
 					const columnWidgetIds = column_widgets[ column.id ] || [];
 					const columnWidgets = columnWidgetIds
@@ -26,21 +26,21 @@ const LayoutPreview = ( { layoutData, selectedLayout } ) => {
 						.filter( Boolean );
 
 					return (
-						<div key={ column.id } className="dashmate-layout-preview-column">
-							<div className="dashmate-layout-preview-widgets">
+						<div key={ column.id } className="layout-preview-column">
+							<div className="layout-preview-widgets">
 								{ columnWidgets.length > 0 ? (
 									columnWidgets.map( ( widget, index ) => (
 										<div
 											key={ `${ column.id }-${ widget.id }` }
-											className="dashmate-layout-preview-widget"
+											className="layout-preview-widget"
 										>
-											<div className="dashmate-layout-preview-widget-title">
+											<div className="layout-preview-widget-title">
 												{ widget.id }
 											</div>
 										</div>
 									) )
 								) : (
-									<div className="dashmate-layout-preview-empty-widget">
+									<div className="layout-preview-empty-widget">
 										<span>No widgets</span>
 									</div>
 								) }
