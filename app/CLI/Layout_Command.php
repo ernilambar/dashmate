@@ -25,6 +25,14 @@ final class Layout_Command {
 	 * [--dir=<dirname>]
 	 * : Full path to directory where export files should be stored. Defaults to current working directory.
 	 *
+	 * ## EXAMPLES
+	 *
+	 *     # Export layout to current directory.
+	 *     $ wp dashmate layout export
+	 *
+	 *     # Export layout to specific directory.
+	 *     $ wp dashmate layout export --dir=/path/to/exports
+	 *
 	 * @since 1.0.0
 	 *
 	 * @param array $args       List of the positional arguments.
@@ -92,6 +100,14 @@ final class Layout_Command {
 	 * <file>
 	 * : Path to the JSON file to import.
 	 *
+	 * ## EXAMPLES
+	 *
+	 *     # Import layout from JSON file.
+	 *     $ wp dashmate layout import layout.json
+	 *
+	 *     # Import layout from specific path.
+	 *     $ wp dashmate layout import /path/to/layout.json
+	 *
 	 * @since 1.0.0
 	 *
 	 * @param array $args       List of the positional arguments.
@@ -133,6 +149,11 @@ final class Layout_Command {
 
 	/**
 	 * Test command.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     # Run test command.
+	 *     $ wp dashmate layout test
 	 *
 	 * @since 1.0.0
 	 *
