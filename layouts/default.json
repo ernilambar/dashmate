@@ -1,4 +1,5 @@
 {
+	"$schema": "../data/schemas/dashmate.json",
 	"layout": {
 		"columns": [
 			{
