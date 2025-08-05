@@ -48,8 +48,14 @@ const LayoutsApp = () => {
 			const data = await response.json();
 			if ( data.success ) {
 				setLayouts( data.data );
-				// Fetch layout data for each layout
-				fetchAllLayoutData( data.data );
+				// Extract layout data from the response
+				const layoutDataMap = {};
+				Object.entries( data.data ).forEach( ( [ key, layout ] ) => {
+					if ( layout.layoutData ) {
+						layoutDataMap[ key ] = layout.layoutData;
+					}
+				} );
+				setLayoutDataMap( layoutDataMap );
 			} else {
 				throw new Error(
 					data.message || settings.strings?.failedToFetch || 'Failed to fetch layouts'
@@ -60,30 +66,6 @@ const LayoutsApp = () => {
 		} finally {
 			setLoading( false );
 		}
-	};
-
-	const fetchAllLayoutData = async ( layoutsData ) => {
-		const dataMap = {};
-		// Ensure REST URL ends with slash
-		const restUrl = settings.restUrl.endsWith( '/' )
-			? settings.restUrl
-			: settings.restUrl + '/';
-		const promises = Object.entries( layoutsData ).map( async ( [ key, layout ] ) => {
-			try {
-				const response = await fetch( `${ restUrl }layouts/${ key }` );
-				if ( response.ok ) {
-					const data = await response.json();
-					if ( data.success ) {
-						dataMap[ key ] = data.data;
-					}
-				}
-			} catch ( error ) {
-				console.warn( `Failed to fetch layout data for ${ key }:`, error );
-			}
-		} );
-
-		await Promise.all( promises );
-		setLayoutDataMap( dataMap );
 	};
 
 	const fetchLayoutData = async ( layoutKey ) => {
