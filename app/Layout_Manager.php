@@ -168,7 +168,17 @@ class Layout_Manager {
 			return new WP_Error( 'layout_load_error', esc_html__( 'Failed to parse layout data from file: ', 'dashmate' ) . $layout['path'] . ' - ' . $layout_data->get_error_message() );
 		}
 
-		return $layout_data;
+		/**
+		 * Filter layout data before returning.
+		 *
+		 * Allows others to modify layout data before it's returned.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param array $layout_data Layout data array.
+		 * @param string $slug       Layout slug.
+		 */
+		return apply_filters( 'dashmate_layout_data', $layout_data, $slug );
 	}
 
 	/**
