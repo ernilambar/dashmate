@@ -7,7 +7,8 @@
 
 namespace Nilambar\Dashmate\CLI;
 
-use Nilambar\Dashmate\Utils\Layout_Utils;
+use Nilambar\Dashmate\Models\Dashboard_Model;
+use Nilambar\Dashmate\Utils\JSON_Utils;
 use WP_CLI;
 
 /**
@@ -48,12 +49,19 @@ final class Layout_Command {
 
 		$assoc_args = wp_parse_args( $assoc_args, $defaults );
 
-		if ( ! Layout_Utils::has_layout_data() ) {
+		if ( ! Dashboard_Model::data_exists() ) {
 			WP_CLI::error( 'No dashboard data found.' );
 			return;
 		}
 
-		$output = Layout_Utils::get_layout_json();
+		$dashboard_data = Dashboard_Model::get_data();
+
+		if ( empty( $dashboard_data ) ) {
+			WP_CLI::error( 'No dashboard data found.' );
+			return;
+		}
+
+		$output = JSON_Utils::encode_to_json( $dashboard_data );
 
 		if ( is_wp_error( $output ) ) {
 			WP_CLI::error( $output->get_error_message() );
@@ -136,8 +144,16 @@ final class Layout_Command {
 			return;
 		}
 
-		// Set layout from file.
-		$result = Layout_Utils::set_layout_from_file( $file_path );
+		// Parse JSON file.
+		$dashboard_data = JSON_Utils::parse_file( $file_path );
+
+		if ( is_wp_error( $dashboard_data ) ) {
+			WP_CLI::error( sprintf( 'Failed to parse file "%s": %s', $file_path, $dashboard_data->get_error_message() ) );
+			return;
+		}
+
+		// Set dashboard data.
+		$result = Dashboard_Model::set_data( $dashboard_data );
 
 		if ( is_wp_error( $result ) ) {
 			WP_CLI::error( sprintf( 'Failed to import layout from file "%s": %s', $file_path, $result->get_error_message() ) );
