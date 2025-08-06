@@ -15,6 +15,7 @@
  */
 
 use Nilambar\Dashmate\Boot\Loader;
+use Nilambar\Dashmate\Widget_Initializer;
 
 // Define.
 define( 'DASHMATE_VERSION', '1.0.0' );
@@ -31,6 +32,23 @@ if ( file_exists( DASHMATE_DIR . '/vendor/autoload.php' ) ) {
 
 // Load CLI.
 require_once DASHMATE_DIR . '/cli.php';
+
+// Activation hook.
+register_activation_hook( __FILE__, 'dashmate_activate' );
+
+/**
+ * Plugin activation callback.
+ *
+ * @since 1.0.0
+ */
+function dashmate_activate() {
+	// Ensure autoload is available.
+	if ( file_exists( DASHMATE_DIR . '/vendor/autoload.php' ) ) {
+		require_once DASHMATE_DIR . '/vendor/autoload.php';
+	}
+
+	Widget_Initializer::create_default_dashboard_on_activation();
+}
 
 // Init.
 new Loader();

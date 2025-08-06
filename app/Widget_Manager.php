@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Nilambar\Dashmate;
 
+use Nilambar\Dashmate\Core\Dashboard_Manager;
 use WP_Error;
 
 /**
@@ -301,46 +302,7 @@ class Widget_Manager {
 	 * @return array|WP_Error
 	 */
 	private static function get_dashboard_data() {
-		$data = get_option( 'dashmate_dashboard_data', null );
-
-		if ( null === $data ) {
-			// Trigger Widget_Initializer to create default data.
-			Widget_Initializer::create_default_widgets();
-
-			// Get the data again after initialization.
-			$data = get_option( 'dashmate_dashboard_data', null );
-
-			if ( null === $data ) {
-				return [
-					'layout'         => [
-						'columns' => [],
-					],
-					'widgets'        => [],
-					'column_widgets' => [],
-				];
-			}
-		}
-
-		// Ensure we always return the new structure.
-		if ( ! isset( $data['layout'] ) || ! isset( $data['widgets'] ) ) {
-			// Trigger Widget_Initializer to create default data.
-			Widget_Initializer::create_default_widgets();
-
-			// Get the data again after initialization.
-			$data = get_option( 'dashmate_dashboard_data', null );
-
-			if ( null === $data || ! isset( $data['layout'] ) || ! isset( $data['widgets'] ) ) {
-				return [
-					'layout'         => [
-						'columns' => [],
-					],
-					'widgets'        => [],
-					'column_widgets' => [],
-				];
-			}
-		}
-
-		return $data;
+		return Dashboard_Manager::get_dashboard_data();
 	}
 
 	/**
@@ -353,12 +315,6 @@ class Widget_Manager {
 	 * @return bool|WP_Error
 	 */
 	private static function save_dashboard_data( $data ) {
-		$result = update_option( 'dashmate_dashboard_data', $data, false );
-
-		if ( false === $result ) {
-			return new WP_Error( 'option_save_error', 'Could not save dashboard data to WordPress options' );
-		}
-
-		return true;
+		return Dashboard_Manager::save_dashboard_data( $data );
 	}
 }

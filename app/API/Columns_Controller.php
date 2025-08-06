@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Nilambar\Dashmate\API;
 
+use Nilambar\Dashmate\Core\Dashboard_Manager;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -161,10 +162,10 @@ class Columns_Controller extends Base_Controller {
 		$dashboard_data['columns'] = $columns;
 
 		// Save updated dashboard data.
-		$result = update_option( 'dashmate_dashboard_data', $dashboard_data, false );
+		$result = Dashboard_Manager::save_dashboard_data( $dashboard_data );
 
-		if ( false === $result ) {
-			return $this->error_response( 'Unable to save dashboard data', 500, 'save_error' );
+		if ( is_wp_error( $result ) ) {
+			return $this->error_response( 'Unable to save dashboard data: ' . $result->get_error_message(), 500, 'save_error' );
 		}
 
 		return $this->success_response( $new_column, 201 );
@@ -224,10 +225,10 @@ class Columns_Controller extends Base_Controller {
 
 		$this->update_column_data( $column_id, $title, $dashboard_data );
 
-		$result = update_option( 'dashmate_dashboard_data', $dashboard_data, false );
+		$result = Dashboard_Manager::save_dashboard_data( $dashboard_data );
 
-		if ( false === $result ) {
-			return $this->error_response( 'Unable to save dashboard data', 500, 'save_error' );
+		if ( is_wp_error( $result ) ) {
+			return $this->error_response( 'Unable to save dashboard data: ' . $result->get_error_message(), 500, 'save_error' );
 		}
 
 		return $this->success_response( $column );
@@ -259,10 +260,10 @@ class Columns_Controller extends Base_Controller {
 
 		$this->remove_column( $column_id, $dashboard_data );
 
-		$result = update_option( 'dashmate_dashboard_data', $dashboard_data, false );
+		$result = Dashboard_Manager::save_dashboard_data( $dashboard_data );
 
-		if ( false === $result ) {
-			return $this->error_response( 'Unable to save dashboard data', 500, 'save_error' );
+		if ( is_wp_error( $result ) ) {
+			return $this->error_response( 'Unable to save dashboard data: ' . $result->get_error_message(), 500, 'save_error' );
 		}
 
 		return $this->success_response( [ 'message' => 'Column deleted successfully' ] );

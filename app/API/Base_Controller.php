@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace Nilambar\Dashmate\API;
 
-use Nilambar\Dashmate\Widget_Initializer;
+use Nilambar\Dashmate\Core\Dashboard_Manager;
 use Nilambar\Dashmate\Widget_Manager;
 use WP_Error;
 use WP_REST_Response;
@@ -149,44 +149,7 @@ abstract class Base_Controller {
 	 * @return array|WP_Error
 	 */
 	protected function get_dashboard_data() {
-		$data = get_option( 'dashmate_dashboard_data', null );
-
-		if ( null === $data ) {
-			// Trigger Widget_Initializer to create default data.
-			Widget_Initializer::create_default_widgets();
-
-			// Get the data again after initialization.
-			$data = get_option( 'dashmate_dashboard_data', null );
-
-			if ( null === $data ) {
-				return [
-					'layout'         => [
-						'columns' => [],
-					],
-					'widgets'        => [],
-					'column_widgets' => [],
-				];
-			}
-		}
-
-		// Ensure we always return the new structure.
-		if ( ! isset( $data['layout'] ) || ! isset( $data['widgets'] ) ) {
-			// Trigger Widget_Initializer to create default data.
-			Widget_Initializer::create_default_widgets();
-
-			// Get the data again after initialization.
-			$data = get_option( 'dashmate_dashboard_data', null );
-
-			if ( null === $data || ! isset( $data['layout'] ) || ! isset( $data['widgets'] ) ) {
-				return [
-					'layout'         => [
-						'columns' => [],
-					],
-					'widgets'        => [],
-					'column_widgets' => [],
-				];
-			}
-		}
+		$data = Dashboard_Manager::get_dashboard_data();
 
 		// Filter out disabled widgets from the dashboard data.
 		$data = $this->filter_disabled_widgets_from_dashboard( $data );
