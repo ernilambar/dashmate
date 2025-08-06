@@ -19,25 +19,25 @@ use WP_Error;
 class Widget_Manager {
 
 	/**
-	 * Get inactive widgets.
+	 * Get disabled widgets.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return array Array of inactive widget IDs.
+	 * @return array Array of disabled widget IDs.
 	 */
-	public static function get_inactive_widgets(): array {
-		$inactive_widgets = [];
+	public static function get_disabled_widgets(): array {
+		$disabled_widgets = [];
 
 		/**
 		 * Filter to allow other plugins to disable widgets programmatically.
 		 *
 		 * @since 1.0.0
 		 *
-		 * @param array $inactive_widgets Array of inactive widget IDs from options.
+		 * @param array $disabled_widgets Array of disabled widget IDs from options.
 		 */
-		$inactive_widgets = apply_filters( 'dashmate_disabled_widgets', $inactive_widgets );
+		$disabled_widgets = apply_filters( 'dashmate_disabled_widgets', $disabled_widgets );
 
-		return is_array( $inactive_widgets ) ? $inactive_widgets : [];
+		return is_array( $disabled_widgets ) ? $disabled_widgets : [];
 	}
 
 	/**
