@@ -20,24 +20,6 @@ use WP_Error;
 class Layout_Utils {
 
 	/**
-	 * Save layout to JSON file.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $file_path File path to save to.
-	 * @return bool|WP_Error True on success, WP_Error on failure.
-	 */
-	public static function save_layout_to_file( string $file_path ) {
-		$dashboard_data = Dashboard_Model::get_data();
-
-		if ( empty( $dashboard_data ) ) {
-			return new WP_Error( 'no_dashboard_data', 'No dashboard data found' );
-		}
-
-		return JSON_Utils::save_json_to_file( $file_path, $dashboard_data );
-	}
-
-	/**
 	 * Set layout from JSON file.
 	 *
 	 * @since 1.0.0
@@ -53,28 +35,6 @@ class Layout_Utils {
 		}
 
 		return Dashboard_Model::set_data( $dashboard_data );
-	}
-
-	/**
-	 * Get current layout data.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return array Layout data.
-	 */
-	public static function get_layout_data(): array {
-		return Dashboard_Model::get_data();
-	}
-
-	/**
-	 * Check if layout data exists.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return bool True if layout data exists, false otherwise.
-	 */
-	public static function layout_exists(): bool {
-		return Dashboard_Model::data_exists();
 	}
 
 	/**
@@ -113,24 +73,13 @@ class Layout_Utils {
 	}
 
 	/**
-	 * Delete layout data.
+	 * Get current layout data.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return bool|WP_Error True on success, WP_Error on failure.
+	 * @return array Layout data.
 	 */
-	public static function delete_layout_data() {
-		return Dashboard_Model::delete_data();
-	}
-
-	/**
-	 * Get layout data as array.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return array Layout data as array.
-	 */
-	public static function get_layout_array(): array {
+	public static function get_layout_data(): array {
 		return Dashboard_Model::get_data();
 	}
 }

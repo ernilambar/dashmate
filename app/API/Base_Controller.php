@@ -39,11 +39,11 @@ abstract class Base_Controller {
 	 */
 	protected $base_route = '';
 
-		/**
-		 * Constructor.
-		 *
-		 * @since 1.0.0
-		 */
+	/**
+	 * Constructor.
+	 *
+	 * @since 1.0.0
+	 */
 	public function __construct() {
 		add_action( 'rest_api_init', [ $this, 'register_routes' ] );
 	}
@@ -88,13 +88,13 @@ abstract class Base_Controller {
 		return '/' . $this->get_namespace() . '/' . $this->get_base_route();
 	}
 
-				/**
-				 * Check permissions.
-				 *
-				 * @since 1.0.0
-				 *
-				 * @return bool
-				 */
+	/**
+	 * Check permissions.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return bool
+	 */
 	public function check_permissions() {
 		// Allow all requests for development.
 		return true;
@@ -155,23 +155,6 @@ abstract class Base_Controller {
 		$data = $this->filter_disabled_widgets_from_dashboard( $data );
 
 		return $data;
-	}
-
-	/**
-	 * Get default dashboard data.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return array
-	 */
-	protected function get_default_dashboard_data() {
-		return [
-			'layout'         => [
-				'columns' => [],
-			],
-			'widgets'        => [],
-			'column_widgets' => [],
-		];
 	}
 
 	/**
