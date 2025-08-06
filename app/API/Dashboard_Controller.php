@@ -192,7 +192,7 @@ class Dashboard_Controller extends Base_Controller {
 			$dashboard_data['widgets']        = $updated_widgets;
 			$dashboard_data['column_widgets'] = $updated_column_widgets;
 
-			$current_data = Dashboard_Manager::get_dashboard_data();
+			$current_data = $this->get_dashboard_data();
 
 			if ( $current_data === $dashboard_data ) {
 				return $this->success_response( [ 'message' => 'Widgets reordered successfully' ] );
