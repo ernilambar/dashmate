@@ -71,15 +71,4 @@ class Layout_Utils {
 
 		return Dashboard_Model::set_data( $dashboard_data );
 	}
-
-	/**
-	 * Get current layout data.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return array Layout data.
-	 */
-	public static function get_layout_data(): array {
-		return Dashboard_Model::get_data();
-	}
 }

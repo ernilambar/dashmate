@@ -9,8 +9,8 @@ declare(strict_types=1);
 
 namespace Nilambar\Dashmate;
 
+use Nilambar\Dashmate\Models\Dashboard_Model;
 use Nilambar\Dashmate\Utils\JSON_Utils;
-use Nilambar\Dashmate\Utils\Layout_Utils;
 use WP_Error;
 
 /**
@@ -189,7 +189,7 @@ class Layout_Manager {
 	 * @return array|WP_Error
 	 */
 	public static function get_current_layout_data() {
-		$layout_data = Layout_Utils::get_layout_data();
+		$layout_data = Dashboard_Model::get_data();
 
 		if ( is_wp_error( $layout_data ) ) {
 			return $layout_data;
