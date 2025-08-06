@@ -321,22 +321,6 @@ class Widget_Dispatcher {
 	}
 
 	/**
-	 * Get default dashboard data.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return array
-	 */
-	private static function get_default_dashboard_data() {
-		return [
-			'layout'  => [
-				'columns' => [],
-			],
-			'widgets' => [],
-		];
-	}
-
-	/**
 	 * Find widget by ID in dashboard data.
 	 *
 	 * @since 1.0.0
