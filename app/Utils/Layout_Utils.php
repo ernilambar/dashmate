@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Nilambar\Dashmate\Utils;
 
+use Nilambar\Dashmate\Models\Dashboard_Model;
 use WP_Error;
 
 /**
@@ -19,15 +20,6 @@ use WP_Error;
 class Layout_Utils {
 
 	/**
-	 * Option key for dashboard data.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var string
-	 */
-	const OPTION_KEY = 'dashmate_dashboard_data';
-
-	/**
 	 * Save layout to JSON file.
 	 *
 	 * @since 1.0.0
@@ -36,9 +28,9 @@ class Layout_Utils {
 	 * @return bool|WP_Error True on success, WP_Error on failure.
 	 */
 	public static function save_layout_to_file( string $file_path ) {
-		$dashboard_data = get_option( self::OPTION_KEY );
+		$dashboard_data = Dashboard_Model::get_data();
 
-		if ( false === $dashboard_data ) {
+		if ( empty( $dashboard_data ) ) {
 			return new WP_Error( 'no_dashboard_data', 'No dashboard data found' );
 		}
 
@@ -60,13 +52,7 @@ class Layout_Utils {
 			return $dashboard_data;
 		}
 
-		$result = update_option( self::OPTION_KEY, $dashboard_data );
-
-		if ( false === $result ) {
-			return new WP_Error( 'update_option_failed', 'Failed to update dashboard data' );
-		}
-
-		return true;
+		return Dashboard_Model::set_data( $dashboard_data );
 	}
 
 	/**
@@ -74,28 +60,10 @@ class Layout_Utils {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return mixed|WP_Error Layout data or WP_Error if not found.
+	 * @return array Layout data.
 	 */
-	public static function get_layout_data() {
-		$data = get_option( self::OPTION_KEY );
-
-		if ( false === $data ) {
-			// Initialize default data if none exists.
-			$default_data = [
-				'layout'         => [
-					'columns' => [],
-				],
-				'widgets'        => [],
-				'column_widgets' => [],
-			];
-
-			// Save the default data.
-			update_option( self::OPTION_KEY, $default_data );
-
-			return $default_data;
-		}
-
-		return $data;
+	public static function get_layout_data(): array {
+		return Dashboard_Model::get_data();
 	}
 
 	/**
@@ -106,8 +74,7 @@ class Layout_Utils {
 	 * @return bool True if layout data exists, false otherwise.
 	 */
 	public static function layout_exists(): bool {
-		$data = get_option( self::OPTION_KEY );
-		return false !== $data;
+		return Dashboard_Model::data_exists();
 	}
 
 	/**
@@ -118,9 +85,9 @@ class Layout_Utils {
 	 * @return string|WP_Error JSON string or WP_Error on failure.
 	 */
 	public static function get_layout_json() {
-		$dashboard_data = get_option( self::OPTION_KEY );
+		$dashboard_data = Dashboard_Model::get_data();
 
-		if ( false === $dashboard_data ) {
+		if ( empty( $dashboard_data ) ) {
 			return new WP_Error( 'no_dashboard_data', 'No dashboard data found' );
 		}
 
@@ -142,13 +109,7 @@ class Layout_Utils {
 			return $dashboard_data;
 		}
 
-		$result = update_option( self::OPTION_KEY, $dashboard_data );
-
-		if ( false === $result ) {
-			return new WP_Error( 'update_option_failed', 'Failed to update dashboard data' );
-		}
-
-		return true;
+		return Dashboard_Model::set_data( $dashboard_data );
 	}
 
 	/**
@@ -159,13 +120,7 @@ class Layout_Utils {
 	 * @return bool|WP_Error True on success, WP_Error on failure.
 	 */
 	public static function delete_layout_data() {
-		$result = delete_option( self::OPTION_KEY );
-
-		if ( false === $result ) {
-			return new WP_Error( 'delete_option_failed', 'Failed to delete layout data' );
-		}
-
-		return true;
+		return Dashboard_Model::delete_data();
 	}
 
 	/**
@@ -176,12 +131,6 @@ class Layout_Utils {
 	 * @return array Layout data as array.
 	 */
 	public static function get_layout_array(): array {
-		$data = get_option( self::OPTION_KEY );
-
-		if ( false === $data ) {
-			return [];
-		}
-
-		return is_array( $data ) ? $data : [];
+		return Dashboard_Model::get_data();
 	}
 }
