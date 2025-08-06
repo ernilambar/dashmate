@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace Nilambar\Dashmate;
 
-use Nilambar\Dashmate\Core\Option;
 use WP_Error;
 
 /**
@@ -20,15 +19,14 @@ use WP_Error;
 class Widget_Manager {
 
 	/**
-	 * Get inactive widgets with proper array validation.
+	 * Get inactive widgets.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @return array Array of inactive widget IDs.
 	 */
 	public static function get_inactive_widgets(): array {
-		$inactive_widgets = Option::get( 'inactive_widgets' );
-		$inactive_widgets = is_array( $inactive_widgets ) ? $inactive_widgets : [];
+		$inactive_widgets = [];
 
 		/**
 		 * Filter to allow other plugins to disable widgets programmatically.
