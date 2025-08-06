@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace Nilambar\Dashmate;
 
-use Nilambar\Dashmate\Core\Dashboard_Manager;
 use WP_Error;
 
 /**

@@ -9,8 +9,6 @@ declare(strict_types=1);
 
 namespace Nilambar\Dashmate;
 
-use Nilambar\Dashmate\Core\Dashboard_Manager;
-use Nilambar\Dashmate\Models\Dashboard_Model;
 use Nilambar\Dashmate\Utils\JSON_Utils;
 use WP_Error;
 
