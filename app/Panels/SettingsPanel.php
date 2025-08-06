@@ -8,7 +8,6 @@
 namespace Nilambar\Dashmate\Panels;
 
 use Nilambar\Dashmate\Core\Option;
-use Nilambar\Dashmate\Widget_Dispatcher;
 use Nilambar\Optify\Abstract_Panel;
 
 /**
@@ -39,19 +38,6 @@ class SettingsPanel extends Abstract_Panel {
 	 * @return array Field configuration.
 	 */
 	public function get_field_configuration() {
-		$all_widgets = Widget_Dispatcher::get_widgets();
-
-		$widget_choices = [];
-
-		if ( ! empty( $all_widgets ) ) {
-			foreach ( $all_widgets as $key => $widget ) {
-				$widget_choices[] = [
-					'label' => esc_html( $widget->get_name() . ' (' . $key . ')' ),
-					'value' => $key,
-				];
-			}
-		}
-
 		return [
 			[
 				'name'    => 'max_columns',
@@ -77,13 +63,6 @@ class SettingsPanel extends Abstract_Panel {
 					],
 
 				],
-			],
-			[
-				'name'    => 'inactive_widgets',
-				'label'   => esc_html__( 'Inactive Widgets', 'dashmate' ),
-				'type'    => 'multi-check',
-				'default' => Option::defaults( 'inactive_widgets' ),
-				'choices' => $widget_choices,
 			],
 		];
 	}

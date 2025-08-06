@@ -9,8 +9,8 @@ declare(strict_types=1);
 
 namespace Nilambar\Dashmate\API;
 
-use Nilambar\Dashmate\Core\Option;
 use Nilambar\Dashmate\Widget_Initializer;
+use Nilambar\Dashmate\Widget_Manager;
 use WP_Error;
 use WP_REST_Response;
 
@@ -221,9 +221,8 @@ abstract class Base_Controller {
 	 * @return array Filtered dashboard data.
 	 */
 	protected function filter_inactive_widgets_from_dashboard( $data ) {
-		// Get inactive widgets from plugin options.
-		$inactive_widgets = Option::get( 'inactive_widgets' );
-		$inactive_widgets = is_array( $inactive_widgets ) ? $inactive_widgets : [];
+		// Get inactive widgets from centralized method.
+		$inactive_widgets = Widget_Manager::get_inactive_widgets();
 
 		if ( empty( $inactive_widgets ) ) {
 			// Convert widgets object to array for frontend consistency.

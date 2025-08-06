@@ -9,8 +9,6 @@ declare(strict_types=1);
 
 namespace Nilambar\Dashmate;
 
-use Nilambar\Dashmate\Core\Option;
-
 /**
  * Widget_Dispatcher class.
  *
@@ -123,9 +121,8 @@ class Widget_Dispatcher {
 	public static function get_active_widgets() {
 		$all_widgets = self::get_widgets();
 
-		// Get inactive widgets from plugin options.
-		$inactive_widgets = Option::get( 'inactive_widgets' );
-		$inactive_widgets = is_array( $inactive_widgets ) ? $inactive_widgets : [];
+		// Get inactive widgets from centralized method.
+		$inactive_widgets = Widget_Manager::get_inactive_widgets();
 
 		// Filter out inactive widgets.
 		$active_widgets = [];
