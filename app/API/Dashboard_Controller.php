@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Nilambar\Dashmate\API;
 
+use Nilambar\Dashmate\Core\Dashboard_Manager;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -131,9 +132,9 @@ class Dashboard_Controller extends Base_Controller {
 			'widgets' => [],
 		];
 
-		$result = update_option( 'dashmate_dashboard_data', $dashboard_data, false );
-		if ( false === $result ) {
-			return $this->error_response( 'Unable to save dashboard data', 500, 'save_error' );
+		$result = Dashboard_Manager::save_dashboard_data( $dashboard_data );
+		if ( is_wp_error( $result ) ) {
+			return $this->error_response( 'Unable to save dashboard data: ' . $result->get_error_message(), 500, 'save_error' );
 		}
 
 		return $this->success_response( $dashboard_data, 201 );
@@ -191,15 +192,15 @@ class Dashboard_Controller extends Base_Controller {
 			$dashboard_data['widgets']        = $updated_widgets;
 			$dashboard_data['column_widgets'] = $updated_column_widgets;
 
-			$current_option = get_option( 'dashmate_dashboard_data' );
+			$current_data = Dashboard_Manager::get_dashboard_data();
 
-			if ( $current_option === $dashboard_data ) {
+			if ( $current_data === $dashboard_data ) {
 				return $this->success_response( [ 'message' => 'Widgets reordered successfully' ] );
 			}
 
-			$result = update_option( 'dashmate_dashboard_data', $dashboard_data, true );
-			if ( false === $result ) {
-				return $this->error_response( 'Unable to save widget order', 500, 'save_error' );
+			$result = Dashboard_Manager::save_dashboard_data( $dashboard_data );
+			if ( is_wp_error( $result ) ) {
+				return $this->error_response( 'Unable to save widget order: ' . $result->get_error_message(), 500, 'save_error' );
 			}
 
 			return $this->success_response( [ 'message' => 'Widgets reordered successfully' ] );

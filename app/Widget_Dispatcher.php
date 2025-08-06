@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Nilambar\Dashmate;
 
+use Nilambar\Dashmate\Core\Dashboard_Manager;
+
 /**
  * Widget_Dispatcher class.
  *
@@ -302,19 +304,7 @@ class Widget_Dispatcher {
 	 * @return array|WP_Error
 	 */
 	private static function get_dashboard_data() {
-		$data = get_option( 'dashmate_dashboard_data', null );
-
-		if ( null === $data ) {
-			// Return empty dashboard structure if no data exists.
-			return [
-				'layout'  => [
-					'columns' => [],
-				],
-				'widgets' => [],
-			];
-		}
-
-		return $data;
+		return Dashboard_Manager::get_dashboard_data();
 	}
 
 	/**
@@ -327,13 +317,7 @@ class Widget_Dispatcher {
 	 * @return bool|WP_Error
 	 */
 	private static function save_dashboard_data( $data ) {
-		$result = update_option( 'dashmate_dashboard_data', $data, false );
-
-		if ( false === $result ) {
-			return new \WP_Error( 'option_update_error', 'Unable to save dashboard data to WordPress options' );
-		}
-
-		return true;
+		return Dashboard_Manager::save_dashboard_data( $data );
 	}
 
 	/**
