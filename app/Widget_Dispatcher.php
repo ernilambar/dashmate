@@ -121,13 +121,13 @@ class Widget_Dispatcher {
 	public static function get_active_widgets() {
 		$all_widgets = self::get_widgets();
 
-		// Get inactive widgets from centralized method.
-		$inactive_widgets = Widget_Manager::get_inactive_widgets();
+		// Get disabled widgets from centralized method.
+		$disabled_widgets = Widget_Manager::get_disabled_widgets();
 
-		// Filter out inactive widgets.
+		// Filter out disabled widgets.
 		$active_widgets = [];
 		foreach ( $all_widgets as $id => $widget ) {
-			if ( ! in_array( $id, $inactive_widgets, true ) ) {
+			if ( ! in_array( $id, $disabled_widgets, true ) ) {
 				$active_widgets[ $id ] = $widget;
 			}
 		}

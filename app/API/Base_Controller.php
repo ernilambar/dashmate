@@ -188,8 +188,8 @@ abstract class Base_Controller {
 			}
 		}
 
-		// Filter out inactive widgets from the dashboard data.
-		$data = $this->filter_inactive_widgets_from_dashboard( $data );
+		// Filter out disabled widgets from the dashboard data.
+		$data = $this->filter_disabled_widgets_from_dashboard( $data );
 
 		return $data;
 	}
@@ -212,7 +212,7 @@ abstract class Base_Controller {
 	}
 
 	/**
-	 * Filter out inactive widgets from dashboard data.
+	 * Filter out disabled widgets from dashboard data.
 	 *
 	 * @since 1.0.0
 	 *
@@ -220,11 +220,11 @@ abstract class Base_Controller {
 	 *
 	 * @return array Filtered dashboard data.
 	 */
-	protected function filter_inactive_widgets_from_dashboard( $data ) {
-		// Get inactive widgets from centralized method.
-		$inactive_widgets = Widget_Manager::get_inactive_widgets();
+	protected function filter_disabled_widgets_from_dashboard( $data ) {
+		// Get disabled widgets from centralized method.
+		$disabled_widgets = Widget_Manager::get_disabled_widgets();
 
-		if ( empty( $inactive_widgets ) ) {
+		if ( empty( $disabled_widgets ) ) {
 			// Convert widgets object to array for frontend consistency.
 			if ( isset( $data['widgets'] ) && is_array( $data['widgets'] ) ) {
 				$data['widgets'] = array_values( $data['widgets'] );
@@ -237,11 +237,11 @@ abstract class Base_Controller {
 			// Convert object to array if needed.
 			$widgets_array = array_values( $data['widgets'] );
 
-			// Filter out inactive widgets.
+			// Filter out disabled widgets.
 			$filtered_widgets = array_filter(
 				$widgets_array,
-				function ( $widget ) use ( $inactive_widgets ) {
-					return ! isset( $widget['id'] ) || ! in_array( $widget['id'], $inactive_widgets, true );
+				function ( $widget ) use ( $disabled_widgets ) {
+					return ! isset( $widget['id'] ) || ! in_array( $widget['id'], $disabled_widgets, true );
 				}
 			);
 
@@ -259,17 +259,17 @@ abstract class Base_Controller {
 			}
 		}
 
-		// Filter out inactive widgets from column_widgets and ensure consistency.
+		// Filter out disabled widgets from column_widgets and ensure consistency.
 		if ( isset( $data['column_widgets'] ) && is_array( $data['column_widgets'] ) ) {
 			foreach ( $data['column_widgets'] as $column_id => &$widget_ids ) {
 				if ( is_array( $widget_ids ) ) {
-					// Filter out inactive widgets and ensure they exist in the widgets array.
+					// Filter out disabled widgets and ensure they exist in the widgets array.
 					$widget_ids = array_values(
 						array_filter(
 							$widget_ids,
-							function ( $widget_id ) use ( $inactive_widgets, $active_widget_ids ) {
-								// Remove if widget is inactive or doesn't exist in widgets array.
-								return ! in_array( $widget_id, $inactive_widgets, true ) &&
+							function ( $widget_id ) use ( $disabled_widgets, $active_widget_ids ) {
+								// Remove if widget is disabled or doesn't exist in widgets array.
+								return ! in_array( $widget_id, $disabled_widgets, true ) &&
 										in_array( $widget_id, $active_widget_ids, true );
 							}
 						)
