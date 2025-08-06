@@ -10,8 +10,7 @@ declare(strict_types=1);
 namespace Nilambar\Dashmate\API;
 
 use Nilambar\Dashmate\Layout_Manager;
-use Nilambar\Dashmate\Utils\JSON_Utils;
-use Nilambar\Dashmate\Utils\Layout_Utils;
+use Nilambar\Dashmate\Models\Dashboard_Model;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -207,19 +206,8 @@ class Layouts_Controller extends Base_Controller {
 			);
 		}
 
-		// Convert layout data to JSON and apply it.
-		$json_data = JSON_Utils::encode_to_json( $layout_data );
-
-		if ( is_wp_error( $json_data ) ) {
-			return $this->error_response(
-				$json_data->get_error_message(),
-				500,
-				'layout_json_conversion_failed'
-			);
-		}
-
 		// Apply the layout data to the options table.
-		$result = Layout_Utils::set_layout_from_json( $json_data );
+		$result = Dashboard_Model::set_data( $layout_data );
 
 		if ( is_wp_error( $result ) ) {
 			return $this->error_response(
