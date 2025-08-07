@@ -3,36 +3,29 @@
 	"title": "Dashboard Schema",
 	"description": "Schema for a dashboard layout with widgets",
 	"type": "object",
-	"required": [ "layout", "widgets", "column_widgets" ],
+	"required": [ "columns", "widgets", "column_widgets" ],
 	"properties": {
 		"$schema": {
 			"type": "string",
 			"description": "Link to the JSON Schema for VS Code validation"
 		},
-		"layout": {
-			"type": "object",
-			"required": [ "columns" ],
-			"properties": {
-				"columns": {
-					"type": "array",
-					"items": {
-						"type": "object",
-						"required": [ "id", "order" ],
-						"properties": {
-							"id": {
-								"type": "string",
-								"pattern": "^col-\\d+$"
-							},
-							"order": {
-								"type": "integer",
-								"minimum": 1
-							}
-						},
-						"additionalProperties": false
+		"columns": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"required": [ "id", "order" ],
+				"properties": {
+					"id": {
+						"type": "string",
+						"pattern": "^col-\\d+$"
+					},
+					"order": {
+						"type": "integer",
+						"minimum": 1
 					}
-				}
-			},
-			"additionalProperties": false
+				},
+				"additionalProperties": false
+			}
 		},
 		"widgets": {
 			"type": "array",

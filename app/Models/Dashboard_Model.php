@@ -99,13 +99,9 @@ class Dashboard_Model {
 	 * @return array Prepared data with ensured structure.
 	 */
 	private static function prepare_data( array $data ): array {
-		// Ensure layout structure exists.
-		if ( ! isset( $data['layout'] ) || ! is_array( $data['layout'] ) ) {
-			$data['layout'] = [];
-		}
-
-		if ( ! isset( $data['layout']['columns'] ) || ! is_array( $data['layout']['columns'] ) ) {
-			$data['layout']['columns'] = [];
+		// Ensure columns array exists.
+		if ( ! isset( $data['columns'] ) || ! is_array( $data['columns'] ) ) {
+			$data['columns'] = [];
 		}
 
 		// Ensure widgets array exists.

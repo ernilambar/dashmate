@@ -2,7 +2,7 @@ import React from 'react';
 
 const LayoutPreview = ( { layoutData, selectedLayout } ) => {
 	// Handle both direct structure and nested layout structure
-	const columns = layoutData?.layout?.columns || layoutData?.columns;
+	const columns = layoutData?.columns;
 	const widgets = layoutData?.widgets;
 	const column_widgets = layoutData?.column_widgets;
 

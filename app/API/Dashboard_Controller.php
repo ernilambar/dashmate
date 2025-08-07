@@ -126,9 +126,7 @@ class Dashboard_Controller extends Base_Controller {
 		}
 
 		$dashboard_data = [
-			'layout'  => [
-				'columns' => $layout_columns,
-			],
+			'columns' => $layout_columns,
 			'widgets' => [],
 		];
 
