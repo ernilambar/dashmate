@@ -41,27 +41,24 @@ All API responses follow a consistent format:
 ### Dashboard Endpoints
 
 #### GET `/dashboard`
-Retrieves the complete dashboard data including layout, widgets, and column widgets.
+Retrieves the complete dashboard data including columns, widgets, and column widgets.
 
 **Response:**
 ```json
 {
   "success": true,
   "data": {
-    "layout": {
-      "columns": [
-        {
-          "id": "col-1",
-          "order": 1
-        }
-      ]
-    },
+    "columns": [
+      {
+        "id": "col-1",
+        "order": 1
+      }
+    ],
     "widgets": [
       {
         "id": "widget-1",
         "type": "html",
         "column_id": "col-1",
-
         "settings": {}
       }
     ],
@@ -94,18 +91,16 @@ Updates the dashboard layout with new column configuration.
 {
   "success": true,
   "data": {
-    "layout": {
-      "columns": [
-        {
-          "id": "col-1",
-          "order": 1
-        },
-        {
-          "id": "col-2",
-          "order": 2
-        }
-      ]
-    },
+    "columns": [
+      {
+        "id": "col-1",
+        "order": 1
+      },
+      {
+        "id": "col-2",
+        "order": 2
+      }
+    ],
     "widgets": []
   }
 }
@@ -151,9 +146,7 @@ Returns a list of all available layouts including the current layout from option
       "title": "Current Layout",
       "type": "options",
       "layoutData": {
-        "layout": {
-          "columns": [...]
-        },
+        "columns": [...],
         "widgets": [...],
         "column_widgets": {...}
       }
@@ -164,9 +157,7 @@ Returns a list of all available layouts including the current layout from option
       "type": "file",
       "path": "/path/to/layouts/default.json",
       "layoutData": {
-        "layout": {
-          "columns": [...]
-        },
+        "columns": [...],
         "widgets": [...],
         "column_widgets": {...}
       }
@@ -197,9 +188,7 @@ Returns the current layout data stored in WordPress options.
 {
   "success": true,
   "data": {
-    "layout": {
-      "columns": [...]
-    },
+    "columns": [...],
     "widgets": [...],
     "column_widgets": {...}
   }
@@ -216,9 +205,7 @@ Returns the default layout data from the JSON file.
 {
   "success": true,
   "data": {
-    "layout": {
-      "columns": [...]
-    },
+    "columns": [...],
     "widgets": [...],
     "column_widgets": {...}
   }
@@ -622,9 +609,7 @@ All dashboard data is stored in WordPress options:
 - **Structure**:
   ```json
   {
-    "layout": {
-      "columns": []
-    },
+    "columns": [],
     "widgets": [],
     "column_widgets": {}
   }

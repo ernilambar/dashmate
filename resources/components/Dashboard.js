@@ -179,7 +179,7 @@ class Dashboard extends Component {
 		}
 
 		// Get columns from the new structure with proper type checking
-		const columns = Array.isArray( dashboard?.layout?.columns ) ? dashboard.layout.columns : [];
+		const columns = Array.isArray( dashboard?.columns ) ? dashboard.columns : [];
 		const allWidgets = Array.isArray( dashboard?.widgets ) ? dashboard.widgets : [];
 		const columnWidgets =
 			dashboard?.column_widgets && typeof dashboard.column_widgets === 'object'
