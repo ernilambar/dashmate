@@ -18,7 +18,6 @@ const LayoutsApp = () => {
 	const [ layoutDataMap, setLayoutDataMap ] = useState( {} );
 	const [ loading, setLoading ] = useState( true );
 	const [ applying, setApplying ] = useState( false );
-	const [ message, setMessage ] = useState( { type: '', text: '' } );
 
 	// Get settings from WordPress.
 	const settings = window.dashmateLayouts || {};
@@ -28,12 +27,15 @@ const LayoutsApp = () => {
 		fetchLayouts();
 	}, [] );
 
-	// Fetch layout data when selected layout changes.
+	// Update layout data when selected layout changes.
 	useEffect( () => {
-		if ( selectedLayout ) {
+		if ( selectedLayout && layoutDataMap[ selectedLayout ] ) {
+			setLayoutData( layoutDataMap[ selectedLayout ] );
+		} else if ( selectedLayout === 'current' ) {
+			// For current layout, we need to fetch it separately
 			fetchLayoutData( selectedLayout );
 		}
-	}, [ selectedLayout ] );
+	}, [ selectedLayout, layoutDataMap ] );
 
 	const fetchLayouts = async () => {
 		try {
@@ -56,13 +58,21 @@ const LayoutsApp = () => {
 					}
 				} );
 				setLayoutDataMap( layoutDataMap );
+
+				// Set initial layout data for current layout
+				if ( layoutDataMap[ 'current' ] ) {
+					setLayoutData( layoutDataMap[ 'current' ] );
+				}
 			} else {
 				throw new Error(
 					data.message || settings.strings?.failedToFetch || 'Failed to fetch layouts'
 				);
 			}
 		} catch ( error ) {
-			setMessage( { type: 'error', text: error.message } );
+			setApplyButtonMessage( { type: 'error', text: error.message } );
+			setTimeout( () => {
+				setApplyButtonMessage( { type: '', text: '' } );
+			}, 3000 );
 		} finally {
 			setLoading( false );
 		}
@@ -84,6 +94,11 @@ const LayoutsApp = () => {
 			const data = await response.json();
 			if ( data.success ) {
 				setLayoutData( data.data );
+				// Update the layoutDataMap with the fetched data
+				setLayoutDataMap( ( prev ) => ( {
+					...prev,
+					[ layoutKey ]: data.data,
+				} ) );
 			} else {
 				throw new Error(
 					data.message ||
@@ -92,7 +107,11 @@ const LayoutsApp = () => {
 				);
 			}
 		} catch ( error ) {
-			setMessage( { type: 'error', text: error.message } );
+			// Use inline message for errors
+			setApplyButtonMessage( { type: 'error', text: error.message } );
+			setTimeout( () => {
+				setApplyButtonMessage( { type: '', text: '' } );
+			}, 3000 );
 		} finally {
 			setLoading( false );
 		}
@@ -100,18 +119,22 @@ const LayoutsApp = () => {
 
 	const applyLayout = async () => {
 		if ( selectedLayout === 'current' ) {
-			setMessage( {
+			setApplyButtonMessage( {
 				type: 'error',
 				text:
 					settings.strings?.currentReadOnly ||
 					'Cannot apply current layout as it is read-only.',
 			} );
+			// Clear error message after 3 seconds
+			setTimeout( () => {
+				setApplyButtonMessage( { type: '', text: '' } );
+			}, 3000 );
 			return;
 		}
 
 		try {
 			setApplying( true );
-			setMessage( { type: '', text: '' } );
+			setApplyButtonMessage( { type: '', text: '' } );
 
 			// Prepare headers - only include nonce in production.
 			const headers = {
@@ -140,14 +163,22 @@ const LayoutsApp = () => {
 			if ( data.success ) {
 				// Decode HTML entities in the message.
 				const decodedMessage = decodeHTMLEntities( data.data.message );
-				setMessage( { type: 'success', text: decodedMessage } );
+				setApplyButtonMessage( { type: 'success', text: decodedMessage } );
+				// Clear success message after 3 seconds
+				setTimeout( () => {
+					setApplyButtonMessage( { type: '', text: '' } );
+				}, 3000 );
 			} else {
 				throw new Error(
 					data.message || settings.strings?.failedToApply || 'Failed to apply layout'
 				);
 			}
 		} catch ( error ) {
-			setMessage( { type: 'error', text: error.message } );
+			setApplyButtonMessage( { type: 'error', text: error.message } );
+			// Clear error message after 3 seconds
+			setTimeout( () => {
+				setApplyButtonMessage( { type: '', text: '' } );
+			}, 3000 );
 		} finally {
 			setApplying( false );
 		}
@@ -160,21 +191,31 @@ const LayoutsApp = () => {
 		return textarea.value;
 	};
 
+	const [ copyButtonText, setCopyButtonText ] = useState( settings.strings?.copyJson || 'Copy' );
+	const [ applyButtonMessage, setApplyButtonMessage ] = useState( { type: '', text: '' } );
+	const [ copyButtonMessage, setCopyButtonMessage ] = useState( { type: '', text: '' } );
+
 	const copyToClipboard = async () => {
 		if ( ! layoutData ) return;
 
 		try {
 			const jsonString = JSON.stringify( layoutData, null, 2 );
 			await navigator.clipboard.writeText( jsonString );
-			setMessage( {
-				type: 'success',
-				text: settings.strings?.copiedToClipboard || 'Layout JSON copied to clipboard!',
-			} );
+
+			// Change button text to "Copied" for 2 seconds
+			setCopyButtonText( 'Copied' );
+			setTimeout( () => {
+				setCopyButtonText( settings.strings?.copyJson || 'Copy' );
+			}, 2000 );
 		} catch ( error ) {
-			setMessage( {
+			setCopyButtonMessage( {
 				type: 'error',
 				text: settings.strings?.failedToCopy || 'Failed to copy to clipboard',
 			} );
+			// Clear error message after 3 seconds
+			setTimeout( () => {
+				setCopyButtonMessage( { type: '', text: '' } );
+			}, 3000 );
 		}
 	};
 
@@ -182,19 +223,7 @@ const LayoutsApp = () => {
 		setSelectedLayout( layoutKey );
 	};
 
-	const clearMessage = () => {
-		setMessage( { type: '', text: '' } );
-	};
-
-	// Auto-clear success messages after 3 seconds.
-	useEffect( () => {
-		if ( message.type === 'success' ) {
-			const timer = setTimeout( clearMessage, 3000 );
-			return () => clearTimeout( timer );
-		}
-	}, [ message ] );
-
-	if ( loading && ! layoutData ) {
+	if ( loading && Object.keys( layouts ).length === 0 ) {
 		return (
 			<div className="dashmate-layouts">
 				<div className="dashmate-layouts-json-loading">
@@ -206,21 +235,6 @@ const LayoutsApp = () => {
 
 	return (
 		<div className="dashmate-layouts">
-			{ message.text && (
-				<div
-					className={ `dashmate-layouts-message dashmate-layouts-message--${ message.type }` }
-				>
-					{ message.text }
-					<button
-						type="button"
-						className="dashmate-layouts-message-close"
-						onClick={ clearMessage }
-					>
-						×
-					</button>
-				</div>
-			) }
-
 			<div className="dashmate-layouts-controls">
 				<div className="dashmate-layouts-selector">
 					<label className="dashmate-layouts-selector-label">
@@ -228,16 +242,30 @@ const LayoutsApp = () => {
 					</label>
 				</div>
 
-				<button
-					type="button"
-					className="button button-primary dashmate-layouts-apply-btn"
-					onClick={ applyLayout }
-					disabled={ selectedLayout === 'current' || applying || loading }
-				>
-					{ applying
-						? settings.strings?.applying || 'Applying...'
-						: settings.strings?.applyLayout || 'Apply Layout' }
-				</button>
+				<div className="dashmate-layouts-apply-container">
+					<button
+						type="button"
+						className="button button-primary dashmate-layouts-apply-btn"
+						onClick={ applyLayout }
+						disabled={ selectedLayout === 'current' || applying || loading }
+					>
+						{ applying
+							? settings.strings?.applying || 'Applying...'
+							: settings.strings?.applyLayout || 'Apply Layout' }
+					</button>
+					{ applyButtonMessage.text && (
+						<div
+							className={ `dashmate-layouts-inline-message dashmate-layouts-inline-message--${ applyButtonMessage.type }` }
+						>
+							<span
+								className={ `dashmate-layouts-inline-message-icon dashmate-layouts-inline-message-icon--${ applyButtonMessage.type }` }
+							>
+								{ applyButtonMessage.type === 'success' ? '✓' : '✗' }
+							</span>
+							{ applyButtonMessage.text }
+						</div>
+					) }
+				</div>
 			</div>
 
 			{ /* Layout Grid */ }
@@ -260,14 +288,28 @@ const LayoutsApp = () => {
 
 			<div className="dashmate-layouts-content">
 				<div className="dashmate-layouts-header">
-					<button
-						type="button"
-						className="button button-secondary dashmate-layouts-header-copy-btn"
-						onClick={ copyToClipboard }
-						disabled={ ! layoutData || loading }
-					>
-						{ settings.strings?.copyJson || 'Copy' }
-					</button>
+					<div className="dashmate-layouts-copy-container">
+						<button
+							type="button"
+							className="button button-secondary dashmate-layouts-header-copy-btn"
+							onClick={ copyToClipboard }
+							disabled={ ! layoutData || loading }
+						>
+							{ copyButtonText }
+						</button>
+						{ copyButtonMessage.text && (
+							<div
+								className={ `dashmate-layouts-inline-message dashmate-layouts-inline-message--${ copyButtonMessage.type }` }
+							>
+								<span
+									className={ `dashmate-layouts-inline-message-icon dashmate-layouts-inline-message-icon--${ copyButtonMessage.type }` }
+								>
+									{ copyButtonMessage.type === 'success' ? '✓' : '✗' }
+								</span>
+								{ copyButtonMessage.text }
+							</div>
+						) }
+					</div>
 				</div>
 
 				<div className="dashmate-layouts-json">

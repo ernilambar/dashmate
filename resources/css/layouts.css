@@ -81,6 +81,61 @@
 	cursor: not-allowed;
 }
 
+/* Inline Message Styles */
+.dashmate-layouts-apply-container,
+.dashmate-layouts-copy-container {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.dashmate-layouts-inline-message {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	padding: 4px 8px;
+	border-radius: 3px;
+	font-size: 12px;
+	font-weight: 500;
+	animation: fadeIn 0.3s ease-in;
+}
+
+.dashmate-layouts-inline-message--success {
+	background-color: #d4edda;
+	color: #155724;
+	border: 1px solid #c3e6cb;
+}
+
+.dashmate-layouts-inline-message--error {
+	background-color: #f8d7da;
+	color: #721c24;
+	border: 1px solid #f5c6cb;
+}
+
+.dashmate-layouts-inline-message-icon {
+	font-size: 10px;
+	font-weight: bold;
+}
+
+.dashmate-layouts-inline-message-icon--success {
+	color: #28a745;
+}
+
+.dashmate-layouts-inline-message-icon--error {
+	color: #dc3545;
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(-5px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
 /* Layout Grid Styles */
 .dashmate-layouts-grid {
 	display: grid;
