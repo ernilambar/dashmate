@@ -2,6 +2,7 @@ import { Component } from 'react';
 import { __ } from '@wordpress/i18n';
 import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 import Column from './Column';
+import WidgetSelector from './WidgetSelector';
 
 class Dashboard extends Component {
 	constructor( props ) {
@@ -144,6 +145,74 @@ class Dashboard extends Component {
 		}
 	};
 
+	handleWidgetSelect = async ( widgetId ) => {
+		const { dashboard } = this.state;
+		if ( ! dashboard || ! dashboard.columns || dashboard.columns.length === 0 ) {
+			return;
+		}
+
+		// Get the first column
+		const firstColumn = dashboard.columns[ 0 ];
+		if ( ! firstColumn ) {
+			return;
+		}
+
+		// Create a copy of the dashboard data
+		const updatedDashboard = { ...dashboard };
+		const updatedColumnWidgets = { ...updatedDashboard.column_widgets };
+
+		// Initialize the first column's widgets array if it doesn't exist
+		if ( ! updatedColumnWidgets[ firstColumn.id ] ) {
+			updatedColumnWidgets[ firstColumn.id ] = [];
+		}
+
+		// Add the widget to the end of the first column
+		updatedColumnWidgets[ firstColumn.id ].push( widgetId );
+
+		// Update the column_widgets in dashboard
+		updatedDashboard.column_widgets = updatedColumnWidgets;
+
+		// Also add the widget to the widgets array if it doesn't exist
+		const existingWidget = updatedDashboard.widgets.find(
+			( widget ) => widget.id === widgetId
+		);
+		if ( ! existingWidget ) {
+			updatedDashboard.widgets.push( {
+				id: widgetId,
+				column_id: firstColumn.id,
+				settings: {},
+			} );
+		}
+
+		// Update state immediately for UI responsiveness
+		this.setState( { dashboard: updatedDashboard } );
+
+		// Save the new layout to the server
+		try {
+			const response = await fetch( `${ dashmateApiSettings.restUrl }dashboard/reorder`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'X-WP-Nonce': dashmateApiSettings?.nonce || '',
+				},
+				body: JSON.stringify( {
+					column_widgets: updatedColumnWidgets,
+				} ),
+			} );
+
+			const data = await response.json();
+
+			if ( ! data.success ) {
+				// Reload dashboard to revert changes
+				this.loadDashboard();
+			}
+		} catch ( error ) {
+			console.error( 'Error adding widget:', error );
+			// Reload dashboard to revert changes
+			this.loadDashboard();
+		}
+	};
+
 	render() {
 		const { dashboard, widgets, loading, error } = this.state;
 
@@ -244,6 +313,11 @@ class Dashboard extends Component {
 						) }
 					</div>
 				</DragDropContext>
+				<WidgetSelector
+					widgets={ widgets }
+					dashboard={ dashboard }
+					onWidgetSelect={ this.handleWidgetSelect }
+				/>
 			</div>
 		);
 	}
