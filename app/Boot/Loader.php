@@ -29,8 +29,7 @@ class Loader {
 		add_filter(
 			'linkit_menu_pages',
 			function ( $pages ) {
-				$pages [] = 'toplevel_page_dashmate';
-				return $pages;
+				return array_merge( $pages, [ 'toplevel_page_dashmate', 'dashmate_page_dashmate-layouts', 'dashmate_page_dashmate-settings' ] );
 			}
 		);
 
