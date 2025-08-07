@@ -27,12 +27,6 @@ export default function SortableField( { label, choices = [], value = [], onChan
 			...remainingChoices.map( ( choice ) => ( { ...choice, enabled: false } ) ),
 		];
 
-		console.log(
-			'SortableField: Initializing with saved order:',
-			savedOrder,
-			'Items:',
-			allItems.map( ( item ) => ( { value: item.value, enabled: item.enabled } ) )
-		);
 		return allItems;
 	} );
 
@@ -87,7 +81,6 @@ export default function SortableField( { label, choices = [], value = [], onChan
 			.filter( ( item ) => item.enabled )
 			.map( ( item ) => item.value );
 
-		console.log( 'SortableField: Saving new order:', enabledValues );
 		onChange( enabledValues );
 	};
 

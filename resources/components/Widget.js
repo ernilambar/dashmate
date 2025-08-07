@@ -35,14 +35,13 @@ class Widget extends Component {
 			// Set to faded state
 			this.setState( { fadeState: 'faded' } );
 
-			const response = await fetch(
-				`${ dashmateApiSettings.restUrl }widgets/${ widget.id }/data`,
-				{
-					headers: {
-						'X-WP-Nonce': dashmateApiSettings?.nonce || '',
-					},
-				}
-			);
+			const url = `${ dashmateApiSettings.restUrl }widgets/${ widget.id }/data`;
+
+			const response = await fetch( url, {
+				headers: {
+					'X-WP-Nonce': dashmateApiSettings?.nonce || '',
+				},
+			} );
 			const data = await response.json();
 
 			if ( data.success ) {
@@ -56,6 +55,7 @@ class Widget extends Component {
 			await new Promise( ( resolve ) => setTimeout( resolve, 150 ) );
 			this.setState( { reloading: false, fadeState: 'normal' } );
 		} catch ( error ) {
+			console.error( 'Error loading widget data:', error );
 			this.setState( { loading: false, reloading: false, fadeState: 'normal' } );
 		}
 	}

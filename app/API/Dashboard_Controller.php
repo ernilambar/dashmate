@@ -183,6 +183,13 @@ class Dashboard_Controller extends Base_Controller {
 						$widget              = $existing_widgets_by_id[ $widget_id ];
 						$widget['column_id'] = $column_id;
 						$updated_widgets[]   = $widget;
+					} else {
+						// Add new widget to the dashboard
+						$updated_widgets[] = [
+							'id'        => $widget_id,
+							'column_id' => $column_id,
+							'settings'  => [],
+						];
 					}
 				}
 			}
