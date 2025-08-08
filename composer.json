@@ -4,7 +4,7 @@
   "license": "GPL-2.0-or-later",
   "require": {
     "php": ">=7.4",
-    "ernilambar/optify": "*"
+    "ernilambar/optify": "^1"
   },
   "require-dev": {
     "dealerdirect/phpcodesniffer-composer-installer": "^1",
@@ -23,8 +23,8 @@
   },
   "repositories": [
 		{
-			"type": "path",
-			"url": "/Users/nilambar/Code/projects/optify"
+			"type": "vcs",
+			"url": "https://github.com/ernilambar/optify"
 		}
 	],
   "config": {
