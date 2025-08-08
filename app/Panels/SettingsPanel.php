@@ -40,11 +40,12 @@ class SettingsPanel extends Abstract_Panel {
 	public function get_field_configuration() {
 		return [
 			[
-				'name'    => 'max_columns',
-				'label'   => esc_html__( 'Columns Number', 'dashmate' ),
-				'type'    => 'buttonset',
-				'default' => Option::defaults( 'max_columns' ),
-				'choices' => [
+				'name'        => 'max_columns',
+				'label'       => esc_html__( 'Columns Number', 'dashmate' ),
+				'description' => esc_html__( 'Maximum number of columns to display in the dashboard.', 'dashmate' ),
+				'type'        => 'buttonset',
+				'default'     => Option::defaults( 'max_columns' ),
+				'choices'     => [
 					[
 						'label' => 'One',
 						'value' => '1',
