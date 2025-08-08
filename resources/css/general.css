@@ -304,17 +304,7 @@
 	box-sizing: border-box;
 }
 
-.widget-header::before {
-	content: "⋮⋮";
-	position: absolute;
-	left: 4px;
-	top: 50%;
-	transform: translateY(-50%);
-	font-size: 12px;
-	color: #666;
-	opacity: 0.6;
-	pointer-events: none;
-}
+/* Removed drag indicator dots from header */
 
 .widget-header:hover {
 	background: #f0f0f0;
@@ -329,7 +319,7 @@
 	display: flex;
 	align-items: center;
 	gap: 8px;
-	margin-left: 20px; /* Make room for the drag handle */
+	margin-left: 0;
 	min-height: 20px; /* Ensure consistent height for text area */
 	line-height: 1.2; /* Consistent line height */
 }
@@ -504,7 +494,7 @@
 	min-height: 20px;
 	display: flex;
 	align-items: center;
-	margin-left: 20px; /* Keep the same margin as normal widgets */
+	margin-left: 0;
 }
 
 /* Spinning loading icon */
