@@ -79,13 +79,49 @@
 	margin-left: 12px;
 }
 
-.sortable-field-container .item-toggle input[type="checkbox"] {
-	margin-right: 8px;
-}
-
-.sortable-field-container .item-toggle span {
+.sortable-field-container .item-toggle .toggle-text {
 	font-size: 12px;
 	color: #666;
+}
+
+/* Toggle switch */
+.sortable-field-container .item-toggle .toggle-input {
+	position: absolute;
+	opacity: 0;
+	width: 0;
+	height: 0;
+}
+
+.sortable-field-container .item-toggle .toggle-track {
+	position: relative;
+	width: 36px;
+	height: 20px;
+	background-color: #cbd5e1; /* slate-300 */
+	border-radius: 9999px;
+	transition: background-color 0.2s ease;
+	margin-right: 8px;
+	flex-shrink: 0;
+}
+
+.sortable-field-container .item-toggle .toggle-track::after {
+	content: "";
+	position: absolute;
+	top: 2px;
+	left: 2px;
+	width: 16px;
+	height: 16px;
+	background-color: #ffffff;
+	border-radius: 50%;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+	transition: transform 0.2s ease;
+}
+
+.sortable-field-container .item-toggle .toggle-input:checked + .toggle-track {
+	background-color: #2271b1;
+}
+
+.sortable-field-container .item-toggle .toggle-input:checked + .toggle-track::after {
+	transform: translateX(16px);
 }
 
 .sortable-field-container .help-text {

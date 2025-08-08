@@ -130,15 +130,20 @@ export default function SortableField( { label, choices = [], value = [], onChan
 														{ item.label }
 													</span>
 												</div>
-												<label className="item-toggle">
+												<label
+													className="item-toggle"
+													aria-label={ `Toggle ${ item.label }` }
+												>
 													<input
+														className="toggle-input"
 														type="checkbox"
 														checked={ item.enabled }
 														onChange={ () => handleToggle( index ) }
 													/>
-													<span>
-														{ item.enabled ? 'Enabled' : 'Disabled' }
-													</span>
+													<span
+														className="toggle-track"
+														aria-hidden="true"
+													></span>
 												</label>
 											</div>
 										) }
