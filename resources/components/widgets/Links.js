@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from '../Icon';
 import WidgetSettingsForm from '../WidgetSettingsForm';
 
 class Links extends React.Component {
@@ -90,9 +91,7 @@ class Links extends React.Component {
 							onClick={ () => this.handleLinkClick( link ) }
 						>
 							{ ! hideIcon && link.icon && (
-								<span
-									className={ `quick-link-icon dashicons ${ link.icon }` }
-								></span>
+								<Icon name={ link.icon } size="small" className="quick-link-icon" />
 							) }
 							<span className="quick-link-title">{ link.title }</span>
 						</div>

@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from '../Icon';
 
 class IconboxWidget extends React.Component {
 	constructor( props ) {
@@ -39,7 +40,7 @@ class IconboxWidget extends React.Component {
 				onMouseLeave={ this.handleMouseLeave }
 			>
 				<div className="iconbox-icon">
-					<span className={ `dashicons ${ icon || 'dashicons-admin-users' }` }></span>
+					<Icon name={ icon || 'person' } size="xlarge" />
 				</div>
 				<div className="iconbox-content">
 					<div className="iconbox-title">{ title || 'Title' }</div>

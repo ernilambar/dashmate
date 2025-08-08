@@ -36,7 +36,7 @@ class Sample_Links extends Abstract_Widget {
 	 */
 	protected function define_widget() {
 		$this->description = esc_html__( 'Display sample links with various styles', 'dashmate' );
-		$this->icon        = 'admin-links';
+		$this->icon        = 'link';
 
 		$this->settings_schema = [
 			'hide_icon'     => [
@@ -106,27 +106,27 @@ class Sample_Links extends Abstract_Widget {
 			[
 				'title' => esc_html__( 'WordPress.org', 'dashmate' ),
 				'url'   => 'https://wordpress.org',
-				'icon'  => 'dashicons-admin-site',
+				'icon'  => 'language',
 			],
 			[
 				'title' => esc_html__( 'WordPress Codex', 'dashmate' ),
 				'url'   => 'https://codex.wordpress.org',
-				'icon'  => 'dashicons-book',
+				'icon'  => 'menu_book',
 			],
 			[
 				'title' => esc_html__( 'WordPress Support', 'dashmate' ),
 				'url'   => 'https://wordpress.org/support',
-				'icon'  => 'dashicons-businessman',
+				'icon'  => 'support_agent',
 			],
 			[
 				'title' => esc_html__( 'WordPress Themes', 'dashmate' ),
 				'url'   => 'https://wordpress.org/themes',
-				'icon'  => 'dashicons-admin-appearance',
+				'icon'  => 'palette',
 			],
 			[
 				'title' => esc_html__( 'WordPress Plugins', 'dashmate' ),
 				'url'   => 'https://wordpress.org/plugins',
-				'icon'  => 'dashicons-admin-plugins',
+				'icon'  => 'extension',
 			],
 		];
 

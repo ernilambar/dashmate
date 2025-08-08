@@ -2,6 +2,7 @@ import { Component } from 'react';
 import { Draggable } from '@hello-pangea/dnd';
 import WidgetContent from './WidgetContent';
 import WidgetSettingsForm from './WidgetSettingsForm';
+import Icon from './Icon';
 
 class Widget extends Component {
 	constructor( props ) {
@@ -80,7 +81,7 @@ class Widget extends Component {
 					>
 						<div className="widget-header" { ...provided.dragHandleProps }>
 							<h3>
-								<span className="dashicons dashicons-warning"></span>
+								<Icon name="warning" size="medium" />
 								Widget Error
 							</h3>
 						</div>
@@ -120,7 +121,7 @@ class Widget extends Component {
 					>
 						<div className="widget-header" { ...provided.dragHandleProps }>
 							<h3>
-								<span className="dashicons dashicons-admin-generic"></span>
+								<Icon name="settings" size="medium" />
 								{ widget.id }
 							</h3>
 							<div className="widget-actions">
@@ -129,11 +130,10 @@ class Widget extends Component {
 									onClick={ this.toggleCollapse }
 									title={ collapsed ? 'Expand' : 'Collapse' }
 								>
-									<span
-										className={ `dashicons dashicons-${
-											collapsed ? 'arrow-down-alt2' : 'arrow-up-alt2'
-										}` }
-									></span>
+									<Icon
+										name={ collapsed ? 'expand_more' : 'expand_less' }
+										size="small"
+									/>
 								</button>
 							</div>
 						</div>
@@ -254,7 +254,11 @@ class Widget extends Component {
 						>
 							<div className="widget-header" { ...provided.dragHandleProps }>
 								<h3>
-									<span className="dashicons dashicons-update-alt widget-loading-icon"></span>
+									<Icon
+										name="refresh"
+										size="medium"
+										className="widget-loading-icon"
+									/>
 								</h3>
 							</div>
 							<div className="widget-content">
@@ -299,11 +303,7 @@ class Widget extends Component {
 					>
 						<div className="widget-header" { ...provided.dragHandleProps }>
 							<h3>
-								{ widgetIcon && (
-									<span
-										className={ `dashicons dashicons-${ widgetIcon }` }
-									></span>
-								) }
+								{ widgetIcon && <Icon name={ widgetIcon } size="medium" /> }
 								{ widgetTitle }
 							</h3>
 							<div className="widget-actions">
@@ -316,11 +316,7 @@ class Widget extends Component {
 										title="Reload Widget"
 										disabled={ reloading }
 									>
-										<span
-											className={ `dashicons dashicons-${
-												reloading ? 'update-alt' : 'update'
-											}` }
-										></span>
+										<Icon name="refresh" size="small" />
 									</button>
 								) }
 								{ ! collapsed &&
@@ -335,7 +331,7 @@ class Widget extends Component {
 											onClick={ this.openWidgetSettings }
 											title="Settings"
 										>
-											<span className="dashicons dashicons-admin-generic"></span>
+											<Icon name="settings" size="small" />
 										</button>
 									) }
 								<button
@@ -343,11 +339,10 @@ class Widget extends Component {
 									onClick={ this.toggleCollapse }
 									title={ collapsed ? 'Expand' : 'Collapse' }
 								>
-									<span
-										className={ `dashicons dashicons-${
-											collapsed ? 'arrow-down-alt2' : 'arrow-up-alt2'
-										}` }
-									></span>
+									<Icon
+										name={ collapsed ? 'expand_more' : 'expand_less' }
+										size="small"
+									/>
 								</button>
 							</div>
 						</div>
