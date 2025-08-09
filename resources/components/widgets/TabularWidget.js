@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from '../Icon';
 
 class TabularWidget extends React.Component {
 	constructor( props ) {
@@ -328,7 +329,7 @@ class TabularWidget extends React.Component {
 					</svg>
 				);
 			default:
-				return <span className="dashicons dashicons-admin-generic"></span>;
+				return <Icon name="settings" size="small" />;
 		}
 	};
 

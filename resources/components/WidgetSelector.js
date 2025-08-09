@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import { __ } from '@wordpress/i18n';
+import Icon from './Icon';
 
 class WidgetSelector extends Component {
 	constructor( props ) {
@@ -77,7 +78,7 @@ class WidgetSelector extends Component {
 					onClick={ this.toggleDropdown }
 					title="Add Widget"
 				>
-					<span className="dashicons dashicons-plus-alt2"></span>
+					<Icon name="add" size="small" />
 				</button>
 				{ isOpen && (
 					<div className="widget-selector-dropdown">
@@ -112,7 +113,7 @@ class WidgetSelector extends Component {
 										</div>
 										{ widget.isPlaced && (
 											<span className="widget-selector-item-status">
-												<span className="dashicons dashicons-yes-alt"></span>
+												<Icon name="check_circle" size="medium" />
 											</span>
 										) }
 									</button>
