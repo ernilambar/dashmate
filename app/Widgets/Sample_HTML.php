@@ -36,7 +36,7 @@ class Sample_HTML extends Abstract_Widget {
 	 */
 	protected function define_widget() {
 		$this->description = esc_html__( 'Display sample HTML content', 'dashmate' );
-		$this->icon        = 'editor-code';
+		$this->icon        = 'code';
 
 		$this->settings_schema = [
 			'allow_scripts' => [

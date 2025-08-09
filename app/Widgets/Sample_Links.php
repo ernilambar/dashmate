@@ -36,7 +36,7 @@ class Sample_Links extends Abstract_Widget {
 	 */
 	protected function define_widget() {
 		$this->description = esc_html__( 'Display sample links with various styles', 'dashmate' );
-		$this->icon        = 'link';
+		$this->icon        = 'dataset_linked';
 
 		$this->settings_schema = [
 			'hide_icon'     => [
