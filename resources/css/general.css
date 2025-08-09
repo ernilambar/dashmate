@@ -837,36 +837,33 @@
 	background: #f8f9fa;
 }
 
-.widget-settings-panel .buttonset-container button {
-	flex: 1;
-	padding: 8px 12px;
-	border: none;
-	background-color: transparent;
-	color: #333;
-	cursor: pointer;
-	font-size: 12px;
-	transition: all 0.2s ease;
-	border-radius: 0;
-	border-right: 1px solid #ddd;
-	position: relative;
-}
+.widget-settings-panel {
+	.buttonset-container {
+		display: inline-flex;
+		border: 1px solid #ccc;
+		border-radius: 3px;
+		overflow: hidden;
+		background: #f5f5f5;
+	}
 
-.widget-settings-panel .buttonset-container button:last-child {
-	border-right: none;
-}
+	.buttonset-container button {
+		padding: 6px 12px;
+		border: none;
+		background: transparent;
+		cursor: pointer;
+		font-size: 14px;
+		color: #333;
+	}
 
-.widget-settings-panel .buttonset-container button.active {
-	background-color: #0073aa;
-	color: white;
-	box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-}
+	.buttonset-container button.active {
+		background: #0073aa;
+		color: white;
+		box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+	}
 
-.widget-settings-panel .buttonset-container button:hover:not(.active) {
-	background-color: #e9ecef;
-}
-
-.widget-settings-panel .buttonset-container button.active:hover {
-	background-color: #005a87;
+	.buttonset-container button:not(:last-child) {
+		border-right: 1px solid #ccc;
+	}
 }
 
 /* Radio field styles for comparison */
