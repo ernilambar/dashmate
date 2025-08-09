@@ -126,12 +126,16 @@ class Widget extends Component {
 							</h3>
 							<div className="widget-actions">
 								<button
-									className="button button-small widget-toggle"
+									className="dm-icon-button dm-icon-button--small widget-toggle"
 									onClick={ this.toggleCollapse }
 									title={ collapsed ? 'Expand' : 'Collapse' }
 								>
 									<Icon
-										name={ collapsed ? 'expand_more' : 'expand_less' }
+										name={
+											collapsed
+												? 'keyboard_double_arrow_down'
+												: 'keyboard_double_arrow_up'
+										}
 										size="small"
 									/>
 								</button>
@@ -309,7 +313,7 @@ class Widget extends Component {
 							<div className="widget-actions">
 								{ ! collapsed && (
 									<button
-										className={ `button button-small widget-reload ${
+										className={ `dm-icon-button dm-icon-button--small widget-reload ${
 											reloading ? 'reloading' : ''
 										}` }
 										onClick={ this.handleReload }
@@ -323,7 +327,7 @@ class Widget extends Component {
 									widgetSchema?.settings_schema &&
 									Object.keys( widgetSchema.settings_schema ).length > 0 && (
 										<button
-											className={ `button button-small widget-settings ${
+											className={ `dm-icon-button dm-icon-button--small widget-settings ${
 												settingsSaveStatus
 													? `settings-${ settingsSaveStatus }`
 													: ''
@@ -331,16 +335,20 @@ class Widget extends Component {
 											onClick={ this.openWidgetSettings }
 											title="Settings"
 										>
-											<Icon name="settings" size="small" />
+											<Icon name="tune" size="small" />
 										</button>
 									) }
 								<button
-									className="button button-small widget-toggle"
+									className="dm-icon-button dm-icon-button--small widget-toggle"
 									onClick={ this.toggleCollapse }
 									title={ collapsed ? 'Expand' : 'Collapse' }
 								>
 									<Icon
-										name={ collapsed ? 'expand_more' : 'expand_less' }
+										name={
+											collapsed
+												? 'keyboard_double_arrow_down'
+												: 'keyboard_double_arrow_up'
+										}
 										size="small"
 									/>
 								</button>
