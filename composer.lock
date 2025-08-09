@@ -4,21 +4,15 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4cbf3267a6326ebd96e9c48b4f722d7e",
+    "content-hash": "f6a36975632c82c4cf3820f1fcc5a9bb",
     "packages": [
         {
             "name": "ernilambar/optify",
-            "version": "1.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ernilambar/optify.git",
-                "reference": "6dcb8e41603a903986e3afb6625924be82d0a606"
-            },
+            "version": "dev-main",
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ernilambar/optify/zipball/6dcb8e41603a903986e3afb6625924be82d0a606",
-                "reference": "6dcb8e41603a903986e3afb6625924be82d0a606",
-                "shasum": ""
+                "type": "path",
+                "url": "/Users/nilambar/Code/projects/optify",
+                "reference": "d58435185c093196445a370db403e32a58423a3c"
             },
             "require": {
                 "php": ">=7.4"
@@ -64,11 +58,9 @@
                 }
             ],
             "description": "A flexible WordPress panel system for React-based options",
-            "support": {
-                "source": "https://github.com/ernilambar/optify/tree/1.0.0",
-                "issues": "https://github.com/ernilambar/optify/issues"
-            },
-            "time": "2025-08-08T17:24:09+00:00"
+            "transport-options": {
+                "relative": false
+            }
         }
     ],
     "packages-dev": [
