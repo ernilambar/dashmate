@@ -16,6 +16,7 @@ class Widget extends Component {
 			fadeState: 'normal', // 'normal', 'fading', 'faded'
 			settingsVersion: 0, // Force re-render when settings change
 			settingsSaveStatus: null, // 'success', 'error', null
+			showInfoTooltip: false, // Show/hide info tooltip
 		};
 	}
 
@@ -232,6 +233,20 @@ class Widget extends Component {
 		}, 2000 );
 	};
 
+	toggleInfoTooltip = () => {
+		this.setState( ( prevState ) => ( {
+			showInfoTooltip: ! prevState.showInfoTooltip,
+		} ) );
+	};
+
+	handleInfoMouseEnter = () => {
+		this.setState( { showInfoTooltip: true } );
+	};
+
+	handleInfoMouseLeave = () => {
+		this.setState( { showInfoTooltip: false } );
+	};
+
 	render() {
 		const { widget, widgets, index } = this.props;
 		const {
@@ -242,6 +257,7 @@ class Widget extends Component {
 			reloading,
 			fadeState,
 			settingsSaveStatus,
+			showInfoTooltip,
 		} = this.state;
 
 		// Show loading state while data is being fetched
@@ -280,6 +296,7 @@ class Widget extends Component {
 		const widgetType = widgetData?.type;
 		const widgetTitle = widgetData?.title || widget.id;
 		const widgetIcon = widgetData?.icon || '';
+		const widgetDescription = widgetData?.description || '';
 
 		// Validate that we have a widget type and it's supported
 		if ( ! widgetType ) {
@@ -311,6 +328,35 @@ class Widget extends Component {
 								{ widgetTitle }
 							</h3>
 							<div className="widget-actions">
+								{ ! collapsed && (
+									<div className="widget-info-container">
+										<button
+											className="dm-icon-button dm-icon-button--small widget-info"
+											onMouseEnter={ this.handleInfoMouseEnter }
+											onMouseLeave={ this.handleInfoMouseLeave }
+											onClick={ this.toggleInfoTooltip }
+											title="Widget Information"
+										>
+											<Icon name="info" size="small" />
+										</button>
+										{ showInfoTooltip && (
+											<div className="widget-info-tooltip">
+												<div className="widget-info-content">
+													<h4>Widget Information</h4>
+													{ widgetDescription ? (
+														<p>{ widgetDescription }</p>
+													) : (
+														<p>
+															No description available for this
+															widget.
+														</p>
+													) }
+													{ /* Future content can be added here */ }
+												</div>
+											</div>
+										) }
+									</div>
+								) }
 								{ ! collapsed && (
 									<button
 										className={ `dm-icon-button dm-icon-button--small widget-reload ${

@@ -181,9 +181,12 @@ class Widgets_Controller extends Base_Controller {
 			return $content;
 		}
 
-		// Add widget type and merged settings to the response
-		$content['type']     = $widget->get_template_type();
-		$content['settings'] = $merged_settings;
+		// Add widget type, description, title, icon and merged settings to the response
+		$content['type']        = $widget->get_template_type();
+		$content['description'] = $widget->get_description();
+		$content['title']       = $widget->get_name();
+		$content['icon']        = $widget->get_icon();
+		$content['settings']    = $merged_settings;
 
 		return $this->success_response( $content );
 	}
@@ -213,8 +216,11 @@ class Widgets_Controller extends Base_Controller {
 			return $content;
 		}
 
-		// Add widget type to the response
-		$content['type'] = $widget->get_template_type();
+		// Add widget type, description, title, and icon to the response
+		$content['type']        = $widget->get_template_type();
+		$content['description'] = $widget->get_description();
+		$content['title']       = $widget->get_name();
+		$content['icon']        = $widget->get_icon();
 
 		return $this->success_response( $content );
 	}
@@ -245,8 +251,11 @@ class Widgets_Controller extends Base_Controller {
 			return $content;
 		}
 
-		// Add widget type to the response
-		$content['type'] = $widget->get_template_type();
+		// Add widget type, description, title, and icon to the response
+		$content['type']        = $widget->get_template_type();
+		$content['description'] = $widget->get_description();
+		$content['title']       = $widget->get_name();
+		$content['icon']        = $widget->get_icon();
 
 		return $this->success_response( $content );
 	}
