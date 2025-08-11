@@ -43,10 +43,14 @@ class WidgetSelector extends Component {
 
 		// Get all widget IDs currently in the dashboard
 		const placedWidgetIds = new Set();
-		if ( dashboard && dashboard.column_widgets ) {
-			Object.values( dashboard.column_widgets ).forEach( ( widgetIds ) => {
-				if ( Array.isArray( widgetIds ) ) {
-					widgetIds.forEach( ( widgetId ) => placedWidgetIds.add( widgetId ) );
+		if ( dashboard && dashboard.columns ) {
+			dashboard.columns.forEach( ( column ) => {
+				if ( column.widgets && Array.isArray( column.widgets ) ) {
+					column.widgets.forEach( ( widget ) => {
+						if ( widget.id ) {
+							placedWidgetIds.add( widget.id );
+						}
+					} );
 				}
 			} );
 		}

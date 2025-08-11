@@ -112,25 +112,6 @@ class Layout_Manager {
 	}
 
 	/**
-	 * Get default layout file path.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return string
-	 */
-	public static function get_default_layout_file_path() {
-		// Get default layout from Layout_Manager.
-		$default_layout = self::get_layout( 'default' );
-
-		if ( is_wp_error( $default_layout ) ) {
-			// Fallback to hardcoded path if default layout not found.
-			return DASHMATE_DIR . '/layouts/default.json';
-		}
-
-		return $default_layout['path'];
-	}
-
-	/**
 	 * Get layout data by slug.
 	 *
 	 * @since 1.0.0
@@ -203,17 +184,6 @@ class Layout_Manager {
 	}
 
 	/**
-	 * Get default layout structure.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return array|WP_Error
-	 */
-	public static function get_default_layout() {
-		return self::get_layout_data( 'default' );
-	}
-
-	/**
 	 * Get widgets from layout.
 	 *
 	 * @since 1.0.0
@@ -229,7 +199,19 @@ class Layout_Manager {
 			return $layout_data;
 		}
 
-		return $layout_data['widgets'] ?? [];
+		$widgets = [];
+		foreach ( $layout_data['columns'] as $column ) {
+			if ( isset( $column['widgets'] ) && is_array( $column['widgets'] ) ) {
+				foreach ( $column['widgets'] as $widget ) {
+					$widgets[] = [
+						'id'        => $widget['id'],
+						'column_id' => $column['id'],
+						'settings'  => $widget['settings'] ?? [],
+					];
+				}
+			}
+		}
+		return $widgets;
 	}
 
 	/**
@@ -248,28 +230,15 @@ class Layout_Manager {
 			return $layout_data;
 		}
 
-		return $layout_data['column_widgets'] ?? [];
-	}
-
-	/**
-	 * Get default widgets.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return array|WP_Error
-	 */
-	public static function get_default_widgets() {
-		return self::get_layout_widgets( 'default' );
-	}
-
-	/**
-	 * Get default column widgets mapping.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return array|WP_Error
-	 */
-	public static function get_default_column_widgets() {
-		return self::get_layout_column_widgets( 'default' );
+		$column_widgets = [];
+		foreach ( $layout_data['columns'] as $column ) {
+			$column_widgets[ $column['id'] ] = [];
+			if ( isset( $column['widgets'] ) && is_array( $column['widgets'] ) ) {
+				foreach ( $column['widgets'] as $widget ) {
+					$column_widgets[ $column['id'] ][] = $widget['id'];
+				}
+			}
+		}
+		return $column_widgets;
 	}
 }

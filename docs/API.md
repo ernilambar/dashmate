@@ -36,12 +36,36 @@ All API responses follow a consistent format:
 }
 ```
 
+## Layout Structure
+
+Dashmate uses a column-based layout system where widgets are directly nested within columns:
+
+```json
+{
+  "columns": [
+    {
+      "id": "col-1",
+      "widgets": [
+        {
+          "id": "widget-1",
+          "settings": {
+            "title": "Widget Title",
+            "content": "Widget content"
+          },
+          "collapsed": false
+        }
+      ]
+    }
+  ]
+}
+```
+
 ## Endpoints
 
 ### Dashboard Endpoints
 
 #### GET `/dashboard`
-Retrieves the complete dashboard data including columns, widgets, and column widgets.
+Retrieves the complete dashboard data including columns and their widgets.
 
 **Response:**
 ```json
@@ -51,20 +75,18 @@ Retrieves the complete dashboard data including columns, widgets, and column wid
     "columns": [
       {
         "id": "col-1",
-        "order": 1
+        "widgets": [
+          {
+            "id": "widget-1",
+            "settings": {
+              "title": "Widget Title",
+              "content": "Widget content"
+            },
+            "collapsed": false
+          }
+        ]
       }
-    ],
-    "widgets": [
-      {
-        "id": "widget-1",
-        "type": "html",
-        "column_id": "col-1",
-        "settings": {}
-      }
-    ],
-    "column_widgets": {
-      "col-1": ["widget-1", "widget-2"]
-    }
+    ]
   }
 }
 ```
@@ -77,10 +99,18 @@ Updates the dashboard layout with new column configuration.
 {
   "columns": [
     {
-      "id": "col-1"
+      "id": "col-1",
+      "widgets": [
+        {
+          "id": "widget-1",
+          "settings": {},
+          "collapsed": false
+        }
+      ]
     },
     {
-      "id": "col-2"
+      "id": "col-2",
+      "widgets": []
     }
   ]
 }
@@ -94,14 +124,19 @@ Updates the dashboard layout with new column configuration.
     "columns": [
       {
         "id": "col-1",
-        "order": 1
+        "widgets": [
+          {
+            "id": "widget-1",
+            "settings": {},
+            "collapsed": false
+          }
+        ]
       },
       {
         "id": "col-2",
-        "order": 2
+        "widgets": []
       }
-    ],
-    "widgets": []
+    ]
   }
 }
 ```
@@ -146,9 +181,18 @@ Returns a list of all available layouts including the current layout from option
       "title": "Current Layout",
       "type": "options",
       "layoutData": {
-        "columns": [...],
-        "widgets": [...],
-        "column_widgets": {...}
+        "columns": [
+          {
+            "id": "col-1",
+            "widgets": [
+              {
+                "id": "widget-1",
+                "settings": {},
+                "collapsed": false
+              }
+            ]
+          }
+        ]
       }
     },
     "default": {
@@ -157,16 +201,25 @@ Returns a list of all available layouts including the current layout from option
       "type": "file",
       "path": "/path/to/layouts/default.json",
       "layoutData": {
-        "columns": [...],
-        "widgets": [...],
-        "column_widgets": {...}
+        "columns": [
+          {
+            "id": "col-1",
+            "widgets": [
+              {
+                "id": "widget-1",
+                "settings": {},
+                "collapsed": false
+              }
+            ]
+          }
+        ]
       }
     }
   }
 }
 ```
 
-**Note:** The `layoutData` field contains the complete layout structure including columns, widgets, and column_widgets mappings. This eliminates the need for separate API calls to fetch individual layout data.
+**Note:** The `layoutData` field contains the complete layout structure with columns and their nested widgets. This eliminates the need for separate API calls to fetch individual layout data.
 
 ### Get Specific Layout
 **GET** `/wp-json/dashmate/v1/layouts/{layout_key}`
@@ -188,9 +241,18 @@ Returns the current layout data stored in WordPress options.
 {
   "success": true,
   "data": {
-    "columns": [...],
-    "widgets": [...],
-    "column_widgets": {...}
+    "columns": [
+      {
+        "id": "col-1",
+        "widgets": [
+          {
+            "id": "widget-1",
+            "settings": {},
+            "collapsed": false
+          }
+        ]
+      }
+    ]
   }
 }
 ```
@@ -205,9 +267,18 @@ Returns the default layout data from the JSON file.
 {
   "success": true,
   "data": {
-    "columns": [...],
-    "widgets": [...],
-    "column_widgets": {...}
+    "columns": [
+      {
+        "id": "col-1",
+        "widgets": [
+          {
+            "id": "widget-1",
+            "settings": {},
+            "collapsed": false
+          }
+        ]
+      }
+    ]
   }
 }
 ```
@@ -609,9 +680,18 @@ All dashboard data is stored in WordPress options:
 - **Structure**:
   ```json
   {
-    "columns": [],
-    "widgets": [],
-    "column_widgets": {}
+    "columns": [
+      {
+        "id": "col-1",
+        "widgets": [
+          {
+            "id": "widget-1",
+            "settings": {},
+            "collapsed": false
+          }
+        ]
+      }
+    ]
   }
   ```
 
@@ -787,5 +867,6 @@ The sortable field provides:
 - All endpoints currently allow all requests for development purposes
 - Widget content is generated dynamically based on widget type and settings
 - Column and widget IDs must be alphanumeric with hyphens and underscores allowed
-- Widget order is determined by array position in column_widgets structure
+- Widget order is determined by array position within each column's widgets array
 - Widget settings are validated against widget-specific schemas
+- Layout files use JSON format with widgets directly nested within columns

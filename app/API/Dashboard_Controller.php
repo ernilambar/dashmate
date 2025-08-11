@@ -116,18 +116,17 @@ class Dashboard_Controller extends Base_Controller {
 			return $this->error_response( 'Columns must be an array', 400, 'invalid_columns' );
 		}
 
-		// Build new layout structure.
+		// Build new layout structure with widgets nested in columns.
 		$layout_columns = [];
 		foreach ( $columns as $index => $column ) {
 			$layout_columns[] = [
-				'id'    => $column['id'] ?? 'col-' . ( $index + 1 ),
-				'order' => $index + 1,
+				'id'      => $column['id'] ?? 'col-' . ( $index + 1 ),
+				'widgets' => $column['widgets'] ?? [],
 			];
 		}
 
 		$dashboard_data = [
 			'columns' => $layout_columns,
-			'widgets' => [],
 		];
 
 		$result = Dashboard_Manager::save_dashboard_data( $dashboard_data );
@@ -139,7 +138,7 @@ class Dashboard_Controller extends Base_Controller {
 	}
 
 	/**
-	 * Reorder widgets using column_widgets structure.
+	 * Reorder widgets.
 	 *
 	 * @since 1.0.0
 	 *
@@ -162,40 +161,45 @@ class Dashboard_Controller extends Base_Controller {
 			}
 
 			// Get existing widgets for reference.
-			$existing_widgets       = $dashboard_data['widgets'] ?? [];
 			$existing_widgets_by_id = [];
-
-			foreach ( $existing_widgets as $existing_widget ) {
-				if ( isset( $existing_widget['id'] ) ) {
-					$existing_widgets_by_id[ $existing_widget['id'] ] = $existing_widget;
-				}
-			}
-
-			// Update widgets with new column_id based on column_widgets.
-			$updated_widgets        = [];
-			$updated_column_widgets = [];
-
-			foreach ( $column_widgets as $column_id => $widget_ids ) {
-				$updated_column_widgets[ $column_id ] = $widget_ids;
-
-				foreach ( $widget_ids as $widget_id ) {
-					if ( isset( $existing_widgets_by_id[ $widget_id ] ) ) {
-						$widget              = $existing_widgets_by_id[ $widget_id ];
-						$widget['column_id'] = $column_id;
-						$updated_widgets[]   = $widget;
-					} else {
-						// Add new widget to the dashboard
-						$updated_widgets[] = [
-							'id'        => $widget_id,
-							'column_id' => $column_id,
-							'settings'  => [],
-						];
+			if ( isset( $dashboard_data['columns'] ) && is_array( $dashboard_data['columns'] ) ) {
+				foreach ( $dashboard_data['columns'] as $column ) {
+					if ( isset( $column['widgets'] ) && is_array( $column['widgets'] ) ) {
+						foreach ( $column['widgets'] as $widget ) {
+							if ( isset( $widget['id'] ) ) {
+								$existing_widgets_by_id[ $widget['id'] ] = $widget;
+							}
+						}
 					}
 				}
 			}
 
-			$dashboard_data['widgets']        = $updated_widgets;
-			$dashboard_data['column_widgets'] = $updated_column_widgets;
+			// Update columns with new widget order.
+			$updated_columns = [];
+
+			foreach ( $column_widgets as $column_id => $widget_ids ) {
+				$column = [
+					'id'      => $column_id,
+					'widgets' => [],
+				];
+
+				foreach ( $widget_ids as $widget_id ) {
+					if ( isset( $existing_widgets_by_id[ $widget_id ] ) ) {
+						$column['widgets'][] = $existing_widgets_by_id[ $widget_id ];
+					} else {
+						// Add new widget to the dashboard
+						$column['widgets'][] = [
+							'id'        => $widget_id,
+							'settings'  => [],
+							'collapsed' => false,
+						];
+					}
+				}
+
+				$updated_columns[] = $column;
+			}
+
+			$dashboard_data['columns'] = $updated_columns;
 
 			$current_data = $this->get_dashboard_data();
 

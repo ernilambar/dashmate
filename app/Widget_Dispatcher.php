@@ -261,7 +261,7 @@ class Widget_Dispatcher {
 	 * @since 1.0.0
 	 *
 	 * @param string $widget_id Widget ID.
-	 * @param array  $settings  New settings.
+	 * @param array  $settings  Widget settings.
 	 *
 	 * @return bool|WP_Error
 	 */
@@ -272,22 +272,24 @@ class Widget_Dispatcher {
 			return $dashboard_data;
 		}
 
-		$widgets = &$dashboard_data['widgets'];
+		// Find the widget in columns and update its settings.
+		foreach ( $dashboard_data['columns'] as &$column ) {
+			if ( isset( $column['widgets'] ) && is_array( $column['widgets'] ) ) {
+				foreach ( $column['widgets'] as &$widget ) {
+					if ( isset( $widget['id'] ) && $widget['id'] === $widget_id ) {
+						$current_settings = $widget['settings'] ?? [];
+						$new_settings     = array_merge( $current_settings, $settings );
 
-		// Find the widget and update its settings.
-		foreach ( $widgets as $index => $widget ) {
-			if ( isset( $widget['id'] ) && $widget['id'] === $widget_id ) {
-				$current_settings = $widget['settings'] ?? [];
-				$new_settings     = array_merge( $current_settings, $settings );
+						// Check if there are actual changes
+						if ( $current_settings === $new_settings ) {
+							// No changes made, return success without saving
+							return true;
+						}
 
-				// Check if there are actual changes
-				if ( $current_settings === $new_settings ) {
-					// No changes made, return success without saving
-					return true;
+						$widget['settings'] = $new_settings;
+						return self::save_dashboard_data( $dashboard_data );
+					}
 				}
-
-				$widgets[ $index ]['settings'] = $new_settings;
-				return self::save_dashboard_data( $dashboard_data );
 			}
 		}
 
@@ -329,11 +331,17 @@ class Widget_Dispatcher {
 	 * @return array|null
 	 */
 	private static function find_widget_by_id( $widget_id, $dashboard_data ) {
-		$widgets = $dashboard_data['widgets'] ?? [];
+		if ( ! isset( $dashboard_data['columns'] ) || ! is_array( $dashboard_data['columns'] ) ) {
+			return null;
+		}
 
-		foreach ( $widgets as $widget ) {
-			if ( isset( $widget['id'] ) && $widget['id'] === $widget_id ) {
-				return $widget;
+		foreach ( $dashboard_data['columns'] as $column ) {
+			if ( isset( $column['widgets'] ) && is_array( $column['widgets'] ) ) {
+				foreach ( $column['widgets'] as $widget ) {
+					if ( isset( $widget['id'] ) && $widget['id'] === $widget_id ) {
+						return $widget;
+					}
+				}
 			}
 		}
 
@@ -359,15 +367,16 @@ class Widget_Dispatcher {
 			return [];
 		}
 
-		$widgets        = $dashboard_data['widgets'] ?? [];
-		$column_widgets = [];
+		if ( ! isset( $dashboard_data['columns'] ) || ! is_array( $dashboard_data['columns'] ) ) {
+			return [];
+		}
 
-		foreach ( $widgets as $widget ) {
-			if ( isset( $widget['column_id'] ) && $widget['column_id'] === $column_id ) {
-				$column_widgets[] = $widget;
+		foreach ( $dashboard_data['columns'] as $column ) {
+			if ( isset( $column['id'] ) && $column['id'] === $column_id ) {
+				return $column['widgets'] ?? [];
 			}
 		}
 
-		return $column_widgets;
+		return [];
 	}
 }

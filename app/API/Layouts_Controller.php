@@ -206,7 +206,7 @@ class Layouts_Controller extends Base_Controller {
 			);
 		}
 
-		// Apply the layout data to the options table.
+		// Apply the layout data directly to the options table.
 		$result = Dashboard_Model::set_data( $layout_data );
 
 		if ( is_wp_error( $result ) ) {
