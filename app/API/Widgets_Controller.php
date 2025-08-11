@@ -273,8 +273,6 @@ class Widgets_Controller extends Base_Controller {
 		return $this->success_response( [ 'message' => 'Settings saved successfully' ] );
 	}
 
-
-
 	/**
 	 * Validate widget ID.
 	 *

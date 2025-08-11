@@ -8,7 +8,7 @@ class Widget extends Component {
 	constructor( props ) {
 		super( props );
 		this.state = {
-			collapsed: false,
+			collapsed: props.widget.collapsed || false,
 			widgetData: null,
 			loading: true,
 			showSettings: false,
@@ -21,6 +21,13 @@ class Widget extends Component {
 
 	componentDidMount() {
 		this.loadWidgetData();
+	}
+
+	componentDidUpdate( prevProps ) {
+		// Update collapsed state if it changes from parent.
+		if ( prevProps.widget.collapsed !== this.props.widget.collapsed ) {
+			this.setState( { collapsed: this.props.widget.collapsed || false } );
+		}
 	}
 
 	async loadWidgetData() {
@@ -159,10 +166,17 @@ class Widget extends Component {
 		);
 	}
 
-	toggleCollapse = () => {
-		this.setState( ( prevState ) => ( {
-			collapsed: ! prevState.collapsed,
-		} ) );
+	toggleCollapse = async () => {
+		const { widget, onPropertyUpdate } = this.props;
+		const newCollapsedState = ! this.state.collapsed;
+
+		// Update local state immediately for UI responsiveness.
+		this.setState( { collapsed: newCollapsedState } );
+
+		// Update the widget data in the parent component.
+		if ( onPropertyUpdate ) {
+			await onPropertyUpdate( widget.id, { collapsed: newCollapsedState } );
+		}
 	};
 
 	openWidgetSettings = () => {
