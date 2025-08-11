@@ -111,29 +111,7 @@ class Widget_Dispatcher {
 		return apply_filters( 'dashmate_widgets', self::$widgets );
 	}
 
-	/**
-	 * Get active widgets (excluding inactive ones).
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return array
-	 */
-	public static function get_active_widgets() {
-		$all_widgets = self::get_widgets();
 
-		// Get disabled widgets from centralized method.
-		$disabled_widgets = Widget_Manager::get_disabled_widgets();
-
-		// Filter out disabled widgets.
-		$active_widgets = [];
-		foreach ( $all_widgets as $id => $widget ) {
-			if ( ! in_array( $id, $disabled_widgets, true ) ) {
-				$active_widgets[ $id ] = $widget;
-			}
-		}
-
-		return $active_widgets;
-	}
 
 	/**
 	 * Get a specific widget.
@@ -145,7 +123,7 @@ class Widget_Dispatcher {
 	 * @return Abstract_Widget|null
 	 */
 	public static function get_widget( $id ) {
-		$widgets = self::get_active_widgets();
+		$widgets = self::get_widgets();
 		return $widgets[ $id ] ?? null;
 	}
 
@@ -159,7 +137,7 @@ class Widget_Dispatcher {
 	 * @return bool
 	 */
 	public static function is_widget_registered( $id ) {
-		$widgets = self::get_active_widgets();
+		$widgets = self::get_widgets();
 		return isset( $widgets[ $id ] );
 	}
 
@@ -198,7 +176,7 @@ class Widget_Dispatcher {
 	 */
 	public static function get_widget_types_for_frontend() {
 		$widget_types = [];
-		$widgets      = self::get_active_widgets();
+		$widgets      = self::get_widgets();
 
 		// First, get all available template types from the registry
 		$templates = Widget_Template_Registry::get_templates();
