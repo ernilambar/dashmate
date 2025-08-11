@@ -3,7 +3,7 @@
 	"title": "Dashboard Schema",
 	"description": "Schema for a dashboard layout with widgets",
 	"type": "object",
-	"required": [ "columns", "widgets", "column_widgets" ],
+	"required": [ "columns" ],
 	"properties": {
 		"$schema": {
 			"type": "string",
@@ -13,54 +13,36 @@
 			"type": "array",
 			"items": {
 				"type": "object",
-				"required": [ "id", "order" ],
+				"required": [ "id" ],
 				"properties": {
 					"id": {
 						"type": "string",
 						"pattern": "^col-\\d+$"
 					},
-					"order": {
-						"type": "integer",
-						"minimum": 1
+					"widgets": {
+						"type": "array",
+						"items": {
+							"type": "object",
+							"required": [ "id" ],
+							"properties": {
+								"id": {
+									"type": "string",
+									"pattern": "^[a-z-]+[a-z0-9-]*$"
+								},
+								"settings": {
+									"type": "object",
+									"additionalProperties": true
+								},
+								"collapsed": {
+									"type": "boolean"
+								}
+							},
+							"additionalProperties": false
+						}
 					}
 				},
 				"additionalProperties": false
 			}
-		},
-		"widgets": {
-			"type": "array",
-			"items": {
-				"type": "object",
-				"required": [ "id", "column_id" ],
-				"properties": {
-					"id": {
-						"type": "string",
-						"pattern": "^[a-z-]+[a-z0-9-]*$"
-					},
-					"column_id": {
-						"type": "string",
-						"pattern": "^col-\\d+$"
-					},
-					"settings": {
-						"type": "object",
-						"additionalProperties": true
-					}
-				},
-				"additionalProperties": false
-			}
-		},
-		"column_widgets": {
-			"type": "object",
-			"patternProperties": {
-				"^col-\\d+$": {
-					"type": "array",
-					"items": {
-						"type": "string",
-						"pattern": "^[a-z-]+[a-z0-9-]*$"
-					}
-				}
-			},
-			"additionalProperties": false
 		}
 	},
 	"additionalProperties": false

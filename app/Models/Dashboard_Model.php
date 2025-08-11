@@ -104,14 +104,11 @@ class Dashboard_Model {
 			$data['columns'] = [];
 		}
 
-		// Ensure widgets array exists.
-		if ( ! isset( $data['widgets'] ) || ! is_array( $data['widgets'] ) ) {
-			$data['widgets'] = [];
-		}
-
-		// Ensure column_widgets array exists.
-		if ( ! isset( $data['column_widgets'] ) || ! is_array( $data['column_widgets'] ) ) {
-			$data['column_widgets'] = [];
+		// Ensure each column has widgets array.
+		foreach ( $data['columns'] as &$column ) {
+			if ( ! isset( $column['widgets'] ) || ! is_array( $column['widgets'] ) ) {
+				$column['widgets'] = [];
+			}
 		}
 
 		return $data;

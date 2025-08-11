@@ -25,15 +25,4 @@ class Widget_Initializer {
 		// Initialize the new widget system.
 		Widget_Registry::init();
 	}
-
-	/**
-	 * Get default layout file path.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return string
-	 */
-	public static function get_default_layout_file_path() {
-		return Layout_Manager::get_default_layout_file_path();
-	}
 }

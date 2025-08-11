@@ -152,6 +152,13 @@ final class Layout_Command {
 			return;
 		}
 
+		// Validate layout format.
+		$validation_result = $this->validate_layout_format( $dashboard_data );
+		if ( is_wp_error( $validation_result ) ) {
+			WP_CLI::error( sprintf( 'Invalid layout format in file "%s": %s', $file_path, $validation_result->get_error_message() ) );
+			return;
+		}
+
 		// Set dashboard data.
 		$result = Dashboard_Model::set_data( $dashboard_data );
 
@@ -161,6 +168,74 @@ final class Layout_Command {
 		}
 
 		WP_CLI::success( sprintf( 'Layout imported successfully from "%s".', $file_path ) );
+	}
+
+	/**
+	 * Validate layout format.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $data Layout data.
+	 *
+	 * @return true|WP_Error True if valid, WP_Error if invalid.
+	 */
+	private function validate_layout_format( $data ) {
+		if ( ! is_array( $data ) ) {
+			return new \WP_Error( 'invalid_format', 'Layout data must be an array.' );
+		}
+
+		if ( ! isset( $data['columns'] ) || ! is_array( $data['columns'] ) ) {
+			return new \WP_Error( 'invalid_format', 'Layout must have a "columns" array.' );
+		}
+
+		foreach ( $data['columns'] as $index => $column ) {
+			if ( ! is_array( $column ) ) {
+				return new \WP_Error( 'invalid_format', sprintf( 'Column %d must be an array.', $index ) );
+			}
+
+			if ( ! isset( $column['id'] ) || ! is_string( $column['id'] ) ) {
+				return new \WP_Error( 'invalid_format', sprintf( 'Column %d must have a string "id".', $index ) );
+			}
+
+			// Validate column ID format.
+			if ( ! preg_match( '/^col-\d+$/', $column['id'] ) ) {
+				return new \WP_Error( 'invalid_format', sprintf( 'Column ID "%s" must match pattern "col-{number}".', $column['id'] ) );
+			}
+
+			// Check if widgets array exists and is valid.
+			if ( isset( $column['widgets'] ) ) {
+				if ( ! is_array( $column['widgets'] ) ) {
+					return new \WP_Error( 'invalid_format', sprintf( 'Widgets in column "%s" must be an array.', $column['id'] ) );
+				}
+
+				foreach ( $column['widgets'] as $widget_index => $widget ) {
+					if ( ! is_array( $widget ) ) {
+						return new \WP_Error( 'invalid_format', sprintf( 'Widget %d in column "%s" must be an array.', $widget_index, $column['id'] ) );
+					}
+
+					if ( ! isset( $widget['id'] ) || ! is_string( $widget['id'] ) ) {
+						return new \WP_Error( 'invalid_format', sprintf( 'Widget %d in column "%s" must have a string "id".', $widget_index, $column['id'] ) );
+					}
+
+					// Validate widget ID format.
+					if ( ! preg_match( '/^[a-z-]+[a-z0-9-]*$/', $widget['id'] ) ) {
+						return new \WP_Error( 'invalid_format', sprintf( 'Widget ID "%s" must contain only lowercase letters, numbers, and hyphens.', $widget['id'] ) );
+					}
+
+					// Validate settings if present.
+					if ( isset( $widget['settings'] ) && ! is_array( $widget['settings'] ) ) {
+						return new \WP_Error( 'invalid_format', sprintf( 'Settings for widget "%s" must be an array.', $widget['id'] ) );
+					}
+
+					// Validate collapsed if present.
+					if ( isset( $widget['collapsed'] ) && ! is_bool( $widget['collapsed'] ) ) {
+						return new \WP_Error( 'invalid_format', sprintf( 'Collapsed property for widget "%s" must be a boolean.', $widget['id'] ) );
+					}
+				}
+			}
+		}
+
+		return true;
 	}
 
 	/**

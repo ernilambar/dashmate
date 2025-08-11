@@ -1,12 +1,10 @@
 import React from 'react';
 
 const LayoutPreview = ( { layoutData, selectedLayout } ) => {
-	// Handle both direct structure and nested layout structure
+	// Handle column-based layout where widgets are nested in columns
 	const columns = layoutData?.columns;
-	const widgets = layoutData?.widgets;
-	const column_widgets = layoutData?.column_widgets;
 
-	if ( ! layoutData || ! columns || ! widgets || ! column_widgets ) {
+	if ( ! layoutData || ! columns ) {
 		return (
 			<div className="layout-preview">
 				<div className="layout-preview-empty">
@@ -20,10 +18,7 @@ const LayoutPreview = ( { layoutData, selectedLayout } ) => {
 		<div className="layout-preview">
 			<div className="layout-preview-content">
 				{ columns.map( ( column ) => {
-					const columnWidgetIds = column_widgets[ column.id ] || [];
-					const columnWidgets = columnWidgetIds
-						.map( ( widgetId ) => widgets.find( ( widget ) => widget.id === widgetId ) )
-						.filter( Boolean );
+					const columnWidgets = column.widgets || [];
 
 					return (
 						<div key={ column.id } className="layout-preview-column">

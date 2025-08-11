@@ -98,39 +98,45 @@ class Dashboard extends Component {
 
 		// Create a copy of the dashboard data
 		const updatedDashboard = { ...dashboard };
-		const updatedColumnWidgets = { ...updatedDashboard.column_widgets };
+
+		// Find source and destination columns
+		const sourceColumn = updatedDashboard.columns.find(
+			( col ) => col.id === source.droppableId
+		);
+		const destColumn = updatedDashboard.columns.find(
+			( col ) => col.id === destination.droppableId
+		);
+
+		if ( ! sourceColumn || ! destColumn ) {
+			return;
+		}
+
+		// Find the widget to move
+		const widgetToMove = sourceColumn.widgets.find( ( widget ) => widget.id === draggableId );
+		if ( ! widgetToMove ) {
+			return;
+		}
 
 		// Remove widget from source column
-		if ( updatedColumnWidgets[ source.droppableId ] ) {
-			updatedColumnWidgets[ source.droppableId ] = updatedColumnWidgets[
-				source.droppableId
-			].filter( ( widgetId ) => widgetId !== draggableId );
-		}
+		sourceColumn.widgets = sourceColumn.widgets.filter(
+			( widget ) => widget.id !== draggableId
+		);
 
 		// Add widget to destination column at the correct position
-		if ( ! updatedColumnWidgets[ destination.droppableId ] ) {
-			updatedColumnWidgets[ destination.droppableId ] = [];
-		}
-
-		updatedColumnWidgets[ destination.droppableId ].splice( destination.index, 0, draggableId );
-
-		// Update the column_widgets in dashboard
-		updatedDashboard.column_widgets = updatedColumnWidgets;
+		destColumn.widgets.splice( destination.index, 0, widgetToMove );
 
 		// Update state immediately for UI responsiveness
 		this.setState( { dashboard: updatedDashboard } );
 
-		// Save the new order to the server using column_widgets structure
+		// Save the new order to the server
 		try {
-			const response = await fetch( `${ dashmateApiSettings.restUrl }dashboard/reorder`, {
+			const response = await fetch( `${ dashmateApiSettings.restUrl }dashboard`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
 					'X-WP-Nonce': dashmateApiSettings?.nonce || '',
 				},
-				body: JSON.stringify( {
-					column_widgets: updatedColumnWidgets,
-				} ),
+				body: JSON.stringify( updatedDashboard ),
 			} );
 
 			const data = await response.json();
@@ -159,45 +165,31 @@ class Dashboard extends Component {
 
 		// Create a copy of the dashboard data
 		const updatedDashboard = { ...dashboard };
-		const updatedColumnWidgets = { ...updatedDashboard.column_widgets };
 
-		// Initialize the first column's widgets array if it doesn't exist
-		if ( ! updatedColumnWidgets[ firstColumn.id ] ) {
-			updatedColumnWidgets[ firstColumn.id ] = [];
+		// Initialize widgets array if it doesn't exist
+		if ( ! firstColumn.widgets ) {
+			firstColumn.widgets = [];
 		}
 
 		// Add the widget to the end of the first column
-		updatedColumnWidgets[ firstColumn.id ].push( widgetId );
-
-		// Update the column_widgets in dashboard
-		updatedDashboard.column_widgets = updatedColumnWidgets;
-
-		// Also add the widget to the widgets array if it doesn't exist
-		const existingWidget = updatedDashboard.widgets.find(
-			( widget ) => widget.id === widgetId
-		);
-		if ( ! existingWidget ) {
-			updatedDashboard.widgets.push( {
-				id: widgetId,
-				column_id: firstColumn.id,
-				settings: {},
-			} );
-		}
+		firstColumn.widgets.push( {
+			id: widgetId,
+			settings: {},
+			collapsed: false,
+		} );
 
 		// Update state immediately for UI responsiveness
 		this.setState( { dashboard: updatedDashboard } );
 
 		// Save the new layout to the server
 		try {
-			const response = await fetch( `${ dashmateApiSettings.restUrl }dashboard/reorder`, {
+			const response = await fetch( `${ dashmateApiSettings.restUrl }dashboard`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
 					'X-WP-Nonce': dashmateApiSettings?.nonce || '',
 				},
-				body: JSON.stringify( {
-					column_widgets: updatedColumnWidgets,
-				} ),
+				body: JSON.stringify( updatedDashboard ),
 			} );
 
 			const data = await response.json();
@@ -247,13 +239,8 @@ class Dashboard extends Component {
 			);
 		}
 
-		// Get columns from the new structure with proper type checking
+		// Get columns from the dashboard structure
 		const columns = Array.isArray( dashboard?.columns ) ? dashboard.columns : [];
-		const allWidgets = Array.isArray( dashboard?.widgets ) ? dashboard.widgets : [];
-		const columnWidgets =
-			dashboard?.column_widgets && typeof dashboard.column_widgets === 'object'
-				? dashboard.column_widgets
-				: {};
 
 		// Determine if we should use grid layout (more than max columns)
 		const maxColumns = window.dashmateApiSettings?.config?.maxColumns || 2;
@@ -273,35 +260,17 @@ class Dashboard extends Component {
 										return null;
 									}
 
-									// Get widgets for this column using column_widgets structure with robust error handling
-									const columnWidgetIds = Array.isArray(
-										columnWidgets[ column.id ]
-									)
-										? columnWidgets[ column.id ]
+									// Get widgets for this column directly from the column
+									const columnWidgets = Array.isArray( column.widgets )
+										? column.widgets
 										: [];
-									const columnWidgetsList = columnWidgetIds
-										.map( ( widgetId ) => {
-											// Ensure widgetId is a string
-											if ( typeof widgetId !== 'string' ) {
-												return null;
-											}
-
-											// Ensure allWidgets is an array before calling find
-											if ( ! Array.isArray( allWidgets ) ) {
-												return null;
-											}
-											return allWidgets.find(
-												( widget ) => widget && widget.id === widgetId
-											);
-										} )
-										.filter( Boolean );
 
 									return (
 										<Column
 											key={ column.id }
 											column={ column }
 											widgets={ widgets }
-											columnWidgets={ columnWidgetsList }
+											columnWidgets={ columnWidgets }
 										/>
 									);
 								} )
