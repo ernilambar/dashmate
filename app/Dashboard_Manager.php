@@ -30,7 +30,12 @@ class Dashboard_Manager {
 	 * @return array Dashboard data.
 	 */
 	public static function get_dashboard_data(): array {
-		return self::get_filtered_dashboard_data();
+		$data = self::get_raw_dashboard_data();
+
+		// Apply dashboard data filter to allow filtering of widgets and other data.
+		$data = apply_filters( 'dashmate_dashboard_data', $data );
+
+		return $data;
 	}
 
 	/**
@@ -45,42 +50,6 @@ class Dashboard_Manager {
 	}
 
 	/**
-	 * Get filtered dashboard data with disabled widgets removed.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return array Filtered dashboard data.
-	 */
-	public static function get_filtered_dashboard_data(): array {
-		$data = self::get_raw_dashboard_data();
-
-		// Get disabled widgets from centralized method.
-		$disabled_widgets = Widget_Manager::get_disabled_widgets();
-
-		if ( empty( $disabled_widgets ) ) {
-			return $data;
-		}
-
-		// Filter out disabled widgets from columns.
-		if ( isset( $data['columns'] ) && is_array( $data['columns'] ) ) {
-			foreach ( $data['columns'] as &$column ) {
-				if ( isset( $column['widgets'] ) && is_array( $column['widgets'] ) ) {
-					$column['widgets'] = array_values(
-						array_filter(
-							$column['widgets'],
-							function ( $widget ) use ( $disabled_widgets ) {
-								return ! isset( $widget['id'] ) || ! in_array( $widget['id'], $disabled_widgets, true );
-							}
-						)
-					);
-				}
-			}
-		}
-
-		return $data;
-	}
-
-	/**
 	 * Get enhanced dashboard data with titles and filters applied.
 	 *
 	 * @since 1.0.0
@@ -88,7 +57,7 @@ class Dashboard_Manager {
 	 * @return array Enhanced dashboard data.
 	 */
 	public static function get_enhanced_dashboard_data(): array {
-		$data = self::get_filtered_dashboard_data();
+		$data = self::get_raw_dashboard_data();
 
 		// Get widget information to include titles.
 		$widget_types = Widget_Dispatcher::get_widget_types_for_frontend();
