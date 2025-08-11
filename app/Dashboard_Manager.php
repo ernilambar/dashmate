@@ -30,28 +30,6 @@ class Dashboard_Manager {
 	 * @return array Dashboard data.
 	 */
 	public static function get_dashboard_data(): array {
-		return self::get_filtered_dashboard_data();
-	}
-
-	/**
-	 * Get raw dashboard data without filtering.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return array Dashboard data.
-	 */
-	public static function get_raw_dashboard_data(): array {
-		return Dashboard_Model::get_data();
-	}
-
-	/**
-	 * Get filtered dashboard data with disabled widgets removed.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return array Filtered dashboard data.
-	 */
-	public static function get_filtered_dashboard_data(): array {
 		$data = self::get_raw_dashboard_data();
 
 		// Get disabled widgets from centralized method.
@@ -81,6 +59,17 @@ class Dashboard_Manager {
 	}
 
 	/**
+	 * Get raw dashboard data without filtering.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return array Dashboard data.
+	 */
+	public static function get_raw_dashboard_data(): array {
+		return Dashboard_Model::get_data();
+	}
+
+	/**
 	 * Get enhanced dashboard data with titles and filters applied.
 	 *
 	 * @since 1.0.0
@@ -88,7 +77,7 @@ class Dashboard_Manager {
 	 * @return array Enhanced dashboard data.
 	 */
 	public static function get_enhanced_dashboard_data(): array {
-		$data = self::get_filtered_dashboard_data();
+		$data = self::get_dashboard_data();
 
 		// Get widget information to include titles.
 		$widget_types = Widget_Dispatcher::get_widget_types_for_frontend();
