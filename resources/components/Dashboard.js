@@ -205,6 +205,63 @@ class Dashboard extends Component {
 		}
 	};
 
+	handleWidgetPropertyUpdate = async ( widgetId, properties ) => {
+		const { dashboard } = this.state;
+		if ( ! dashboard ) {
+			return;
+		}
+
+		// Create a copy of the dashboard data.
+		const updatedDashboard = { ...dashboard };
+
+		// Find and update the widget.
+		let widgetFound = false;
+		for ( const column of updatedDashboard.columns ) {
+			if ( column.widgets ) {
+				for ( const widget of column.widgets ) {
+					if ( widget.id === widgetId ) {
+						// Update widget properties.
+						Object.assign( widget, properties );
+						widgetFound = true;
+						break;
+					}
+				}
+				if ( widgetFound ) {
+					break;
+				}
+			}
+		}
+
+		if ( ! widgetFound ) {
+			return;
+		}
+
+		// Update state immediately for UI responsiveness.
+		this.setState( { dashboard: updatedDashboard } );
+
+		// Save the updated dashboard to the server.
+		try {
+			const response = await fetch( `${ dashmateApiSettings.restUrl }dashboard`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'X-WP-Nonce': dashmateApiSettings?.nonce || '',
+				},
+				body: JSON.stringify( updatedDashboard ),
+			} );
+
+			const data = await response.json();
+
+			if ( ! data.success ) {
+				// Reload dashboard to revert changes.
+				this.loadDashboard();
+			}
+		} catch ( error ) {
+			// Reload dashboard to revert changes.
+			this.loadDashboard();
+		}
+	};
+
 	render() {
 		const { dashboard, widgets, loading, error } = this.state;
 
@@ -271,6 +328,9 @@ class Dashboard extends Component {
 											column={ column }
 											widgets={ widgets }
 											columnWidgets={ columnWidgets }
+											onWidgetPropertyUpdate={
+												this.handleWidgetPropertyUpdate
+											}
 										/>
 									);
 								} )
