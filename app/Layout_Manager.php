@@ -169,7 +169,7 @@ class Layout_Manager {
 	 * @return array|WP_Error
 	 */
 	public static function get_current_layout_data() {
-		$layout_data = Dashboard_Manager::get_dashboard_data();
+		$layout_data = Dashboard_Manager::get_enhanced_dashboard_data();
 
 		if ( is_wp_error( $layout_data ) ) {
 			return $layout_data;

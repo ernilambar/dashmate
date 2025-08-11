@@ -301,7 +301,7 @@ class Widget_Manager {
 	 * @return array|WP_Error
 	 */
 	private static function get_dashboard_data() {
-		return Dashboard_Manager::get_dashboard_data();
+		return Dashboard_Manager::get_enhanced_dashboard_data();
 	}
 
 	/**
