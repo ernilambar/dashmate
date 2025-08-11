@@ -1,0 +1,363 @@
+/* Widget Styles */
+.widget {
+	margin-bottom: 10px;
+	border: 1px solid #e1e1e1;
+	border-radius: 6px;
+	background: #fff;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+	transition: box-shadow 0.2s ease;
+	cursor: grab;
+}
+
+.widget:last-child {
+	margin-bottom: 0;
+}
+
+.widget:hover {
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.widget.dragging {
+	transform: rotate(5deg);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+	cursor: grabbing;
+	z-index: 1000;
+}
+
+.widget-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 6px 10px;
+	border-bottom: 1px solid #e1e1e1;
+	background: #f9f9f9;
+	border-radius: 6px 6px 0 0;
+	cursor: grab;
+	position: relative;
+	min-height: 32px; /* Ensure consistent height */
+	box-sizing: border-box;
+}
+
+/* Removed drag indicator dots from header */
+
+.widget-header:hover {
+	background: #f0f0f0;
+}
+
+.widget-header h3 {
+	margin: 0;
+	font-size: 14px;
+	font-weight: 600;
+	color: #3c434a;
+	flex: 1;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-left: 0;
+	min-height: 20px; /* Ensure consistent height for text area */
+	line-height: 1.2; /* Consistent line height */
+}
+
+/* Ensure consistent spacing when icon is not present */
+.widget-header h3 .icon {
+	font-size: 16px;
+	width: 16px;
+	height: 16px;
+	line-height: 1;
+	color: #0073aa;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0; /* Prevent icon from shrinking */
+}
+
+/* Add placeholder for missing icon to prevent layout shift */
+.widget-header h3:not(:has(.icon))::before {
+	content: "";
+	width: 16px;
+	height: 16px;
+	flex-shrink: 0;
+}
+
+.widget-actions {
+	display: flex;
+	gap: 4px;
+	align-items: center;
+	min-height: 20px; /* Ensure consistent height */
+}
+
+/* Dashmate icon-only button (avoids WP core button classes) */
+.dm-icon-button {
+	appearance: none;
+	-webkit-appearance: none;
+	background-color: #ffffff;
+	border: 1px solid #c6e1f2; /* light bluish border */
+	border: 1px solid #2271b1; /* light bluish border */
+	border-radius: 3px;
+	padding: 4px 6px;
+	line-height: 1;
+	min-width: auto;
+	height: 20px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	color: #1d2327;
+	cursor: pointer;
+	transition:
+		background-color 0.15s ease,
+		border-color 0.15s ease,
+		color 0.15s ease,
+		box-shadow 0.15s ease;
+}
+
+.dm-icon-button:hover:not(:disabled) {
+	background-color: #f0f8ff; /* very light blue */
+	border-color: #8cc5df; /* hover blue */
+	color: #007cba; /* WP admin blue */
+}
+
+.dm-icon-button:focus-visible {
+	outline: none;
+	box-shadow: 0 0 0 2px rgba(0, 124, 186, 0.2);
+	border-color: #8cc5df;
+}
+
+.dm-icon-button:active:not(:disabled) {
+	background-color: #e7f3fb;
+	border-color: #66a8d6;
+}
+
+.dm-icon-button:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.dm-icon-button--small {
+	height: 20px;
+	padding: 3px 5px;
+	border-radius: 3px;
+}
+
+.widget-toggle .icon,
+.widget-settings .icon,
+.widget-reload .icon,
+.dm-icon-button .icon {
+	font-size: 16px;
+	width: 16px;
+	height: 16px;
+	line-height: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.widget-reload.reloading .icon {
+	animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+/* Settings save status animations for cog icon */
+.widget-settings.settings-success .icon {
+	animation: settingsSuccess 2s ease-in-out;
+	color: #46b450;
+}
+
+.widget-settings.settings-error .icon {
+	animation: settingsError 2s ease-in-out;
+	color: #d63638;
+}
+
+@keyframes settingsSuccess {
+	0% {
+		transform: scale(1);
+		color: inherit;
+	}
+	20% {
+		transform: scale(1.2);
+		color: #46b450;
+	}
+	40% {
+		transform: scale(1);
+		color: #46b450;
+	}
+	60% {
+		transform: scale(1.1);
+		color: #46b450;
+	}
+	80% {
+		transform: scale(1);
+		color: #46b450;
+	}
+	100% {
+		transform: scale(1);
+		color: inherit;
+	}
+}
+
+@keyframes settingsError {
+	0% {
+		transform: scale(1);
+		color: inherit;
+	}
+	20% {
+		transform: scale(1.2);
+		color: #d63638;
+	}
+	40% {
+		transform: scale(1);
+		color: #d63638;
+	}
+	60% {
+		transform: scale(1.1);
+		color: #d63638;
+	}
+	80% {
+		transform: scale(1);
+		color: #d63638;
+	}
+	100% {
+		transform: scale(1);
+		color: inherit;
+	}
+}
+
+.widget.collapsed .widget-content {
+	display: none;
+}
+
+.widget.collapsed .widget-header {
+	border-radius: 6px;
+}
+
+.widget-content {
+	padding: 0;
+	transition: opacity 0.3s ease-in-out;
+}
+
+.widget-content.fading {
+	opacity: 0.6;
+}
+
+.widget-content.faded {
+	opacity: 0.3;
+}
+
+.widget-loading,
+.widget-error {
+	text-align: center;
+	color: #666;
+}
+
+/* Ensure loading state maintains consistent header height */
+.widget-loading .widget-header {
+	min-height: 32px;
+	display: flex;
+	align-items: center;
+	background: #f8f9fa;
+	border-color: #dee2e6;
+}
+
+.widget-loading .widget-header h3 {
+	min-height: 20px;
+	display: flex;
+	align-items: center;
+	margin-left: 0;
+}
+
+/* Spinning loading icon */
+.widget-loading-icon {
+	animation: spin 1s linear infinite;
+	color: #0073aa;
+}
+
+.widget-loading .widget-header h3 {
+	color: #6c757d;
+}
+
+.widget-error {
+	color: #d63638;
+}
+
+.widget-error .widget-header {
+	background: #fef7f1;
+	border-color: #d63638;
+	min-height: 32px;
+	display: flex;
+	align-items: center;
+}
+
+.widget-error .widget-header h3 {
+	min-height: 20px;
+	display: flex;
+	align-items: center;
+}
+
+.widget-error .widget-header h3 {
+	color: #d63638;
+}
+
+.widget-error-message {
+	padding: 15px;
+	background: #fef7f1;
+	border: 1px solid #d63638;
+	border-radius: 4px;
+}
+
+.widget-error-message p {
+	margin: 0 0 10px 0;
+	font-size: 13px;
+}
+
+.widget-error-message p:last-child {
+	margin-bottom: 0;
+}
+
+/* Basic Widget (Fallback) */
+.widget-basic .widget-header {
+	background: #f8f9fa;
+	border-color: #dee2e6;
+}
+
+.widget-basic .widget-header h3 {
+	color: #6c757d;
+}
+
+.widget-basic-message {
+	padding: 15px;
+	background: #f8f9fa;
+	border: 1px solid #dee2e6;
+	border-radius: 4px;
+	text-align: center;
+}
+
+.widget-basic-message p {
+	margin: 0 0 5px 0;
+	font-size: 13px;
+	color: #6c757d;
+}
+
+.widget-basic-message p:last-child {
+	margin-bottom: 0;
+}
+
+.widget-no-data {
+	text-align: center;
+	padding: 20px;
+	color: #666;
+	background: #f8f9fa;
+	border: 1px solid #dee2e6;
+	border-radius: 4px;
+}
+
+.widget-no-data p {
+	margin: 0;
+	font-size: 14px;
+}

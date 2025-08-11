@@ -1,5 +1,8 @@
 /* General styles */
 @import "./general.css";
+@import "./widget.css";
+@import "./widget-selector.css";
+@import "./widget-settings.css";
 @import "./sortable.css";
 /* Import widget-specific styles */
 @import "./widgets/html.css";
