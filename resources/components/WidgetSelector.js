@@ -78,7 +78,7 @@ class WidgetSelector extends Component {
 					onClick={ this.toggleDropdown }
 					title="Add Widget"
 				>
-					<Icon name="add" size="small" />
+					<Icon name="add_circle_outlined" size="20px" />
 				</button>
 				{ isOpen && (
 					<div className="widget-selector-dropdown">
