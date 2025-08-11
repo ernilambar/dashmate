@@ -81,6 +81,46 @@ class Dashboard_Manager {
 	}
 
 	/**
+	 * Get enhanced dashboard data with titles and filters applied.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return array Enhanced dashboard data.
+	 */
+	public static function get_enhanced_dashboard_data(): array {
+		$data = self::get_filtered_dashboard_data();
+
+		// Get widget information to include titles.
+		$widget_types = Widget_Dispatcher::get_widget_types_for_frontend();
+
+		// Enhance widget data with titles and other information.
+		if ( isset( $data['columns'] ) && is_array( $data['columns'] ) ) {
+			foreach ( $data['columns'] as &$column ) {
+				if ( isset( $column['widgets'] ) && is_array( $column['widgets'] ) ) {
+					foreach ( $column['widgets'] as &$widget ) {
+						if ( isset( $widget['id'] ) && isset( $widget_types[ $widget['id'] ] ) ) {
+							$widget_info           = $widget_types[ $widget['id'] ];
+							$widget['title']       = $widget_info['name'] ?? $widget_info['title'] ?? $widget['id'];
+							$widget['description'] = $widget_info['description'] ?? '';
+							$widget['icon']        = $widget_info['icon'] ?? 'settings';
+						} else {
+							// Fallback for widgets not found in registry.
+							$widget['title']       = $widget['id'];
+							$widget['description'] = '';
+							$widget['icon']        = 'settings';
+						}
+					}
+				}
+			}
+		}
+
+		// Apply dashboard data filter to the entire dashboard data.
+		$data = apply_filters( 'dashmate_dashboard_data', $data );
+
+		return $data;
+	}
+
+	/**
 	 * Save dashboard data.
 	 *
 	 * @since 1.0.0
