@@ -116,6 +116,11 @@ class Widget extends Component {
 		const { widget, widgets, index } = this.props;
 		const { collapsed, showSettings, fadeState } = this.state;
 
+		// Use title and icon from widget data (now provided by API) or fallback to schema.
+		const widgetTitle =
+			widget.title || widgets[ widget.id ]?.name || widgets[ widget.id ]?.title || widget.id;
+		const widgetIcon = widget.icon || widgets[ widget.id ]?.icon || 'settings';
+
 		return (
 			<Draggable draggableId={ widget.id } index={ index }>
 				{ ( provided, snapshot ) => (
@@ -128,8 +133,8 @@ class Widget extends Component {
 					>
 						<div className="widget-header" { ...provided.dragHandleProps }>
 							<h3>
-								<Icon name="settings" size="medium" />
-								{ widget.id }
+								<Icon name={ widgetIcon } size="medium" />
+								{ widgetTitle }
 							</h3>
 							<div className="widget-actions">
 								<button
@@ -258,8 +263,8 @@ class Widget extends Component {
 			settingsSaveStatus,
 		} = this.state;
 
-		// Show loading state while data is being fetched
-		if ( loading ) {
+		// Show loading state while data is being fetched (but not for collapsed widgets).
+		if ( loading && ! collapsed ) {
 			return (
 				<Draggable draggableId={ widget.id } index={ index }>
 					{ ( provided, snapshot ) => (
@@ -290,22 +295,27 @@ class Widget extends Component {
 			);
 		}
 
-		// Get widget type from API response instead of guessing from ID
+		// For collapsed widgets, use basic widget display with title from dashboard data.
+		if ( collapsed ) {
+			return this.renderBasicWidget();
+		}
+
+		// Get widget type from API response instead of guessing from ID.
 		const widgetType = widgetData?.type;
 		const widgetTitle = widgetData?.title || widget.id;
 		const widgetIcon = widgetData?.icon || '';
 
-		// Validate that we have a widget type and it's supported
+		// Validate that we have a widget type and it's supported.
 		if ( ! widgetType ) {
-			// Fallback to a basic widget display
+			// Fallback to a basic widget display.
 			return this.renderBasicWidget();
 		}
 
-		// Get widget schema using widget ID
+		// Get widget schema using widget ID.
 		const widgetSchema = widgets[ widget.id ];
 
 		if ( ! widgetSchema ) {
-			// Fallback to a basic widget display
+			// Fallback to a basic widget display.
 			return this.renderBasicWidget();
 		}
 

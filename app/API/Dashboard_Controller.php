@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Nilambar\Dashmate\API;
 
 use Nilambar\Dashmate\Dashboard_Manager;
+use Nilambar\Dashmate\Widget_Dispatcher;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -95,6 +96,30 @@ class Dashboard_Controller extends Base_Controller {
 
 		if ( is_wp_error( $data ) ) {
 			return $data;
+		}
+
+		// Get widget information to include titles.
+		$widget_types = Widget_Dispatcher::get_widget_types_for_frontend();
+
+		// Enhance widget data with titles and other information.
+		if ( isset( $data['columns'] ) && is_array( $data['columns'] ) ) {
+			foreach ( $data['columns'] as &$column ) {
+				if ( isset( $column['widgets'] ) && is_array( $column['widgets'] ) ) {
+					foreach ( $column['widgets'] as &$widget ) {
+						if ( isset( $widget['id'] ) && isset( $widget_types[ $widget['id'] ] ) ) {
+							$widget_info           = $widget_types[ $widget['id'] ];
+							$widget['title']       = $widget_info['name'] ?? $widget_info['title'] ?? $widget['id'];
+							$widget['description'] = $widget_info['description'] ?? '';
+							$widget['icon']        = $widget_info['icon'] ?? 'settings';
+						} else {
+							// Fallback for widgets not found in registry.
+							$widget['title']       = $widget['id'];
+							$widget['description'] = '';
+							$widget['icon']        = 'settings';
+						}
+					}
+				}
+			}
 		}
 
 		return $this->success_response( $data );
