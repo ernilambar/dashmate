@@ -35,24 +35,16 @@ class Sample_HTML extends Abstract_Widget {
 	 * @since 1.0.0
 	 */
 	protected function define_widget() {
-		$this->description = esc_html__( 'Display sample HTML content', 'dashmate' );
+		$this->description = esc_html__( 'Display sample HTML content.', 'dashmate' );
 		$this->icon        = 'code';
 
-		$this->settings_schema = [
-			'allow_scripts' => [
-				'type'        => 'checkbox',
-				'label'       => esc_html__( 'Allow Scripts', 'dashmate' ),
-				'description' => esc_html__( 'Allow JavaScript execution in HTML content', 'dashmate' ),
-				'default'     => false,
-				'refresh'     => false,
-			],
-		];
+		$this->settings_schema = [];
 
 		$this->output_schema = [
 			'html_content' => [
 				'type'        => 'string',
 				'required'    => true,
-				'description' => esc_html__( 'HTML content to render', 'dashmate' ),
+				'description' => esc_html__( 'HTML content to render.', 'dashmate' ),
 			],
 		];
 	}
@@ -82,8 +74,7 @@ class Sample_HTML extends Abstract_Widget {
 	 * @since 1.0.0
 	 *
 	 * @param array $settings Widget settings.
-	 *
-	 * @return string
+	 * @return string HTML content.
 	 */
 	private function get_html_content( array $settings ): string {
 		ob_start();

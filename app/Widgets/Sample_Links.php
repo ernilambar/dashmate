@@ -40,17 +40,17 @@ class Sample_Links extends Abstract_Widget {
 
 		$this->settings_schema = [
 			'hide_icon'     => [
-				'type'        => 'checkbox',
-				'label'       => esc_html__( 'Hide Icons', 'dashmate' ),
-				'default'     => false,
-				'refresh'     => false,
+				'type'    => 'checkbox',
+				'label'   => esc_html__( 'Hide Icons', 'dashmate' ),
+				'default' => false,
+				'refresh' => false,
 			],
 			'display_style' => [
-				'type'        => 'buttonset',
-				'label'       => esc_html__( 'Link Style', 'dashmate' ),
-				'default'     => 'list',
-				'refresh'     => false,
-				'choices'     => [
+				'type'    => 'buttonset',
+				'label'   => esc_html__( 'Link Style', 'dashmate' ),
+				'default' => 'list',
+				'refresh' => false,
+				'choices' => [
 					[
 						'value' => 'list',
 						'label' => esc_html__( 'List', 'dashmate' ),

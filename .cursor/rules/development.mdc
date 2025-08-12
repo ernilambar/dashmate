@@ -31,7 +31,7 @@ alwaysApply: true
   - Utilize WordPress's database abstraction layer (wpdb) for database interactions.
   - Use prepare() statements for secure database queries.
   - Implement proper database schema changes using dbDelta() function.
-  - Always use Yoda conditions.
+  - ALWAYS use Yoda conditions.
   - When possible use snake case naming convention.
   - Use PSR4 for naming PHP class name and file name.
   - Inline comments in any type of files should start with capital letter and end with period character.
