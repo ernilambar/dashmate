@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
-export default function SortableField( { label, choices = [], value = [], onChange } ) {
+export default function SortableField( {
+	label,
+	description,
+	choices = [],
+	value = [],
+	onChange,
+} ) {
 	const [ items, setItems ] = useState( () => {
 		// Initialize items preserving the saved order from value
 		const savedOrder = value || [];
@@ -99,6 +105,7 @@ export default function SortableField( { label, choices = [], value = [], onChan
 	return (
 		<div className="sortable-field-container">
 			<label>{ label }</label>
+			{ description && <div className="description">{ description }</div> }
 			<div style={ { marginTop: 8 } }>
 				<DragDropContext onDragEnd={ handleDragEnd }>
 					<Droppable droppableId="sortable-list" direction="vertical">
@@ -157,9 +164,6 @@ export default function SortableField( { label, choices = [], value = [], onChan
 						) }
 					</Droppable>
 				</DragDropContext>
-				{ items.length > 0 && (
-					<div className="help-text">Drag to reorder • Toggle to enable/disable</div>
-				) }
 			</div>
 		</div>
 	);

@@ -84,11 +84,20 @@ export default function WidgetSettingsForm( {
 
 	// Helper to render a single field
 	const renderField = ( key, fieldSchema, value ) => {
+		// Helper function to render description
+		const renderDescription = ( description ) => {
+			if ( ! description ) {
+				return null;
+			}
+			return <div className="description">{ description }</div>;
+		};
+
 		switch ( fieldSchema.type ) {
 			case 'text':
 				return (
 					<div key={ key } style={ { marginBottom: 12 } }>
 						<label>{ fieldSchema.label }</label>
+						{ renderDescription( fieldSchema.description ) }
 						<input
 							type="text"
 							value={ value || '' }
@@ -100,6 +109,7 @@ export default function WidgetSettingsForm( {
 				return (
 					<div key={ key } style={ { marginBottom: 12 } }>
 						<label>{ fieldSchema.label }</label>
+						{ renderDescription( fieldSchema.description ) }
 						<input
 							type="url"
 							value={ value || '' }
@@ -118,12 +128,14 @@ export default function WidgetSettingsForm( {
 							/>
 							{ fieldSchema.label }
 						</label>
+						{ renderDescription( fieldSchema.description ) }
 					</div>
 				);
 			case 'select':
 				return (
 					<div key={ key } style={ { marginBottom: 12 } }>
 						<label>{ fieldSchema.label }</label>
+						{ renderDescription( fieldSchema.description ) }
 						<select
 							value={ value || fieldSchema.default }
 							onChange={ ( e ) => handleFieldChange( key, e.target.value ) }
@@ -142,6 +154,7 @@ export default function WidgetSettingsForm( {
 				return (
 					<div key={ key } style={ { marginBottom: 12 } }>
 						<label>{ fieldSchema.label }</label>
+						{ renderDescription( fieldSchema.description ) }
 						<div className="number-with-choices">
 							<input
 								type="number"
@@ -188,6 +201,7 @@ export default function WidgetSettingsForm( {
 				return (
 					<div key={ key } style={ { marginBottom: 12 } }>
 						<label>{ fieldSchema.label }</label>
+						{ renderDescription( fieldSchema.description ) }
 						<div style={ { marginTop: 4 } }>
 							{ fieldSchema.choices &&
 								Array.isArray( fieldSchema.choices ) &&
@@ -236,6 +250,7 @@ export default function WidgetSettingsForm( {
 				return (
 					<div key={ key } style={ { marginBottom: 12 } }>
 						<label>{ fieldSchema.label }</label>
+						{ renderDescription( fieldSchema.description ) }
 						<div className="buttonset-container">
 							{ fieldSchema.choices &&
 								Array.isArray( fieldSchema.choices ) &&
@@ -276,6 +291,7 @@ export default function WidgetSettingsForm( {
 				return (
 					<div key={ key } style={ { marginBottom: 12 } }>
 						<label>{ fieldSchema.label }</label>
+						{ renderDescription( fieldSchema.description ) }
 						<div style={ { marginTop: 4 } }>
 							{ fieldSchema.choices &&
 								Array.isArray( fieldSchema.choices ) &&
@@ -337,6 +353,7 @@ export default function WidgetSettingsForm( {
 					<SortableField
 						key={ key }
 						label={ fieldSchema.label }
+						description={ fieldSchema.description }
 						choices={ fieldSchema.choices || [] }
 						value={
 							Array.isArray( value )
@@ -352,6 +369,7 @@ export default function WidgetSettingsForm( {
 				return (
 					<div key={ key } style={ { marginBottom: 12 } }>
 						<label>{ fieldSchema.label }</label>
+						{ renderDescription( fieldSchema.description ) }
 						{ ( value || [] ).map( ( item, idx ) => (
 							<div
 								key={ idx }
