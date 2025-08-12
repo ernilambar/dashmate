@@ -35,38 +35,19 @@ class Sample_Links extends Abstract_Widget {
 	 * @since 1.0.0
 	 */
 	protected function define_widget() {
-		$this->description = esc_html__( 'Display sample links with various styles', 'dashmate' );
+		$this->description = esc_html__( 'Display sample links with various styles.', 'dashmate' );
 		$this->icon        = 'dataset_linked';
 
 		$this->settings_schema = [
 			'hide_icon'     => [
 				'type'        => 'checkbox',
 				'label'       => esc_html__( 'Hide Icons', 'dashmate' ),
-				'description' => esc_html__( 'Hide link icons', 'dashmate' ),
 				'default'     => false,
 				'refresh'     => false,
-			],
-			'icon_type'     => [
-				'type'        => 'buttonset',
-				'label'       => esc_html__( 'Icon Type', 'dashmate' ),
-				'description' => esc_html__( 'Choose the type of icons to display', 'dashmate' ),
-				'default'     => 'material-icons',
-				'refresh'     => false,
-				'choices'     => [
-					[
-						'value' => 'material-icons',
-						'label' => esc_html__( 'Material Icons', 'dashmate' ),
-					],
-					[
-						'value' => 'svg',
-						'label' => esc_html__( 'SVG Icons', 'dashmate' ),
-					],
-				],
 			],
 			'display_style' => [
 				'type'        => 'buttonset',
 				'label'       => esc_html__( 'Link Style', 'dashmate' ),
-				'description' => esc_html__( 'Choose how links are displayed', 'dashmate' ),
 				'default'     => 'list',
 				'refresh'     => false,
 				'choices'     => [
@@ -86,7 +67,7 @@ class Sample_Links extends Abstract_Widget {
 			'links' => [
 				'type'        => 'array',
 				'required'    => true,
-				'description' => esc_html__( 'Array of link objects with display settings', 'dashmate' ),
+				'description' => esc_html__( 'Array of link objects with display settings.', 'dashmate' ),
 			],
 		];
 	}
