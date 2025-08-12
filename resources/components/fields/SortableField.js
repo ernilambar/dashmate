@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import FieldWrapper from './FieldWrapper';
 
 export default function SortableField( {
 	label,
@@ -103,9 +104,7 @@ export default function SortableField( {
 	};
 
 	return (
-		<div className="sortable-field-container">
-			<label>{ label }</label>
-			{ description && <div className="description">{ description }</div> }
+		<FieldWrapper label={ label } description={ description } fieldType="sortable">
 			<div style={ { marginTop: 8 } }>
 				<DragDropContext onDragEnd={ handleDragEnd }>
 					<Droppable droppableId="sortable-list" direction="vertical">
@@ -165,6 +164,6 @@ export default function SortableField( {
 					</Droppable>
 				</DragDropContext>
 			</div>
-		</div>
+		</FieldWrapper>
 	);
 }

@@ -11,7 +11,7 @@ export default function SelectField( {
 	defaultValue,
 } ) {
 	return (
-		<FieldWrapper label={ label } description={ description }>
+		<FieldWrapper label={ label } description={ description } fieldType="select">
 			<select
 				value={ value || defaultValue }
 				onChange={ ( e ) => onChange( fieldKey, e.target.value ) }

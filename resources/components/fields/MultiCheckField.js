@@ -11,7 +11,7 @@ export default function MultiCheckField( {
 	defaultValue,
 } ) {
 	return (
-		<FieldWrapper label={ label } description={ description }>
+		<FieldWrapper label={ label } description={ description } fieldType="multi-check">
 			<div style={ { marginTop: 4 } }>
 				{ choices &&
 					Array.isArray( choices ) &&

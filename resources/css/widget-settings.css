@@ -91,11 +91,11 @@
 }
 
 /* Field Wrapper */
-.field-wrapper {
+.dm-field {
 	margin-bottom: 12px;
 }
 
-.field-wrapper label {
+.dm-field label {
 	display: block;
 	font-weight: 500;
 	margin-bottom: 4px;

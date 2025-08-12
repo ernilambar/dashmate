@@ -8,9 +8,13 @@ const renderDescription = ( description ) => {
 	return <div className="description">{ description }</div>;
 };
 
-export default function FieldWrapper( { label, description, children } ) {
+export default function FieldWrapper( { label, description, children, fieldType } ) {
+	const fieldClasses = [ 'dm-field', fieldType ? `dm-field-type-${ fieldType }` : '' ]
+		.filter( Boolean )
+		.join( ' ' );
+
 	return (
-		<div className="field-wrapper">
+		<div className={ fieldClasses }>
 			{ label && <label>{ label }</label> }
 			{ renderDescription( description ) }
 			{ children }

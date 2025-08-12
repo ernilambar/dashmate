@@ -1,5 +1,4 @@
 import React from 'react';
-import SortableField from './SortableField';
 import Icon from './Icon';
 import {
 	TextField,
@@ -12,6 +11,7 @@ import {
 	MultiCheckField,
 	HiddenField,
 	RepeaterField,
+	SortableField,
 } from './fields';
 
 // Renders a form based on a widget schema and current values

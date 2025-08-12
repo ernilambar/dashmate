@@ -8,4 +8,5 @@ export { default as ButtonsetField } from './ButtonsetField';
 export { default as MultiCheckField } from './MultiCheckField';
 export { default as HiddenField } from './HiddenField';
 export { default as RepeaterField } from './RepeaterField';
+export { default as SortableField } from './SortableField';
 export { default as FieldWrapper } from './FieldWrapper';
