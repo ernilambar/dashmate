@@ -57,7 +57,7 @@ class Layouts_Page extends Abstract_Admin_Page {
 				[
 					'ajaxUrl' => admin_url( 'admin-ajax.php' ),
 					'restUrl' => rest_url( 'dashmate/v1/' ),
-					'nonce'   => wp_create_nonce( 'dashmate_layouts' ),
+					'nonce'   => wp_create_nonce( 'wp_rest' ),
 					'isDebug' => defined( 'WP_DEBUG' ) && WP_DEBUG,
 					'strings' => [
 						'loading'           => esc_html__( 'Loading layouts...', 'dashmate' ),

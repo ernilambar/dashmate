@@ -95,7 +95,11 @@ abstract class Base_Controller {
 	 * @return bool
 	 */
 	public function check_permissions() {
-		// Allow all requests for development.
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return false;
+		}
+
 		return true;
 	}
 
