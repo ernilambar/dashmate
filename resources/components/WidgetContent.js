@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import HtmlWidget from './widgets/HtmlWidget';
-// import IconboxWidget from './widgets/IconboxWidget'; // For reference
 import ProgressCirclesWidget from './widgets/ProgressCirclesWidget';
-import Links from './widgets/Links';
+import LinksWidget from './widgets/LinksWidget';
 import TabularWidget from './widgets/TabularWidget';
 
 class WidgetContent extends Component {
@@ -16,7 +15,7 @@ class WidgetContent extends Component {
 	}
 
 	componentDidMount() {
-		// If widgetData is provided as prop, use it; otherwise fetch data
+		// If widgetData is provided as prop, use it; otherwise fetch data.
 		if ( this.props.widgetData ) {
 			this.setState( { data: this.props.widgetData, loading: false } );
 		} else {
@@ -25,7 +24,7 @@ class WidgetContent extends Component {
 	}
 
 	componentDidUpdate( prevProps ) {
-		// Check if widgetData prop changed (when settings are saved and content is refetched)
+		// Check if widgetData prop changed (when settings are saved and content is refetched).
 		if ( prevProps.widgetData !== this.props.widgetData ) {
 			if ( this.props.widgetData ) {
 				this.setState( { data: this.props.widgetData, loading: false } );
@@ -58,7 +57,7 @@ class WidgetContent extends Component {
 	}
 
 	handleSettingsChange = ( newSettings, needsRefresh = false ) => {
-		// Propagate settings changes to parent Widget component
+		// Propagate settings changes to parent Widget component.
 		if ( this.props.onSettingsChange ) {
 			this.props.onSettingsChange( newSettings, needsRefresh );
 		}
@@ -76,13 +75,13 @@ class WidgetContent extends Component {
 			return <div className="widget-error">Error: { error }</div>;
 		}
 
-		// Route to appropriate widget component
+		// Route to appropriate widget component.
 		switch ( widget.type ) {
 			case 'html':
 				return <HtmlWidget widgetId={ widget.id } data={ data } settings={ settings } />;
 			case 'links':
 				return (
-					<Links
+					<LinksWidget
 						widgetId={ widget.id }
 						data={ data }
 						settings={ settings }
@@ -99,8 +98,6 @@ class WidgetContent extends Component {
 				);
 			case 'tabular':
 				return <TabularWidget widgetId={ widget.id } data={ data } settings={ settings } />;
-			// case 'iconbox':
-			// 	return <IconboxWidget widgetId={ widget.id } data={ data } settings={ settings } />;
 			default:
 				return <p>Unknown widget type: { widget.type }</p>;
 		}

@@ -1,8 +1,7 @@
-/* HTML Widget */
-.html-widget {
+.dm-html-widget {
 	padding: 10px;
 
-	.html-content {
+	.dm-html-content {
 		line-height: 1.6;
 
 		h1,
@@ -72,15 +71,5 @@
 			border-radius: 3px;
 			overflow-x: auto;
 		}
-	}
-
-	.html-scripts-notice {
-		margin-top: 10px;
-		padding: 8px 12px;
-		background: #f0f8ff;
-		border: 1px solid #0073aa;
-		border-radius: 4px;
-		font-size: 12px;
-		color: #0073aa;
 	}
 }

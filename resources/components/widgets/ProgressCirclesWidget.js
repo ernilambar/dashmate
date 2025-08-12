@@ -24,16 +24,17 @@ class ProgressCirclesWidget extends React.Component {
 			return;
 		}
 
-		// Set current values directly
+		// Set current values directly.
 		const currentValues = {};
 		items.forEach( ( item, index ) => {
 			currentValues[ index ] = item.percentage || 0;
 		} );
+
 		this.setState( { currentValues } );
 	};
 
 	handleCircleClick = ( index, item ) => {
-		// Handle circle click if needed
+		// Handle circle click if needed.
 	};
 
 	renderProgressCircle = ( item, index ) => {
@@ -44,13 +45,13 @@ class ProgressCirclesWidget extends React.Component {
 		const currentValue = currentValues[ index ] || 0;
 		const hideCaption = settings.hide_caption || false;
 
-		// Responsive radius calculation - smaller circles for smaller containers
+		// Responsive radius calculation - smaller circles for smaller containers.
 		const baseRadius = 40;
 		const minRadius = 25;
 		const maxRadius = 50;
 
-		// Calculate responsive radius based on container width
-		const containerWidth = this.props.containerWidth || 400; // Default fallback
+		// Calculate responsive radius based on container width.
+		const containerWidth = this.props.containerWidth || 400;
 		const responsiveRadius = Math.max( minRadius, Math.min( maxRadius, containerWidth / 12 ) );
 
 		const radius = responsiveRadius;
@@ -58,25 +59,25 @@ class ProgressCirclesWidget extends React.Component {
 		const strokeDasharray = circumference;
 		const strokeDashoffset = circumference - ( currentValue / 100 ) * circumference;
 
-		// Calculate responsive stroke width based on radius
+		// Calculate responsive stroke width based on radius.
 		const minStrokeWidth = 2;
 		const maxStrokeWidth = 8;
 		const strokeWidth = Math.max( minStrokeWidth, Math.min( maxStrokeWidth, radius / 8 ) );
 
-		// Calculate SVG size based on radius
-		const svgSize = radius * 2 + 20; // Add padding
+		// Calculate SVG size based on radius.
+		const svgSize = radius * 2 + 20; // Add padding.
 		const center = svgSize / 2;
 
 		return (
 			<div
 				key={ index }
-				className="progress-circle-item"
+				className="dm-progress-circle-item"
 				onClick={ () => this.handleCircleClick( index, item ) }
 			>
-				<div className="progress-circle-container">
-					<svg className="progress-circle" width={ svgSize } height={ svgSize }>
+				<div className="dm-progress-circle-container">
+					<svg className="dm-progress-circle" width={ svgSize } height={ svgSize }>
 						<circle
-							className="progress-circle-bg"
+							className="dm-progress-circle-bg"
 							cx={ center }
 							cy={ center }
 							r={ radius }
@@ -85,7 +86,7 @@ class ProgressCirclesWidget extends React.Component {
 							strokeWidth={ strokeWidth }
 						/>
 						<circle
-							className="progress-circle-fill"
+							className="dm-progress-circle-fill"
 							cx={ center }
 							cy={ center }
 							r={ radius }
@@ -98,10 +99,10 @@ class ProgressCirclesWidget extends React.Component {
 							transform={ `rotate(-90 ${ center } ${ center })` }
 						/>
 					</svg>
-					{ value && <div className="progress-circle-label">{ value }</div> }
+					{ value && <div className="dm-progress-circle-label">{ value }</div> }
 				</div>
 				{ caption && ! hideCaption && (
-					<div className="progress-circle-caption">{ caption }</div>
+					<div className="dm-progress-circle-caption">{ caption }</div>
 				) }
 			</div>
 		);
@@ -113,7 +114,7 @@ class ProgressCirclesWidget extends React.Component {
 
 		if ( ! items || ! Array.isArray( items ) || items.length === 0 ) {
 			return (
-				<div className="progress-circles-widget">
+				<div className="dm-progress-circles-widget">
 					<div className="widget-no-data">
 						<p>No progress data available.</p>
 					</div>
@@ -122,8 +123,8 @@ class ProgressCirclesWidget extends React.Component {
 		}
 
 		return (
-			<div className="progress-circles-widget">
-				<div className="progress-circles-grid">
+			<div className="dm-progress-circles-widget">
+				<div className="dm-progress-circles-grid">
 					{ items.map( ( item, index ) => this.renderProgressCircle( item, index ) ) }
 				</div>
 			</div>

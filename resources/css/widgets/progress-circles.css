@@ -1,27 +1,21 @@
-/* Progress Circles Widget */
-.progress-circles-widget {
+.dm-progress-circles-widget {
 	padding: 10px;
 
-	.progress-circle-container {
+	.dm-progress-circle-container {
 		position: relative;
 		display: inline-block;
 		margin-bottom: 8px;
 	}
 
-	.progress-circle {
-		/* Remove transform as it's handled in JS */
-	}
-
-	.progress-circle-bg {
+	.dm-progress-circle-bg {
 		stroke: #e1e1e1;
 	}
 
-	.progress-circle-fill {
+	.dm-progress-circle-fill {
 		stroke: #6facde;
-		/* No transition - static display */
 	}
 
-	.progress-circle-label {
+	.dm-progress-circle-label {
 		position: absolute;
 		top: 50%;
 		left: 50%;
@@ -31,67 +25,67 @@
 		color: #23282d;
 	}
 
-	.progress-circle-caption {
+	.dm-progress-circle-caption {
 		font-size: 12px;
 		color: #666;
 		margin-top: 5px;
 		text-align: center;
 		word-wrap: break-word;
 	}
-}
 
-.progress-circles-grid {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); /* Responsive grid */
-	gap: 10px;
-	align-items: start;
-	width: 100%;
-	max-width: 100%;
-}
+	.dm-progress-circles-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+		gap: 10px;
+		align-items: start;
+		width: 100%;
+		max-width: 100%;
+	}
 
-.progress-circle-item {
-	text-align: center;
-	cursor: pointer;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	min-height: 80px;
+	.dm-progress-circle-item {
+		text-align: center;
+		cursor: pointer;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		min-height: 80px;
+	}
 }
 
 /* Responsive adjustments for smaller screens */
 @media (max-width: 768px) {
-	.progress-circles-grid {
+	.dm-progress-circles-grid {
 		gap: 8px;
 	}
 
-	.progress-circle-item {
+	.dm-progress-circle-item {
 		min-height: 60px;
 	}
 
-	.progress-circle-label {
+	.dm-progress-circle-label {
 		font-size: 12px;
 	}
 
-	.progress-circle-caption {
+	.dm-progress-circle-caption {
 		font-size: 10px;
 	}
 }
 
 @media (max-width: 480px) {
-	.progress-circles-grid {
+	.dm-progress-circles-grid {
 		gap: 5px;
 	}
 
-	.progress-circle-item {
+	.dm-progress-circle-item {
 		min-height: 50px;
 	}
 
-	.progress-circle-label {
+	.dm-progress-circle-label {
 		font-size: 10px;
 	}
 
-	.progress-circle-caption {
+	.dm-progress-circle-caption {
 		font-size: 9px;
 	}
 }

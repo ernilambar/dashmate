@@ -1,8 +1,7 @@
 import React from 'react';
 import Icon from '../Icon';
-import WidgetSettingsForm from '../WidgetSettingsForm';
 
-class Links extends React.Component {
+class LinksWidget extends React.Component {
 	constructor( props ) {
 		super( props );
 		this.state = {
@@ -17,20 +16,9 @@ class Links extends React.Component {
 	}
 
 	componentDidUpdate( prevProps ) {
-		// Check if widgetId changed
-		if ( prevProps.widgetId !== this.props.widgetId ) {
-			// Widget ID changed, but data will be fetched by parent component
-		}
-
-		// Check if settings prop changed (when settings are updated from parent)
+		// Check if settings prop changed (when settings are updated from parent).
 		if ( prevProps.settings !== this.props.settings ) {
 			this.setState( { settings: this.props.settings || {} } );
-		}
-
-		// Check if data prop changed (when settings are saved and content is refetched)
-		if ( prevProps.data !== this.props.data ) {
-			// Data has been updated by parent component, no need to update state
-			// as we'll use props.data directly in render
 		}
 	}
 
@@ -42,10 +30,10 @@ class Links extends React.Component {
 			if ( result.success ) {
 				this.setState( { widgetSchemas: result.data } );
 			} else {
-				// Handle error silently or log to server
+				// Handle error silently.
 			}
 		} catch ( error ) {
-			// Handle error silently or log to server
+			// Handle error silently.
 		}
 	};
 
@@ -54,10 +42,10 @@ class Links extends React.Component {
 	};
 
 	handleSettingsChange = ( newSettings, needsRefresh = false ) => {
-		// Update local state immediately for instant feedback
+		// Update local state immediately for instant feedback.
 		this.setState( { settings: { ...this.state.settings, ...newSettings } } );
 
-		// Propagate changes to parent component if onChange prop is provided
+		// Propagate changes to parent component if onChange prop is provided.
 		if ( this.props.onSettingsChange ) {
 			this.props.onSettingsChange( newSettings, needsRefresh );
 		}
@@ -65,24 +53,24 @@ class Links extends React.Component {
 
 	render() {
 		const { settings, widgetSchemas } = this.state;
-		const { data } = this.props; // Use data from props instead of state
+		const { data } = this.props;
 		const schema = widgetSchemas?.[ 'links' ]?.settings_schema;
 
-		// Get links from data and settings from widget settings
+		// Get links from data and settings from widget settings.
 		const links = data?.links || [];
 		const linkStyle = settings?.display_style || 'list';
 		const hideIcon = settings?.hide_icon || false;
 		const iconType = settings?.icon_type || 'material-icons';
 
-		// Show loading if data is not available yet
+		// Show loading if data is not available yet.
 		if ( ! data ) {
 			return <div>Loading...</div>;
 		}
 
-		// Ensure links is always an array
+		// Ensure links is always an array.
 		const safeLinks = Array.isArray( links ) ? links : [];
 
-		// Helper function to get icon props based on icon type
+		// Helper function to get icon props based on icon type.
 		const getIconProps = ( link ) => {
 			if ( ! link.icon ) return {};
 
@@ -99,7 +87,6 @@ class Links extends React.Component {
 					name: link.icon,
 				};
 			} else {
-				// Default to material-icons
 				return {
 					library: 'material-icons',
 					name: link.icon,
@@ -108,22 +95,22 @@ class Links extends React.Component {
 		};
 
 		return (
-			<div className="quick-links-widget">
-				<div className={ `quick-links-${ linkStyle }` }>
+			<div className="dm-links-widget">
+				<div className={ `dm-links-${ linkStyle }` }>
 					{ safeLinks.map( ( link, index ) => (
 						<div
 							key={ index }
-							className="quick-link-item"
+							className="dm-link-item"
 							onClick={ () => this.handleLinkClick( link ) }
 						>
 							{ ! hideIcon && link.icon && (
 								<Icon
 									{ ...getIconProps( link ) }
 									size="small"
-									className="quick-link-icon"
+									className="dm-link-icon"
 								/>
 							) }
-							<span className="quick-link-title">{ link.title }</span>
+							<span className="dm-link-title">{ link.title }</span>
 						</div>
 					) ) }
 				</div>
@@ -132,4 +119,4 @@ class Links extends React.Component {
 	}
 }
 
-export default Links;
+export default LinksWidget;

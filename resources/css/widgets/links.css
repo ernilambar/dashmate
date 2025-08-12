@@ -1,20 +1,19 @@
-/* Quick Links Widget */
-.quick-links-widget {
+.dm-links-widget {
 	padding: 10px;
 
-	.quick-links-list {
+	.dm-links-list {
 		display: flex;
 		flex-direction: column;
 		gap: 8px;
 	}
 
-	.quick-links-grid {
+	.dm-links-grid {
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 		gap: 12px;
 	}
 
-	.quick-link-item {
+	.dm-link-item {
 		display: flex;
 		align-items: center;
 		padding: 10px 12px;
@@ -30,7 +29,7 @@
 			text-decoration: none;
 		}
 
-		.quick-link-icon {
+		.dm-link-icon {
 			margin-right: 10px;
 			font-size: 16px;
 			width: 16px;
@@ -41,7 +40,6 @@
 			align-items: center;
 			justify-content: center;
 
-			/* SVG icon specific styling */
 			&.dm-svg-icon {
 				svg {
 					width: 100%;
@@ -50,7 +48,6 @@
 				}
 			}
 
-			/* Dashicons specific styling */
 			&.dashicons {
 				font-size: 16px;
 				width: 16px;
@@ -58,7 +55,6 @@
 				line-height: 1;
 			}
 
-			/* Material icons specific styling */
 			&.dm-material-icons {
 				font-family: "Material Icons";
 				font-weight: normal;
@@ -76,7 +72,7 @@
 			}
 		}
 
-		.quick-link-title {
+		.dm-link-title {
 			font-size: 14px;
 			font-weight: 500;
 		}
