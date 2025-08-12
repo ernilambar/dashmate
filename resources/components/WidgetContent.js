@@ -78,13 +78,21 @@ class WidgetContent extends Component {
 		// Route to appropriate widget component.
 		switch ( widget.type ) {
 			case 'html':
-				return <HtmlWidget widgetId={ widget.id } data={ data } settings={ settings } />;
+				return (
+					<HtmlWidget
+						widgetId={ widget.id }
+						data={ data }
+						settings={ settings }
+						widgetSchemas={ this.props.widgetSchemas }
+					/>
+				);
 			case 'links':
 				return (
 					<LinksWidget
 						widgetId={ widget.id }
 						data={ data }
 						settings={ settings }
+						widgetSchemas={ this.props.widgetSchemas }
 						onSettingsChange={ this.handleSettingsChange }
 					/>
 				);
@@ -94,10 +102,18 @@ class WidgetContent extends Component {
 						widgetId={ widget.id }
 						data={ data }
 						settings={ settings }
+						widgetSchemas={ this.props.widgetSchemas }
 					/>
 				);
 			case 'tabular':
-				return <TabularWidget widgetId={ widget.id } data={ data } settings={ settings } />;
+				return (
+					<TabularWidget
+						widgetId={ widget.id }
+						data={ data }
+						settings={ settings }
+						widgetSchemas={ this.props.widgetSchemas }
+					/>
+				);
 			default:
 				return <p>Unknown widget type: { widget.type }</p>;
 		}

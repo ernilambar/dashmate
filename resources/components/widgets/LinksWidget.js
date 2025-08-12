@@ -12,7 +12,27 @@ class LinksWidget extends React.Component {
 	}
 
 	componentDidMount() {
-		this.fetchWidgetSchemas();
+		// Only fetch schemas if we don't have them from props.
+		if ( ! this.props.widgetSchemas ) {
+			// Wait for dashmateApiSettings to be available before making the request.
+			if ( typeof dashmateApiSettings !== 'undefined' && dashmateApiSettings?.nonce ) {
+				this.fetchWidgetSchemas();
+			} else {
+				// Retry after a short delay if settings are not available yet.
+				setTimeout( () => {
+					if (
+						typeof dashmateApiSettings !== 'undefined' &&
+						dashmateApiSettings?.nonce
+					) {
+						this.fetchWidgetSchemas();
+					} else {
+						console.error(
+							'Dashmate: LinksWidget - dashmateApiSettings not available'
+						);
+					}
+				}, 100 );
+			}
+		}
 	}
 
 	componentDidUpdate( prevProps ) {
@@ -23,14 +43,25 @@ class LinksWidget extends React.Component {
 	}
 
 	fetchWidgetSchemas = async () => {
+		// Check if required settings are available.
+		if (
+			typeof dashmateApiSettings === 'undefined' ||
+			! dashmateApiSettings?.nonce ||
+			! dashmateApiSettings?.restUrl
+		) {
+			return;
+		}
+
 		try {
-			const response = await fetch( `${ dashmateApiSettings.restUrl }widgets` );
+			const response = await fetch( `${ dashmateApiSettings.restUrl }widgets`, {
+				headers: {
+					'X-WP-Nonce': dashmateApiSettings?.nonce || '',
+				},
+			} );
 			const result = await response.json();
 
 			if ( result.success ) {
 				this.setState( { widgetSchemas: result.data } );
-			} else {
-				// Handle error silently.
 			}
 		} catch ( error ) {
 			// Handle error silently.
@@ -53,8 +84,10 @@ class LinksWidget extends React.Component {
 
 	render() {
 		const { settings, widgetSchemas } = this.state;
-		const { data } = this.props;
-		const schema = widgetSchemas?.[ 'links' ]?.settings_schema;
+		const { data, widgetSchemas: propsWidgetSchemas } = this.props;
+		// Use schemas from props if available, otherwise use state.
+		const schemas = propsWidgetSchemas || widgetSchemas;
+		const schema = schemas?.[ 'links' ]?.settings_schema;
 
 		// Get links from data and settings from widget settings.
 		const links = data?.links || [];
