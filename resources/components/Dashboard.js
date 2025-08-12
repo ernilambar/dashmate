@@ -3,6 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 import Column from './Column';
 import WidgetSelector from './WidgetSelector';
+import LayoutSaver from './LayoutSaver';
 
 class Dashboard extends Component {
 	constructor( props ) {
@@ -10,6 +11,7 @@ class Dashboard extends Component {
 		this.state = {
 			dashboard: null,
 			widgets: null,
+			layouts: null,
 			loading: true,
 			error: null,
 		};
@@ -18,6 +20,7 @@ class Dashboard extends Component {
 	componentDidMount() {
 		this.loadDashboard();
 		this.loadWidgets();
+		this.loadLayouts();
 	}
 
 	async loadDashboard() {
@@ -50,6 +53,23 @@ class Dashboard extends Component {
 
 			if ( data.success ) {
 				this.setState( { widgets: data.data } );
+			}
+		} catch ( error ) {
+			// Handle error silently
+		}
+	}
+
+	async loadLayouts() {
+		try {
+			const response = await fetch( `${ dashmateApiSettings.restUrl }layouts`, {
+				headers: {
+					'X-WP-Nonce': dashmateApiSettings?.nonce || '',
+				},
+			} );
+			const data = await response.json();
+
+			if ( data.success ) {
+				this.setState( { layouts: data.data } );
 			}
 		} catch ( error ) {
 			// Handle error silently
@@ -262,6 +282,11 @@ class Dashboard extends Component {
 		}
 	};
 
+	handleLayoutSaved = () => {
+		// Reload layouts to include the new one
+		this.loadLayouts();
+	};
+
 	render() {
 		const { dashboard, widgets, loading, error } = this.state;
 
@@ -307,6 +332,16 @@ class Dashboard extends Component {
 
 		return (
 			<div className="dashmate-app">
+				{ /* Dashboard Controls */ }
+				<div className="dashboard-controls">
+					<LayoutSaver dashboard={ dashboard } onLayoutSaved={ this.handleLayoutSaved } />
+					<WidgetSelector
+						widgets={ widgets }
+						dashboard={ dashboard }
+						onWidgetSelect={ this.handleWidgetSelect }
+					/>
+				</div>
+
 				<DragDropContext onDragEnd={ this.handleDragEnd }>
 					<div className={ dashboardContentClass }>
 						{ columns.length > 0 ? (
@@ -342,11 +377,6 @@ class Dashboard extends Component {
 						) }
 					</div>
 				</DragDropContext>
-				<WidgetSelector
-					widgets={ widgets }
-					dashboard={ dashboard }
-					onWidgetSelect={ this.handleWidgetSelect }
-				/>
 			</div>
 		);
 	}

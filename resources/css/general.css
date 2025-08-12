@@ -1,5 +1,21 @@
 /* Widget Selector Styles - Moved to widget-selector.css */
 
+/* Dashboard Controls Styles */
+.dashboard-controls {
+	position: absolute;
+	top: -30px;
+	right: 0;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	pointer-events: none;
+	z-index: 1000;
+}
+
+.dashboard-controls > * {
+	pointer-events: auto;
+}
+
 /* Dashboard App Styles */
 .dashmate-app {
 	max-width: 2200px;

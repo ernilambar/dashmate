@@ -1,15 +1,7 @@
 /* Widget Selector Styles */
 .widget-selector {
-	position: absolute;
-	top: -30px;
-	right: 0;
+	position: relative;
 	display: inline-block;
-	pointer-events: none;
-	z-index: 1000;
-}
-
-.widget-selector > * {
-	pointer-events: auto;
 }
 
 .widget-selector-toggle {

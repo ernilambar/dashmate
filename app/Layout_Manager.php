@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Nilambar\Dashmate;
 
+use Nilambar\Dashmate\Models\Custom_Layout_Model;
 use Nilambar\Dashmate\Utils\JSON_Utils;
 use WP_Error;
 
@@ -28,16 +29,26 @@ class Layout_Manager {
 	 */
 	public static function get_layouts() {
 		$layouts = [
-			'current' => [
+			'current'   => [
 				'title' => esc_html__( 'Current Layout', 'dashmate' ),
 				'type'  => 'options',
 			],
-			'default' => [
+			'default'   => [
 				'title' => esc_html__( 'Default', 'dashmate' ),
 				'path'  => DASHMATE_DIR . '/layouts/default.json',
 				'type'  => 'file',
 			],
+			'favourite' => [
+				'title' => esc_html__( 'Favourite', 'dashmate' ),
+				'type'  => 'custom',
+			],
 		];
+
+		// Add custom layouts from database.
+		$custom_layouts = self::get_custom_layouts_from_db();
+		if ( ! is_wp_error( $custom_layouts ) ) {
+			$layouts = array_merge( $layouts, $custom_layouts );
+		}
 
 		/**
 		 * Filter the registered layouts.
@@ -52,8 +63,8 @@ class Layout_Manager {
 			// Automatically add id field based on the array key.
 			$layouts[ $key ]['id'] = $key;
 
-			// Skip path validation for options-based layouts.
-			if ( 'options' === ( $layout['type'] ?? 'file' ) ) {
+			// Skip path validation for options-based and custom layouts.
+			if ( 'options' === ( $layout['type'] ?? 'file' ) || 'custom' === ( $layout['type'] ?? 'file' ) ) {
 				continue;
 			}
 
@@ -132,6 +143,11 @@ class Layout_Manager {
 			return self::get_current_layout_data();
 		}
 
+		// Handle custom layouts.
+		if ( 'custom' === ( $layout['type'] ?? 'file' ) ) {
+			return self::get_custom_layout_data( $slug );
+		}
+
 		if ( ! file_exists( $layout['path'] ) || ! is_readable( $layout['path'] ) ) {
 			return new WP_Error( 'layout_load_error', esc_html__( 'Layout file does not exist or is not readable: ', 'dashmate' ) . $layout['path'] );
 		}
@@ -181,6 +197,54 @@ class Layout_Manager {
 		}
 
 		return $layout_data;
+	}
+
+	/**
+	 * Get custom layout data from database.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $key Custom layout key.
+	 *
+	 * @return array|WP_Error
+	 */
+	public static function get_custom_layout_data( $key ) {
+		$layout_data = Custom_Layout_Model::get_data( $key );
+
+		if ( is_wp_error( $layout_data ) ) {
+			return $layout_data;
+		}
+
+		// Ensure we return the expected structure.
+		if ( ! is_array( $layout_data ) ) {
+			return new WP_Error( 'invalid_layout_data', esc_html__( 'Invalid layout data structure.', 'dashmate' ) );
+		}
+
+		return $layout_data;
+	}
+
+	/**
+	 * Get custom layouts from database.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return array|WP_Error
+	 */
+	public static function get_custom_layouts_from_db() {
+		$custom_keys = Custom_Layout_Model::get_all_keys();
+		$layouts     = [];
+
+		foreach ( $custom_keys as $key ) {
+			$layout_data = Custom_Layout_Model::get_data( $key );
+			if ( ! is_wp_error( $layout_data ) ) {
+				$layouts[ $key ] = [
+					'title' => esc_html__( 'Custom Layout', 'dashmate' ) . ': ' . $key,
+					'type'  => 'custom',
+				];
+			}
+		}
+
+		return $layouts;
 	}
 
 	/**

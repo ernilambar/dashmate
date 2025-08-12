@@ -2,6 +2,7 @@
 @import "./general.css";
 @import "./widget.css";
 @import "./widget-selector.css";
+@import "./layout-saver.css";
 @import "./widget-settings.css";
 @import "./sortable.css";
 /* Import widget-specific styles */
