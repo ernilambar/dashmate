@@ -117,8 +117,7 @@ abstract class Abstract_Widget {
 	 * @since 1.0.0
 	 *
 	 * @param array $settings Widget settings.
-	 *
-	 * @return array
+	 * @return array Widget content.
 	 */
 	abstract public function get_content( array $settings = [] ): array;
 
@@ -391,29 +390,24 @@ abstract class Abstract_Widget {
 	public function get_essential_fields() {
 		return [
 			'id'       => [
-				'type'        => 'string',
-				'required'    => true,
-				'description' => 'Unique widget identifier',
+				'type'     => 'string',
+				'required' => true,
 			],
 			'type'     => [
-				'type'        => 'string',
-				'required'    => true,
-				'description' => 'Widget type for routing',
+				'type'     => 'string',
+				'required' => true,
 			],
 			'title'    => [
-				'type'        => 'string',
-				'required'    => true,
-				'description' => 'Widget display title (REQUIRED FOR ALL WIDGETS)',
+				'type'     => 'string',
+				'required' => true,
 			],
 			'icon'     => [
-				'type'        => 'string',
-				'required'    => true,
-				'description' => 'Widget icon CSS class (REQUIRED FOR ALL WIDGETS, may be empty)',
+				'type'     => 'string',
+				'required' => true,
 			],
 			'settings' => [
-				'type'        => 'object',
-				'required'    => true,
-				'description' => 'Widget settings object',
+				'type'     => 'object',
+				'required' => true,
 			],
 		];
 	}
@@ -428,14 +422,12 @@ abstract class Abstract_Widget {
 	protected function get_universal_output_schema() {
 		return [
 			'title' => [
-				'type'        => 'string',
-				'required'    => true,
-				'description' => 'Widget title (REQUIRED FOR ALL WIDGETS)',
+				'type'     => 'string',
+				'required' => true,
 			],
 			'icon'  => [
-				'type'        => 'string',
-				'required'    => true,
-				'description' => 'Widget icon CSS class (REQUIRED FOR ALL WIDGETS, may be empty)',
+				'type'     => 'string',
+				'required' => true,
 			],
 		];
 	}

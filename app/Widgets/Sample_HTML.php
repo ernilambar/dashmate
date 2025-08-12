@@ -55,7 +55,6 @@ class Sample_HTML extends Abstract_Widget {
 	 * @since 1.0.0
 	 *
 	 * @param array $settings Widget settings.
-	 *
 	 * @return array
 	 */
 	public function get_content( array $settings = [] ): array {

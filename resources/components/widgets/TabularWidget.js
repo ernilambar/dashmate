@@ -5,17 +5,17 @@ class TabularWidget extends React.Component {
 	constructor( props ) {
 		super( props );
 		this.state = {
-			loadingActions: {}, // Track loading state for each action
-			actionResults: {}, // Track success/error states
+			loadingActions: {}, // Track loading state for each action.
+			actionResults: {}, // Track success/error states.
 		};
 	}
 
 	handleTableClick = ( table, tableIndex ) => {
-		// Handle table click if needed
+		// Handle table click if needed.
 	};
 
 	handleRowClick = ( row, rowIndex, tableIndex ) => {
-		// Handle row click if needed
+		// Handle row click if needed.
 	};
 
 	/**
@@ -29,12 +29,12 @@ class TabularWidget extends React.Component {
 	handleActionClick = async ( action, row, rowIndex, tableIndex ) => {
 		const actionKey = `${ tableIndex }-${ rowIndex }-${ action }`;
 
-		// Check if action is defined for this row
+		// Check if action is defined for this row.
 		if ( ! this.isActionDefined( action, row ) ) {
 			return;
 		}
 
-		// Set loading state
+		// Set loading state.
 		this.setState( ( prevState ) => ( {
 			loadingActions: {
 				...prevState.loadingActions,
@@ -43,7 +43,6 @@ class TabularWidget extends React.Component {
 		} ) );
 
 		try {
-			// Handle different action types
 			switch ( action ) {
 				case 'delete':
 					await this.handleDeleteAction( row, rowIndex, tableIndex );
@@ -55,7 +54,7 @@ class TabularWidget extends React.Component {
 					throw new Error( `Unknown action: ${ action }` );
 			}
 
-			// Set success state
+			// Set success state.
 			this.setState( ( prevState ) => ( {
 				actionResults: {
 					...prevState.actionResults,
@@ -66,7 +65,7 @@ class TabularWidget extends React.Component {
 				},
 			} ) );
 		} catch ( error ) {
-			// Set error state
+			// Set error state.
 			this.setState( ( prevState ) => ( {
 				actionResults: {
 					...prevState.actionResults,
@@ -77,7 +76,7 @@ class TabularWidget extends React.Component {
 				},
 			} ) );
 		} finally {
-			// Clear loading state
+			// Clear loading state.
 			this.setState( ( prevState ) => ( {
 				loadingActions: {
 					...prevState.loadingActions,
@@ -85,7 +84,7 @@ class TabularWidget extends React.Component {
 				},
 			} ) );
 
-			// Clear result after 3 seconds
+			// Clear result after few seconds.
 			setTimeout( () => {
 				this.setState( ( prevState ) => {
 					const newResults = { ...prevState.actionResults };
@@ -109,29 +108,29 @@ class TabularWidget extends React.Component {
 
 		const cellText = row.cells[ 0 ].text;
 
-		// Try to extract ID from HTML link
+		// Try to extract ID from HTML link.
 		const linkMatch = cellText.match( /<a[^>]*>(\d+)<\/a>/ );
 		if ( linkMatch ) {
-			return linkMatch[ 1 ]; // Extract the number inside the link
+			return linkMatch[ 1 ]; // Extract the number inside the link.
 		}
 
-		// Fallback: try to extract just the number
+		// Fallback: try to extract just the number.
 		const numberMatch = cellText.match( /(\d+)/ );
 		if ( numberMatch ) {
 			return numberMatch[ 1 ];
 		}
 
-		throw new Error( 'Could not extract ID from row data' );
+		throw new Error( 'Could not extract ID from row data.' );
 	};
 
 	/**
 	 * Handle delete action with confirmation.
 	 */
 	handleDeleteAction = async ( row, rowIndex, tableIndex ) => {
-		// Get action configuration from row
+		// Get action configuration from row.
 		const actionConfig = row.actions?.delete;
 		if ( ! actionConfig || ! actionConfig.endpoint ) {
-			throw new Error( 'Delete action not configured for this row' );
+			throw new Error( 'Delete action not configured for this row.' );
 		}
 
 		// Check if confirmation is required
@@ -140,14 +139,14 @@ class TabularWidget extends React.Component {
 				actionConfig.message || 'Are you sure you want to delete this item?';
 			const confirmed = window.confirm( confirmationMessage );
 			if ( ! confirmed ) {
-				throw new Error( 'Action cancelled by user' );
+				throw new Error( 'Action cancelled by user.' );
 			}
 		}
 
-		// Extract ID from the first cell
+		// Extract ID from the first cell.
 		const id = this.extractIdFromRow( row );
 
-		// Build request data
+		// Build request data.
 		const requestData = {
 			id: id,
 			action: 'delete',
@@ -158,7 +157,7 @@ class TabularWidget extends React.Component {
 			timestamp: new Date().toISOString(),
 		};
 
-		// Call external API endpoint
+		// Call external API endpoint.
 		const response = await fetch( actionConfig.endpoint, {
 			method: 'POST',
 			headers: {
@@ -168,8 +167,10 @@ class TabularWidget extends React.Component {
 		} );
 
 		if ( ! response.ok ) {
-			const errorData = await response.json().catch( () => ( { message: 'Network error' } ) );
-			throw new Error( errorData.message || 'Failed to delete item' );
+			const errorData = await response
+				.json()
+				.catch( () => ( { message: 'Network error.' } ) );
+			throw new Error( errorData.message || 'Failed to delete item.' );
 		}
 
 		const result = await response.json();
@@ -179,16 +180,17 @@ class TabularWidget extends React.Component {
 	 * Handle sync action.
 	 */
 	handleSyncAction = async ( row, rowIndex, tableIndex ) => {
-		// Get action configuration from row
+		// Get action configuration from row.
 		const actionConfig = row.actions?.sync;
+
 		if ( ! actionConfig || ! actionConfig.endpoint ) {
-			throw new Error( 'Sync action not configured for this row' );
+			throw new Error( 'Sync action not configured for this row.' );
 		}
 
-		// Extract ID from the first cell
+		// Extract ID from the first cell.
 		const id = this.extractIdFromRow( row );
 
-		// Build request data
+		// Build request data.
 		const requestData = {
 			id: id,
 			widget_id: this.props.widgetId,
@@ -198,7 +200,7 @@ class TabularWidget extends React.Component {
 			timestamp: new Date().toISOString(),
 		};
 
-		// Call external API endpoint
+		// Call external API endpoint.
 		const response = await fetch( actionConfig.endpoint, {
 			method: 'POST',
 			headers: {
@@ -281,6 +283,7 @@ class TabularWidget extends React.Component {
 	 */
 	getActionTitle = ( action, row ) => {
 		const actionConfig = row.actions && row.actions[ action ];
+
 		if ( actionConfig && actionConfig.title ) {
 			return actionConfig.title;
 		}
@@ -299,37 +302,11 @@ class TabularWidget extends React.Component {
 	getActionIcon = ( action ) => {
 		switch ( action ) {
 			case 'delete':
-				return (
-					<svg
-						width="16"
-						height="16"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						strokeWidth="2"
-					>
-						<polyline points="3,6 5,6 21,6" />
-						<path d="m19,6v14a2,2 0 0,1 -2,2H7a2,2 0 0,1 -2,-2V6m3,0V4a2,2 0 0,1 2,-2h4a2,2 0 0,1 2,2v2" />
-					</svg>
-				);
+				return <Icon name="delete" size="medium" />;
 			case 'sync':
-				return (
-					<svg
-						width="16"
-						height="16"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						strokeWidth="2"
-					>
-						<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
-						<path d="M21 3v5h-5" />
-						<path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
-						<path d="M3 21v-5h5" />
-					</svg>
-				);
+				return <Icon name="sync" size="medium" />;
 			default:
-				return <Icon name="settings" size="small" />;
+				return <Icon name="settings" size="medium" />;
 		}
 	};
 
@@ -363,24 +340,24 @@ class TabularWidget extends React.Component {
 	 * @returns {JSX.Element} Cell content.
 	 */
 	renderCell = ( cell, cellIndex, row, rowIndex, tableIndex ) => {
-		// Check if this is the last column for actions
+		// Check if this is the last column for actions.
 		if ( cellIndex === row.cells.length - 1 ) {
-			// Last column - render actions
+			// Last column - render actions.
 			return this.renderActions( row, rowIndex, tableIndex );
 		}
 
-		// Get the cell content
+		// Get the cell content.
 		const cellContent = cell.text || cell.value || cell.content || '';
 
-		// Check if the content contains HTML tags
+		// Check if the content contains HTML tags.
 		const hasHtmlTags = /<[^>]*>/g.test( cellContent );
 
 		if ( hasHtmlTags ) {
-			// Render HTML content properly
+			// Render HTML content properly.
 			return <span dangerouslySetInnerHTML={ { __html: cellContent } } />;
 		}
 
-		// Render plain text content
+		// Render plain text content.
 		return cellContent;
 	};
 
@@ -395,7 +372,7 @@ class TabularWidget extends React.Component {
 	getCellClassName = ( cellIndex, totalCells, headers = [] ) => {
 		const classes = [];
 
-		// Add header-based classes
+		// Add header-based classes.
 		if ( headers[ cellIndex ] && headers[ cellIndex ].text ) {
 			const headerText = headers[ cellIndex ].text.toLowerCase().replace( /\s+/g, '-' );
 			classes.push( `column-${ headerText }` );
@@ -423,7 +400,7 @@ class TabularWidget extends React.Component {
 	getHeaderClassName = ( headerIndex, totalHeaders, headers = [] ) => {
 		const classes = [];
 
-		// Add header-based classes
+		// Add header-based classes.
 		if ( headers[ headerIndex ] && headers[ headerIndex ].text ) {
 			const headerText = headers[ headerIndex ].text.toLowerCase().replace( /\s+/g, '-' );
 			classes.push( `column-${ headerText }` );
@@ -523,7 +500,7 @@ class TabularWidget extends React.Component {
 								</div>
 							) : (
 								<div className="empty-container">
-									<p>No data available</p>
+									<p>No data available.</p>
 								</div>
 							) }
 						</div>

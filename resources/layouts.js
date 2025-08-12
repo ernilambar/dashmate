@@ -7,9 +7,10 @@
 import { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import LayoutPreview from './components/LayoutPreview';
-import JsonHighlight from './components/JsonHighlight';
+import CodeHighlight from './components/CodeHighlight';
 import './css/layouts.css';
 import './css/layout-preview.css';
+import './css/components/code-highlight.css';
 
 const LayoutsApp = () => {
 	const [ layouts, setLayouts ] = useState( [] );
@@ -342,7 +343,11 @@ const LayoutsApp = () => {
 							{ settings.strings?.loadingData || 'Loading layout data...' }
 						</div>
 					) : layoutData ? (
-						<JsonHighlight data={ layoutData } />
+						<CodeHighlight
+							code={ JSON.stringify( layoutData, null, 2 ) }
+							language="json"
+							showLineNumbers={ true }
+						/>
 					) : (
 						<div className="dashmate-layouts-json-no-data">
 							{ settings.strings?.noDataAvailable || 'No layout data available' }

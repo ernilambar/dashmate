@@ -35,7 +35,7 @@ class Sample_Links extends Abstract_Widget {
 	 * @since 1.0.0
 	 */
 	protected function define_widget() {
-		$this->description = esc_html__( 'Display sample links with various styles.', 'dashmate' );
+		$this->description = esc_html__( 'Display sample links.', 'dashmate' );
 		$this->icon        = 'dataset_linked';
 
 		$this->settings_schema = [
@@ -67,7 +67,7 @@ class Sample_Links extends Abstract_Widget {
 			'links' => [
 				'type'        => 'array',
 				'required'    => true,
-				'description' => esc_html__( 'Array of link objects with display settings.', 'dashmate' ),
+				'description' => esc_html__( 'Array of link objects.', 'dashmate' ),
 			],
 		];
 	}
@@ -78,8 +78,7 @@ class Sample_Links extends Abstract_Widget {
 	 * @since 1.0.0
 	 *
 	 * @param array $settings Widget settings.
-	 *
-	 * @return array
+	 * @return array Widget content.
 	 */
 	public function get_content( array $settings = [] ): array {
 		$settings = $this->merge_settings_with_defaults( $settings );
