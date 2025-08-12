@@ -1,6 +1,18 @@
 import React from 'react';
 import SortableField from './SortableField';
 import Icon from './Icon';
+import {
+	TextField,
+	UrlField,
+	CheckboxField,
+	SelectField,
+	NumberField,
+	RadioField,
+	ButtonsetField,
+	MultiCheckField,
+	HiddenField,
+	RepeaterField,
+} from './fields';
 
 // Renders a form based on a widget schema and current values
 export default function WidgetSettingsForm( {
@@ -84,269 +96,89 @@ export default function WidgetSettingsForm( {
 
 	// Helper to render a single field
 	const renderField = ( key, fieldSchema, value ) => {
-		// Helper function to render description
-		const renderDescription = ( description ) => {
-			if ( ! description ) {
-				return null;
-			}
-			return <div className="description">{ description }</div>;
+		const commonProps = {
+			key,
+			value,
+			onChange: handleFieldChange,
+			fieldKey: key,
 		};
 
 		switch ( fieldSchema.type ) {
 			case 'text':
 				return (
-					<div key={ key } style={ { marginBottom: 12 } }>
-						<label>{ fieldSchema.label }</label>
-						{ renderDescription( fieldSchema.description ) }
-						<input
-							type="text"
-							value={ value || '' }
-							onChange={ ( e ) => handleFieldChange( key, e.target.value ) }
-						/>
-					</div>
+					<TextField
+						{ ...commonProps }
+						label={ fieldSchema.label }
+						description={ fieldSchema.description }
+					/>
 				);
 			case 'url':
 				return (
-					<div key={ key } style={ { marginBottom: 12 } }>
-						<label>{ fieldSchema.label }</label>
-						{ renderDescription( fieldSchema.description ) }
-						<input
-							type="url"
-							value={ value || '' }
-							onChange={ ( e ) => handleFieldChange( key, e.target.value ) }
-						/>
-					</div>
+					<UrlField
+						{ ...commonProps }
+						label={ fieldSchema.label }
+						description={ fieldSchema.description }
+					/>
 				);
 			case 'checkbox':
 				return (
-					<div key={ key } style={ { marginBottom: 12 } }>
-						<label>
-							<input
-								type="checkbox"
-								checked={ !! value }
-								onChange={ ( e ) => handleFieldChange( key, e.target.checked ) }
-							/>
-							{ fieldSchema.label }
-						</label>
-						{ renderDescription( fieldSchema.description ) }
-					</div>
+					<CheckboxField
+						{ ...commonProps }
+						label={ fieldSchema.label }
+						description={ fieldSchema.description }
+					/>
 				);
 			case 'select':
 				return (
-					<div key={ key } style={ { marginBottom: 12 } }>
-						<label>{ fieldSchema.label }</label>
-						{ renderDescription( fieldSchema.description ) }
-						<select
-							value={ value || fieldSchema.default }
-							onChange={ ( e ) => handleFieldChange( key, e.target.value ) }
-						>
-							{ fieldSchema.choices &&
-								Array.isArray( fieldSchema.choices ) &&
-								fieldSchema.choices.map( ( choice ) => (
-									<option key={ choice.value } value={ choice.value }>
-										{ choice.label }
-									</option>
-								) ) }
-						</select>
-					</div>
+					<SelectField
+						{ ...commonProps }
+						label={ fieldSchema.label }
+						description={ fieldSchema.description }
+						choices={ fieldSchema.choices }
+						defaultValue={ fieldSchema.default }
+					/>
 				);
 			case 'number':
 				return (
-					<div key={ key } style={ { marginBottom: 12 } }>
-						<label>{ fieldSchema.label }</label>
-						{ renderDescription( fieldSchema.description ) }
-						<div className="number-with-choices">
-							<input
-								type="number"
-								min={ fieldSchema.min }
-								max={ fieldSchema.max }
-								value={ value || fieldSchema.default || '' }
-								onChange={ ( e ) =>
-									handleFieldChange( key, parseInt( e.target.value ) || 0 )
-								}
-							/>
-							{ fieldSchema.choices &&
-								Array.isArray( fieldSchema.choices ) &&
-								fieldSchema.choices.length > 0 && (
-									<div className="number-choices">
-										{ fieldSchema.choices.map( ( choice ) => {
-											// Support both simple values and {value, label} objects
-											const choiceValue =
-												typeof choice === 'object' ? choice.value : choice;
-											const choiceLabel =
-												typeof choice === 'object' ? choice.label : choice;
-											const isActive =
-												( value || fieldSchema.default ) === choiceValue;
-
-											return (
-												<button
-													key={ choiceValue }
-													type="button"
-													onClick={ () =>
-														handleFieldChange( key, choiceValue )
-													}
-													className={ isActive ? 'active' : '' }
-													title={ `Set to ${ choiceLabel }` }
-												>
-													{ choiceLabel }
-												</button>
-											);
-										} ) }
-									</div>
-								) }
-						</div>
-					</div>
+					<NumberField
+						{ ...commonProps }
+						label={ fieldSchema.label }
+						description={ fieldSchema.description }
+						min={ fieldSchema.min }
+						max={ fieldSchema.max }
+						defaultValue={ fieldSchema.default }
+						choices={ fieldSchema.choices }
+					/>
 				);
 			case 'radio':
 				return (
-					<div key={ key } style={ { marginBottom: 12 } }>
-						<label>{ fieldSchema.label }</label>
-						{ renderDescription( fieldSchema.description ) }
-						<div style={ { marginTop: 4 } }>
-							{ fieldSchema.choices &&
-								Array.isArray( fieldSchema.choices ) &&
-								fieldSchema.choices.length > 0 &&
-								fieldSchema.choices.map( ( choice ) => (
-									<label
-										key={ choice.value }
-										style={ {
-											display: 'block',
-											marginBottom: 4,
-											cursor: 'pointer',
-										} }
-									>
-										<input
-											type="radio"
-											name={ key }
-											value={ choice.value }
-											checked={
-												( value || fieldSchema.default ) === choice.value
-											}
-											onChange={ ( e ) =>
-												handleFieldChange( key, e.target.value )
-											}
-											style={ { marginRight: 6 } }
-										/>
-										{ choice.label }
-									</label>
-								) ) }
-							{ ( ! fieldSchema.choices ||
-								! Array.isArray( fieldSchema.choices ) ||
-								fieldSchema.choices.length === 0 ) && (
-								<div
-									style={ {
-										color: '#666',
-										fontStyle: 'italic',
-										fontSize: '12px',
-									} }
-								>
-									No choices defined for radio field
-								</div>
-							) }
-						</div>
-					</div>
+					<RadioField
+						{ ...commonProps }
+						label={ fieldSchema.label }
+						description={ fieldSchema.description }
+						choices={ fieldSchema.choices }
+						defaultValue={ fieldSchema.default }
+					/>
 				);
 			case 'buttonset':
 				return (
-					<div key={ key } style={ { marginBottom: 12 } }>
-						<label>{ fieldSchema.label }</label>
-						{ renderDescription( fieldSchema.description ) }
-						<div className="buttonset-container">
-							{ fieldSchema.choices &&
-								Array.isArray( fieldSchema.choices ) &&
-								fieldSchema.choices.length > 0 &&
-								fieldSchema.choices.map( ( choice, index ) => {
-									const isActive =
-										( value || fieldSchema.default ) === choice.value;
-
-									return (
-										<button
-											key={ choice.value }
-											type="button"
-											onClick={ () => handleFieldChange( key, choice.value ) }
-											className={ isActive ? 'active' : '' }
-											title={ choice.label }
-										>
-											{ choice.label }
-										</button>
-									);
-								} ) }
-							{ ( ! fieldSchema.choices ||
-								! Array.isArray( fieldSchema.choices ) ||
-								fieldSchema.choices.length === 0 ) && (
-								<div
-									style={ {
-										color: '#666',
-										fontStyle: 'italic',
-										fontSize: '12px',
-									} }
-								>
-									No choices defined for buttonset field
-								</div>
-							) }
-						</div>
-					</div>
+					<ButtonsetField
+						{ ...commonProps }
+						label={ fieldSchema.label }
+						description={ fieldSchema.description }
+						choices={ fieldSchema.choices }
+						defaultValue={ fieldSchema.default }
+					/>
 				);
 			case 'multi-check':
 				return (
-					<div key={ key } style={ { marginBottom: 12 } }>
-						<label>{ fieldSchema.label }</label>
-						{ renderDescription( fieldSchema.description ) }
-						<div style={ { marginTop: 4 } }>
-							{ fieldSchema.choices &&
-								Array.isArray( fieldSchema.choices ) &&
-								fieldSchema.choices.length > 0 &&
-								fieldSchema.choices.map( ( choice ) => {
-									// Ensure value is always an array, use default if value is not provided
-									const currentValue = Array.isArray( value )
-										? value
-										: Array.isArray( fieldSchema.default )
-										? fieldSchema.default
-										: [];
-									const isChecked = currentValue.includes( choice.value );
-
-									return (
-										<label
-											key={ choice.value }
-											style={ {
-												display: 'block',
-												marginBottom: 4,
-												cursor: 'pointer',
-											} }
-										>
-											<input
-												type="checkbox"
-												value={ choice.value }
-												checked={ isChecked }
-												onChange={ ( e ) => {
-													const newValue = e.target.checked
-														? [ ...currentValue, choice.value ]
-														: currentValue.filter(
-																( v ) => v !== choice.value
-														  );
-													handleFieldChange( key, newValue );
-												} }
-												style={ { marginRight: 6 } }
-											/>
-											{ choice.label }
-										</label>
-									);
-								} ) }
-							{ ( ! fieldSchema.choices ||
-								! Array.isArray( fieldSchema.choices ) ||
-								fieldSchema.choices.length === 0 ) && (
-								<div
-									style={ {
-										color: '#666',
-										fontStyle: 'italic',
-										fontSize: '12px',
-									} }
-								>
-									No choices defined for multi-check field
-								</div>
-							) }
-						</div>
-					</div>
+					<MultiCheckField
+						{ ...commonProps }
+						label={ fieldSchema.label }
+						description={ fieldSchema.description }
+						choices={ fieldSchema.choices }
+						defaultValue={ fieldSchema.default }
+					/>
 				);
 			case 'sortable':
 				return (
@@ -367,59 +199,15 @@ export default function WidgetSettingsForm( {
 				);
 			case 'repeater':
 				return (
-					<div key={ key } style={ { marginBottom: 12 } }>
-						<label>{ fieldSchema.label }</label>
-						{ renderDescription( fieldSchema.description ) }
-						{ ( value || [] ).map( ( item, idx ) => (
-							<div
-								key={ idx }
-								style={ { marginBottom: 8, border: '1px solid #eee', padding: 8 } }
-							>
-								{ Object.entries( fieldSchema.fields ).map(
-									( [ subKey, subSchema ] ) =>
-										renderField(
-											`${ key }.${ idx }.${ subKey }`,
-											subSchema,
-											item[ subKey ]
-										)
-								) }
-								<button
-									type="button"
-									onClick={ () => {
-										const newArr = [ ...value ];
-										newArr.splice( idx, 1 );
-										handleFieldChange( key, newArr );
-									} }
-								>
-									Remove
-								</button>
-							</div>
-						) ) }
-						<button
-							type="button"
-							onClick={ () => {
-								const newItem = {};
-								Object.entries( fieldSchema.fields ).forEach(
-									( [ subKey, subSchema ] ) => {
-										newItem[ subKey ] = subSchema.default || '';
-									}
-								);
-								handleFieldChange( key, [ ...( value || [] ), newItem ] );
-							} }
-						>
-							Add
-						</button>
-					</div>
-				);
-			case 'hidden':
-				return (
-					<input
-						key={ key }
-						type="hidden"
-						value={ value || fieldSchema.default || '' }
-						onChange={ ( e ) => handleFieldChange( key, e.target.value ) }
+					<RepeaterField
+						{ ...commonProps }
+						label={ fieldSchema.label }
+						description={ fieldSchema.description }
+						fields={ fieldSchema.fields }
 					/>
 				);
+			case 'hidden':
+				return <HiddenField { ...commonProps } defaultValue={ fieldSchema.default } />;
 			default:
 				return null;
 		}
