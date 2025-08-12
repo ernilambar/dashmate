@@ -46,6 +46,23 @@ class Sample_Links extends Abstract_Widget {
 				'default'     => false,
 				'refresh'     => false,
 			],
+			'icon_type'     => [
+				'type'        => 'buttonset',
+				'label'       => esc_html__( 'Icon Type', 'dashmate' ),
+				'description' => esc_html__( 'Choose the type of icons to display', 'dashmate' ),
+				'default'     => 'material-icons',
+				'refresh'     => false,
+				'choices'     => [
+					[
+						'value' => 'material-icons',
+						'label' => esc_html__( 'Material Icons', 'dashmate' ),
+					],
+					[
+						'value' => 'svg',
+						'label' => esc_html__( 'SVG Icons', 'dashmate' ),
+					],
+				],
+			],
 			'display_style' => [
 				'type'        => 'buttonset',
 				'label'       => esc_html__( 'Link Style', 'dashmate' ),
@@ -104,9 +121,10 @@ class Sample_Links extends Abstract_Widget {
 	private function get_links( array $settings ): array {
 		$links = [
 			[
-				'title' => esc_html__( 'WordPress.org', 'dashmate' ),
-				'url'   => 'https://wordpress.org',
-				'icon'  => 'language',
+				'title'     => esc_html__( 'WordPress.org', 'dashmate' ),
+				'url'       => 'https://wordpress.org',
+				'icon'      => '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>',
+				'icon_type' => 'svg',
 			],
 			[
 				'title' => esc_html__( 'WordPress Codex', 'dashmate' ),
@@ -114,9 +132,10 @@ class Sample_Links extends Abstract_Widget {
 				'icon'  => 'menu_book',
 			],
 			[
-				'title' => esc_html__( 'WordPress Support', 'dashmate' ),
-				'url'   => 'https://wordpress.org/support',
-				'icon'  => 'support_agent',
+				'title'     => esc_html__( 'WordPress Support', 'dashmate' ),
+				'url'       => 'https://wordpress.org/support',
+				'icon'      => 'feedback',
+				'icon_type' => 'dashicons',
 			],
 			[
 				'title' => esc_html__( 'WordPress Themes', 'dashmate' ),

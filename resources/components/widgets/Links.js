@@ -72,6 +72,7 @@ class Links extends React.Component {
 		const links = data?.links || [];
 		const linkStyle = settings?.display_style || 'list';
 		const hideIcon = settings?.hide_icon || false;
+		const iconType = settings?.icon_type || 'material-icons';
 
 		// Show loading if data is not available yet
 		if ( ! data ) {
@@ -80,6 +81,31 @@ class Links extends React.Component {
 
 		// Ensure links is always an array
 		const safeLinks = Array.isArray( links ) ? links : [];
+
+		// Helper function to get icon props based on icon type
+		const getIconProps = ( link ) => {
+			if ( ! link.icon ) return {};
+
+			const linkIconType = link.icon_type || 'material-icons';
+
+			if ( linkIconType === 'svg' && link.icon.startsWith( '<svg' ) ) {
+				return {
+					library: 'svg',
+					svgContent: link.icon,
+				};
+			} else if ( linkIconType === 'dashicons' ) {
+				return {
+					library: 'dashicons',
+					name: link.icon,
+				};
+			} else {
+				// Default to material-icons
+				return {
+					library: 'material-icons',
+					name: link.icon,
+				};
+			}
+		};
 
 		return (
 			<div className="quick-links-widget">
@@ -91,7 +117,11 @@ class Links extends React.Component {
 							onClick={ () => this.handleLinkClick( link ) }
 						>
 							{ ! hideIcon && link.icon && (
-								<Icon name={ link.icon } size="small" className="quick-link-icon" />
+								<Icon
+									{ ...getIconProps( link ) }
+									size="small"
+									className="quick-link-icon"
+								/>
 							) }
 							<span className="quick-link-title">{ link.title }</span>
 						</div>
