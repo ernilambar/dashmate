@@ -7,6 +7,101 @@
 	border-radius: 4px;
 }
 
+/* Widget Settings Header */
+.widget-settings-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 15px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid #e1e1e1;
+}
+
+.widget-settings-header h4 {
+	margin: 0;
+	font-size: 14px;
+	font-weight: 600;
+	color: #23282d;
+}
+
+/* Widget Settings Actions */
+.widget-settings-actions {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-top: 16px;
+	gap: 10px;
+}
+
+/* Widget Save Button */
+.widget-save-button {
+	background: #0073aa;
+	color: white;
+	border: none;
+	padding: 8px 16px;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 13px;
+	font-weight: 500;
+	transition: background-color 0.2s ease;
+}
+
+.widget-save-button:hover {
+	background: #005a87;
+}
+
+.widget-save-button:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
+.widget-save-button:focus {
+	outline: none;
+	box-shadow: 0 0 0 2px rgba(0, 115, 170, 0.25);
+}
+
+/* Widget Remove Button */
+.widget-remove-button {
+	background: #dc3545;
+	color: white;
+	border: none;
+	border-radius: 50%;
+	width: 24px;
+	height: 24px;
+	font-size: 14px;
+	font-weight: bold;
+	line-height: 1;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: background-color 0.2s ease;
+	flex-shrink: 0;
+	padding: 0;
+	text-align: center;
+}
+
+.widget-remove-button:hover {
+	background: #c82333;
+}
+
+.widget-remove-button:focus {
+	outline: none;
+	box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.25);
+}
+
+/* Widget No Settings Message */
+.widget-no-settings {
+	padding: 15px 0;
+	text-align: center;
+}
+
+.widget-no-settings p {
+	margin: 0;
+	color: #666;
+	font-style: italic;
+	font-size: 13px;
+}
 .widget-settings-panel label {
 	display: block;
 	margin-bottom: 5px;

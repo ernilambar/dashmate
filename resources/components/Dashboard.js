@@ -282,6 +282,61 @@ class Dashboard extends Component {
 		}
 	};
 
+	handleWidgetRemove = async ( widgetId ) => {
+		const { dashboard } = this.state;
+		if ( ! dashboard ) {
+			return;
+		}
+
+		// Create a copy of the dashboard data.
+		const updatedDashboard = { ...dashboard };
+
+		// Find and remove the widget.
+		let widgetFound = false;
+		for ( const column of updatedDashboard.columns ) {
+			if ( column.widgets ) {
+				const widgetIndex = column.widgets.findIndex(
+					( widget ) => widget.id === widgetId
+				);
+				if ( widgetIndex !== -1 ) {
+					// Remove widget from the column.
+					column.widgets.splice( widgetIndex, 1 );
+					widgetFound = true;
+					break;
+				}
+			}
+		}
+
+		if ( ! widgetFound ) {
+			return;
+		}
+
+		// Update state immediately for UI responsiveness.
+		this.setState( { dashboard: updatedDashboard } );
+
+		// Save the updated dashboard to the server.
+		try {
+			const response = await fetch( `${ dashmateApiSettings.restUrl }dashboard`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'X-WP-Nonce': dashmateApiSettings?.nonce || '',
+				},
+				body: JSON.stringify( updatedDashboard ),
+			} );
+
+			const data = await response.json();
+
+			if ( ! data.success ) {
+				// Reload dashboard to revert changes.
+				this.loadDashboard();
+			}
+		} catch ( error ) {
+			// Reload dashboard to revert changes.
+			this.loadDashboard();
+		}
+	};
+
 	handleLayoutSaved = () => {
 		// Reload layouts to include the new one
 		this.loadLayouts();
@@ -366,6 +421,7 @@ class Dashboard extends Component {
 											onWidgetPropertyUpdate={
 												this.handleWidgetPropertyUpdate
 											}
+											onWidgetRemove={ this.handleWidgetRemove }
 										/>
 									);
 								} )
