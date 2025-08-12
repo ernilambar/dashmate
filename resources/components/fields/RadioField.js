@@ -11,7 +11,7 @@ export default function RadioField( {
 	defaultValue,
 } ) {
 	return (
-		<FieldWrapper label={ label } description={ description }>
+		<FieldWrapper label={ label } description={ description } fieldType="radio">
 			<div style={ { marginTop: 4 } }>
 				{ choices &&
 					Array.isArray( choices ) &&

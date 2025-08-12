@@ -48,7 +48,7 @@ export default function RepeaterField( {
 	};
 
 	return (
-		<FieldWrapper label={ label } description={ description }>
+		<FieldWrapper label={ label } description={ description } fieldType="repeater">
 			{ currentValue.map( ( item, idx ) => (
 				<div
 					key={ idx }

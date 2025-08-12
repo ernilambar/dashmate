@@ -1,23 +1,12 @@
 /* Sortable Field Styles */
-.sortable-field-container {
-	margin-bottom: 12px;
-}
-
-.sortable-field-container label {
-	display: block;
-	margin-bottom: 8px;
-	font-weight: 500;
-	color: #333;
-}
-
-.sortable-field-container .sortable-list {
+.dm-field-type-sortable .sortable-list {
 	border: 1px solid #ddd;
 	border-radius: 4px;
 	min-height: 50px;
 	background-color: #f9f9f9;
 }
 
-.sortable-field-container .sortable-item {
+.dm-field-type-sortable .sortable-item {
 	padding: 12px;
 	margin: 4px;
 	background-color: white;
@@ -30,26 +19,26 @@
 	transition: box-shadow 0.2s ease;
 }
 
-.sortable-field-container .sortable-item:hover {
+.dm-field-type-sortable .sortable-item:hover {
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.sortable-field-container .sortable-item.dragging {
+.dm-field-type-sortable .sortable-item.dragging {
 	background-color: #e3f2fd;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 	opacity: 0.9;
 }
 
-.sortable-field-container .sortable-item.disabled {
+.dm-field-type-sortable .sortable-item.disabled {
 	opacity: 0.6;
 }
 
-.sortable-field-container .sortable-item.disabled .item-label {
+.dm-field-type-sortable .sortable-item.disabled .item-label {
 	font-weight: 300;
 	color: #999;
 }
 
-.sortable-field-container .drag-handle {
+.dm-field-type-sortable .drag-handle {
 	width: 20px;
 	height: 20px;
 	margin-right: 12px;
@@ -61,38 +50,39 @@
 	cursor: grab;
 }
 
-.sortable-field-container .item-content {
+.dm-field-type-sortable .item-content {
 	display: flex;
 	align-items: center;
 	flex: 1;
 }
 
-.sortable-field-container .item-label {
+.dm-field-type-sortable .item-label {
 	font-weight: normal;
 	color: #333;
 }
 
-.sortable-field-container .item-toggle {
+.dm-field-type-sortable .item-toggle {
 	display: flex;
 	align-items: center;
 	cursor: pointer;
 	margin-left: 12px;
 }
 
-.sortable-field-container .item-toggle .toggle-text {
+.dm-field-type-sortable .item-toggle .toggle-text {
 	font-size: 12px;
 	color: #666;
 }
 
 /* Toggle switch */
-.sortable-field-container .item-toggle .toggle-input {
-	position: absolute;
-	opacity: 0;
-	width: 0;
-	height: 0;
+.dm-field-type-sortable .item-toggle .toggle-input {
+	position: absolute !important;
+	opacity: 0 !important;
+	width: 0 !important;
+	height: 0 !important;
+	margin: 0 !important;
 }
 
-.sortable-field-container .item-toggle .toggle-track {
+.dm-field-type-sortable .item-toggle .toggle-track {
 	position: relative;
 	width: 36px;
 	height: 20px;
@@ -103,7 +93,7 @@
 	flex-shrink: 0;
 }
 
-.sortable-field-container .item-toggle .toggle-track::after {
+.dm-field-type-sortable .item-toggle .toggle-track::after {
 	content: "";
 	position: absolute;
 	top: 2px;
@@ -116,22 +106,22 @@
 	transition: transform 0.2s ease;
 }
 
-.sortable-field-container .item-toggle .toggle-input:checked + .toggle-track {
-	background-color: #2271b1;
+.dm-field-type-sortable .item-toggle .toggle-input:checked + .toggle-track {
+	background-color: #2271b1 !important;
 }
 
-.sortable-field-container .item-toggle .toggle-input:checked + .toggle-track::after {
-	transform: translateX(16px);
+.dm-field-type-sortable .item-toggle .toggle-input:checked + .toggle-track::after {
+	transform: translateX(16px) !important;
 }
 
-.sortable-field-container .help-text {
+.dm-field-type-sortable .help-text {
 	margin-top: 8px;
 	font-size: 12px;
 	color: #666;
 	font-style: italic;
 }
 
-.sortable-field-container .empty-state {
+.dm-field-type-sortable .empty-state {
 	padding: 20px;
 	text-align: center;
 	color: #666;

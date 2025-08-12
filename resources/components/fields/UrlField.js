@@ -3,7 +3,7 @@ import FieldWrapper from './FieldWrapper';
 
 export default function UrlField( { label, description, value, onChange, fieldKey } ) {
 	return (
-		<FieldWrapper label={ label } description={ description }>
+		<FieldWrapper label={ label } description={ description } fieldType="url">
 			<input
 				type="url"
 				value={ value || '' }

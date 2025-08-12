@@ -3,7 +3,7 @@ import FieldWrapper from './FieldWrapper';
 
 export default function CheckboxField( { label, description, value, onChange, fieldKey } ) {
 	return (
-		<FieldWrapper description={ description }>
+		<FieldWrapper description={ description } fieldType="checkbox">
 			<label>
 				<input
 					type="checkbox"

@@ -11,7 +11,7 @@ export default function ButtonsetField( {
 	defaultValue,
 } ) {
 	return (
-		<FieldWrapper label={ label } description={ description }>
+		<FieldWrapper label={ label } description={ description } fieldType="buttonset">
 			<div className="buttonset-container">
 				{ choices &&
 					Array.isArray( choices ) &&

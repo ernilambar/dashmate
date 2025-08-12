@@ -13,7 +13,7 @@ export default function NumberField( {
 	choices = [],
 } ) {
 	return (
-		<FieldWrapper label={ label } description={ description }>
+		<FieldWrapper label={ label } description={ description } fieldType="number">
 			<div className="number-with-choices">
 				<input
 					type="number"
