@@ -5,10 +5,11 @@ import React from 'react';
  *
  * @param {Object} props - Component props
  * @param {string} props.name - Icon name
- * @param {string} props.library - Icon library (e.g., 'material-icons', 'dashicons')
+ * @param {string} props.library - Icon library (e.g., 'material-icons', 'dashicons', 'svg')
  * @param {string} props.className - Additional CSS classes
  * @param {Object} props.style - Inline styles
  * @param {string} props.size - Icon size ('small', 'medium', 'large', or custom)
+ * @param {string} props.svgContent - Raw SVG markup (when library is 'svg')
  * @returns {JSX.Element} Icon component
  */
 const Icon = ( {
@@ -17,6 +18,7 @@ const Icon = ( {
 	className = '',
 	style = {},
 	size = 'medium',
+	svgContent = null,
 } ) => {
 	// Size mappings
 	const sizeMap = {
@@ -39,14 +41,27 @@ const Icon = ( {
 		...style,
 	};
 
+	// Handle SVG content from plugins
+	if ( library === 'svg' && svgContent ) {
+		const svgClasses = `dm-icon dm-svg-icon ${ className }`;
+		return (
+			<span
+				className={ svgClasses }
+				style={ combinedStyles }
+				aria-hidden="true"
+				dangerouslySetInnerHTML={ { __html: svgContent } }
+			/>
+		);
+	}
+
 	// If using Dashicons, render class-based glyph and omit ligature text
 	if ( library === 'dashicons' ) {
-		const dashiconsClasses = `icon dashicons dashicons-${ name } ${ className }`;
+		const dashiconsClasses = `dm-icon dashicons dashicons-${ name } ${ className }`;
 		return <span className={ dashiconsClasses } style={ combinedStyles } aria-hidden="true" />;
 	}
 
 	// Default to ligature/text-based libraries (Material Icons, etc.)
-	const classes = `icon ${ library } ${ className }`;
+	const classes = `dm-icon dm-${ library } ${ className }`;
 	return (
 		<span className={ classes } style={ combinedStyles }>
 			{ name }

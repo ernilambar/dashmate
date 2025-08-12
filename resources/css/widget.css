@@ -59,7 +59,7 @@
 }
 
 /* Ensure consistent spacing when icon is not present */
-.widget-header h3 .icon {
+.widget-header h3 .dm-icon {
 	font-size: 16px;
 	width: 16px;
 	height: 16px;
@@ -72,7 +72,7 @@
 }
 
 /* Add placeholder for missing icon to prevent layout shift */
-.widget-header h3:not(:has(.icon))::before {
+.widget-header h3:not(:has(.dm-icon))::before {
 	content: "";
 	width: 16px;
 	height: 16px;
@@ -138,10 +138,10 @@
 	border-radius: 3px;
 }
 
-.widget-toggle .icon,
-.widget-settings .icon,
-.widget-reload .icon,
-.dm-icon-button .icon {
+.widget-toggle .dm-icon,
+.widget-settings .dm-icon,
+.widget-reload .dm-icon,
+.dm-icon-button .dm-icon {
 	font-size: 16px;
 	width: 16px;
 	height: 16px;
@@ -151,7 +151,7 @@
 	justify-content: center;
 }
 
-.widget-reload.reloading .icon {
+.widget-reload.reloading .dm-icon {
 	animation: spin 1s linear infinite;
 }
 
@@ -165,12 +165,12 @@
 }
 
 /* Settings save status animations for cog icon */
-.widget-settings.settings-success .icon {
+.widget-settings.settings-success .dm-icon {
 	animation: settingsSuccess 2s ease-in-out;
 	color: #46b450;
 }
 
-.widget-settings.settings-error .icon {
+.widget-settings.settings-error .dm-icon {
 	animation: settingsError 2s ease-in-out;
 	color: #d63638;
 }
