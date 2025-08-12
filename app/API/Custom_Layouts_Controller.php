@@ -159,15 +159,6 @@ class Custom_Layouts_Controller extends Base_Controller {
 		$key  = $request->get_param( 'key' );
 		$data = $request->get_param( 'data' );
 
-		// Check if layout already exists.
-		if ( Custom_Layout_Model::data_exists( $key ) ) {
-			return $this->error_response(
-				esc_html__( 'Custom layout already exists: ', 'dashmate' ) . $key,
-				409,
-				'layout_already_exists'
-			);
-		}
-
 		// Validate data structure.
 		if ( ! is_array( $data ) || ! isset( $data['columns'] ) ) {
 			return $this->error_response(
@@ -187,13 +178,22 @@ class Custom_Layouts_Controller extends Base_Controller {
 			);
 		}
 
+		// Check if layout was created or updated.
+		$message = Custom_Layout_Model::data_exists( $key )
+			? sprintf(
+				/* translators: %s: Layout key */
+				esc_html__( 'Custom layout "%s" updated successfully!', 'dashmate' ),
+				$key
+			)
+			: sprintf(
+				/* translators: %s: Layout key */
+				esc_html__( 'Custom layout "%s" created successfully!', 'dashmate' ),
+				$key
+			);
+
 		return $this->success_response(
 			[
-				'message' => sprintf(
-					/* translators: %s: Layout key */
-					esc_html__( 'Custom layout "%s" created successfully!', 'dashmate' ),
-					$key
-				),
+				'message' => $message,
 				'key'     => $key,
 				'data'    => $data,
 			],

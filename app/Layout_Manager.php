@@ -28,24 +28,14 @@ class Layout_Manager {
 	 * @return array|WP_Error
 	 */
 	public static function get_layouts() {
-		$layouts = [
-			'current'   => [
-				'title' => esc_html__( 'Current Layout', 'dashmate' ),
-				'type'  => 'options',
-			],
-			'default'   => [
-				'title' => esc_html__( 'Default', 'dashmate' ),
-				'path'  => DASHMATE_DIR . '/layouts/default.json',
-				'type'  => 'file',
-			],
-			'favourite' => [
-				'title' => esc_html__( 'Favourite', 'dashmate' ),
-				'type'  => 'custom',
-			],
-		];
+		$layouts = self::get_registered_layouts_only();
+
+		if ( is_wp_error( $layouts ) ) {
+			return $layouts;
+		}
 
 		// Add custom layouts from database.
-		$custom_layouts = self::get_custom_layouts_from_db();
+		$custom_layouts = self::get_custom_layouts();
 		if ( ! is_wp_error( $custom_layouts ) ) {
 			$layouts = array_merge( $layouts, $custom_layouts );
 		}
@@ -224,21 +214,83 @@ class Layout_Manager {
 	}
 
 	/**
-	 * Get custom layouts from database.
+	 * Get registered layouts without database layouts.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @return array|WP_Error
 	 */
-	public static function get_custom_layouts_from_db() {
+	private static function get_registered_layouts_only() {
+		$layouts = [
+			'current'   => [
+				'title' => esc_html__( 'Current Layout', 'dashmate' ),
+				'type'  => 'options',
+			],
+			'default'   => [
+				'title' => esc_html__( 'Default', 'dashmate' ),
+				'path'  => DASHMATE_DIR . '/layouts/default.json',
+				'type'  => 'file',
+			],
+			'favourite' => [
+				'title' => esc_html__( 'Favorite', 'dashmate' ),
+				'type'  => 'custom',
+			],
+		];
+
+		/**
+		 * Filter the registered layouts.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param array $layouts Array of registered layouts.
+		 */
+		$layouts = apply_filters( 'dashmate_layouts', $layouts );
+
+		foreach ( $layouts as $key => $layout ) {
+			// Automatically add id field based on the array key.
+			$layouts[ $key ]['id'] = $key;
+
+			// Skip path validation for options-based and custom layouts.
+			if ( 'options' === ( $layout['type'] ?? 'file' ) || 'custom' === ( $layout['type'] ?? 'file' ) ) {
+				continue;
+			}
+
+			if ( ! array_key_exists( 'path', $layout ) ) {
+				return new WP_Error( 'layout_path_missing', esc_html__( 'Layout file path not provided.', 'dashmate' ) );
+			}
+
+			if ( ! file_exists( $layout['path'] ) ) {
+				return new WP_Error( 'layout_file_not_found', esc_html__( 'Layout file does not exist: ', 'dashmate' ) . $layout['path'] );
+			}
+		}
+
+		return $layouts;
+	}
+
+	/**
+	 * Get custom layouts.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return array|WP_Error
+	 */
+	public static function get_custom_layouts() {
 		$custom_keys = Custom_Layout_Model::get_all_keys();
 		$layouts     = [];
+
+		// Get registered layouts to preserve their titles.
+		$registered_layouts = self::get_registered_layouts_only();
+		if ( is_wp_error( $registered_layouts ) ) {
+			return $registered_layouts;
+		}
 
 		foreach ( $custom_keys as $key ) {
 			$layout_data = Custom_Layout_Model::get_data( $key );
 			if ( ! is_wp_error( $layout_data ) ) {
+				// Use registered layout title if it exists, otherwise use the key.
+				$title           = isset( $registered_layouts[ $key ] ) ? $registered_layouts[ $key ]['title'] : $key;
 				$layouts[ $key ] = [
-					'title' => esc_html__( 'Custom Layout', 'dashmate' ) . ': ' . $key,
+					'title' => $title,
 					'type'  => 'custom',
 				];
 			}
