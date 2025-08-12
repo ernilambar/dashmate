@@ -1,3 +1,5 @@
+@import "./components/json-highlight.css";
+
 .dashmate-layouts {
 	margin: 20px 0;
 }
@@ -249,24 +251,4 @@
 	padding: 20px;
 	color: #666;
 	font-style: italic;
-}
-
-/* JSON Syntax Highlighting */
-.json-key {
-	color: #d63200;
-	font-weight: 600;
-}
-
-.json-string {
-	color: #006d75;
-}
-
-.json-value {
-	color: #003eb3;
-	font-weight: 500;
-}
-
-.json-bracket {
-	color: #6a737d;
-	font-weight: 500;
 }

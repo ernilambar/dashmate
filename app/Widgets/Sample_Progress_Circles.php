@@ -35,14 +35,14 @@ class Sample_Progress_Circles extends Abstract_Widget {
 	 * @since 1.0.0
 	 */
 	protected function define_widget() {
-		$this->description = esc_html__( 'Display sample progress circles with various metrics', 'dashmate' );
+		$this->description = esc_html__( 'Display sample progress circles.', 'dashmate' );
 		$this->icon        = 'pie_chart';
 
 		$this->settings_schema = [
 			'circles_number' => [
 				'type'        => 'number',
 				'label'       => esc_html__( 'Circles Number', 'dashmate' ),
-				'description' => esc_html__( 'Number of progress circles to display', 'dashmate' ),
+				'description' => esc_html__( 'Number of progress circles to display.', 'dashmate' ),
 				'default'     => 4,
 				'min'         => 1,
 				'max'         => 8,
@@ -51,7 +51,7 @@ class Sample_Progress_Circles extends Abstract_Widget {
 			'hide_caption'   => [
 				'type'        => 'checkbox',
 				'label'       => esc_html__( 'Hide Caption', 'dashmate' ),
-				'description' => esc_html__( 'Hide captions below progress circles', 'dashmate' ),
+				'description' => esc_html__( 'Hide captions below progress circles.', 'dashmate' ),
 				'default'     => false,
 				'refresh'     => false,
 			],
@@ -61,7 +61,7 @@ class Sample_Progress_Circles extends Abstract_Widget {
 			'items' => [
 				'type'        => 'array',
 				'required'    => true,
-				'description' => esc_html__( 'Array of circle objects', 'dashmate' ),
+				'description' => esc_html__( 'Array of circle objects.', 'dashmate' ),
 			],
 		];
 	}

@@ -35,14 +35,14 @@ class Sample_Tabular extends Abstract_Widget {
 	 * @since 1.0.0
 	 */
 	protected function define_widget() {
-		$this->description = esc_html__( 'Display sample data in tabular format', 'dashmate' );
+		$this->description = esc_html__( 'Display sample data in tabular format.', 'dashmate' );
 		$this->icon        = 'table_chart';
 
 		$this->settings_schema = [
 			'max_items'       => [
 				'type'        => 'number',
 				'label'       => esc_html__( 'Items Per Page', 'dashmate' ),
-				'description' => esc_html__( 'Number of items to show per page', 'dashmate' ),
+				'description' => esc_html__( 'Number of items to show per page.', 'dashmate' ),
 				'default'     => 2,
 				'min'         => 1,
 				'max'         => 10,
@@ -51,7 +51,7 @@ class Sample_Tabular extends Abstract_Widget {
 			'visible_columns' => [
 				'type'        => 'sortable',
 				'label'       => esc_html__( 'Visible Columns', 'dashmate' ),
-				'description' => esc_html__( 'Drag to reorder columns and toggle to show/hide', 'dashmate' ),
+				'description' => esc_html__( 'Drag to reorder and toggle to show/hide.', 'dashmate' ),
 				'default'     => [ 'id', 'title', 'status', 'actions' ],
 				'refresh'     => true,
 				'choices'     => [
@@ -79,7 +79,7 @@ class Sample_Tabular extends Abstract_Widget {
 			'tables' => [
 				'type'        => 'array',
 				'required'    => true,
-				'description' => esc_html__( 'Array of table objects', 'dashmate' ),
+				'description' => esc_html__( 'Array of table objects.', 'dashmate' ),
 			],
 		];
 	}
@@ -90,8 +90,7 @@ class Sample_Tabular extends Abstract_Widget {
 	 * @since 1.0.0
 	 *
 	 * @param array $settings Widget settings.
-	 *
-	 * @return array
+	 * @return array Widget content.
 	 */
 	public function get_content( array $settings = [] ): array {
 		$settings = $this->merge_settings_with_defaults( $settings );
@@ -254,6 +253,7 @@ class Sample_Tabular extends Abstract_Widget {
 	 */
 	private function filter_cells_by_columns( array $cells, array $visible_columns ): array {
 		$filtered_cells = [];
+
 		foreach ( $visible_columns as $column_key ) {
 			if ( isset( $cells[ $column_key ] ) ) {
 				$filtered_cells[] = $cells[ $column_key ];
