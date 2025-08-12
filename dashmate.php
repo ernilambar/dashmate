@@ -33,4 +33,9 @@ if ( file_exists( DASHMATE_DIR . '/vendor/autoload.php' ) ) {
 require_once DASHMATE_DIR . '/cli.php';
 
 // Init.
-new Loader();
+add_action(
+	'plugins_loaded',
+	function () {
+		new Loader();
+	}
+);

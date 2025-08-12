@@ -43,7 +43,19 @@ const LayoutsApp = () => {
 			const restUrl = settings.restUrl.endsWith( '/' )
 				? settings.restUrl
 				: settings.restUrl + '/';
-			const response = await fetch( `${ restUrl }layouts` );
+
+			// Prepare headers with nonce for security.
+			const headers = {};
+
+			// Add nonce header for authentication.
+			if ( settings.nonce ) {
+				headers[ 'X-WP-Nonce' ] = settings.nonce;
+			}
+
+			const response = await fetch( `${ restUrl }layouts`, {
+				headers: headers,
+				credentials: 'same-origin',
+			} );
 			if ( ! response.ok ) {
 				throw new Error( settings.strings?.failedToFetch || 'Failed to fetch layouts' );
 			}
@@ -85,7 +97,19 @@ const LayoutsApp = () => {
 			const restUrl = settings.restUrl.endsWith( '/' )
 				? settings.restUrl
 				: settings.restUrl + '/';
-			const response = await fetch( `${ restUrl }layouts/${ layoutKey }` );
+
+			// Prepare headers with nonce for security.
+			const headers = {};
+
+			// Add nonce header for authentication.
+			if ( settings.nonce ) {
+				headers[ 'X-WP-Nonce' ] = settings.nonce;
+			}
+
+			const response = await fetch( `${ restUrl }layouts/${ layoutKey }`, {
+				headers: headers,
+				credentials: 'same-origin',
+			} );
 			if ( ! response.ok ) {
 				throw new Error(
 					settings.strings?.failedToFetchData || 'Failed to fetch layout data'
@@ -136,13 +160,13 @@ const LayoutsApp = () => {
 			setApplying( true );
 			setApplyButtonMessage( { type: '', text: '' } );
 
-			// Prepare headers - only include nonce in production.
+			// Prepare headers with nonce for security.
 			const headers = {
 				'Content-Type': 'application/json',
 			};
 
-			// Add nonce header only in production (not in debug mode).
-			if ( ! settings.isDebug && settings.nonce ) {
+			// Add nonce header for authentication.
+			if ( settings.nonce ) {
 				headers[ 'X-WP-Nonce' ] = settings.nonce;
 			}
 
