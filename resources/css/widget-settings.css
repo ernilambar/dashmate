@@ -90,6 +90,18 @@
 	box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.25);
 }
 
+/* Field Wrapper */
+.field-wrapper {
+	margin-bottom: 12px;
+}
+
+.field-wrapper label {
+	display: block;
+	font-weight: 500;
+	margin-bottom: 4px;
+	color: #23282d;
+}
+
 /* Widget No Settings Message */
 .widget-no-settings {
 	padding: 15px 0;
