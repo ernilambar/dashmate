@@ -4,7 +4,8 @@ import Widget from './Widget';
 
 class Column extends Component {
 	render() {
-		const { column, widgets, columnWidgets, onWidgetPropertyUpdate } = this.props;
+		const { column, widgets, columnWidgets, onWidgetPropertyUpdate, onWidgetRemove } =
+			this.props;
 
 		return (
 			<div className="dashboard-column">
@@ -25,6 +26,7 @@ class Column extends Component {
 										widgets={ widgets }
 										index={ index }
 										onPropertyUpdate={ onWidgetPropertyUpdate }
+										onRemove={ onWidgetRemove }
 									/>
 								) )
 							) : (

@@ -1,8 +1,17 @@
 import React from 'react';
 import SortableField from './SortableField';
+import Icon from './Icon';
 
 // Renders a form based on a widget schema and current values
-export default function WidgetSettingsForm( { schema, values, onChange, onClose, onSaveStatus } ) {
+export default function WidgetSettingsForm( {
+	schema,
+	values,
+	onChange,
+	onClose,
+	onSaveStatus,
+	onRemove,
+	widgetId,
+} ) {
 	const [ localValues, setLocalValues ] = React.useState( values );
 	const [ isSaving, setIsSaving ] = React.useState( false );
 
@@ -398,30 +407,58 @@ export default function WidgetSettingsForm( { schema, values, onChange, onClose,
 		}
 	};
 
+	const handleRemoveWidget = () => {
+		if ( onRemove && widgetId ) {
+			// Show confirmation dialog
+			if (
+				window.confirm(
+					'Are you sure you want to remove this widget? This action cannot be undone.'
+				)
+			) {
+				onRemove( widgetId );
+			}
+		}
+	};
+
+	// Check if there are any settings fields
+	const hasSettingsFields = Object.keys( schema ).length > 0;
+
 	return (
 		<div>
-			<form>
-				{ Object.entries( schema ).map( ( [ key, fieldSchema ] ) =>
-					renderField( key, fieldSchema, localValues[ key ] )
-				) }
-			</form>
+			<div className="widget-settings-header">
+				<h4>Widget Settings</h4>
+			</div>
 
-			<div style={ { marginTop: 16, textAlign: 'right' } }>
+			{ hasSettingsFields ? (
+				<form>
+					{ Object.entries( schema ).map( ( [ key, fieldSchema ] ) =>
+						renderField( key, fieldSchema, localValues[ key ] )
+					) }
+				</form>
+			) : (
+				<div className="widget-no-settings">
+					<p>No settings available for this widget.</p>
+				</div>
+			) }
+
+			<div className="widget-settings-actions">
+				{ hasSettingsFields && (
+					<button
+						type="button"
+						className="widget-save-button"
+						onClick={ handleSave }
+						disabled={ isSaving }
+					>
+						{ isSaving ? 'Saving...' : 'Save Settings' }
+					</button>
+				) }
 				<button
 					type="button"
-					onClick={ handleSave }
-					disabled={ isSaving }
-					style={ {
-						backgroundColor: '#0073aa',
-						color: 'white',
-						border: 'none',
-						padding: '8px 16px',
-						borderRadius: 4,
-						cursor: isSaving ? 'not-allowed' : 'pointer',
-						opacity: isSaving ? 0.6 : 1,
-					} }
+					className="widget-remove-button"
+					onClick={ handleRemoveWidget }
+					title="Remove Widget"
 				>
-					{ isSaving ? 'Saving...' : 'Save Settings' }
+					<Icon name="close" size="small" />
 				</button>
 			</div>
 		</div>

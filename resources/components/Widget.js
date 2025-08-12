@@ -203,6 +203,7 @@ class Widget extends Component {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
+						'X-WP-Nonce': dashmateApiSettings?.nonce || '',
 					},
 					body: JSON.stringify( {
 						settings: newSettings,
@@ -252,7 +253,7 @@ class Widget extends Component {
 	};
 
 	render() {
-		const { widget, widgets, index } = this.props;
+		const { widget, widgets, index, onRemove } = this.props;
 		const {
 			collapsed,
 			widgetData,
@@ -384,21 +385,19 @@ class Widget extends Component {
 									fadeState !== 'normal' ? fadeState : ''
 								}` }
 							>
-								{ showSettings &&
-									widgetSchema?.settings_schema &&
-									Object.keys( widgetSchema.settings_schema ).length > 0 && (
-										<div className="widget-settings-panel">
-											<WidgetSettingsForm
-												schema={ widgetSchema.settings_schema }
-												values={
-													widgetData?.settings || widget.settings || {}
-												}
-												onChange={ this.handleSettingsChange }
-												onClose={ this.openWidgetSettings }
-												onSaveStatus={ this.handleSettingsSaveStatus }
-											/>
-										</div>
-									) }
+								{ showSettings && (
+									<div className="widget-settings-panel">
+										<WidgetSettingsForm
+											schema={ widgetSchema?.settings_schema || {} }
+											values={ widgetData?.settings || widget.settings || {} }
+											onChange={ this.handleSettingsChange }
+											onClose={ this.openWidgetSettings }
+											onSaveStatus={ this.handleSettingsSaveStatus }
+											onRemove={ onRemove }
+											widgetId={ widget.id }
+										/>
+									</div>
+								) }
 								<WidgetContent
 									widget={ { ...widget, type: widgetType } }
 									widgetData={ widgetData }

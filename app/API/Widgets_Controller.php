@@ -297,11 +297,17 @@ class Widgets_Controller extends Base_Controller {
 	 * @return array|null
 	 */
 	private function find_widget_by_id( $widget_id, $dashboard_data ) {
-		$widgets = $dashboard_data['widgets'] ?? [];
+		if ( ! isset( $dashboard_data['columns'] ) || ! is_array( $dashboard_data['columns'] ) ) {
+			return null;
+		}
 
-		foreach ( $widgets as $widget ) {
-			if ( isset( $widget['id'] ) && $widget['id'] === $widget_id ) {
-				return $widget;
+		foreach ( $dashboard_data['columns'] as $column ) {
+			if ( isset( $column['widgets'] ) && is_array( $column['widgets'] ) ) {
+				foreach ( $column['widgets'] as $widget ) {
+					if ( isset( $widget['id'] ) && $widget['id'] === $widget_id ) {
+						return $widget;
+					}
+				}
 			}
 		}
 
