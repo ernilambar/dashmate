@@ -61,6 +61,8 @@ Returns a list of all available layouts including the current layout from option
 
 **Note:** The `layoutData` field contains the complete layout structure with columns and their nested widgets. This eliminates the need for separate API calls to fetch individual layout data.
 
+**Custom Layouts:** Custom layouts are automatically discovered and included in this response. They are identified by `type: 'custom'` and can be managed through the separate `/custom-layouts` endpoints.
+
 ### Get Specific Layout
 **GET** `/wp-json/dashmate/v1/layouts/{layout_key}`
 
@@ -180,6 +182,14 @@ Applies a custom layout to the current dashboard.
 - **Example**: `default` layout
 - **Use Case**: Predefined layout templates
 - **Access**: Can be applied to dashboard
+
+### Custom Layouts
+- **Type**: `custom`
+- **Source**: WordPress options table with `dashmate_dashboard_custom_<key>` format
+- **Example**: `favourite`, `my-custom-layout`
+- **Use Case**: User-created custom layouts
+- **Access**: Can be applied to dashboard, full CRUD operations available
+- **Management**: Separate API endpoints at `/custom-layouts`
 
 ## Usage Examples
 
