@@ -5,7 +5,7 @@
 	background: #f6f8fa;
 	border: 1px solid #e1e4e8;
 	border-radius: 6px;
-	overflow: hidden;
+	overflow: visible;
 	font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
 	font-size: 13px;
 	line-height: 1.45;
@@ -15,9 +15,11 @@
 		padding: 16px;
 		background: transparent;
 		border: none;
-		overflow-x: auto;
+		height: auto;
+		overflow: visible;
 		white-space: pre;
 		word-wrap: normal;
+		line-height: 1.45;
 
 		code {
 			background: transparent;
@@ -25,7 +27,8 @@
 			border: none;
 			font-size: inherit;
 			font-family: inherit;
-			line-height: inherit;
+			line-height: 1.45;
+			color: #74859d;
 		}
 	}
 
@@ -39,10 +42,12 @@
 		padding: 16px 8px;
 		text-align: right;
 		color: #6a737d;
-		font-size: 12px;
+		font-size: 13px;
 		line-height: 1.45;
 		user-select: none;
 		z-index: 1;
+		height: 100%;
+		min-height: 100%;
 	}
 
 	.dm-code-line-number {
@@ -50,6 +55,7 @@
 		padding: 0;
 		margin: 0;
 		display: block;
+		line-height: 1.45;
 	}
 
 	.dm-code-key {
@@ -70,39 +76,7 @@
 
 .dm-code-highlight:has(.dm-code-line-numbers) .dm-code-content,
 .dm-code-highlight--with-lines .dm-code-content {
-	padding-left: 66px;
-}
-
-/* Language-specific themes */
-.dm-code-highlight.dm-code-json {
-	background: #f6f8fa;
-}
-
-/* Dark theme support (optional) */
-@media (prefers-color-scheme: dark) {
-	.dm-code-highlight {
-		background: #0d1117;
-		border-color: #30363d;
-		color: #c9d1d9;
-
-		.dm-code-content {
-			color: #c9d1d9;
-		}
-
-		.dm-code-line-numbers {
-			background: #161b22;
-			border-right-color: #30363d;
-			color: #8b949e;
-		}
-
-		.dm-code-key {
-			color: #ff7b72;
-		}
-
-		.dm-code-bracket {
-			color: #8b949e;
-		}
-	}
+	padding-left: 71px;
 }
 
 /* Responsive design */
