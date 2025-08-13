@@ -1,17 +1,15 @@
 import React from 'react';
+import { CheckboxControl } from '@wordpress/components';
 import FieldWrapper from './FieldWrapper';
 
 export default function CheckboxField( { label, description, value, onChange, fieldKey } ) {
 	return (
 		<FieldWrapper description={ description } fieldType="checkbox">
-			<label>
-				<input
-					type="checkbox"
-					checked={ !! value }
-					onChange={ ( e ) => onChange( fieldKey, e.target.checked ) }
-				/>
-				{ label }
-			</label>
+			<CheckboxControl
+				label={ label }
+				checked={ !! value }
+				onChange={ ( newValue ) => onChange( fieldKey, newValue ) }
+			/>
 		</FieldWrapper>
 	);
 }

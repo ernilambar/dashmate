@@ -48,7 +48,10 @@ class Layouts_Page extends Abstract_Admin_Page {
 		if ( file_exists( $asset_file_name ) ) {
 			$asset_file = include $asset_file_name;
 
-			wp_enqueue_style( 'dashmate-layouts', DASHMATE_URL . '/assets/layouts.css', [], $asset_file['version'] );
+			// Enqueue WordPress components styles as dependency.
+			wp_enqueue_style( 'wp-components' );
+
+			wp_enqueue_style( 'dashmate-layouts', DASHMATE_URL . '/assets/layouts.css', [ 'wp-components' ], $asset_file['version'] );
 			wp_enqueue_script( 'dashmate-layouts', DASHMATE_URL . '/assets/layouts.js', $asset_file['dependencies'], $asset_file['version'], true );
 
 			wp_localize_script(

@@ -50,7 +50,10 @@ class Dashmate_Page extends Abstract_Admin_Page {
 		if ( file_exists( $asset_file_name ) ) {
 			$asset_file = include $asset_file_name;
 
-			wp_enqueue_style( 'dashmate-main', DASHMATE_URL . '/assets/index.css', [], $asset_file['version'] );
+			// Enqueue WordPress components styles as dependency.
+			wp_enqueue_style( 'wp-components' );
+
+			wp_enqueue_style( 'dashmate-main', DASHMATE_URL . '/assets/index.css', [ 'wp-components' ], $asset_file['version'] );
 			wp_enqueue_script( 'dashmate-main', DASHMATE_URL . '/assets/index.js', $asset_file['dependencies'], $asset_file['version'], true );
 			wp_localize_script(
 				'dashmate-main',

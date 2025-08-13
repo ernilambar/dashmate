@@ -1,4 +1,5 @@
 import React from 'react';
+import { ButtonGroup, Button } from '@wordpress/components';
 import FieldWrapper from './FieldWrapper';
 
 export default function ButtonsetField( {
@@ -10,39 +11,33 @@ export default function ButtonsetField( {
 	choices = [],
 	defaultValue,
 } ) {
+	const currentValue = value || defaultValue;
+
 	return (
 		<FieldWrapper label={ label } description={ description } fieldType="buttonset">
-			<div className="buttonset-container">
+			<ButtonGroup>
 				{ choices &&
 					Array.isArray( choices ) &&
 					choices.length > 0 &&
-					choices.map( ( choice, index ) => {
-						const isActive = ( value || defaultValue ) === choice.value;
+					choices.map( ( choice ) => {
+						const isActive = currentValue === choice.value;
 
 						return (
-							<button
+							<Button
 								key={ choice.value }
-								type="button"
+								isPrimary={ isActive }
+								isSecondary={ ! isActive }
 								onClick={ () => onChange( fieldKey, choice.value ) }
-								className={ isActive ? 'active' : '' }
 								title={ choice.label }
 							>
 								{ choice.label }
-							</button>
+							</Button>
 						);
 					} ) }
-				{ ( ! choices || ! Array.isArray( choices ) || choices.length === 0 ) && (
-					<div
-						style={ {
-							color: '#666',
-							fontStyle: 'italic',
-							fontSize: '12px',
-						} }
-					>
-						No choices defined for buttonset field
-					</div>
-				) }
-			</div>
+			</ButtonGroup>
+			{ ( ! choices || ! Array.isArray( choices ) || choices.length === 0 ) && (
+				<div className="no-choices-message">No choices defined for buttonset field</div>
+			) }
 		</FieldWrapper>
 	);
 }

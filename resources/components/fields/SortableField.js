@@ -105,7 +105,7 @@ export default function SortableField( {
 
 	return (
 		<FieldWrapper label={ label } description={ description } fieldType="sortable">
-			<div style={ { marginTop: 8 } }>
+			<div className="sortable-container">
 				<DragDropContext onDragEnd={ handleDragEnd }>
 					<Droppable droppableId="sortable-list" direction="vertical">
 						{ ( provided ) => (

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button } from '@wordpress/components';
 import Icon from './Icon';
 import {
 	TextField,
@@ -10,7 +11,6 @@ import {
 	ButtonsetField,
 	MultiCheckField,
 	HiddenField,
-	RepeaterField,
 	SortableField,
 } from './fields';
 
@@ -197,15 +197,6 @@ export default function WidgetSettingsForm( {
 						onChange={ ( newValue ) => handleFieldChange( key, newValue ) }
 					/>
 				);
-			case 'repeater':
-				return (
-					<RepeaterField
-						{ ...commonProps }
-						label={ fieldSchema.label }
-						description={ fieldSchema.description }
-						fields={ fieldSchema.fields }
-					/>
-				);
 			case 'hidden':
 				return <HiddenField { ...commonProps } defaultValue={ fieldSchema.default } />;
 			default:
@@ -249,23 +240,23 @@ export default function WidgetSettingsForm( {
 
 			<div className="widget-settings-actions">
 				{ hasSettingsFields && (
-					<button
-						type="button"
-						className="widget-save-button"
+					<Button
+						isPrimary
 						onClick={ handleSave }
 						disabled={ isSaving }
+						className="widget-save-button"
 					>
 						{ isSaving ? 'Saving...' : 'Save Settings' }
-					</button>
+					</Button>
 				) }
-				<button
-					type="button"
-					className="widget-remove-button"
+				<Button
+					isDestructive
 					onClick={ handleRemoveWidget }
 					title="Remove Widget"
+					className="widget-remove-button"
 				>
-					<Icon name="close" size="small" />
-				</button>
+					<Icon name="close" library="material-icons" size="small" />
+				</Button>
 			</div>
 		</div>
 	);
