@@ -1,4 +1,5 @@
 import React from 'react';
+import { TextControl, Button } from '@wordpress/components';
 import FieldWrapper from './FieldWrapper';
 
 export default function NumberField( {
@@ -10,36 +11,36 @@ export default function NumberField( {
 	min,
 	max,
 	defaultValue,
-	choices = [],
+	choices,
 } ) {
+	const currentValue = value || defaultValue || '';
+
 	return (
 		<FieldWrapper label={ label } description={ description } fieldType="number">
 			<div className="number-with-choices">
-				<input
+				<TextControl
 					type="number"
+					value={ currentValue }
 					min={ min }
 					max={ max }
-					value={ value || defaultValue || '' }
-					onChange={ ( e ) => onChange( fieldKey, parseInt( e.target.value ) || 0 ) }
+					onChange={ ( newValue ) => onChange( fieldKey, newValue ) }
 				/>
 				{ choices && Array.isArray( choices ) && choices.length > 0 && (
 					<div className="number-choices">
 						{ choices.map( ( choice ) => {
-							// Support both simple values and {value, label} objects
-							const choiceValue = typeof choice === 'object' ? choice.value : choice;
-							const choiceLabel = typeof choice === 'object' ? choice.label : choice;
-							const isActive = ( value || defaultValue ) === choiceValue;
+							const isActive = currentValue === choice.value;
 
 							return (
-								<button
-									key={ choiceValue }
-									type="button"
-									onClick={ () => onChange( fieldKey, choiceValue ) }
-									className={ isActive ? 'active' : '' }
-									title={ `Set to ${ choiceLabel }` }
+								<Button
+									key={ choice.value }
+									isSmall
+									isPrimary={ isActive }
+									isSecondary={ ! isActive }
+									onClick={ () => onChange( fieldKey, choice.value ) }
+									title={ `Set to ${ choice.label }` }
 								>
-									{ choiceLabel }
-								</button>
+									{ choice.label }
+								</Button>
 							);
 						} ) }
 					</div>

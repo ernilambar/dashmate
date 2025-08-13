@@ -81,6 +81,19 @@
 	text-align: center;
 }
 
+.widget-remove-button .dm-icon {
+	color: white;
+	font-size: 12px;
+	width: 12px;
+	height: 12px;
+}
+
+.widget-remove-button .dm-material-icons {
+	font-size: 12px;
+	width: 12px;
+	height: 12px;
+}
+
 .widget-remove-button:hover {
 	background: #c82333;
 }
@@ -90,16 +103,49 @@
 	box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.25);
 }
 
-/* Field Wrapper */
+/* Field wrapper styles */
 .dm-field {
-	margin-bottom: 12px;
+	margin-bottom: 16px;
 }
 
 .dm-field label {
 	display: block;
-	font-weight: 500;
+	font-weight: 600;
 	margin-bottom: 4px;
-	color: #23282d;
+	color: #1d2327;
+}
+
+.dm-field .description {
+	margin-top: 4px;
+	font-size: 13px;
+	color: #646970;
+	line-height: 1.4;
+}
+
+/* Field type specific styles */
+.dm-field-type-multi-check .choices-container {
+	margin-top: 4px;
+}
+
+.dm-field-type-multi-check .choice-item {
+	display: block;
+	margin-bottom: 4px;
+	cursor: pointer;
+}
+
+.dm-field-type-multi-check .choice-item input[type="checkbox"] {
+	margin-right: 6px;
+}
+
+.dm-field-type-sortable .sortable-container {
+	margin-top: 8px;
+}
+
+/* No choices message */
+.dm-field .no-choices-message {
+	color: #666;
+	font-style: italic;
+	font-size: 12px;
 }
 
 /* Widget No Settings Message */
@@ -150,13 +196,6 @@
 .widget-settings-panel textarea {
 	resize: vertical;
 	min-height: 80px;
-}
-
-.widget-settings-panel .description {
-	font-size: 12px;
-	color: #666;
-	margin-top: 2px;
-	margin-bottom: 8px;
 }
 
 /* Radio field styles */

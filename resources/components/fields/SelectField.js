@@ -1,4 +1,5 @@
 import React from 'react';
+import { SelectControl } from '@wordpress/components';
 import FieldWrapper from './FieldWrapper';
 
 export default function SelectField( {
@@ -12,18 +13,11 @@ export default function SelectField( {
 } ) {
 	return (
 		<FieldWrapper label={ label } description={ description } fieldType="select">
-			<select
+			<SelectControl
 				value={ value || defaultValue }
-				onChange={ ( e ) => onChange( fieldKey, e.target.value ) }
-			>
-				{ choices &&
-					Array.isArray( choices ) &&
-					choices.map( ( choice ) => (
-						<option key={ choice.value } value={ choice.value }>
-							{ choice.label }
-						</option>
-					) ) }
-			</select>
+				options={ choices }
+				onChange={ ( newValue ) => onChange( fieldKey, newValue ) }
+			/>
 		</FieldWrapper>
 	);
 }

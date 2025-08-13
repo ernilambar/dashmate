@@ -12,12 +12,12 @@ export default function MultiCheckField( {
 } ) {
 	return (
 		<FieldWrapper label={ label } description={ description } fieldType="multi-check">
-			<div style={ { marginTop: 4 } }>
+			<div className="choices-container">
 				{ choices &&
 					Array.isArray( choices ) &&
 					choices.length > 0 &&
 					choices.map( ( choice ) => {
-						// Ensure value is always an array, use default if value is not provided
+						// Ensure value is always an array, use default if value is not provided.
 						const currentValue = Array.isArray( value )
 							? value
 							: Array.isArray( defaultValue )
@@ -26,14 +26,7 @@ export default function MultiCheckField( {
 						const isChecked = currentValue.includes( choice.value );
 
 						return (
-							<label
-								key={ choice.value }
-								style={ {
-									display: 'block',
-									marginBottom: 4,
-									cursor: 'pointer',
-								} }
-							>
+							<label key={ choice.value } className="choice-item">
 								<input
 									type="checkbox"
 									value={ choice.value }
@@ -44,20 +37,13 @@ export default function MultiCheckField( {
 											: currentValue.filter( ( v ) => v !== choice.value );
 										onChange( fieldKey, newValue );
 									} }
-									style={ { marginRight: 6 } }
 								/>
 								{ choice.label }
 							</label>
 						);
 					} ) }
 				{ ( ! choices || ! Array.isArray( choices ) || choices.length === 0 ) && (
-					<div
-						style={ {
-							color: '#666',
-							fontStyle: 'italic',
-							fontSize: '12px',
-						} }
-					>
+					<div className="no-choices-message">
 						No choices defined for multi-check field
 					</div>
 				) }
