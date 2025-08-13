@@ -1,4 +1,5 @@
 import React from 'react';
+import { CheckboxControl } from '@wordpress/components';
 import FieldWrapper from './FieldWrapper';
 
 export default function MultiCheckField( {
@@ -26,20 +27,17 @@ export default function MultiCheckField( {
 						const isChecked = currentValue.includes( choice.value );
 
 						return (
-							<label key={ choice.value } className="choice-item">
-								<input
-									type="checkbox"
-									value={ choice.value }
-									checked={ isChecked }
-									onChange={ ( e ) => {
-										const newValue = e.target.checked
-											? [ ...currentValue, choice.value ]
-											: currentValue.filter( ( v ) => v !== choice.value );
-										onChange( fieldKey, newValue );
-									} }
-								/>
-								{ choice.label }
-							</label>
+							<CheckboxControl
+								key={ choice.value }
+								label={ choice.label }
+								checked={ isChecked }
+								onChange={ ( checked ) => {
+									const newValue = checked
+										? [ ...currentValue, choice.value ]
+										: currentValue.filter( ( v ) => v !== choice.value );
+									onChange( fieldKey, newValue );
+								} }
+							/>
 						);
 					} ) }
 				{ ( ! choices || ! Array.isArray( choices ) || choices.length === 0 ) && (

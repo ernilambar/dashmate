@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import { ToggleControl } from '@wordpress/components';
 import FieldWrapper from './FieldWrapper';
 
 export default function SortableField( {
@@ -136,21 +137,11 @@ export default function SortableField( {
 														{ item.label }
 													</span>
 												</div>
-												<label
-													className="item-toggle"
-													aria-label={ `Toggle ${ item.label }` }
-												>
-													<input
-														className="toggle-input"
-														type="checkbox"
-														checked={ item.enabled }
-														onChange={ () => handleToggle( index ) }
-													/>
-													<span
-														className="toggle-track"
-														aria-hidden="true"
-													></span>
-												</label>
+												<ToggleControl
+													checked={ item.enabled }
+													onChange={ () => handleToggle( index ) }
+													__nextHasNoMarginBottom
+												/>
 											</div>
 										) }
 									</Draggable>

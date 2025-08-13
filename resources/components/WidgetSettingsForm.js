@@ -10,6 +10,7 @@ import {
 	RadioField,
 	ButtonsetField,
 	MultiCheckField,
+	ToggleField,
 	HiddenField,
 	SortableField,
 } from './fields';
@@ -178,6 +179,14 @@ export default function WidgetSettingsForm( {
 						description={ fieldSchema.description }
 						choices={ fieldSchema.choices }
 						defaultValue={ fieldSchema.default }
+					/>
+				);
+			case 'toggle':
+				return (
+					<ToggleField
+						{ ...commonProps }
+						label={ fieldSchema.label }
+						description={ fieldSchema.description }
 					/>
 				);
 			case 'sortable':
