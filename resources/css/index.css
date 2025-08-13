@@ -1,6 +1,6 @@
 /* General styles */
 @import "./general.css";
-@import "./icon.css";
+@import "./components/icon.css";
 @import "./widget.css";
 @import "./widget-selector.css";
 @import "./layout-saver.css";
