@@ -13,6 +13,7 @@ import {
 	ToggleField,
 	HiddenField,
 	SortableField,
+	TextareaField,
 } from './fields';
 
 // Renders a form based on a widget schema and current values
@@ -98,7 +99,6 @@ export default function WidgetSettingsForm( {
 	// Helper to render a single field
 	const renderField = ( key, fieldSchema, value ) => {
 		const commonProps = {
-			key,
 			value,
 			onChange: handleFieldChange,
 			fieldKey: key,
@@ -108,31 +108,58 @@ export default function WidgetSettingsForm( {
 			case 'text':
 				return (
 					<TextField
-						{ ...commonProps }
+						key={ key }
+						value={ commonProps.value }
+						onChange={ commonProps.onChange }
+						fieldKey={ commonProps.fieldKey }
 						label={ fieldSchema.label }
 						description={ fieldSchema.description }
+						placeholder={ fieldSchema.placeholder }
 					/>
 				);
 			case 'url':
 				return (
 					<UrlField
-						{ ...commonProps }
+						key={ key }
+						value={ commonProps.value }
+						onChange={ commonProps.onChange }
+						fieldKey={ commonProps.fieldKey }
 						label={ fieldSchema.label }
 						description={ fieldSchema.description }
+						placeholder={ fieldSchema.placeholder }
+					/>
+				);
+			case 'textarea':
+				return (
+					<TextareaField
+						key={ key }
+						value={ commonProps.value }
+						onChange={ commonProps.onChange }
+						fieldKey={ commonProps.fieldKey }
+						label={ fieldSchema.label }
+						description={ fieldSchema.description }
+						placeholder={ fieldSchema.placeholder }
 					/>
 				);
 			case 'checkbox':
 				return (
 					<CheckboxField
-						{ ...commonProps }
+						key={ key }
+						value={ commonProps.value }
+						onChange={ commonProps.onChange }
+						fieldKey={ commonProps.fieldKey }
 						label={ fieldSchema.label }
 						description={ fieldSchema.description }
+						message={ fieldSchema.message }
 					/>
 				);
 			case 'select':
 				return (
 					<SelectField
-						{ ...commonProps }
+						key={ key }
+						value={ commonProps.value }
+						onChange={ commonProps.onChange }
+						fieldKey={ commonProps.fieldKey }
 						label={ fieldSchema.label }
 						description={ fieldSchema.description }
 						choices={ fieldSchema.choices }
@@ -142,7 +169,10 @@ export default function WidgetSettingsForm( {
 			case 'number':
 				return (
 					<NumberField
-						{ ...commonProps }
+						key={ key }
+						value={ commonProps.value }
+						onChange={ commonProps.onChange }
+						fieldKey={ commonProps.fieldKey }
 						label={ fieldSchema.label }
 						description={ fieldSchema.description }
 						min={ fieldSchema.min }
@@ -154,7 +184,10 @@ export default function WidgetSettingsForm( {
 			case 'radio':
 				return (
 					<RadioField
-						{ ...commonProps }
+						key={ key }
+						value={ commonProps.value }
+						onChange={ commonProps.onChange }
+						fieldKey={ commonProps.fieldKey }
 						label={ fieldSchema.label }
 						description={ fieldSchema.description }
 						choices={ fieldSchema.choices }
@@ -164,7 +197,10 @@ export default function WidgetSettingsForm( {
 			case 'buttonset':
 				return (
 					<ButtonsetField
-						{ ...commonProps }
+						key={ key }
+						value={ commonProps.value }
+						onChange={ commonProps.onChange }
+						fieldKey={ commonProps.fieldKey }
 						label={ fieldSchema.label }
 						description={ fieldSchema.description }
 						choices={ fieldSchema.choices }
@@ -174,7 +210,10 @@ export default function WidgetSettingsForm( {
 			case 'multi-check':
 				return (
 					<MultiCheckField
-						{ ...commonProps }
+						key={ key }
+						value={ commonProps.value }
+						onChange={ commonProps.onChange }
+						fieldKey={ commonProps.fieldKey }
 						label={ fieldSchema.label }
 						description={ fieldSchema.description }
 						choices={ fieldSchema.choices }
@@ -184,9 +223,13 @@ export default function WidgetSettingsForm( {
 			case 'toggle':
 				return (
 					<ToggleField
-						{ ...commonProps }
+						key={ key }
+						value={ commonProps.value }
+						onChange={ commonProps.onChange }
+						fieldKey={ commonProps.fieldKey }
 						label={ fieldSchema.label }
 						description={ fieldSchema.description }
+						message={ fieldSchema.message }
 					/>
 				);
 			case 'sortable':
@@ -207,7 +250,15 @@ export default function WidgetSettingsForm( {
 					/>
 				);
 			case 'hidden':
-				return <HiddenField { ...commonProps } defaultValue={ fieldSchema.default } />;
+				return (
+					<HiddenField
+						key={ key }
+						value={ commonProps.value }
+						onChange={ commonProps.onChange }
+						fieldKey={ commonProps.fieldKey }
+						defaultValue={ fieldSchema.default }
+					/>
+				);
 			default:
 				return null;
 		}

@@ -24,20 +24,18 @@ export default function NumberField( {
 					min={ min }
 					max={ max }
 					onChange={ ( newValue ) => onChange( fieldKey, newValue ) }
+					__next40pxDefaultSize={ true }
 				/>
 				{ choices && Array.isArray( choices ) && choices.length > 0 && (
 					<div className="number-choices">
 						{ choices.map( ( choice ) => {
-							const isActive = currentValue === choice.value;
+							const isActive = String( currentValue ) === String( choice.value );
 
 							return (
 								<Button
 									key={ choice.value }
-									isSmall
-									isPrimary={ isActive }
-									isSecondary={ ! isActive }
+									variant={ isActive ? 'primary' : 'secondary' }
 									onClick={ () => onChange( fieldKey, choice.value ) }
-									title={ `Set to ${ choice.label }` }
 								>
 									{ choice.label }
 								</Button>

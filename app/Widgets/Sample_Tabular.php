@@ -47,6 +47,36 @@ class Sample_Tabular extends Abstract_Widget {
 				'min'         => 1,
 				'max'         => 10,
 				'refresh'     => true,
+				'choices'     => [
+					[
+						'value' => 3,
+						'label' => '3',
+					],
+					[
+						'value' => 5,
+						'label' => '5',
+					],
+					[
+						'value' => 10,
+						'label' => '10',
+					],
+					[
+						'value' => 15,
+						'label' => '15',
+					],
+					[
+						'value' => 20,
+						'label' => '20',
+					],
+					[
+						'value' => 50,
+						'label' => '50',
+					],
+					[
+						'value' => 100,
+						'label' => '100',
+					],
+				],
 			],
 			'visible_columns' => [
 				'type'        => 'sortable',

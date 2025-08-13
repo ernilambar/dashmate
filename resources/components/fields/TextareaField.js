@@ -1,8 +1,8 @@
 import React from 'react';
-import { TextControl } from '@wordpress/components';
+import { TextareaControl } from '@wordpress/components';
 import FieldWrapper from './FieldWrapper';
 
-export default function TextField( {
+export default function TextareaField( {
 	label,
 	description,
 	placeholder,
@@ -11,8 +11,8 @@ export default function TextField( {
 	fieldKey,
 } ) {
 	return (
-		<FieldWrapper label={ label } description={ description } fieldType="text">
-			<TextControl
+		<FieldWrapper label={ label } description={ description } fieldType="textarea">
+			<TextareaControl
 				value={ value || '' }
 				placeholder={ placeholder }
 				onChange={ ( newValue ) => onChange( fieldKey, newValue ) }
