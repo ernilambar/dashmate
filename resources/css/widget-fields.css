@@ -1,0 +1,10 @@
+.widget-settings-panel .dm-field-type-number .components-base-control__field {
+	margin-bottom: 0 !important;
+}
+
+.dm-field-type-textarea textarea {
+	min-height: 60px;
+	height: auto;
+	resize: vertical;
+	box-sizing: border-box;
+}

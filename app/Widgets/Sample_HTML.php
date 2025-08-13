@@ -43,13 +43,14 @@ class Sample_HTML extends Abstract_Widget {
 				'type'        => 'text',
 				'label'       => esc_html__( 'Text Field', 'dashmate' ),
 				'description' => esc_html__( 'A simple text input field for testing.', 'dashmate' ),
-				'default'     => 'Sample text value',
+				'default'     => '',
+				'placeholder' => esc_html__( 'Enter text...', 'dashmate' ),
 			],
 			'url_field'         => [
 				'type'        => 'url',
 				'label'       => esc_html__( 'URL Field', 'dashmate' ),
 				'description' => esc_html__( 'A URL input field for testing.', 'dashmate' ),
-				'default'     => 'https://example.com',
+				'placeholder' => 'https://example.com',
 			],
 			'checkbox_field'    => [
 				'type'        => 'checkbox',
@@ -92,6 +93,13 @@ class Sample_HTML extends Abstract_Widget {
 				'min'         => 1,
 				'max'         => 100,
 			],
+			'textarea_field'    => [
+				'type'        => 'textarea',
+				'label'       => esc_html__( 'Textarea Field', 'dashmate' ),
+				'description' => esc_html__( 'A simple textarea input field for testing.', 'dashmate' ),
+				'placeholder' => esc_html__( 'Enter text content...', 'dashmate' ),
+			],
+
 			'radio_field'       => [
 				'type'        => 'radio',
 				'label'       => esc_html__( 'Radio Field', 'dashmate' ),
