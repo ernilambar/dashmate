@@ -216,31 +216,7 @@
 }
 
 .dashmate-layouts-json {
-	padding: 0;
-	min-height: 300px;
-	max-height: 500px;
-	overflow-y: auto;
 	margin-top: 10px;
-}
-
-.dashmate-layouts-json-content {
-	margin: 0;
-	white-space: pre-wrap;
-	word-wrap: break-word;
-	font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-	font-size: 12px;
-	line-height: 1.4;
-	color: #24292e;
-	background: #f6f8fa;
-	border: 1px solid #e1e4e8;
-	border-radius: 6px;
-	padding: 16px;
-}
-
-.dashmate-layouts-json-content code {
-	background: transparent;
-	padding: 0;
-	border: none;
 }
 
 .dashmate-layouts-json-loading,
