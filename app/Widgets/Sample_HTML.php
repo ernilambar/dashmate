@@ -55,6 +55,7 @@ class Sample_HTML extends Abstract_Widget {
 				'type'        => 'checkbox',
 				'label'       => esc_html__( 'Checkbox Field', 'dashmate' ),
 				'description' => esc_html__( 'A checkbox field for testing.', 'dashmate' ),
+				'message'     => esc_html__( 'Enable this checkbox?', 'dashmate' ),
 				'default'     => true,
 			],
 			'toggle_field'      => [
