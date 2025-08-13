@@ -1,18 +1,15 @@
-/* Icon Component Styles */
-
 .dm-icon {
 	line-height: 1;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-}
 
-/* SVG Icon Styles */
-.dm-svg-icon svg {
-	width: 100%;
-	height: 100%;
-	fill: currentColor;
-	vertical-align: middle;
+	svg {
+		width: 100%;
+		height: 100%;
+		fill: currentColor;
+		vertical-align: middle;
+	}
 }
 
 /* Material Icons Font */

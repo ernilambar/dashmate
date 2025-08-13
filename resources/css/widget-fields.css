@@ -1,10 +1,96 @@
-.widget-settings-panel .dm-field-type-number .components-base-control__field {
-	margin-bottom: 0 !important;
+/* Common fields */
+.dm-field {
+	margin-bottom: 16px;
+
+	.description {
+		margin-top: 0;
+		margin-bottom: 6px;
+		font-size: 13px;
+		color: #646970;
+		line-height: 1.4;
+	}
+
+	label {
+		display: block;
+		margin-bottom: 2px;
+		font-weight: 600;
+		font-size: 13px;
+		color: #1d2327;
+	}
 }
 
-.dm-field-type-textarea textarea {
-	min-height: 60px;
-	height: auto;
-	resize: vertical;
-	box-sizing: border-box;
+/* Number field */
+.dm-field-type-number {
+	.components-base-control__field {
+		margin-bottom: 0 !important;
+	}
+
+	.number-with-choices {
+		display: flex;
+		gap: 8px;
+		align-items: center;
+
+		input[type="number"] {
+			flex: 1;
+		}
+
+		.components-base-control {
+			min-width: 60px;
+		}
+	}
+
+	.number-choices {
+		display: flex;
+		gap: 4px;
+	}
+}
+
+/* Multi-check field */
+.dm-field-type-multi-check {
+	.choices-container {
+		margin-top: 4px;
+	}
+
+	.choice-item {
+		display: block;
+		margin-bottom: 4px;
+		cursor: pointer;
+	}
+
+	.choice-item input[type="checkbox"] {
+		margin-right: 6px;
+	}
+}
+
+/* Textarea field */
+.dm-field-type-textarea {
+	textarea {
+		min-height: 60px;
+		height: auto;
+		resize: vertical;
+		box-sizing: border-box;
+	}
+}
+
+/* Sortable field */
+.dm-field-type-sortable {
+	.sortable-container {
+		margin-top: 8px;
+	}
+}
+
+/* Radio field */
+.dm-field-type-radio {
+	input[type="radio"] + label {
+		display: inline;
+		font-weight: 400;
+	}
+}
+
+/* Checkbox field */
+.dm-field-type-checkbox {
+	.components-checkbox-control__label {
+		display: inline;
+		font-weight: 400;
+	}
 }
