@@ -259,10 +259,10 @@ class Sample_Tabular extends Abstract_Widget {
 		$max_items = $settings['max_items'] ?? 2;
 
 		// Limit products table rows.
-		$products['rows'] = array_slice( $products['rows'], 0, $max_items );
+		$products['rows'] = array_slice( $products['rows'], 0, (int) $max_items );
 
 		// Limit orders table rows.
-		$orders['rows'] = array_slice( $orders['rows'], 0, $max_items );
+		$orders['rows'] = array_slice( $orders['rows'], 0, (int) $max_items );
 
 		return [
 			'tables' => [

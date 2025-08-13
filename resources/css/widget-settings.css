@@ -4,298 +4,90 @@
 	background: #f9f9f9;
 	border: 1px solid #e1e1e1;
 	border-radius: 4px;
-}
 
-/* Widget Settings Header */
-.widget-settings-header {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	margin-bottom: 15px;
-	padding-bottom: 10px;
-	border-bottom: 1px solid #e1e1e1;
-}
+	.widget-settings-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 15px;
+		padding-bottom: 10px;
+		border-bottom: 1px solid #e1e1e1;
 
-.widget-settings-header h4 {
-	margin: 0;
-	font-size: 14px;
-	font-weight: 600;
-	color: #23282d;
-}
-
-/* Widget Settings Actions */
-.widget-settings-actions {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	margin-top: 16px;
-	gap: 10px;
-}
-
-/* Widget Save Button */
-.widget-save-button {
-	background: #0073aa;
-	color: white;
-	border: none;
-	padding: 8px 16px;
-	border-radius: 4px;
-	cursor: pointer;
-	font-size: 13px;
-	font-weight: 500;
-	transition: background-color 0.2s ease;
-}
-
-.widget-save-button:hover {
-	background: #005a87;
-}
-
-.widget-save-button:disabled {
-	opacity: 0.6;
-	cursor: not-allowed;
-}
-
-.widget-save-button:focus {
-	outline: none;
-	box-shadow: 0 0 0 2px rgba(0, 115, 170, 0.25);
-}
-
-/* Widget Remove Button */
-.widget-remove-button {
-	background: #dc3545;
-	color: white;
-	border: none;
-	border-radius: 50%;
-	width: 24px;
-	height: 24px;
-	font-size: 14px;
-	font-weight: bold;
-	line-height: 1;
-	cursor: pointer;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	transition: background-color 0.2s ease;
-	flex-shrink: 0;
-	padding: 0;
-	text-align: center;
-}
-
-.widget-remove-button .dm-icon {
-	color: white;
-	font-size: 12px;
-	width: 12px;
-	height: 12px;
-}
-
-.widget-remove-button .dm-material-icons {
-	font-size: 12px;
-	width: 12px;
-	height: 12px;
-}
-
-.widget-remove-button:hover {
-	background: #c82333;
-}
-
-.widget-remove-button:focus {
-	outline: none;
-	box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.25);
-}
-
-/* Field wrapper styles */
-.dm-field {
-	margin-bottom: 16px;
-}
-
-.dm-field label {
-	display: block;
-	font-weight: 600;
-	margin-bottom: 4px;
-	color: #1d2327;
-}
-
-.dm-field .description {
-	margin-top: 0;
-	margin-bottom: 6px;
-	font-size: 13px;
-	color: #646970;
-	line-height: 1.4;
-}
-
-/* Field type specific styles */
-.dm-field-type-multi-check .choices-container {
-	margin-top: 4px;
-}
-
-.dm-field-type-multi-check .choice-item {
-	display: block;
-	margin-bottom: 4px;
-	cursor: pointer;
-}
-
-.dm-field-type-multi-check .choice-item input[type="checkbox"] {
-	margin-right: 6px;
-}
-
-.dm-field-type-sortable .sortable-container {
-	margin-top: 8px;
-}
-
-/* No choices message */
-.dm-field .no-choices-message {
-	color: #666;
-	font-style: italic;
-	font-size: 12px;
-}
-
-/* Widget No Settings Message */
-.widget-no-settings {
-	padding: 15px 0;
-	text-align: center;
-}
-
-.widget-no-settings p {
-	margin: 0;
-	color: #666;
-	font-style: italic;
-	font-size: 13px;
-}
-.widget-settings-panel label {
-	display: block;
-	margin-bottom: 2px;
-	font-weight: 600;
-	font-size: 13px;
-	color: #23282d;
-}
-
-.widget-settings-panel input[type="text"],
-.widget-settings-panel input[type="number"],
-.widget-settings-panel input[type="url"],
-.widget-settings-panel textarea {
-	width: 100%;
-	border: 1px solid #ddd;
-	border-radius: 4px;
-	font-size: 13px;
-	line-height: 1.4;
-}
-
-.widget-settings-panel input[type="checkbox"] {
-	margin-right: 8px;
-}
-
-.widget-settings-panel input[type="checkbox"] + label {
-	display: inline;
-	font-weight: normal;
-}
-
-.widget-settings-panel select {
-	background: #fff;
-}
-
-.widget-settings-panel textarea {
-	resize: vertical;
-	min-height: 80px;
-}
-
-/* Radio field styles */
-.widget-settings-panel input[type="radio"] {
-	margin-right: 6px;
-}
-
-.widget-settings-panel input[type="radio"] + label {
-	display: inline;
-	font-weight: normal;
-}
-
-/* Buttonset field styles - Advanced radio buttons displayed as connected buttons */
-.widget-settings-panel .buttonset-container {
-	display: flex;
-	gap: 0;
-	margin-top: 4px;
-	border: 1px solid #ddd;
-	border-radius: 4px;
-	overflow: hidden;
-	background: #f8f9fa;
-}
-
-.widget-settings-panel {
-	.buttonset-container {
-		display: inline-flex;
-		border: 1px solid #ccc;
-		border-radius: 3px;
-		overflow: hidden;
-		background: #f5f5f5;
+		h4 {
+			margin: 0;
+			font-size: 14px;
+			font-weight: 600;
+			color: #1d2327;
+		}
 	}
 
-	.buttonset-container button {
-		padding: 6px 12px;
-		border: none;
-		background: transparent;
-		cursor: pointer;
-		font-size: 14px;
-		color: #333;
+	.widget-settings-actions {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-top: 16px;
+		gap: 10px;
 	}
 
-	.buttonset-container button.active {
+	.widget-save-button {
 		background: #0073aa;
 		color: white;
-		box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+		border: none;
+		padding: 8px 16px;
+		border-radius: 4px;
+		cursor: pointer;
+		font-size: 13px;
+		font-weight: 500;
+		transition: background-color 0.2s ease;
+
+		&:hover {
+			background: #005a87;
+		}
+
+		&:focus {
+			outline: none;
+			box-shadow: 0 0 0 2px rgba(0, 115, 170, 0.25);
+		}
+
+		&:disabled {
+			opacity: 0.6;
+			cursor: not-allowed;
+		}
 	}
 
-	.buttonset-container button:not(:last-child) {
-		border-right: 1px solid #ccc;
+	.widget-remove-button {
+		background: #dc3545;
+		color: white;
+		border: none;
+		border-radius: 50%;
+		width: 24px;
+		height: 24px;
+		font-size: 14px;
+		font-weight: bold;
+		line-height: 1;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: background-color 0.2s ease;
+		flex-shrink: 0;
+		padding: 0;
+		text-align: center;
+
+		&:hover {
+			background: #c82333;
+		}
+
+		&:focus {
+			outline: none;
+			box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.25);
+		}
+
+		.dm-icon {
+			color: white;
+			font-size: 12px;
+			width: 12px;
+			height: 12px;
+		}
 	}
-}
-
-/* Radio field styles for comparison */
-.widget-settings-panel input[type="radio"] {
-	margin-right: 6px;
-}
-
-.widget-settings-panel input[type="radio"] + label {
-	display: inline;
-	font-weight: normal;
-}
-
-/* Number field with choices */
-.widget-settings-panel .number-with-choices {
-	display: flex;
-	gap: 8px;
-	align-items: center;
-}
-
-.widget-settings-panel .number-with-choices input[type="number"] {
-	flex: 1;
-}
-
-.widget-settings-panel .number-choices {
-	display: flex;
-	gap: 4px;
-}
-
-.widget-settings-panel .number-choices button {
-	padding: 4px 10px;
-	font-size: 12px;
-	border: 1px solid #ddd;
-	background-color: #f8f9fa;
-	color: #333;
-	border-radius: 3px;
-	cursor: pointer;
-	transition: all 0.2s ease;
-	height: 40px;
-	min-height: 40px;
-	box-sizing: border-box;
-}
-
-.widget-settings-panel .number-choices button.active {
-	background-color: #0073aa;
-	color: white;
-}
-
-.widget-settings-panel .number-choices button:hover {
-	background-color: #e9ecef;
-}
-
-.widget-settings-panel .number-choices button.active:hover {
-	background-color: #005a87;
 }
