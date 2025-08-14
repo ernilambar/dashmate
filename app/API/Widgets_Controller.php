@@ -181,9 +181,15 @@ class Widgets_Controller extends Base_Controller {
 			return $content;
 		}
 
-		// Add widget type and merged settings to the response
+		// Add widget type and merged settings to the response.
 		$content['type']     = $widget->get_template_type();
 		$content['settings'] = $merged_settings;
+
+		// Add metadata to the response.
+		$metadata = $widget->get_metadata( $settings );
+		if ( ! empty( $metadata['classes'] ) || ! empty( $metadata['attributes'] ) ) {
+			$content['metadata'] = $metadata;
+		}
 
 		return $this->success_response( $content );
 	}
