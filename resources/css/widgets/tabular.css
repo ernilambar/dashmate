@@ -1,4 +1,3 @@
-/* Tabular Widget Styles - Minimal Design */
 .tabular-widget {
 	padding: 10px;
 	letter-spacing: 0.5px;
@@ -11,10 +10,10 @@
 	overflow: visible;
 	box-shadow: none;
 	border: none;
+}
 
-	a {
-		text-decoration: none;
-	}
+.tabular-table a {
+	text-decoration: none;
 }
 
 .tabular-table:last-child {
@@ -38,12 +37,24 @@
 	background: transparent;
 }
 
+/* Column width control - Free-flowing approach */
 .tabular-widget table {
 	width: 100%;
 	border-collapse: collapse;
 	margin: 0;
 	background: transparent;
-	table-layout: fixed;
+	table-layout: auto; /* Allow natural column sizing */
+}
+
+/* Base column styling - let content determine width */
+.tabular-widget th,
+.tabular-widget td {
+	width: auto;
+	min-width: 0; /* Allow columns to shrink as needed */
+	max-width: none; /* Allow columns to expand as needed */
+	white-space: normal; /* Allow text to wrap */
+	word-wrap: break-word; /* Break long words */
+	overflow-wrap: break-word; /* Modern word breaking */
 }
 
 .tabular-widget th {
@@ -54,10 +65,7 @@
 	font-size: 12px;
 	color: #3c4349;
 	border-bottom: 1px solid #dcdcde;
-	white-space: nowrap;
 	letter-spacing: 0.02em;
-	overflow: hidden;
-	text-overflow: ellipsis;
 }
 
 .tabular-widget td {
@@ -67,9 +75,6 @@
 	color: #3c4349;
 	vertical-align: middle;
 	line-height: 1.2;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
 }
 
 .tabular-widget tr:last-child td {
@@ -80,60 +85,15 @@
 	background: transparent;
 }
 
-/* Column width control */
-.tabular-widget th:first-child,
-.tabular-widget td:first-child {
-	width: 50px;
-	max-width: 50px;
-	min-width: 50px;
-}
-
-.tabular-widget th:last-child,
-.tabular-widget td:last-child {
-	width: 60px;
-	max-width: 60px;
-	min-width: 60px;
-	text-align: center;
-}
-
-/* Middle columns - flexible width */
-.tabular-widget th:not(:first-child):not(:last-child),
-.tabular-widget td:not(:first-child):not(:last-child) {
-	width: auto;
-	min-width: 100px;
-}
-
-/* Action column specific styling */
+/* Only action columns have fixed width */
 .tabular-widget td.action-column,
 .tabular-widget th.action-column {
-	width: 60px !important;
-	max-width: 60px !important;
-	min-width: 60px !important;
+	width: 60px;
+	min-width: 60px;
+	max-width: 60px;
 	text-align: center;
-	padding: 4px 2px !important;
-}
-
-/* Status column specific styling */
-.tabular-widget td.column-status,
-.tabular-widget th.column-status {
-	width: 80px !important;
-	max-width: 80px !important;
-	min-width: 80px !important;
-	text-align: center;
-}
-.tabular-widget td.column-activity,
-.tabular-widget th.column-activity {
-	width: 80px !important;
-	max-width: 80px !important;
-	min-width: 80px !important;
-	text-align: center;
-}
-
-.tabular-widget td.column-author,
-.tabular-widget th.column-author {
-	width: 100px !important;
-	max-width: 100px !important;
-	min-width: 100px !important;
+	padding: 4px 2px;
+	white-space: nowrap;
 }
 
 /* Linked cells styling */
@@ -204,7 +164,6 @@
 	line-height: 1;
 }
 
-/* Loading spinner */
 .tabular-widget .loading-spinner {
 	width: 14px;
 	height: 14px;
@@ -284,17 +243,24 @@
 	font-size: 10px;
 }
 
-/* Responsive design */
+/* Responsive behavior for smaller screens */
 @media (max-width: 768px) {
 	.tabular-widget .table-title {
 		font-size: 12px;
 		margin-bottom: 6px;
 	}
 
+	.tabular-widget table {
+		table-layout: auto; /* Keep auto layout for free-flowing columns */
+	}
+
 	.tabular-widget th,
 	.tabular-widget td {
 		padding: 3px 6px;
 		font-size: 11px;
+		white-space: nowrap; /* Prevent wrapping on mobile */
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
 	.tabular-widget .action-btn {
@@ -312,26 +278,12 @@
 		height: 10px;
 	}
 
-	/* Mobile column widths */
-	.tabular-widget th:nth-child(1),
-	.tabular-widget td:nth-child(1) {
-		width: 80px;
-		max-width: 80px;
-		min-width: 80px;
-	}
-
-	.tabular-widget th:nth-child(2),
-	.tabular-widget td:nth-child(2) {
-		width: 150px;
-		max-width: 150px;
-		min-width: 150px;
-	}
-
-	.tabular-widget th:last-child,
-	.tabular-widget td:last-child {
+	/* Only action columns have fixed width on mobile */
+	.tabular-widget td.action-column,
+	.tabular-widget th.action-column {
 		width: 50px;
-		max-width: 50px;
 		min-width: 50px;
+		max-width: 50px;
 	}
 }
 
@@ -357,25 +309,10 @@
 		height: 9px;
 	}
 
-	/* Small mobile column widths */
-	.tabular-widget th:nth-child(1),
-	.tabular-widget td:nth-child(1) {
-		width: 70px;
-		max-width: 70px;
-		min-width: 70px;
-	}
-
-	.tabular-widget th:nth-child(2),
-	.tabular-widget td:nth-child(2) {
-		width: 120px;
-		max-width: 120px;
-		min-width: 120px;
-	}
-
-	.tabular-widget th:last-child,
-	.tabular-widget td:last-child {
+	.tabular-widget td.action-column,
+	.tabular-widget th.action-column {
 		width: 40px;
-		max-width: 40px;
 		min-width: 40px;
+		max-width: 40px;
 	}
 }
