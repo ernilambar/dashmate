@@ -450,4 +450,67 @@ abstract class Abstract_Widget {
 			'essential_fields' => $this->get_essential_fields(),
 		];
 	}
+
+	/**
+	 * Get custom CSS classes for this widget.
+	 *
+	 * Child plugins can override this method to add custom classes.
+	 * Alternatively, they can use the 'dashmate_widget_custom_classes' filter.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $settings Widget settings.
+	 * @return array Array of CSS class strings.
+	 */
+	public function get_custom_classes( array $settings = [] ) {
+		$classes = [];
+
+		/**
+		 * Filter custom CSS classes for a specific widget.
+		 *
+		 * This filter allows other plugins and addons to add custom CSS classes
+		 * to specific widgets based on their ID, type, and settings.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param array  $classes  Array of CSS class strings.
+		 * @param string $widget_id Widget ID.
+		 * @param string $widget_type Widget template type.
+		 * @param array  $settings Widget settings.
+		 */
+		return apply_filters( 'dashmate_widget_custom_classes', $classes, $this->id, $this->template_type, $settings );
+	}
+
+	/**
+	 * Get widget metadata (classes and attributes).
+	 *
+	 * Child plugins can override this method to add custom metadata.
+	 * Alternatively, they can use the 'dashmate_widget_metadata' filter.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $settings Widget settings.
+	 * @return array Widget metadata with 'classes' and 'attributes' keys.
+	 */
+	public function get_metadata( array $settings = [] ) {
+		$metadata = [
+			'classes'    => $this->get_custom_classes( $settings ),
+			'attributes' => [],
+		];
+
+		/**
+		 * Filter widget metadata for a specific widget.
+		 *
+		 * This filter allows other plugins and addons to add custom metadata
+		 * (classes and attributes) to specific widgets.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param array  $metadata Widget metadata array with 'classes' and 'attributes' keys.
+		 * @param string $widget_id Widget ID.
+		 * @param string $widget_type Widget template type.
+		 * @param array  $settings Widget settings.
+		 */
+		return apply_filters( 'dashmate_widget_metadata', $metadata, $this->id, $this->template_type, $settings );
+	}
 }

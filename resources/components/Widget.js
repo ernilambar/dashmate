@@ -80,9 +80,10 @@ class Widget extends Component {
 			<Draggable draggableId={ widget.id } index={ index }>
 				{ ( provided, snapshot ) => (
 					<div
-						className={ `widget widget-error ${
-							snapshot.isDragging ? 'dragging' : ''
-						}` }
+						className={ this.getWidgetClasses( 'error', widget.id, [], {
+							isDragging: snapshot.isDragging,
+							state: 'error',
+						} ) }
 						ref={ provided.innerRef }
 						{ ...provided.draggableProps }
 					>
@@ -125,9 +126,10 @@ class Widget extends Component {
 			<Draggable draggableId={ widget.id } index={ index }>
 				{ ( provided, snapshot ) => (
 					<div
-						className={ `widget widget-basic ${ collapsed ? 'collapsed' : '' } ${
-							snapshot.isDragging ? 'dragging' : ''
-						}` }
+						className={ this.getWidgetClasses( 'basic', widget.id, [], {
+							collapsed,
+							isDragging: snapshot.isDragging,
+						} ) }
 						ref={ provided.innerRef }
 						{ ...provided.draggableProps }
 					>
@@ -252,6 +254,39 @@ class Widget extends Component {
 		}, 2000 );
 	};
 
+	/**
+	 * Generate widget wrapper classes consistently.
+	 *
+	 * @param {string} widgetType - Widget type (html, tabular, etc.).
+	 * @param {string} widgetId - Widget ID.
+	 * @param {Array} customClasses - Custom classes from metadata.
+	 * @param {Object} options - Additional options.
+	 * @returns {string} Combined class string.
+	 */
+	getWidgetClasses = ( widgetType, widgetId, customClasses = [], options = {} ) => {
+		const { collapsed = false, isDragging = false, state = '' } = options;
+
+		const baseClasses = [ 'widget', `widget-${ widgetType }`, `widget-${ widgetId }` ];
+
+		if ( collapsed ) {
+			baseClasses.push( 'collapsed' );
+		}
+
+		if ( isDragging ) {
+			baseClasses.push( 'dragging' );
+		}
+
+		if ( state ) {
+			baseClasses.push( `widget-${ state }` );
+		}
+
+		if ( customClasses.length > 0 ) {
+			baseClasses.push( ...customClasses );
+		}
+
+		return baseClasses.join( ' ' );
+	};
+
 	render() {
 		const { widget, widgets, index, onRemove } = this.props;
 		const {
@@ -270,9 +305,10 @@ class Widget extends Component {
 				<Draggable draggableId={ widget.id } index={ index }>
 					{ ( provided, snapshot ) => (
 						<div
-							className={ `widget widget-loading ${
-								snapshot.isDragging ? 'dragging' : ''
-							}` }
+							className={ this.getWidgetClasses( 'loading', widget.id, [], {
+								isDragging: snapshot.isDragging,
+								state: 'loading',
+							} ) }
 							ref={ provided.innerRef }
 							{ ...provided.draggableProps }
 						>
@@ -305,6 +341,9 @@ class Widget extends Component {
 		const widgetType = widgetData?.type;
 		const widgetTitle = widgetData?.title || widget.id;
 		const widgetIcon = widgetData?.icon || '';
+		const metadata = widgetData?.metadata || {};
+		const customClasses = metadata.classes || [];
+		const customAttributes = metadata.attributes || {};
 
 		// Validate that we have a widget type and it's supported.
 		if ( ! widgetType ) {
@@ -324,11 +363,13 @@ class Widget extends Component {
 			<Draggable draggableId={ widget.id } index={ index }>
 				{ ( provided, snapshot ) => (
 					<div
-						className={ `widget widget-${ widgetType } ${
-							collapsed ? 'collapsed' : ''
-						} ${ snapshot.isDragging ? 'dragging' : '' }` }
+						className={ this.getWidgetClasses( widgetType, widget.id, customClasses, {
+							collapsed,
+							isDragging: snapshot.isDragging,
+						} ) }
 						ref={ provided.innerRef }
 						{ ...provided.draggableProps }
+						{ ...customAttributes }
 					>
 						<div className="widget-header" { ...provided.dragHandleProps }>
 							<h3>
