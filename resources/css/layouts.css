@@ -141,7 +141,7 @@
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
 	gap: 20px;
-	margin-bottom: 30px;
+	margin-bottom: 20px;
 }
 
 .dashmate-layout-grid-item {
@@ -192,27 +192,6 @@
 
 .dashmate-layouts-content {
 	overflow: hidden;
-}
-
-.dashmate-layouts-header {
-	display: flex;
-	justify-content: flex-start;
-	align-items: center;
-	padding: 0;
-	margin: 0;
-}
-
-.dashmate-layouts-header-copy-btn {
-	padding: 4px 8px;
-	font-size: 12px;
-}
-
-.dashmate-layouts-title {
-	margin: 0;
-	font-size: 14px;
-	font-weight: 600;
-	color: #333;
-	flex-grow: 1;
 }
 
 .dashmate-layouts-json {

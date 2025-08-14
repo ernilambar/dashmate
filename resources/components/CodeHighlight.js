@@ -4,7 +4,7 @@
  * @package Dashmate
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 
 /**
  * Code Highlight Component.
@@ -14,6 +14,7 @@ import React from 'react';
  * @param {string} props.language - Language for syntax highlighting (default: 'json').
  * @param {string} props.className - Additional CSS classes.
  * @param {boolean} props.showLineNumbers - Whether to show line numbers.
+ * @param {boolean} props.showCopyButton - Whether to show copy button (default: false).
  * @returns {JSX.Element} Code highlight component.
  */
 const CodeHighlight = ( {
@@ -21,7 +22,27 @@ const CodeHighlight = ( {
 	language = 'json',
 	className = '',
 	showLineNumbers = false,
+	showCopyButton = false,
 } ) => {
+	const [ copyStatus, setCopyStatus ] = useState( 'idle' );
+
+	// Function to copy code to clipboard.
+	const copyToClipboard = async () => {
+		try {
+			await navigator.clipboard.writeText( code );
+			setCopyStatus( 'copied' );
+			setTimeout( () => {
+				setCopyStatus( 'idle' );
+			}, 2000 );
+		} catch ( error ) {
+			console.error( 'Failed to copy to clipboard:', error );
+			setCopyStatus( 'error' );
+			setTimeout( () => {
+				setCopyStatus( 'idle' );
+			}, 2000 );
+		}
+	};
+
 	// Function to highlight JSON with proper multilevel support.
 	const highlightJson = ( jsonString ) => {
 		// Split the JSON string into lines to preserve indentation.
@@ -67,12 +88,49 @@ const CodeHighlight = ( {
 		);
 	};
 
+	// Get button text based on copy status.
+	const getButtonText = () => {
+		switch ( copyStatus ) {
+			case 'copied':
+				return 'Copied';
+			case 'error':
+				return 'Error';
+			default:
+				return 'Copy';
+		}
+	};
+
+	// Get button class based on copy status.
+	const getButtonClass = () => {
+		const baseClass = 'button button-secondary dm-code-copy-btn';
+		switch ( copyStatus ) {
+			case 'copied':
+				return `${ baseClass } dm-code-copy-btn--copied`;
+			case 'error':
+				return `${ baseClass } dm-code-copy-btn--error`;
+			default:
+				return baseClass;
+		}
+	};
+
 	return (
 		<div
 			className={ `dm-code-highlight dm-code-${ language } ${
 				showLineNumbers ? 'dm-code-highlight--with-lines' : ''
 			} ${ className }` }
 		>
+			{ showCopyButton && (
+				<div className="dm-code-copy-container">
+					<button
+						type="button"
+						className={ getButtonClass() }
+						onClick={ copyToClipboard }
+						disabled={ ! code }
+					>
+						{ getButtonText() }
+					</button>
+				</div>
+			) }
 			{ showLineNumbers && generateLineNumbers( code ) }
 			<pre className="dm-code-content">
 				<code

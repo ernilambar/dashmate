@@ -216,33 +216,7 @@ const LayoutsApp = () => {
 		return textarea.value;
 	};
 
-	const [ copyButtonText, setCopyButtonText ] = useState( settings.strings?.copyJson || 'Copy' );
 	const [ applyButtonMessage, setApplyButtonMessage ] = useState( { type: '', text: '' } );
-	const [ copyButtonMessage, setCopyButtonMessage ] = useState( { type: '', text: '' } );
-
-	const copyToClipboard = async () => {
-		if ( ! layoutData ) return;
-
-		try {
-			const jsonString = JSON.stringify( layoutData, null, 2 );
-			await navigator.clipboard.writeText( jsonString );
-
-			// Change button text to "Copied" for 2 seconds
-			setCopyButtonText( 'Copied' );
-			setTimeout( () => {
-				setCopyButtonText( settings.strings?.copyJson || 'Copy' );
-			}, 2000 );
-		} catch ( error ) {
-			setCopyButtonMessage( {
-				type: 'error',
-				text: settings.strings?.failedToCopy || 'Failed to copy to clipboard',
-			} );
-			// Clear error message after 3 seconds
-			setTimeout( () => {
-				setCopyButtonMessage( { type: '', text: '' } );
-			}, 3000 );
-		}
-	};
 
 	const handleLayoutSelect = ( layoutKey ) => {
 		setSelectedLayout( layoutKey );
@@ -312,31 +286,6 @@ const LayoutsApp = () => {
 			</div>
 
 			<div className="dashmate-layouts-content">
-				<div className="dashmate-layouts-header">
-					<div className="dashmate-layouts-copy-container">
-						<button
-							type="button"
-							className="button button-secondary dashmate-layouts-header-copy-btn"
-							onClick={ copyToClipboard }
-							disabled={ ! layoutData || loading }
-						>
-							{ copyButtonText }
-						</button>
-						{ copyButtonMessage.text && (
-							<div
-								className={ `dashmate-layouts-inline-message dashmate-layouts-inline-message--${ copyButtonMessage.type }` }
-							>
-								<span
-									className={ `dashmate-layouts-inline-message-icon dashmate-layouts-inline-message-icon--${ copyButtonMessage.type }` }
-								>
-									{ copyButtonMessage.type === 'success' ? '✓' : '✗' }
-								</span>
-								{ copyButtonMessage.text }
-							</div>
-						) }
-					</div>
-				</div>
-
 				<div className="dashmate-layouts-json">
 					{ loading ? (
 						<div className="dashmate-layouts-json-loading">
@@ -347,6 +296,7 @@ const LayoutsApp = () => {
 							code={ JSON.stringify( layoutData, null, 2 ) }
 							language="json"
 							showLineNumbers={ true }
+							showCopyButton={ true }
 						/>
 					) : (
 						<div className="dashmate-layouts-json-no-data">
