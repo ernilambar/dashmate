@@ -279,6 +279,11 @@
 		height: 10px;
 	}
 
+	.tabular-widget .loading-spinner {
+		width: 10px;
+		height: 10px;
+	}
+
 	/* Only action columns have fixed width on mobile */
 	.tabular-widget td.action-column,
 	.tabular-widget th.action-column {
@@ -306,6 +311,11 @@
 
 	.tabular-widget .action-btn .dm-icon {
 		font-size: 9px;
+		width: 9px;
+		height: 9px;
+	}
+
+	.tabular-widget .loading-spinner {
 		width: 9px;
 		height: 9px;
 	}
