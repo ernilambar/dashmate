@@ -296,7 +296,11 @@ class TabularWidget extends React.Component {
 					this.getActionIcon( action )
 				) }
 				{ result && (
-					<span className={ `action-result ${ result.success ? 'success' : 'error' }` }>
+					<span
+						className={ `action-result ${
+							result.success ? 'result-success' : 'result-error'
+						}` }
+					>
 						{ result.success ? '✓' : '✗' }
 					</span>
 				) }

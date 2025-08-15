@@ -195,14 +195,15 @@
 	align-items: center;
 	justify-content: center;
 	animation: fadeIn 0.3s ease;
+	background: green;
 }
 
-.tabular-widget .action-result.success {
+.tabular-widget .action-result.result-success {
 	background: #00a32a;
 	color: white;
 }
 
-.tabular-widget .action-result.error {
+.tabular-widget .action-result.result-error {
 	background: #d63638;
 	color: white;
 }
