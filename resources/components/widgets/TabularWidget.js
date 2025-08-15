@@ -230,34 +230,24 @@ class TabularWidget extends React.Component {
 	 * @param {Object} cell Cell data.
 	 * @param {Object} row Row data.
 	 * @param {number} cellIndex Cell index.
+	 * @param {Array} headers Table headers.
 	 * @returns {boolean} True if this is an actions column.
 	 */
-	isActionsColumn = ( cell, row, cellIndex ) => {
+	isActionsColumn = ( cell, row, cellIndex, headers = [] ) => {
 		// Check if the row has actions defined.
 		if ( ! row.actions || Object.keys( row.actions ).length === 0 ) {
 			return false;
 		}
 
-		// Check if this cell is empty or has minimal content (typical for actions column).
-		const cellContent = cell.text || cell.value || cell.content || '';
-
-		// Ensure cellContent is a string before calling trim().
-		const cellContentStr = String( cellContent );
-		const isEmptyOrMinimal = cellContentStr.trim() === '' || cellContentStr.trim() === '&nbsp;';
-
-		// If the cell is empty/minimal and the row has actions, treat it as actions column.
-		if ( isEmptyOrMinimal ) {
-			return true;
+		// Simple check: if the header text is "Actions", treat it as actions column.
+		if ( headers[ cellIndex ] && headers[ cellIndex ].text ) {
+			const headerText = headers[ cellIndex ].text.toLowerCase();
+			if ( headerText === 'actions' || headerText === 'action' ) {
+				return true;
+			}
 		}
 
-		// Additional check: if the cell content looks like it's meant for actions.
-		const isActionsContent =
-			cellContentStr.includes( 'action' ) ||
-			cellContentStr.includes( 'Action' ) ||
-			cellContentStr.includes( 'actions' ) ||
-			cellContentStr.includes( 'Actions' );
-
-		return isActionsContent;
+		return false;
 	};
 
 	/**
@@ -373,11 +363,12 @@ class TabularWidget extends React.Component {
 	 * @param {Object} row Row data.
 	 * @param {number} rowIndex Row index.
 	 * @param {number} tableIndex Table index.
+	 * @param {Array} headers Table headers.
 	 * @returns {JSX.Element} Cell content.
 	 */
-	renderCell = ( cell, cellIndex, row, rowIndex, tableIndex ) => {
-		// Check if this is an actions column by looking at the cell content and row actions.
-		const isActionsColumn = this.isActionsColumn( cell, row, cellIndex );
+	renderCell = ( cell, cellIndex, row, rowIndex, tableIndex, headers = [] ) => {
+		// Check if this is an actions column by looking at the header text.
+		const isActionsColumn = this.isActionsColumn( cell, row, cellIndex, headers );
 
 		if ( isActionsColumn ) {
 			// Render actions only if this is actually an actions column.
@@ -427,7 +418,12 @@ class TabularWidget extends React.Component {
 
 		// Only add action-column class if this is actually an actions column.
 		if ( row && row.cells && row.cells[ cellIndex ] ) {
-			const isActionsColumn = this.isActionsColumn( row.cells[ cellIndex ], row, cellIndex );
+			const isActionsColumn = this.isActionsColumn(
+				row.cells[ cellIndex ],
+				row,
+				cellIndex,
+				headers
+			);
 			if ( isActionsColumn ) {
 				classes.push( 'action-column' );
 			}
@@ -463,12 +459,13 @@ class TabularWidget extends React.Component {
 		}
 
 		// Only add action-column class if this header corresponds to an actions column.
-		// Check if any row has actions and if the last column is an actions column.
+		// Check if any row has actions and if the header text is "Actions".
 		if ( rows.length > 0 && rows[ 0 ] && rows[ 0 ].cells && rows[ 0 ].cells[ headerIndex ] ) {
 			const isActionsColumn = this.isActionsColumn(
 				rows[ 0 ].cells[ headerIndex ],
 				rows[ 0 ],
-				headerIndex
+				headerIndex,
+				headers
 			);
 			if ( isActionsColumn ) {
 				classes.push( 'action-column' );
@@ -551,7 +548,8 @@ class TabularWidget extends React.Component {
 																	cellIndex,
 																	row,
 																	rowIndex,
-																	tableIndex
+																	tableIndex,
+																	table.headers
 																) }
 															</td>
 														)
