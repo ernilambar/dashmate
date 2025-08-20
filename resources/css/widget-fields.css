@@ -45,8 +45,8 @@
 	}
 }
 
-/* Multi-check field */
-.dm-field-type-multi-check {
+/* Multicheckbox field */
+.dm-field-type-multicheckbox {
 	.choices-container {
 		margin-top: 4px;
 	}
@@ -59,6 +59,10 @@
 
 	.choice-item input[type="checkbox"] {
 		margin-right: 6px;
+	}
+
+	.components-checkbox-control__label {
+		font-weight: 400;
 	}
 }
 

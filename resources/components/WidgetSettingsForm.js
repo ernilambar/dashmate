@@ -3,13 +3,15 @@ import { Button } from '@wordpress/components';
 import Icon from './Icon';
 import {
 	TextField,
+	EmailField,
+	PasswordField,
 	UrlField,
 	CheckboxField,
 	SelectField,
 	NumberField,
 	RadioField,
 	ButtonsetField,
-	MultiCheckField,
+	MulticheckboxField,
 	ToggleField,
 	HiddenField,
 	SortableField,
@@ -117,6 +119,30 @@ export default function WidgetSettingsForm( {
 						placeholder={ fieldSchema.placeholder }
 					/>
 				);
+			case 'email':
+				return (
+					<EmailField
+						key={ key }
+						value={ commonProps.value }
+						onChange={ commonProps.onChange }
+						fieldKey={ commonProps.fieldKey }
+						label={ fieldSchema.label }
+						description={ fieldSchema.description }
+						placeholder={ fieldSchema.placeholder }
+					/>
+				);
+			case 'password':
+				return (
+					<PasswordField
+						key={ key }
+						value={ commonProps.value }
+						onChange={ commonProps.onChange }
+						fieldKey={ commonProps.fieldKey }
+						label={ fieldSchema.label }
+						description={ fieldSchema.description }
+						placeholder={ fieldSchema.placeholder }
+					/>
+				);
 			case 'url':
 				return (
 					<UrlField
@@ -207,9 +233,9 @@ export default function WidgetSettingsForm( {
 						defaultValue={ fieldSchema.default }
 					/>
 				);
-			case 'multi-check':
+			case 'multicheckbox':
 				return (
-					<MultiCheckField
+					<MulticheckboxField
 						key={ key }
 						value={ commonProps.value }
 						onChange={ commonProps.onChange }
