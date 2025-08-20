@@ -35,6 +35,7 @@ alwaysApply: true
   - When possible use snake case naming convention.
   - Use PSR4 for naming PHP class name and file name.
   - Inline comments in any type of files should start with capital letter and end with period character.
+  - Always use `use` import statements for PHP classes instead of fully qualified class names (e.g., `use WP_Error;` instead of `\WP_Error`, `use WP_Query;` instead of `\WP_Query`, etc.).
 
   Dependencies
   - WordPress (latest stable version)

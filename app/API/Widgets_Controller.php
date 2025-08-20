@@ -267,8 +267,17 @@ class Widgets_Controller extends Base_Controller {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public function save_widget_settings( $request ) {
-		$widget_id = $request->get_param( 'id' );
+		$widget_id = sanitize_key( $request->get_param( 'id' ) );
 		$settings  = $request->get_param( 'settings' );
+
+		// Basic validation
+		if ( empty( $widget_id ) ) {
+			return $this->error_response( 'Invalid widget ID', 400, 'invalid_widget_id' );
+		}
+
+		if ( ! is_array( $settings ) ) {
+			return $this->error_response( 'Settings must be an array', 400, 'invalid_settings' );
+		}
 
 		$result = Widget_Dispatcher::update_widget_settings( $widget_id, $settings );
 
