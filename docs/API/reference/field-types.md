@@ -30,6 +30,54 @@ Basic text input field for single-line text.
 - Short text inputs
 - Single-line content
 
+### Email Field
+
+Text input field specifically for email addresses with email validation.
+
+```json
+{
+  "type": "email",
+  "label": "Email Address",
+  "description": "Enter your email address",
+  "default": "user@example.com"
+}
+```
+
+**Properties**:
+- `type` (string): Must be "email"
+- `label` (string): Field display label
+- `description` (string, optional): Help text
+- `default` (string, optional): Default email value
+
+**Use Cases**:
+- User email addresses
+- Contact forms
+- Notification settings
+
+### Password Field
+
+Secure text input field for password entry with masked input.
+
+```json
+{
+  "type": "password",
+  "label": "Password",
+  "description": "Enter your password",
+  "default": ""
+}
+```
+
+**Properties**:
+- `type` (string): Must be "password"
+- `label` (string): Field display label
+- `description` (string, optional): Help text
+- `default` (string, optional): Default password value (usually empty for security)
+
+**Use Cases**:
+- User authentication
+- API credentials
+- Secure data entry
+
 ### URL Field
 
 Text input field specifically for URLs with validation.
@@ -226,13 +274,13 @@ Visual button group for single selection.
 - Layout options
 - Visual preference settings
 
-### Multi-Check Field
+### Multicheckbox Field
 
 Multiple selection using checkboxes.
 
 ```json
 {
-  "type": "multi-check",
+  "type": "multicheckbox",
   "label": "Select Items",
   "description": "Choose multiple items",
   "default": ["item1", "item2"],
@@ -250,7 +298,7 @@ Multiple selection using checkboxes.
 ```
 
 **Properties**:
-- `type` (string): Must be "multi-check"
+- `type` (string): Must be "multicheckbox"
 - `label` (string): Field display label
 - `description` (string, optional): Help text
 - `default` (array, optional): Default selected values

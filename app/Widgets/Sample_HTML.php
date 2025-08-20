@@ -141,9 +141,9 @@ class Sample_HTML extends Abstract_Widget {
 				],
 			],
 			'multi_check_field' => [
-				'type'        => 'multi-check',
-				'label'       => esc_html__( 'Multi-Check Field', 'dashmate' ),
-				'description' => esc_html__( 'A multi-check field for testing.', 'dashmate' ),
+				'type'        => 'multicheckbox',
+				'label'       => esc_html__( 'Multicheckbox Field', 'dashmate' ),
+				'description' => esc_html__( 'A multicheckbox field for testing.', 'dashmate' ),
 				'default'     => [ 'item1', 'item3' ],
 				'choices'     => [
 					[
@@ -163,6 +163,18 @@ class Sample_HTML extends Abstract_Widget {
 						'label' => esc_html__( 'Item 4', 'dashmate' ),
 					],
 				],
+			],
+			'email_field'       => [
+				'type'        => 'email',
+				'label'       => esc_html__( 'Email Field', 'dashmate' ),
+				'description' => esc_html__( 'An email field for testing.', 'dashmate' ),
+				'default'     => 'test@example.com',
+			],
+			'password_field'    => [
+				'type'        => 'password',
+				'label'       => esc_html__( 'Password Field', 'dashmate' ),
+				'description' => esc_html__( 'A password field for testing.', 'dashmate' ),
+				'default'     => '',
 			],
 			'sortable_field'    => [
 				'type'        => 'sortable',

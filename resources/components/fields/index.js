@@ -1,11 +1,13 @@
 export { default as TextField } from './TextField';
+export { default as EmailField } from './EmailField';
+export { default as PasswordField } from './PasswordField';
 export { default as UrlField } from './UrlField';
 export { default as CheckboxField } from './CheckboxField';
 export { default as SelectField } from './SelectField';
 export { default as NumberField } from './NumberField';
 export { default as RadioField } from './RadioField';
 export { default as ButtonsetField } from './ButtonsetField';
-export { default as MultiCheckField } from './MultiCheckField';
+export { default as MulticheckboxField } from './MulticheckboxField';
 export { default as ToggleField } from './ToggleField';
 export { default as HiddenField } from './HiddenField';
 export { default as SortableField } from './SortableField';

@@ -2,7 +2,7 @@ import React from 'react';
 import { CheckboxControl } from '@wordpress/components';
 import FieldWrapper from './FieldWrapper';
 
-export default function MultiCheckField( {
+export default function MulticheckboxField( {
 	label,
 	description,
 	value,
@@ -12,7 +12,7 @@ export default function MultiCheckField( {
 	defaultValue,
 } ) {
 	return (
-		<FieldWrapper label={ label } description={ description } fieldType="multi-check">
+		<FieldWrapper label={ label } description={ description } fieldType="multicheckbox">
 			<div className="choices-container">
 				{ choices &&
 					Array.isArray( choices ) &&
@@ -42,7 +42,7 @@ export default function MultiCheckField( {
 					} ) }
 				{ ( ! choices || ! Array.isArray( choices ) || choices.length === 0 ) && (
 					<div className="no-choices-message">
-						No choices defined for multi-check field
+						No choices defined for multicheckbox field
 					</div>
 				) }
 			</div>
