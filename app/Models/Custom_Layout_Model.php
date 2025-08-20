@@ -40,11 +40,11 @@ class Custom_Layout_Model {
 		$option_key = self::get_option_key( $key );
 		$data       = get_option( $option_key, null );
 
-		if ( null === $data ) {
+		if ( null === $data || empty( $data ) ) {
 			return new WP_Error( 'custom_layout_not_found', esc_html__( 'Custom layout not found: ', 'dashmate' ) . $key );
 		}
 
-		return self::prepare_data( $data );
+		return self::prepare_data( (array) $data );
 	}
 
 	/**

@@ -34,12 +34,6 @@ class Layout_Manager {
 			return $layouts;
 		}
 
-		// Add custom layouts from database.
-		$custom_layouts = self::get_custom_layouts();
-		if ( ! is_wp_error( $custom_layouts ) ) {
-			$layouts = array_merge( $layouts, $custom_layouts );
-		}
-
 		/**
 		 * Filter the registered layouts.
 		 *
