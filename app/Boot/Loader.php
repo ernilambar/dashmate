@@ -27,7 +27,7 @@ class Loader {
 		add_filter( 'plugin_action_links_' . DASHMATE_BASE_FILENAME, [ $this, 'customize_plugin_links' ] );
 
 		add_filter(
-			'linkit_menu_pages',
+			'linkit_menu_bar_pages',
 			function ( $pages ) {
 				return array_merge( $pages, [ 'toplevel_page_dashmate', 'dashmate_page_dashmate-layouts', 'dashmate_page_dashmate-settings' ] );
 			}
