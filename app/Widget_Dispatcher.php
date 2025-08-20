@@ -60,7 +60,7 @@ class Widget_Dispatcher {
 		// Get widget by ID from registered widgets.
 		$widget = self::get_widget( $id );
 
-		if ( null === $widget ) {
+		if ( $widget === null ) {
 			return null;
 		}
 
@@ -127,6 +127,8 @@ class Widget_Dispatcher {
 		return $widgets[ $id ] ?? null;
 	}
 
+
+
 	/**
 	 * Check if a widget is registered.
 	 *
@@ -153,10 +155,10 @@ class Widget_Dispatcher {
 	 * @return array|WP_Error
 	 */
 	public static function get_widget_content( $type, $widget_id, $settings = [] ) {
-		// Get widget by ID.
+		// Get widget by ID (widget_id is the actual widget instance ID).
 		$widget = self::get_widget( $widget_id );
 
-		if ( null === $widget ) {
+		if ( $widget === null ) {
 			return new \WP_Error( 'unknown_widget', 'Unknown widget: ' . $widget_id );
 		}
 
@@ -256,7 +258,21 @@ class Widget_Dispatcher {
 				foreach ( $column['widgets'] as &$widget ) {
 					if ( isset( $widget['id'] ) && $widget['id'] === $widget_id ) {
 						$current_settings = $widget['settings'] ?? [];
-						$new_settings     = array_merge( $current_settings, $settings );
+
+						// Get widget instance for proper sanitization
+						$widget_id       = $widget['id'] ?? '';
+						$widget_instance = self::get_widget( $widget_id );
+
+						if ( $widget_instance === null ) {
+							// Log error for debugging.
+							error_log( 'Dashmate: Widget instance not found for ID: ' . $widget_id );
+							// Skip sanitization if widget not found.
+							$sanitized_settings = $settings;
+						} else {
+							// Sanitize the new settings using the widget's sanitization method.
+							$sanitized_settings = $widget_instance->sanitize_settings( $settings );
+						}
+						$new_settings = array_merge( $current_settings, $sanitized_settings );
 
 						// Check if there are actual changes
 						if ( $current_settings === $new_settings ) {
@@ -298,6 +314,8 @@ class Widget_Dispatcher {
 		return Dashboard_Manager::save_dashboard_data( $data );
 	}
 
+
+
 	/**
 	 * Find widget by ID in dashboard data.
 	 *
@@ -337,7 +355,7 @@ class Widget_Dispatcher {
 	 * @return array
 	 */
 	public static function get_widgets_for_column( $column_id, $dashboard_data = null ) {
-		if ( null === $dashboard_data ) {
+		if ( $dashboard_data === null ) {
 			$dashboard_data = self::get_dashboard_data();
 		}
 

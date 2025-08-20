@@ -240,6 +240,152 @@ abstract class Abstract_Widget {
 	}
 
 	/**
+	 * Sanitize widget settings based on field types.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $settings Widget settings to sanitize.
+	 *
+	 * @return array Sanitized settings.
+	 */
+	public function sanitize_settings( array $settings ): array {
+		if ( empty( $this->settings_schema ) ) {
+			return $settings;
+		}
+
+		$sanitized_settings = [];
+
+		foreach ( $this->settings_schema as $key => $schema ) {
+			if ( ! isset( $settings[ $key ] ) ) {
+				continue;
+			}
+
+			$value      = $settings[ $key ];
+			$field_type = $schema['type'] ?? 'text';
+
+			$sanitized_settings[ $key ] = $this->sanitize_field_value( $value, $field_type, $schema );
+		}
+
+		return $sanitized_settings;
+	}
+
+	/**
+	 * Sanitize individual field value based on field type.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param mixed  $value      Field value to sanitize.
+	 * @param string $field_type Field type from schema.
+	 * @param array  $schema     Field schema.
+	 *
+	 * @return mixed Sanitized value.
+	 */
+	protected function sanitize_field_value( $value, string $field_type, array $schema ) {
+		switch ( $field_type ) {
+			case 'text':
+				return sanitize_text_field( $value );
+
+			case 'textarea':
+				return sanitize_textarea_field( $value );
+
+			case 'url':
+				return esc_url_raw( $value );
+
+			case 'email':
+				return sanitize_email( $value );
+
+			case 'password':
+				// For passwords, we don't sanitize as it might break the password
+				// But we ensure it's a string and trim whitespace
+				return is_string( $value ) ? trim( $value ) : '';
+
+			case 'number':
+				return is_numeric( $value ) ? intval( $value ) : 0;
+
+			case 'checkbox':
+				return (bool) $value;
+
+			case 'toggle':
+				return (bool) $value;
+
+			case 'select':
+				// Validate against choices if provided
+				if ( isset( $schema['choices'] ) && is_array( $schema['choices'] ) ) {
+					$valid_choices = array_column( $schema['choices'], 'value' );
+					return in_array( $value, $valid_choices, true ) ? sanitize_text_field( $value ) : '';
+				}
+				return sanitize_text_field( $value );
+
+			case 'radio':
+				// Validate against choices if provided
+				if ( isset( $schema['choices'] ) && is_array( $schema['choices'] ) ) {
+					$valid_choices = array_column( $schema['choices'], 'value' );
+					return in_array( $value, $valid_choices, true ) ? sanitize_text_field( $value ) : '';
+				}
+				return sanitize_text_field( $value );
+
+			case 'buttonset':
+				// Validate against choices if provided
+				if ( isset( $schema['choices'] ) && is_array( $schema['choices'] ) ) {
+					$valid_choices = array_column( $schema['choices'], 'value' );
+					return in_array( $value, $valid_choices, true ) ? sanitize_text_field( $value ) : '';
+				}
+				return sanitize_text_field( $value );
+
+			case 'multicheckbox':
+				// Handle array of selected values
+				if ( ! is_array( $value ) ) {
+					return [];
+				}
+
+				$sanitized_array = [];
+				if ( isset( $schema['choices'] ) && is_array( $schema['choices'] ) ) {
+					$valid_choices = array_column( $schema['choices'], 'value' );
+					foreach ( $value as $item ) {
+						if ( in_array( $item, $valid_choices, true ) ) {
+							$sanitized_array[] = sanitize_text_field( $item );
+						}
+					}
+				} else {
+					// If no choices defined, sanitize all values as text
+					foreach ( $value as $item ) {
+						$sanitized_array[] = sanitize_text_field( $item );
+					}
+				}
+				return $sanitized_array;
+
+			case 'sortable':
+				// Handle array of sortable items
+				if ( ! is_array( $value ) ) {
+					return [];
+				}
+
+				$sanitized_array = [];
+				if ( isset( $schema['choices'] ) && is_array( $schema['choices'] ) ) {
+					$valid_choices = array_column( $schema['choices'], 'value' );
+					foreach ( $value as $item ) {
+						if ( in_array( $item, $valid_choices, true ) ) {
+							$sanitized_array[] = sanitize_text_field( $item );
+						}
+					}
+				} else {
+					// If no choices defined, sanitize all values as text
+					foreach ( $value as $item ) {
+						$sanitized_array[] = sanitize_text_field( $item );
+					}
+				}
+				return $sanitized_array;
+
+			case 'hidden':
+				return sanitize_text_field( $value );
+
+			default:
+				// Default to text sanitization for unknown field types
+				return sanitize_text_field( $value );
+		}
+	}
+
+	/**
 	 * Validate widget output against universal schema.
 	 *
 	 * @since 1.0.0
@@ -321,7 +467,7 @@ abstract class Abstract_Widget {
 	}
 
 	/**
-	 * Merge settings with defaults.
+	 * Merge settings with defaults and sanitize.
 	 *
 	 * @since 1.0.0
 	 *
@@ -330,7 +476,8 @@ abstract class Abstract_Widget {
 	 * @return array
 	 */
 	public function merge_settings_with_defaults( $settings ) {
-		return wp_parse_args( $settings, $this->get_default_settings() );
+		$merged_settings = wp_parse_args( $settings, $this->get_default_settings() );
+		return $this->sanitize_settings( $merged_settings );
 	}
 
 	/**
