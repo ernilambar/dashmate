@@ -43,6 +43,13 @@
 						"hide_caption": false
 					},
 					"collapsed": false
+				},
+				{
+					"id": "sample-line-chart",
+					"settings": {
+						"points_number": 12
+					},
+					"collapsed": false
 				}
 			]
 		}

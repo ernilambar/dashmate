@@ -30,4 +30,8 @@ module.exports = {
 			config: [ __filename ],
 		},
 	},
+	// Hide webpack performance warnings
+	performance: {
+		hints: false,
+	},
 };

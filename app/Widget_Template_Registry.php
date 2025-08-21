@@ -33,6 +33,9 @@ class Widget_Template_Registry {
 		'progress-circles' => [
 			'component' => 'ProgressCirclesWidget',
 		],
+		'line-chart'       => [
+			'component' => 'LineChartWidget',
+		],
 		'tabular'          => [
 			'component' => 'TabularWidget',
 		],

@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Nilambar\Dashmate;
 
 use Nilambar\Dashmate\Widgets\Sample_HTML;
+use Nilambar\Dashmate\Widgets\Sample_Line_Chart;
 use Nilambar\Dashmate\Widgets\Sample_Links;
 use Nilambar\Dashmate\Widgets\Sample_Progress_Circles;
 use Nilambar\Dashmate\Widgets\Sample_Tabular;
@@ -41,6 +42,7 @@ class Widget_Registry {
 		Widget_Dispatcher::register_widget( new Sample_Links( 'sample-links' ) );
 		Widget_Dispatcher::register_widget( new Sample_Progress_Circles( 'sample-progress-circles' ) );
 		Widget_Dispatcher::register_widget( new Sample_Tabular( 'sample-tabular' ) );
+		Widget_Dispatcher::register_widget( new Sample_Line_Chart( 'sample-line-chart' ) );
 	}
 
 	/**
