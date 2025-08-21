@@ -56,14 +56,6 @@ class Sample_Progress_Circles extends Abstract_Widget {
 				'refresh'     => false,
 			],
 		];
-
-		$this->output_schema = [
-			'items' => [
-				'type'        => 'array',
-				'required'    => true,
-				'description' => esc_html__( 'Array of circle objects.', 'dashmate' ),
-			],
-		];
 	}
 
 	/**

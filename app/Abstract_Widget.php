@@ -70,14 +70,7 @@ abstract class Abstract_Widget {
 	 */
 	protected $settings_schema;
 
-	/**
-	 * Widget output schema.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var array
-	 */
-	protected $output_schema;
+
 
 	/**
 	 * Constructor.
@@ -95,7 +88,6 @@ abstract class Abstract_Widget {
 		$this->description     = '';
 		$this->icon            = '';
 		$this->settings_schema = [];
-		$this->output_schema   = [];
 
 		// Define widget configuration.
 		$this->define_widget();
@@ -187,16 +179,7 @@ abstract class Abstract_Widget {
 		return $this->settings_schema ?? [];
 	}
 
-	/**
-	 * Get widget output schema.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return array
-	 */
-	public function get_output_schema() {
-		return $this->output_schema ?? [];
-	}
+
 
 	/**
 	 * Get widget definition.
@@ -212,7 +195,7 @@ abstract class Abstract_Widget {
 			'icon'            => $this->icon,
 			'template_type'   => $this->template_type,
 			'settings_schema' => $this->settings_schema,
-			'output_schema'   => $this->output_schema,
+
 		];
 	}
 
@@ -421,25 +404,6 @@ abstract class Abstract_Widget {
 			return false;
 		}
 
-		// Then validate widget-specific schema.
-		if ( empty( $this->output_schema ) ) {
-			return true;
-		}
-
-		foreach ( $this->output_schema as $key => $schema ) {
-			if ( isset( $schema['required'] ) && $schema['required'] && ! isset( $output[ $key ] ) ) {
-				return false;
-			}
-
-			// Validate type if specified.
-			if ( isset( $schema['type'] ) && isset( $output[ $key ] ) ) {
-				$actual_type = gettype( $output[ $key ] );
-				if ( $actual_type !== $schema['type'] ) {
-					return false;
-				}
-			}
-		}
-
 		return true;
 	}
 
@@ -593,7 +557,7 @@ abstract class Abstract_Widget {
 			'icon'             => $this->icon,
 			'template_type'    => $this->template_type,
 			'settings_schema'  => $this->settings_schema,
-			'output_schema'    => $this->output_schema,
+
 			'essential_fields' => $this->get_essential_fields(),
 		];
 	}

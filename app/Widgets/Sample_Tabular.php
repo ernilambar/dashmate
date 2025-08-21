@@ -104,14 +104,6 @@ class Sample_Tabular extends Abstract_Widget {
 				],
 			],
 		];
-
-		$this->output_schema = [
-			'tables' => [
-				'type'        => 'array',
-				'required'    => true,
-				'description' => esc_html__( 'Array of table objects.', 'dashmate' ),
-			],
-		];
 	}
 
 	/**
