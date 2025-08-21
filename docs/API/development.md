@@ -121,6 +121,7 @@ resources/
         ├── html.css
         ├── links.css
         ├── progress-circles.css
+        ├── bar-chart.css
         └── tabular.css
 ```
 

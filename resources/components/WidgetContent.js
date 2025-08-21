@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import HtmlWidget from './widgets/HtmlWidget';
 import ProgressCirclesWidget from './widgets/ProgressCirclesWidget';
 import LinksWidget from './widgets/LinksWidget';
+import BarChartWidget from './widgets/BarChartWidget';
 import TabularWidget from './widgets/TabularWidget';
 
 class WidgetContent extends Component {
@@ -99,6 +100,15 @@ class WidgetContent extends Component {
 			case 'progress-circles':
 				return (
 					<ProgressCirclesWidget
+						widgetId={ widget.id }
+						data={ data }
+						settings={ settings }
+						widgetSchemas={ this.props.widgetSchemas }
+					/>
+				);
+			case 'bar-chart':
+				return (
+					<BarChartWidget
 						widgetId={ widget.id }
 						data={ data }
 						settings={ settings }

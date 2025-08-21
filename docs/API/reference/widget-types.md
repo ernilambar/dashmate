@@ -140,6 +140,38 @@ The Dashmate API supports various widget types, each designed for specific use c
 - Task completion
 - Performance metrics
 
+### Sample Bar Chart Widget (`bar-chart`)
+
+**Description**: Displays sample bar chart data with configurable bars.
+
+**Settings**:
+- `bars_number` (number): Number of bars to display (3-12, default: 6)
+- `hide_labels` (boolean): Hide labels below bars (default: false)
+- `show_values` (boolean): Show values on top of bars (default: true)
+
+**Template**: `bar-chart`
+
+**Example Settings**:
+```json
+{
+  "bars_number": 6,
+  "hide_labels": false,
+  "show_values": true
+}
+```
+
+**Data Structure**:
+- `items` (array): Array of bar objects
+  - `value` (number): Bar value
+  - `label` (string): Bar label
+  - `color` (string): Bar color (hex code)
+
+**Use Cases**:
+- Monthly statistics
+- Performance metrics
+- Sales data visualization
+- Comparative analysis
+
 ## Widget Configuration
 
 ### Common Settings
