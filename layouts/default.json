@@ -45,11 +45,9 @@
 					"collapsed": false
 				},
 				{
-					"id": "sample-bar-chart",
+					"id": "sample-line-chart",
 					"settings": {
-						"bars_number": 6,
-						"hide_labels": false,
-						"show_values": true
+						"points_number": 12
 					},
 					"collapsed": false
 				}

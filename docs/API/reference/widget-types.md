@@ -140,37 +140,64 @@ The Dashmate API supports various widget types, each designed for specific use c
 - Task completion
 - Performance metrics
 
-### Sample Bar Chart Widget (`bar-chart`)
+### Sample Line Chart Widget (`line-chart`)
 
-**Description**: Displays sample bar chart data with configurable bars.
+**Description**: Displays sample line chart data with configurable data points and dynamic chart configuration.
 
 **Settings**:
-- `bars_number` (number): Number of bars to display (3-12, default: 6)
-- `hide_labels` (boolean): Hide labels below bars (default: false)
-- `show_values` (boolean): Show values on top of bars (default: true)
+- `points_number` (number): Number of data points to display (1-12, default: 12)
 
-**Template**: `bar-chart`
+**Template**: `line-chart`
 
 **Example Settings**:
 ```json
 {
-  "bars_number": 6,
-  "hide_labels": false,
-  "show_values": true
+  "points_number": 12
 }
 ```
 
 **Data Structure**:
-- `items` (array): Array of bar objects
-  - `value` (number): Bar value
-  - `label` (string): Bar label
-  - `color` (string): Bar color (hex code)
+- `items` (array): Array of data point objects
+  - `value` (number): Data point value
+  - `label` (string): Data point label (e.g., month names)
+  - `color` (string): Data point color (hex code)
+- `chart_settings` (array): Chart configuration object
+  - `chart_title` (string, optional): Chart title
+  - `chart_subtitle` (string, optional): Chart subtitle
+  - `x_axis_label` (string, optional): X-axis label
+  - `y_axis_label` (string, optional): Y-axis label
+
+**Example Response**:
+```json
+{
+  "items": [
+    {
+      "value": 85,
+      "label": "Jan",
+      "color": "#6facde"
+    },
+    {
+      "value": 92,
+      "label": "Feb",
+      "color": "#6facde"
+    }
+  ],
+  "chart_settings": {
+    "chart_title": "Monthly Performance",
+    "chart_subtitle": "Data trends over the year",
+    "x_axis_label": "Months",
+    "y_axis_label": "Values"
+  }
+}
+```
 
 **Use Cases**:
-- Monthly statistics
-- Performance metrics
-- Sales data visualization
-- Comparative analysis
+- Trend analysis
+- Time series data
+- Performance tracking
+- Data visualization
+- Monthly/quarterly reports
+- Business metrics tracking
 
 ## Widget Configuration
 

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import HtmlWidget from './widgets/HtmlWidget';
 import ProgressCirclesWidget from './widgets/ProgressCirclesWidget';
 import LinksWidget from './widgets/LinksWidget';
-import BarChartWidget from './widgets/BarChartWidget';
+import LineChartWidget from './widgets/LineChartWidget';
 import TabularWidget from './widgets/TabularWidget';
 
 class WidgetContent extends Component {
@@ -106,9 +106,9 @@ class WidgetContent extends Component {
 						widgetSchemas={ this.props.widgetSchemas }
 					/>
 				);
-			case 'bar-chart':
+			case 'line-chart':
 				return (
-					<BarChartWidget
+					<LineChartWidget
 						widgetId={ widget.id }
 						data={ data }
 						settings={ settings }
