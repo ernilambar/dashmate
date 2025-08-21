@@ -209,14 +209,6 @@ class Sample_HTML extends Abstract_Widget {
 				'value' => 'hidden_value_for_testing',
 			],
 		];
-
-		$this->output_schema = [
-			'html_content' => [
-				'type'        => 'string',
-				'required'    => true,
-				'description' => esc_html__( 'HTML content to render.', 'dashmate' ),
-			],
-		];
 	}
 
 	/**

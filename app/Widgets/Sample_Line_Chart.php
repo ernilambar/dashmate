@@ -49,19 +49,6 @@ class Sample_Line_Chart extends Abstract_Widget {
 				'refresh'     => true,
 			],
 		];
-
-		$this->output_schema = [
-			'items'          => [
-				'type'        => 'array',
-				'required'    => true,
-				'description' => esc_html__( 'Array of data point objects.', 'dashmate' ),
-			],
-			'chart_settings' => [
-				'type'        => 'array',
-				'required'    => false,
-				'description' => esc_html__( 'Chart configuration settings.', 'dashmate' ),
-			],
-		];
 	}
 
 	/**

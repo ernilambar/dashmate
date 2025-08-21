@@ -62,14 +62,6 @@ class Sample_Links extends Abstract_Widget {
 				],
 			],
 		];
-
-		$this->output_schema = [
-			'links' => [
-				'type'        => 'array',
-				'required'    => true,
-				'description' => esc_html__( 'Array of link objects.', 'dashmate' ),
-			],
-		];
 	}
 
 	/**

@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Nilambar\Dashmate;
 
+use WP_Error;
+
 /**
  * Widget_Type_Manager class.
  *
@@ -26,57 +28,66 @@ class Widget_Type_Manager {
 	private static $widget_types = [];
 
 	/**
-	 * Register a new widget type.
+	 * Widget type output schemas.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $type       Widget type identifier.
-	 * @param array  $definition Widget definition.
-	 *
-	 * @return bool
+	 * @var array
 	 */
-	public static function register_widget_type( $type, $definition ) {
-		if ( empty( $type ) || ! is_string( $type ) ) {
-			return false;
-		}
+	private static $output_schemas = [
+		'html'             => [
+			'html_content' => [
+				'type'        => 'string',
+				'required'    => true,
+				'description' => 'HTML content to render.',
+			],
+		],
+		'line-chart'       => [
+			'items'          => [
+				'type'        => 'array',
+				'required'    => true,
+				'description' => 'Chart data points.',
+			],
+			'chart_settings' => [
+				'type'        => 'object',
+				'required'    => true,
+				'description' => 'Chart configuration.',
+			],
+		],
+		'tabular'          => [
+			'headers' => [
+				'type'        => 'array',
+				'required'    => true,
+				'description' => 'Table headers.',
+			],
+			'rows'    => [
+				'type'        => 'array',
+				'required'    => true,
+				'description' => 'Table rows.',
+			],
+		],
+		'links'            => [
+			'links' => [
+				'type'        => 'array',
+				'required'    => true,
+				'description' => 'Array of link objects.',
+			],
+		],
+		'progress-circles' => [
+			'items' => [
+				'type'        => 'array',
+				'required'    => true,
+				'description' => 'Progress circle items.',
+			],
+		],
+	];
 
-		// Validate required fields.
-		$required_fields = [ 'name', 'description', 'icon', 'settings_schema' ];
-		foreach ( $required_fields as $field ) {
-			if ( ! isset( $definition[ $field ] ) ) {
-				return false;
-			}
-		}
 
-		// Register widget type.
-		self::$widget_types[ $type ] = $definition;
 
-		return true;
-	}
+
 
 	/**
-	 * Get all registered widget types.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return array
-	 */
-	public static function get_widget_types() {
-		/**
-		 * Filter the registered widget types.
-		 *
-		 * This filter allows other plugins and addons to add their own widget types
-		 * to the Dashmate dashboard.
-		 *
-		 * @since 1.0.0
-		 *
-		 * @param array $widget_types Array of registered widget types.
-		 */
-		return apply_filters( 'dashmate_widget_types', self::$widget_types );
-	}
-
-	/**
-	 * Get a specific widget type definition.
+	 * Get output schema for a specific widget type.
 	 *
 	 * @since 1.0.0
 	 *
@@ -84,45 +95,55 @@ class Widget_Type_Manager {
 	 *
 	 * @return array|null
 	 */
-	public static function get_widget_type( $type ) {
-		$filtered_widget_types = self::get_widget_types();
-		return $filtered_widget_types[ $type ] ?? null;
+	public static function get_widget_output_schema( $type ) {
+		return self::$output_schemas[ $type ] ?? null;
 	}
 
+
+
+
+
 	/**
-	 * Check if a widget type is registered.
+	 * Validate widget output against the widget type's output schema.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $type Widget type.
+	 * @param string $widget_type Widget type identifier.
+	 * @param array  $output      Widget output to validate.
 	 *
-	 * @return bool
+	 * @return true|WP_Error True if valid, WP_Error if invalid.
 	 */
-	public static function is_widget_type_registered( $type ) {
-		$filtered_widget_types = self::get_widget_types();
-		return isset( $filtered_widget_types[ $type ] );
-	}
-
-	/**
-	 * Get widget types as JSON for frontend.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return array
-	 */
-	public static function get_widget_types_for_frontend() {
-		$widget_types          = [];
-		$filtered_widget_types = self::get_widget_types();
-
-		foreach ( $filtered_widget_types as $type => $definition ) {
-			$widget_types[ $type ] = [
-				'name'            => $definition['name'],
-				'description'     => $definition['description'],
-				'icon'            => $definition['icon'],
-				'settings_schema' => $definition['settings_schema'],
-			];
+	public static function validate_widget_output( $widget_type, $output ) {
+		if ( ! isset( self::$output_schemas[ $widget_type ] ) ) {
+			return new WP_Error(
+				'invalid_widget_type',
+				sprintf( 'Widget type "%s" has no output schema defined.', $widget_type ),
+				[ 'widget_type' => $widget_type ]
+			);
 		}
 
-		return $widget_types;
+		$schema = self::$output_schemas[ $widget_type ];
+		$errors = [];
+
+		// Validate that all required fields from the output schema are present in the output.
+		foreach ( $schema as $field_name => $field_config ) {
+			if ( ! isset( $output[ $field_name ] ) ) {
+				$errors[] = sprintf( 'Required output field "%s" is missing.', $field_name );
+			}
+		}
+
+		if ( ! empty( $errors ) ) {
+			error_log( sprintf( 'Dashmate: Widget output validation failed for type "%s": %s', $widget_type, implode( '; ', $errors ) ) );
+			return new WP_Error(
+				'invalid_widget_output',
+				sprintf( 'Widget output validation failed for type "%s": %s', $widget_type, implode( '; ', $errors ) ),
+				[
+					'widget_type' => $widget_type,
+					'errors'      => $errors,
+				]
+			);
+		}
+
+		return true;
 	}
 }
