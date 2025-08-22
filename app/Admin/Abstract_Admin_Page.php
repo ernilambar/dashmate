@@ -106,7 +106,22 @@ abstract class Abstract_Admin_Page {
 	 */
 	public function render_header() {
 		echo '<div class="wrap">';
-		echo '<h1>' . esc_html( get_admin_page_title() ) . '</h1>';
+
+		// Get the default admin page title.
+		$default_title = get_admin_page_title();
+
+		/**
+		 * Filters the admin page title displayed in the page.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param string $title     The page title to display.
+		 * @param string $menu_slug The menu slug of the current page.
+		 * @param self   $page      The current admin page instance.
+		 */
+		$page_title = apply_filters( 'dashmate_admin_page_title', $default_title, $this->menu_slug, $this );
+
+		echo '<h1>' . esc_html( $page_title ) . '</h1>';
 	}
 
 	/**
