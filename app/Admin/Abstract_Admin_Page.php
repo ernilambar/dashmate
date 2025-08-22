@@ -121,7 +121,11 @@ abstract class Abstract_Admin_Page {
 		 */
 		$page_title = apply_filters( 'dashmate_admin_page_title', $default_title, $this->menu_slug, $this );
 
+		do_action( 'dashmate_action_before_page_title', $this->menu_slug, $this );
+
 		echo '<h1>' . esc_html( $page_title ) . '</h1>';
+
+		do_action( 'dashmate_action_after_page_title', $this->menu_slug, $this );
 	}
 
 	/**
