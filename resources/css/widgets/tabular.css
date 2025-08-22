@@ -37,24 +37,19 @@
 	background: transparent;
 }
 
-/* Column width control - Free-flowing approach */
 .tabular-widget table {
 	width: 100%;
 	border-collapse: collapse;
 	margin: 0;
 	background: transparent;
-	table-layout: auto; /* Allow natural column sizing */
+	table-layout: auto;
 }
 
-/* Base column styling - let content determine width */
 .tabular-widget th,
 .tabular-widget td {
-	width: auto;
-	min-width: 0; /* Allow columns to shrink as needed */
-	max-width: none; /* Allow columns to expand as needed */
-	white-space: normal; /* Allow text to wrap */
-	word-wrap: break-word; /* Break long words */
-	overflow-wrap: break-word; /* Modern word breaking */
+	white-space: normal;
+	word-wrap: break-word;
+	overflow-wrap: break-word;
 }
 
 .tabular-widget th {
@@ -259,9 +254,8 @@
 	.tabular-widget td {
 		padding: 3px 6px;
 		font-size: 11px;
-		white-space: nowrap; /* Prevent wrapping on mobile */
-		overflow: hidden;
-		text-overflow: ellipsis;
+		white-space: normal; /* Allow wrapping on mobile too */
+		overflow: visible;
 	}
 
 	.tabular-widget .action-btn {
