@@ -10,6 +10,7 @@ namespace Nilambar\Dashmate\Boot;
 use Nilambar\Dashmate\Admin\Admin_Page;
 use Nilambar\Dashmate\API\API_Main;
 use Nilambar\Dashmate\Widget_Initializer;
+use Nilambar\Optify\Panel_Manager;
 
 /**
  * Loader class.
@@ -24,12 +25,12 @@ class Loader {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-		add_filter( 'plugin_action_links_' . DASHMATE_BASE_FILENAME, [ $this, 'customize_plugin_links' ] );
+		add_action( 'dashmate_action_after_page_title', [ $this, 'add_settings_app' ] );
 
 		add_filter(
 			'linkit_menu_bar_pages',
 			function ( $pages ) {
-				return array_merge( $pages, [ 'toplevel_page_dashmate', 'dashmate_page_dashmate-layouts', 'dashmate_page_dashmate-settings' ] );
+				return array_merge( $pages, [ 'toplevel_page_dashmate', 'dashmate_page_dashmate-layouts' ] );
 			}
 		);
 
@@ -50,19 +51,25 @@ class Loader {
 	}
 
 	/**
-	 * Customize plugin action links.
+	 * Add settings app.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $actions Action links.
-	 * @return array Modified action links.
+	 * @param string $menu_slug Menu slug.
 	 */
-	public function customize_plugin_links( $actions ) {
-		return array_merge(
-			[
-				'settings' => '<a href="' . esc_url( add_query_arg( [ 'page' => 'dashmate-settings' ], admin_url( 'options-general.php' ) ) ) . '">' . esc_html__( 'Settings', 'dashmate' ) . '</a>',
-			],
-			$actions
-		);
+	public function add_settings_app( $menu_slug ) {
+		if ( 'dashmate' === $menu_slug ) {
+			echo '<div id="dashmate-wrap-settings">';
+
+			Panel_Manager::render_panel(
+				'dashmate-settings',
+				[
+					'show_title' => true,
+					'display'    => 'modal',
+				]
+			);
+
+			echo '</div>';
+		}
 	}
 }

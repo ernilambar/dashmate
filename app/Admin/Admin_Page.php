@@ -35,7 +35,6 @@ class Admin_Page {
 	public function register_pages() {
 			new Dashmate_Page();
 			new Layouts_Page();
-			new Settings_Page();
 	}
 
 	/**
