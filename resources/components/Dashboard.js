@@ -379,11 +379,11 @@ class Dashboard extends Component {
 		// Get columns from the dashboard structure
 		const columns = Array.isArray( dashboard?.columns ) ? dashboard.columns : [];
 
-		// Determine if we should use grid layout (more than max columns)
-		const maxColumns = window.dashmateApiSettings?.config?.maxColumns || 2;
-		const shouldUseGridLayout = columns.length > maxColumns;
-		const gridClass = shouldUseGridLayout ? `grid-layout grid-${ maxColumns }` : '';
-		const dashboardContentClass = `dashboard-content${ gridClass ? ' ' + gridClass : '' }`;
+		// Always use grid layout with appropriate number of columns
+		const maxColumns = window.dashmateApiSettings?.config?.maxColumns;
+		const gridColumns = maxColumns ? Math.min( maxColumns, columns.length ) : columns.length;
+		const gridClass = `grid-layout grid-${ gridColumns }`;
+		const dashboardContentClass = `dashboard-content ${ gridClass }`;
 
 		return (
 			<div className="dashmate-app">

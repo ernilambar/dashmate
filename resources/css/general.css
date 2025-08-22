@@ -12,10 +12,6 @@
 	z-index: 1000;
 }
 
-.dashboard-controls > * {
-	pointer-events: auto;
-}
-
 /* Dashboard App Styles */
 .dashmate-app {
 	max-width: 2200px;
@@ -25,8 +21,7 @@
 }
 
 .dashboard-content {
-	display: flex;
-	flex-direction: column;
+	display: grid;
 	gap: 10px;
 }
 
@@ -36,24 +31,18 @@
 	border: none;
 	border-radius: 0;
 	box-shadow: none;
-	flex: 1;
-}
-
-.column-full {
-	flex: 1;
+	min-width: 0;
+	overflow: hidden;
 }
 
 .column-sidebar {
 	flex: 0 0 300px;
 }
 
-/* Grid layout for more than max columns */
 .dashboard-content.grid-layout {
-	display: grid;
-	gap: 10px;
+	width: 100%;
 }
 
-/* Dynamic grid columns based on max columns value */
 .dashboard-content.grid-layout.grid-1 {
 	grid-template-columns: 1fr;
 }
@@ -84,10 +73,6 @@
 		align-items: flex-start;
 	}
 
-	.column-full {
-		flex: 1;
-	}
-
 	.column-sidebar {
 		flex: 1;
 	}
@@ -101,6 +86,8 @@
 	padding: 0;
 	min-height: 100px;
 	transition: background-color 0.2s ease;
+	min-width: 0;
+	overflow: hidden;
 }
 
 .column-content.dragging-over {
