@@ -24,7 +24,7 @@ class Dashmate_Page extends Abstract_Admin_Page {
 	 */
 	protected function init() {
 		$this->page_title = esc_html__( 'Dashmate', 'dashmate' );
-		$this->menu_title = esc_html__( 'Dashmate', 'dashmate' );
+		$this->menu_title = apply_filters( 'dashmate_menu_title', esc_html__( 'Dashmate', 'dashmate' ) );
 		$this->menu_slug  = 'dashmate';
 		$this->icon       = 'dashicons-admin-home';
 		$this->position   = 0;
