@@ -394,12 +394,14 @@ class TabularWidget extends React.Component {
 	 * @returns {JSX.Element} Action icons.
 	 */
 	renderActions = ( row, rowIndex, tableIndex ) => {
+		// Get the order of actions from the row configuration.
+		const actionOrder = row.actions ? Object.keys( row.actions ) : [];
+
 		return (
 			<div className="table-actions">
-				{ this.isActionDefined( 'delete', row ) &&
-					this.renderActionButton( 'delete', row, rowIndex, tableIndex ) }
-				{ this.isActionDefined( 'sync', row ) &&
-					this.renderActionButton( 'sync', row, rowIndex, tableIndex ) }
+				{ actionOrder.map( ( action ) =>
+					this.renderActionButton( action, row, rowIndex, tableIndex )
+				) }
 			</div>
 		);
 	};
