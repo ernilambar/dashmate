@@ -196,10 +196,9 @@
 
 #dashmate-wrap-settings {
 	display: block;
-	float: right;
 	position: absolute;
-	top: 24px;
-	right: 80px;
+	top: -5px;
+	right: 30px;
 
 	.optify-modal-button {
 		height: 20px;
