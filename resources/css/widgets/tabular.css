@@ -215,6 +215,10 @@
 }
 
 /* Action button specific styles */
+.tabular-widget .action-btn.delete-btn {
+	color: #2271b1;
+}
+
 .tabular-widget .action-btn.delete-btn:hover {
 	color: #d63638;
 }

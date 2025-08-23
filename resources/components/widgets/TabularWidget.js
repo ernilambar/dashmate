@@ -377,7 +377,7 @@ class TabularWidget extends React.Component {
 	getActionIcon = ( action ) => {
 		switch ( action ) {
 			case 'delete':
-				return <Icon name="delete" size="medium" />;
+				return <Icon name="delete_outline" size="medium" />;
 			case 'sync':
 				return <Icon name="sync" size="medium" />;
 			default:
