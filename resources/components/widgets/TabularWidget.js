@@ -7,6 +7,7 @@ class TabularWidget extends React.Component {
 		this.state = {
 			loadingActions: {}, // Track loading state for each action.
 			actionResults: {}, // Track success/error states.
+			removedRows: {}, // Track rows that have been removed from UI.
 		};
 	}
 
@@ -43,27 +44,32 @@ class TabularWidget extends React.Component {
 		} ) );
 
 		try {
+			let actionCompleted = false;
+
 			switch ( action ) {
 				case 'delete':
-					await this.handleDeleteAction( row, rowIndex, tableIndex );
+					actionCompleted = await this.handleDeleteAction( row, rowIndex, tableIndex );
 					break;
 				case 'sync':
 					await this.handleSyncAction( row, rowIndex, tableIndex );
+					actionCompleted = true; // Sync actions don't have cancellation
 					break;
 				default:
 					throw new Error( `Unknown action: ${ action }` );
 			}
 
-			// Set success state.
-			this.setState( ( prevState ) => ( {
-				actionResults: {
-					...prevState.actionResults,
-					[ actionKey ]: {
-						success: true,
-						message: `${ action } action completed successfully`,
+			// Only set success state if action was actually completed (not cancelled).
+			if ( actionCompleted ) {
+				this.setState( ( prevState ) => ( {
+					actionResults: {
+						...prevState.actionResults,
+						[ actionKey ]: {
+							success: true,
+							message: `${ action } action completed successfully`,
+						},
 					},
-				},
-			} ) );
+				} ) );
+			}
 		} catch ( error ) {
 			// Set error state.
 			this.setState( ( prevState ) => ( {
@@ -125,6 +131,8 @@ class TabularWidget extends React.Component {
 
 	/**
 	 * Handle delete action with confirmation.
+	 *
+	 * @returns {boolean} True if action was completed successfully, false if cancelled.
 	 */
 	handleDeleteAction = async ( row, rowIndex, tableIndex ) => {
 		// Get action configuration from row.
@@ -139,7 +147,8 @@ class TabularWidget extends React.Component {
 				actionConfig.message || 'Are you sure you want to delete this item?';
 			const confirmed = window.confirm( confirmationMessage );
 			if ( ! confirmed ) {
-				throw new Error( 'Action cancelled by user.' );
+				// Return false to indicate action was cancelled.
+				return false;
 			}
 		}
 
@@ -159,7 +168,7 @@ class TabularWidget extends React.Component {
 
 		// Call external API endpoint.
 		const response = await fetch( actionConfig.endpoint, {
-			method: 'POST',
+			method: 'DELETE',
 			headers: {
 				'Content-Type': 'application/json',
 			},
@@ -174,6 +183,42 @@ class TabularWidget extends React.Component {
 		}
 
 		const result = await response.json();
+
+		// On successful deletion, trigger fade-out animation and remove row.
+		this.handleSuccessfulDelete( rowIndex, tableIndex );
+
+		// Return true to indicate successful completion.
+		return true;
+	};
+
+	/**
+	 * Handle successful delete action - simply remove row from UI.
+	 *
+	 * @param {number} rowIndex Row index.
+	 * @param {number} tableIndex Table index.
+	 */
+	handleSuccessfulDelete = ( rowIndex, tableIndex ) => {
+		const rowKey = `${ tableIndex }-${ rowIndex }`;
+
+		// Mark row as removed to hide it from UI.
+		this.setState( ( prevState ) => ( {
+			removedRows: {
+				...prevState.removedRows,
+				[ rowKey ]: true,
+			},
+		} ) );
+	};
+
+	/**
+	 * Check if a row has been removed.
+	 *
+	 * @param {number} rowIndex Row index.
+	 * @param {number} tableIndex Table index.
+	 * @returns {boolean} True if row has been removed.
+	 */
+	isRowRemoved = ( rowIndex, tableIndex ) => {
+		const rowKey = `${ tableIndex }-${ rowIndex }`;
+		return this.state.removedRows[ rowKey ] || false;
 	};
 
 	/**
@@ -519,40 +564,60 @@ class TabularWidget extends React.Component {
 										</thead>
 									) }
 									<tbody>
-										{ table.rows.map( ( row, rowIndex ) => (
-											<tr
-												key={ rowIndex }
-												className={
-													stripedRows && rowIndex % 2 === 1
-														? 'alternate'
-														: ''
-												}
-												onClick={ () =>
-													this.handleRowClick( row, rowIndex, tableIndex )
-												}
-											>
-												{ ( row.cells || [] ).map( ( cell, cellIndex ) => (
-													<td
-														key={ cellIndex }
-														className={ this.getCellClassName(
-															cellIndex,
-															row.cells.length,
-															table.headers,
-															row
-														) }
-													>
-														{ this.renderCell(
-															cell,
-															cellIndex,
+										{ table.rows.map( ( row, rowIndex ) => {
+											const isRemoved = this.isRowRemoved(
+												rowIndex,
+												tableIndex
+											);
+
+											// Skip rendering if row has been removed.
+											if ( isRemoved ) {
+												return null;
+											}
+
+											const rowClasses = [];
+
+											if ( stripedRows && rowIndex % 2 === 1 ) {
+												rowClasses.push( 'alternate' );
+											}
+
+											return (
+												<tr
+													key={ rowIndex }
+													className={ rowClasses.join( ' ' ) }
+													onClick={ () =>
+														this.handleRowClick(
 															row,
 															rowIndex,
-															tableIndex,
-															table.headers
-														) }
-													</td>
-												) ) }
-											</tr>
-										) ) }
+															tableIndex
+														)
+													}
+												>
+													{ ( row.cells || [] ).map(
+														( cell, cellIndex ) => (
+															<td
+																key={ cellIndex }
+																className={ this.getCellClassName(
+																	cellIndex,
+																	row.cells.length,
+																	table.headers,
+																	row
+																) }
+															>
+																{ this.renderCell(
+																	cell,
+																	cellIndex,
+																	row,
+																	rowIndex,
+																	tableIndex,
+																	table.headers
+																) }
+															</td>
+														)
+													) }
+												</tr>
+											);
+										} ) }
 									</tbody>
 								</table>
 							</div>
