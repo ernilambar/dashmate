@@ -10,24 +10,24 @@
 	overflow: visible;
 	box-shadow: none;
 	border: none;
-}
 
-.tabular-table a {
-	text-decoration: none;
-}
+	&:last-child {
+		margin-bottom: 0;
+	}
 
-.tabular-table:last-child {
-	margin-bottom: 0;
-}
+	a {
+		text-decoration: none;
+	}
 
-.tabular-widget .table-title {
-	margin: 0 0 5px 0;
-	padding: 0;
-	font-size: 12px;
-	font-weight: 600;
-	color: #3c434a;
-	border-bottom: none;
-	background: transparent;
+	.table-title {
+		margin: 0 0 5px 0;
+		padding: 0;
+		font-size: 12px;
+		font-weight: 600;
+		color: #3c434a;
+		border-bottom: none;
+		background: transparent;
+	}
 }
 
 .table-container {
@@ -83,11 +83,11 @@
 /* Only action columns have fixed width */
 .tabular-widget td.action-column,
 .tabular-widget th.action-column {
-	width: 60px;
-	min-width: 60px;
-	max-width: 60px;
+	width: 50px;
+	min-width: 50px;
+	max-width: 50px;
 	text-align: center;
-	padding: 4px 2px;
+	padding: 3px 2px;
 	white-space: nowrap;
 }
 
