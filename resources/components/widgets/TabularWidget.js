@@ -399,9 +399,11 @@ class TabularWidget extends React.Component {
 
 		return (
 			<div className="table-actions">
-				{ actionOrder.map( ( action ) =>
-					this.renderActionButton( action, row, rowIndex, tableIndex )
-				) }
+				{ actionOrder.map( ( action ) => (
+					<div key={ action }>
+						{ this.renderActionButton( action, row, rowIndex, tableIndex ) }
+					</div>
+				) ) }
 			</div>
 		);
 	};
