@@ -33,8 +33,7 @@ class Admin_Page {
 	 * @since 1.0.0
 	 */
 	public function register_pages() {
-			new Dashmate_Page();
-			new Layouts_Page();
+		new Dashmate_Page();
 	}
 
 	/**
