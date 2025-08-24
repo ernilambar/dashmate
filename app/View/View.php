@@ -32,7 +32,8 @@ class View {
 		$file = DASHMATE_DIR . "/templates/{$name}.php";
 
 		if ( ! file_exists( $file ) ) {
-			throw new Exception( esc_html( "View \"{$name}\" found." ) );
+			printf( esc_html__( 'View "%1$s" not found. Expected: %2$s', 'dashmate' ), '<b>' . esc_html( $name ) . '</b>', esc_html( $file ) );
+			return;
 		}
 
 		include $file;
