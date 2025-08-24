@@ -18,6 +18,11 @@ const LayoutSelector = ( { onLayoutSelect, currentLayout = 'current' } ) => {
 		fetchLayouts();
 	}, [] );
 
+	// Sync selectedLayout with currentLayout prop when it changes.
+	useEffect( () => {
+		setSelectedLayout( currentLayout );
+	}, [ currentLayout ] );
+
 	// Handle click outside to close popup
 	useEffect( () => {
 		const handleClickOutside = ( event ) => {
@@ -89,6 +94,26 @@ const LayoutSelector = ( { onLayoutSelect, currentLayout = 'current' } ) => {
 		}
 	};
 
+	const handleCopyLayout = async () => {
+		const currentLayoutData = layoutDataMap[ selectedLayout ];
+		if ( ! currentLayoutData ) {
+			return;
+		}
+
+		try {
+			const jsonContent = JSON.stringify( currentLayoutData, null, 2 );
+			await navigator.clipboard.writeText( jsonContent );
+		} catch ( error ) {
+			// Fallback for older browsers
+			const textArea = document.createElement( 'textarea' );
+			textArea.value = JSON.stringify( currentLayoutData, null, 2 );
+			document.body.appendChild( textArea );
+			textArea.select();
+			document.execCommand( 'copy' );
+			document.body.removeChild( textArea );
+		}
+	};
+
 	if ( loading ) {
 		return (
 			<div className="layout-selector">
@@ -151,10 +176,27 @@ const LayoutSelector = ( { onLayoutSelect, currentLayout = 'current' } ) => {
 									</h4>
 								</div>
 								{ layoutDataMap[ key ] ? (
-									<LayoutPreview
-										layoutData={ layoutDataMap[ key ] }
-										selectedLayout={ key }
-									/>
+									<div className="layout-selector-option-content">
+										<LayoutPreview
+											layoutData={ layoutDataMap[ key ] }
+											selectedLayout={ key }
+										/>
+										<div className="layout-selector-option-actions">
+											{ selectedLayout === key && (
+												<button
+													type="button"
+													className="layout-selector-copy-button"
+													onClick={ ( e ) => {
+														e.stopPropagation();
+														handleCopyLayout();
+													} }
+													title="Copy layout JSON"
+												>
+													<Icon name="content_copy" size="16px" />
+												</button>
+											) }
+										</div>
+									</div>
 								) : (
 									<div className="layout-selector-option-no-preview">
 										<p>No preview available</p>
