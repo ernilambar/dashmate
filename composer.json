@@ -3,8 +3,7 @@
   "description": "Dashboard helper.",
   "license": "GPL-2.0-or-later",
   "require": {
-    "php": ">=7.4",
-    "ernilambar/optify": "*"
+    "php": ">=7.4"
   },
   "require-dev": {
     "dealerdirect/phpcodesniffer-composer-installer": "^1",
@@ -14,12 +13,6 @@
     "slevomat/coding-standard": "^8",
     "wp-coding-standards/wpcs": "^3.2"
   },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/ernilambar/optify"
-    }
-  ],
   "minimum-stability": "dev",
   "prefer-stable": true,
   "autoload": {

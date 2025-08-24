@@ -5,11 +5,11 @@
 	position: absolute;
 	top: -30px;
 	right: 0;
-	display: flex;
-	align-items: center;
+	display: grid;
+	grid-template-columns: repeat(4, 24px);
 	gap: 4px;
 	z-index: 1000;
-	height: 20px;
+	height: 24px;
 	background: transparent;
 	overflow: visible;
 }
@@ -19,6 +19,49 @@
 	margin: 0;
 	padding: 0;
 	flex-shrink: 0;
+}
+
+/* Layout Settings Button */
+.layout-settings-button {
+	background: transparent;
+	color: #0073aa;
+	border: none;
+	border-radius: 4px;
+	width: 24px;
+	height: 24px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: color 0.2s ease;
+}
+
+.layout-settings-button:hover {
+	color: #005a87;
+}
+
+/* Layout Settings Modal */
+.layout-settings-modal {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, 0.5);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 10000;
+}
+
+.layout-settings-modal > div {
+	background: white;
+	border-radius: 8px;
+	padding: 20px;
+	max-width: 500px;
+	max-height: 80vh;
+	overflow-y: auto;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 /* Dashboard App Styles */
@@ -201,22 +244,5 @@
 
 	.item-details {
 		align-items: flex-start;
-	}
-}
-
-#dashmate-wrap-settings {
-	display: block;
-	position: absolute;
-	top: -5px;
-	right: 20px;
-
-	.optify-modal-button {
-		height: 20px;
-		min-width: 20px;
-		width: 20px;
-	}
-
-	.optify-modal-icon {
-		fill: #0073aa;
 	}
 }

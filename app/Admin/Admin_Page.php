@@ -7,10 +7,7 @@
 
 namespace Nilambar\Dashmate\Admin;
 
-use Nilambar\Dashmate\Core\Option;
-use Nilambar\Dashmate\Panels\SettingsPanel;
 use Nilambar\Dashmate\View\View;
-use Nilambar\Optify\Optify;
 
 /**
  * Admin_Page class.
@@ -26,7 +23,6 @@ class Admin_Page {
 	 */
 	public function __construct() {
 		add_action( 'admin_menu', [ $this, 'register_page' ] );
-		add_action( 'init', [ $this, 'register_settings' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_assets' ] );
 	}
 
@@ -57,20 +53,6 @@ class Admin_Page {
 	}
 
 	/**
-	 * Register settings
-	 *
-	 * @since 1.0.0
-	 */
-	public function register_settings() {
-		$optify = Optify::get_instance( 'dashmate', 'v1', DASHMATE_BASE_FILEPATH );
-		$optify->register_panel( 'dashmate-settings', SettingsPanel::class );
-		$optify->load_assets(
-			DASHMATE_DIR . '/vendor/ernilambar/optify/',
-			DASHMATE_URL . '/vendor/ernilambar/optify/'
-		);
-	}
-
-	/**
 	 * Enqueue assets.
 	 *
 	 * @since 1.0.0
@@ -98,9 +80,6 @@ class Admin_Page {
 				[
 					'nonce'   => wp_create_nonce( 'wp_rest' ),
 					'restUrl' => rest_url( 'dashmate/v1/' ),
-					'config'  => [
-						'maxColumns' => absint( Option::get( 'max_columns' ) ),
-					],
 				]
 			);
 		}

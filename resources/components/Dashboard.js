@@ -5,16 +5,18 @@ import Column from './Column';
 import WidgetSelector from './WidgetSelector';
 import LayoutSaver from './LayoutSaver';
 import LayoutSelector from './LayoutSelector';
+import LayoutSettings from './LayoutSettings';
+import Icon from './Icon';
 
 class Dashboard extends Component {
 	constructor( props ) {
 		super( props );
 		this.state = {
 			dashboard: null,
-			widgets: null,
-			layouts: null,
+			widgets: {},
 			loading: true,
 			error: null,
+			showLayoutSettings: false,
 		};
 	}
 
@@ -374,8 +376,18 @@ class Dashboard extends Component {
 		}
 	};
 
+	handleLayoutSettingsToggle = () => {
+		this.setState( ( prevState ) => ( {
+			showLayoutSettings: ! prevState.showLayoutSettings,
+		} ) );
+	};
+
+	handleLayoutSettingsClose = () => {
+		this.setState( { showLayoutSettings: false } );
+	};
+
 	render() {
-		const { dashboard, widgets, loading, error } = this.state;
+		const { dashboard, widgets, loading, error, showLayoutSettings } = this.state;
 
 		if ( loading ) {
 			return (
@@ -411,9 +423,14 @@ class Dashboard extends Component {
 		// Get columns from the dashboard structure
 		const columns = Array.isArray( dashboard?.columns ) ? dashboard.columns : [];
 
-		// Always use grid layout with appropriate number of columns
-		const maxColumns = window.dashmateApiSettings?.config?.maxColumns;
-		const gridColumns = maxColumns ? Math.min( maxColumns, columns.length ) : columns.length;
+		// Get max columns from localStorage, fallback to 3 if not set
+		const maxColumns = parseInt(
+			localStorage.getItem( 'dashmate_layout_settings' )
+				? JSON.parse( localStorage.getItem( 'dashmate_layout_settings' ) ).max_columns
+				: '3',
+			10
+		);
+		const gridColumns = Math.min( maxColumns, columns.length );
 		const gridClass = `grid-layout grid-${ gridColumns }`;
 		const dashboardContentClass = `dashboard-content ${ gridClass }`;
 
@@ -428,7 +445,21 @@ class Dashboard extends Component {
 					/>
 					<LayoutSaver dashboard={ dashboard } onLayoutSaved={ this.handleLayoutSaved } />
 					<LayoutSelector onLayoutSelect={ this.handleLayoutSelect } />
+					<button
+						type="button"
+						className="layout-settings-button"
+						onClick={ this.handleLayoutSettingsToggle }
+						title="Layout Settings"
+					>
+						<Icon name="settings" size="20px" />
+					</button>
 				</div>
+
+				{ showLayoutSettings && (
+					<div className="layout-settings-modal">
+						<LayoutSettings onClose={ this.handleLayoutSettingsClose } />
+					</div>
+				) }
 
 				<DragDropContext onDragEnd={ this.handleDragEnd }>
 					<div className={ dashboardContentClass }>
