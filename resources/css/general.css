@@ -213,3 +213,25 @@
 		fill: #0073aa;
 	}
 }
+
+.dashboard-controls {
+	.widget-selector {
+		padding-left: 60px !important;
+	}
+}
+
+.widget-selector-toggle {
+	margin-left: 10px !important;
+}
+
+.widget-selector-dropdown {
+	right: -20px !important;
+}
+
+.layout-saver-dropdown {
+	right: -10px !important;
+}
+
+.layout-saver-toggle {
+	margin-left: 10px !important;
+}
