@@ -4,15 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f6a36975632c82c4cf3820f1fcc5a9bb",
+    "content-hash": "ad365be72b0f13e2229505ccc469b3d5",
     "packages": [
         {
             "name": "ernilambar/optify",
-            "version": "dev-main",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ernilambar/optify.git",
+                "reference": "4d47b4e0a871ee0f4dbd9e43d137e7548cd3d7b7"
+            },
             "dist": {
-                "type": "path",
-                "url": "/Users/nilambar/Code/projects/optify",
-                "reference": "d58435185c093196445a370db403e32a58423a3c"
+                "type": "zip",
+                "url": "https://api.github.com/repos/ernilambar/optify/zipball/4d47b4e0a871ee0f4dbd9e43d137e7548cd3d7b7",
+                "reference": "4d47b4e0a871ee0f4dbd9e43d137e7548cd3d7b7",
+                "shasum": ""
             },
             "require": {
                 "php": ">=7.4"
@@ -58,9 +64,11 @@
                 }
             ],
             "description": "A flexible WordPress panel system for React-based options",
-            "transport-options": {
-                "relative": false
-            }
+            "support": {
+                "source": "https://github.com/ernilambar/optify/tree/1.0.1",
+                "issues": "https://github.com/ernilambar/optify/issues"
+            },
+            "time": "2025-08-18T12:45:37+00:00"
         }
     ],
     "packages-dev": [
@@ -366,7 +374,7 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2025-08-06T19:48:56+00:00"
+            "time": "2025-08-20T03:33:09+00:00"
         },
         {
             "name": "phpcsstandards/phpcsextra",
@@ -452,16 +460,16 @@
         },
         {
             "name": "phpcsstandards/phpcsutils",
-            "version": "1.1.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHPCSUtils.git",
-                "reference": "65355670ac17c34cd235cf9d3ceae1b9252c4dad"
+                "reference": "f7eb16f2fa4237d5db9e8fed8050239bee17a9bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/65355670ac17c34cd235cf9d3ceae1b9252c4dad",
-                "reference": "65355670ac17c34cd235cf9d3ceae1b9252c4dad",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/f7eb16f2fa4237d5db9e8fed8050239bee17a9bd",
+                "reference": "f7eb16f2fa4237d5db9e8fed8050239bee17a9bd",
                 "shasum": ""
             },
             "require": {
@@ -541,7 +549,7 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2025-06-12T04:32:33+00:00"
+            "time": "2025-08-10T01:04:45+00:00"
         },
         {
             "name": "phpstan/phpdoc-parser",

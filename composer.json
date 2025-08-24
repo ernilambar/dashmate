@@ -14,6 +14,12 @@
     "slevomat/coding-standard": "^8",
     "wp-coding-standards/wpcs": "^3.2"
   },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/ernilambar/optify"
+    }
+  ],
   "minimum-stability": "dev",
   "prefer-stable": true,
   "autoload": {
@@ -21,12 +27,6 @@
       "Nilambar\\Dashmate\\": "app/"
     }
   },
-  "repositories": [
-		{
-      "type": "path",
-			"url": "/Users/nilambar/Code/projects/optify"
-    }
-	],
   "config": {
     "allow-plugins": {
       "dealerdirect/phpcodesniffer-composer-installer": true,
@@ -46,6 +46,5 @@
     ],
     "lint-php": "@php ./vendor/bin/parallel-lint --colors --exclude .git --exclude vendor .",
     "phpcs": "@php ./vendor/bin/phpcs --report-full --report-summary"
-
   }
 }
