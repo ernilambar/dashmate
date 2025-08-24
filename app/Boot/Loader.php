@@ -10,7 +10,6 @@ namespace Nilambar\Dashmate\Boot;
 use Nilambar\Dashmate\Admin\Admin_Page;
 use Nilambar\Dashmate\API\API_Main;
 use Nilambar\Dashmate\Widget_Initializer;
-use Nilambar\Optify\Panel_Manager;
 
 /**
  * Loader class.
@@ -48,28 +47,5 @@ class Loader {
 	 */
 	public function init_widgets() {
 		Widget_Initializer::init();
-	}
-
-	/**
-	 * Add settings app.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $menu_slug Menu slug.
-	 */
-	public function add_settings_app( $menu_slug ) {
-		if ( 'dashmate' === $menu_slug ) {
-			echo '<div id="dashmate-wrap-settings">';
-
-			Panel_Manager::render_panel(
-				'dashmate-settings',
-				[
-					'show_title' => true,
-					'display'    => 'modal',
-				]
-			);
-
-			echo '</div>';
-		}
 	}
 }
