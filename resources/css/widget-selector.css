@@ -20,7 +20,6 @@
 	transition: all 0.2s ease;
 	box-shadow: none;
 	padding: 0;
-	margin-left: 10px !important;
 }
 
 .widget-selector-toggle:active {

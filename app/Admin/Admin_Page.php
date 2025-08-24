@@ -98,9 +98,6 @@ class Admin_Page {
 				[
 					'nonce'   => wp_create_nonce( 'wp_rest' ),
 					'restUrl' => rest_url( 'dashmate/v1/' ),
-					'config'  => [
-						'maxColumns' => absint( Option::get( 'max_columns' ) ),
-					],
 				]
 			);
 		}
