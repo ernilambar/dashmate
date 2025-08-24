@@ -9,6 +9,9 @@
 	align-items: center;
 	gap: 15px;
 	z-index: 1000;
+	height: 30px;
+	background: transparent;
+	overflow: visible;
 }
 
 /* Dashboard App Styles */

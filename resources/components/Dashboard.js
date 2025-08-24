@@ -4,6 +4,7 @@ import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 import Column from './Column';
 import WidgetSelector from './WidgetSelector';
 import LayoutSaver from './LayoutSaver';
+import LayoutSelector from './LayoutSelector';
 
 class Dashboard extends Component {
 	constructor( props ) {
@@ -342,6 +343,37 @@ class Dashboard extends Component {
 		this.loadLayouts();
 	};
 
+	handleLayoutSelect = async ( layoutKey ) => {
+		if ( layoutKey === 'current' ) {
+			return; // Don't apply current layout
+		}
+
+		try {
+			// Apply the selected layout
+			const response = await fetch(
+				`${ dashmateApiSettings.restUrl }layouts/${ layoutKey }/apply`,
+				{
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'X-WP-Nonce': dashmateApiSettings?.nonce || '',
+					},
+				}
+			);
+
+			const data = await response.json();
+
+			if ( data.success ) {
+				// Reload the dashboard with the new layout
+				this.loadDashboard();
+			} else {
+				console.error( 'Failed to apply layout:', data.message );
+			}
+		} catch ( error ) {
+			console.error( 'Error applying layout:', error );
+		}
+	};
+
 	render() {
 		const { dashboard, widgets, loading, error } = this.state;
 
@@ -389,6 +421,7 @@ class Dashboard extends Component {
 			<div className="dashmate-app">
 				{ /* Dashboard Controls */ }
 				<div className="dashboard-controls">
+					<LayoutSelector onLayoutSelect={ this.handleLayoutSelect } />
 					<LayoutSaver dashboard={ dashboard } onLayoutSaved={ this.handleLayoutSaved } />
 					<WidgetSelector
 						widgets={ widgets }
