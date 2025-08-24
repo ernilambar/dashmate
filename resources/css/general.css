@@ -246,20 +246,3 @@
 		align-items: flex-start;
 	}
 }
-
-#dashmate-wrap-settings {
-	display: block;
-	position: absolute;
-	top: -5px;
-	right: 20px;
-
-	.optify-modal-button {
-		height: 20px;
-		min-width: 20px;
-		width: 20px;
-	}
-
-	.optify-modal-icon {
-		fill: #0073aa;
-	}
-}
