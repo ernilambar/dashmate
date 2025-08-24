@@ -7,11 +7,18 @@
 	right: 0;
 	display: flex;
 	align-items: center;
-	gap: 15px;
+	gap: 4px;
 	z-index: 1000;
-	height: 30px;
+	height: 20px;
 	background: transparent;
 	overflow: visible;
+}
+
+/* Ensure uniform spacing between control buttons */
+.dashboard-controls > * {
+	margin: 0;
+	padding: 0;
+	flex-shrink: 0;
 }
 
 /* Dashboard App Styles */

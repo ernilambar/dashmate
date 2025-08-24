@@ -421,13 +421,13 @@ class Dashboard extends Component {
 			<div className="dashmate-app">
 				{ /* Dashboard Controls */ }
 				<div className="dashboard-controls">
-					<LayoutSelector onLayoutSelect={ this.handleLayoutSelect } />
-					<LayoutSaver dashboard={ dashboard } onLayoutSaved={ this.handleLayoutSaved } />
 					<WidgetSelector
 						widgets={ widgets }
 						dashboard={ dashboard }
 						onWidgetSelect={ this.handleWidgetSelect }
 					/>
+					<LayoutSaver dashboard={ dashboard } onLayoutSaved={ this.handleLayoutSaved } />
+					<LayoutSelector onLayoutSelect={ this.handleLayoutSelect } />
 				</div>
 
 				<DragDropContext onDragEnd={ this.handleDragEnd }>

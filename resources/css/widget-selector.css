@@ -20,10 +20,7 @@
 	transition: all 0.2s ease;
 	box-shadow: none;
 	padding: 0;
-}
-
-.widget-selector-toggle:hover {
-	/* Hover effects removed */
+	margin-left: 10px !important;
 }
 
 .widget-selector-toggle:active {
@@ -42,7 +39,7 @@
 
 .widget-selector-dropdown {
 	position: absolute;
-	top: 30px;
+	top: 25px;
 	right: 0;
 	width: 300px;
 	background: white;
