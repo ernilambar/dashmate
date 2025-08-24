@@ -78,6 +78,10 @@ class Admin_Page {
 	 * @param string $hook Hook name.
 	 */
 	public function enqueue_assets( $hook ) {
+		if ( 'toplevel_page_dashmate' !== $hook ) {
+			return;
+		}
+
 		$asset_file_name = DASHMATE_DIR . '/assets/index.asset.php';
 
 		if ( file_exists( $asset_file_name ) ) {
