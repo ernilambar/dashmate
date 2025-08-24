@@ -379,7 +379,7 @@ class TabularWidget extends React.Component {
 			case 'delete':
 				return <Icon name="delete_outline" size="medium" />;
 			case 'sync':
-				return <Icon name="sync" size="medium" />;
+				return <Icon name="autorenew" size="medium" />;
 			default:
 				return <Icon name="settings" size="medium" />;
 		}
