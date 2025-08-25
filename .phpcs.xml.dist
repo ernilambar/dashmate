@@ -80,7 +80,6 @@
 			<property name="old_text_domain" type="array">
 				<element value="" />
 				<element value="handy" />
-				<element value="linkit" />
 				<element value="snippo" />
 				<element value="ticktor" />
 				<element value="groundify" />
