@@ -183,7 +183,7 @@ class Dashboard_Controller extends Base_Controller {
 					if ( isset( $existing_widgets_by_id[ $widget_id ] ) ) {
 						$column['widgets'][] = $existing_widgets_by_id[ $widget_id ];
 					} else {
-						// Add new widget to the dashboard
+						// Add new widget to the dashboard.
 						$column['widgets'][] = [
 							'id'        => $widget_id,
 							'settings'  => [],

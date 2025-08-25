@@ -124,10 +124,10 @@ class Dashboard_Model {
 	 * @return array Sanitized dashboard data.
 	 */
 	private static function sanitize_dashboard_data( array $data ): array {
-		// Sanitize column data
+		// Sanitize column data.
 		if ( isset( $data['columns'] ) && is_array( $data['columns'] ) ) {
 			foreach ( $data['columns'] as &$column ) {
-				// Sanitize column ID and title
+				// Sanitize column ID and title.
 				if ( isset( $column['id'] ) ) {
 					$column['id'] = sanitize_key( $column['id'] );
 				}
@@ -135,10 +135,10 @@ class Dashboard_Model {
 					$column['title'] = sanitize_text_field( $column['title'] );
 				}
 
-				// Sanitize widget data
+				// Sanitize widget data.
 				if ( isset( $column['widgets'] ) && is_array( $column['widgets'] ) ) {
 					foreach ( $column['widgets'] as &$widget ) {
-						// Sanitize widget ID and title
+						// Sanitize widget ID and title.
 						if ( isset( $widget['id'] ) ) {
 							$widget['id'] = sanitize_key( $widget['id'] );
 						}
@@ -152,8 +152,8 @@ class Dashboard_Model {
 							$widget['icon'] = sanitize_text_field( $widget['icon'] );
 						}
 
-						// Widget settings are already sanitized by the widget classes
-						// But we ensure the settings key exists and is an array
+						// Widget settings are already sanitized by the widget classes.
+						// But we ensure the settings key exists and is an array.
 						if ( isset( $widget['settings'] ) && ! is_array( $widget['settings'] ) ) {
 							$widget['settings'] = [];
 						}

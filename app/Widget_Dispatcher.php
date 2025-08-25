@@ -60,7 +60,7 @@ class Widget_Dispatcher {
 		// Get widget by ID from registered widgets.
 		$widget = self::get_widget( $id );
 
-		if ( $widget === null ) {
+		if ( null === $widget ) {
 			return null;
 		}
 
@@ -158,7 +158,7 @@ class Widget_Dispatcher {
 		// Get widget by ID (widget_id is the actual widget instance ID).
 		$widget = self::get_widget( $widget_id );
 
-		if ( $widget === null ) {
+		if ( null === $widget ) {
 			return new \WP_Error( 'unknown_widget', 'Unknown widget: ' . $widget_id );
 		}
 
@@ -180,10 +180,10 @@ class Widget_Dispatcher {
 		$widget_types = [];
 		$widgets      = self::get_widgets();
 
-		// First, get all available template types from the registry
+		// First, get all available template types from the registry.
 		$templates = Widget_Template_Registry::get_templates();
 
-		// Initialize with all available template types
+		// Initialize with all available template types.
 		foreach ( $templates as $template_type => $template_config ) {
 			$widget_types[ $template_type ] = [
 				'name'            => $template_config['component'],
@@ -195,15 +195,15 @@ class Widget_Dispatcher {
 			];
 		}
 
-		// Then, create individual widget entries with their own schemas
+		// Then, create individual widget entries with their own schemas.
 		foreach ( $widgets as $id => $widget ) {
 			$template_type     = $widget->get_template_type();
 			$widget_definition = $widget->get_definition();
 
-			// Create a unique key for this widget using its ID
+			// Create a unique key for this widget using its ID.
 			$widget_key = $id;
 
-			// Add the widget with its own schema
+			// Add the widget with its own schema.
 			$widget_types[ $widget_key ] = array_merge(
 				$widget_definition,
 				[
@@ -259,13 +259,12 @@ class Widget_Dispatcher {
 					if ( isset( $widget['id'] ) && $widget['id'] === $widget_id ) {
 						$current_settings = $widget['settings'] ?? [];
 
-						// Get widget instance for proper sanitization
-						$widget_id       = $widget['id'] ?? '';
+						// Get widget instance for proper sanitization.
+						$widget_id = $widget['id'] ?? '';
+
 						$widget_instance = self::get_widget( $widget_id );
 
-						if ( $widget_instance === null ) {
-							// Log error for debugging.
-							error_log( 'Dashmate: Widget instance not found for ID: ' . $widget_id );
+						if ( null === $widget_instance ) {
 							// Skip sanitization if widget not found.
 							$sanitized_settings = $settings;
 						} else {
@@ -274,9 +273,9 @@ class Widget_Dispatcher {
 						}
 						$new_settings = array_merge( $current_settings, $sanitized_settings );
 
-						// Check if there are actual changes
+						// Check if there are actual changes.
 						if ( $current_settings === $new_settings ) {
-							// No changes made, return success without saving
+							// No changes made, return success without saving.
 							return true;
 						}
 
@@ -355,7 +354,7 @@ class Widget_Dispatcher {
 	 * @return array
 	 */
 	public static function get_widgets_for_column( $column_id, $dashboard_data = null ) {
-		if ( $dashboard_data === null ) {
+		if ( null === $dashboard_data ) {
 			$dashboard_data = self::get_dashboard_data();
 		}
 

@@ -171,7 +171,7 @@ class Widgets_Controller extends Base_Controller {
 		$widget_data = $this->find_widget_by_id( $widget_id, $dashboard_data );
 		$settings    = $widget_data['settings'] ?? [];
 
-		// Merge settings with defaults to ensure frontend gets complete settings
+		// Merge settings with defaults to ensure frontend gets complete settings.
 		$merged_settings = $widget->merge_settings_with_defaults( $settings );
 
 		// Get content using the new system.
@@ -219,7 +219,7 @@ class Widgets_Controller extends Base_Controller {
 			return $content;
 		}
 
-		// Add widget type to the response
+		// Add widget type to the response.
 		$content['type'] = $widget->get_template_type();
 
 		return $this->success_response( $content );
@@ -251,7 +251,7 @@ class Widgets_Controller extends Base_Controller {
 			return $content;
 		}
 
-		// Add widget type to the response
+		// Add widget type to the response.
 		$content['type'] = $widget->get_template_type();
 
 		return $this->success_response( $content );
@@ -270,7 +270,7 @@ class Widgets_Controller extends Base_Controller {
 		$widget_id = sanitize_key( $request->get_param( 'id' ) );
 		$settings  = $request->get_param( 'settings' );
 
-		// Basic validation
+		// Basic validation.
 		if ( empty( $widget_id ) ) {
 			return $this->error_response( 'Invalid widget ID', 400, 'invalid_widget_id' );
 		}

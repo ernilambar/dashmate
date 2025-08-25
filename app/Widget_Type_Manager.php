@@ -133,7 +133,6 @@ class Widget_Type_Manager {
 		}
 
 		if ( ! empty( $errors ) ) {
-			error_log( sprintf( 'Dashmate: Widget output validation failed for type "%s": %s', $widget_type, implode( '; ', $errors ) ) );
 			return new WP_Error(
 				'invalid_widget_output',
 				sprintf( 'Widget output validation failed for type "%s": %s', $widget_type, implode( '; ', $errors ) ),
