@@ -278,8 +278,6 @@ abstract class Abstract_Widget {
 				return sanitize_email( $value );
 
 			case 'password':
-				// For passwords, we don't sanitize as it might break the password
-				// But we ensure it's a string and trim whitespace
 				return is_string( $value ) ? trim( $value ) : '';
 
 			case 'number':
@@ -292,7 +290,6 @@ abstract class Abstract_Widget {
 				return (bool) $value;
 
 			case 'select':
-				// Validate against choices if provided
 				if ( isset( $schema['choices'] ) && is_array( $schema['choices'] ) ) {
 					$valid_choices = array_column( $schema['choices'], 'value' );
 					return in_array( $value, $valid_choices, true ) ? sanitize_text_field( $value ) : '';
@@ -300,7 +297,6 @@ abstract class Abstract_Widget {
 				return sanitize_text_field( $value );
 
 			case 'radio':
-				// Validate against choices if provided
 				if ( isset( $schema['choices'] ) && is_array( $schema['choices'] ) ) {
 					$valid_choices = array_column( $schema['choices'], 'value' );
 					return in_array( $value, $valid_choices, true ) ? sanitize_text_field( $value ) : '';
@@ -308,7 +304,6 @@ abstract class Abstract_Widget {
 				return sanitize_text_field( $value );
 
 			case 'buttonset':
-				// Validate against choices if provided
 				if ( isset( $schema['choices'] ) && is_array( $schema['choices'] ) ) {
 					$valid_choices = array_column( $schema['choices'], 'value' );
 					return in_array( $value, $valid_choices, true ) ? sanitize_text_field( $value ) : '';
@@ -316,7 +311,7 @@ abstract class Abstract_Widget {
 				return sanitize_text_field( $value );
 
 			case 'multicheckbox':
-				// Handle array of selected values
+				// Handle array of selected values.
 				if ( ! is_array( $value ) ) {
 					return [];
 				}
@@ -330,7 +325,6 @@ abstract class Abstract_Widget {
 						}
 					}
 				} else {
-					// If no choices defined, sanitize all values as text
 					foreach ( $value as $item ) {
 						$sanitized_array[] = sanitize_text_field( $item );
 					}
@@ -338,7 +332,7 @@ abstract class Abstract_Widget {
 				return $sanitized_array;
 
 			case 'sortable':
-				// Handle array of sortable items
+				// Handle array of sortable items.
 				if ( ! is_array( $value ) ) {
 					return [];
 				}
@@ -352,7 +346,6 @@ abstract class Abstract_Widget {
 						}
 					}
 				} else {
-					// If no choices defined, sanitize all values as text
 					foreach ( $value as $item ) {
 						$sanitized_array[] = sanitize_text_field( $item );
 					}
@@ -363,7 +356,6 @@ abstract class Abstract_Widget {
 				return sanitize_text_field( $value );
 
 			default:
-				// Default to text sanitization for unknown field types
 				return sanitize_text_field( $value );
 		}
 	}

@@ -52,9 +52,10 @@
 	<config name="ignore_warnings_on_exit" value="1"/>
 
 	<rule ref="WordPress">
-		<exclude name="Universal.Arrays.DisallowShortArraySyntax"/>
 		<exclude name="Generic.CodeAnalysis.UnusedFunctionParameter"/>
-		<exclude name="Generic.Functions.CallTimePassByReference"/>
+		<exclude name="Universal.Arrays.DisallowShortArraySyntax"/>
+		<exclude name="WordPress.DB.DirectDatabaseQuery"/>
+		<exclude name="WordPress.WP.AlternativeFunctions"/>
 		<exclude name="WordPress.WP.I18n.MissingTranslatorsComment"/>
 	</rule>
 
@@ -79,10 +80,6 @@
 		<properties>
 			<property name="old_text_domain" type="array">
 				<element value="" />
-				<element value="handy" />
-				<element value="snippo" />
-				<element value="ticktor" />
-				<element value="groundify" />
 			</property>
 			<property name="new_text_domain" value="dashmate" />
 		</properties>
@@ -100,11 +97,6 @@
 
 		<!-- Remove nonce notice -->
 		<exclude name="WordPress.Security.NonceVerification.Recommended"/>
-	</rule>
-
-	<!-- Make missing translator comment a warning. -->
-	<rule ref="WordPress.WP.I18n.MissingTranslatorsComment">
-		<type>warning</type>
 	</rule>
 
 	<!-- Sometimes we need to override globals -->
