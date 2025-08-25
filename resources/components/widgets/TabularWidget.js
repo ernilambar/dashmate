@@ -52,7 +52,15 @@ class TabularWidget extends React.Component {
 					break;
 				case 'sync':
 					await this.handleSyncAction( row, rowIndex, tableIndex );
-					actionCompleted = true; // Sync actions don't have cancellation
+					actionCompleted = true; // Sync actions don't have cancellation.
+					break;
+				case 'snooze':
+					await this.handleSnoozeAction( row, rowIndex, tableIndex );
+					actionCompleted = true; // Snooze actions don't have cancellation.
+					break;
+				case 'unsnooze':
+					await this.handleUnsnoozeAction( row, rowIndex, tableIndex );
+					actionCompleted = true; // Unsnooze actions don't have cancellation.
 					break;
 				default:
 					throw new Error( `Unknown action: ${ action }` );
@@ -65,7 +73,7 @@ class TabularWidget extends React.Component {
 						...prevState.actionResults,
 						[ actionKey ]: {
 							success: true,
-							message: `${ action } action completed successfully`,
+							message: `${ action } action completed successfully.`,
 						},
 					},
 				} ) );
@@ -109,7 +117,7 @@ class TabularWidget extends React.Component {
 	 */
 	extractIdFromRow = ( row ) => {
 		if ( ! row.cells || ! row.cells[ 0 ] || ! row.cells[ 0 ].text ) {
-			throw new Error( 'Could not extract ID from row data' );
+			throw new Error( 'Could not extract ID from row data.' );
 		}
 
 		const cellText = row.cells[ 0 ].text;
@@ -141,7 +149,7 @@ class TabularWidget extends React.Component {
 			throw new Error( 'Delete action not configured for this row.' );
 		}
 
-		// Check if confirmation is required
+		// Check if confirmation is required.
 		if ( actionConfig.requires_confirmation ) {
 			const confirmationMessage =
 				actionConfig.message || 'Are you sure you want to delete this item?';
@@ -255,8 +263,96 @@ class TabularWidget extends React.Component {
 		} );
 
 		if ( ! response.ok ) {
-			const errorData = await response.json().catch( () => ( { message: 'Network error' } ) );
-			throw new Error( errorData.message || 'Sync failed' );
+			const errorData = await response
+				.json()
+				.catch( () => ( { message: 'Network error.' } ) );
+			throw new Error( errorData.message || 'Sync failed.' );
+		}
+
+		const result = await response.json();
+	};
+
+	/**
+	 * Handle snooze action.
+	 */
+	handleSnoozeAction = async ( row, rowIndex, tableIndex ) => {
+		// Get action configuration from row.
+		const actionConfig = row.actions?.snooze;
+
+		if ( ! actionConfig || ! actionConfig.endpoint ) {
+			throw new Error( 'Snooze action not configured for this row.' );
+		}
+
+		// Extract ID from the first cell.
+		const id = this.extractIdFromRow( row );
+
+		// Build request data.
+		const requestData = {
+			id: id,
+			widget_id: this.props.widgetId,
+			row_data: row,
+			row_index: rowIndex,
+			table_index: tableIndex,
+			timestamp: new Date().toISOString(),
+		};
+
+		// Call external API endpoint.
+		const response = await fetch( actionConfig.endpoint, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify( requestData ),
+		} );
+
+		if ( ! response.ok ) {
+			const errorData = await response
+				.json()
+				.catch( () => ( { message: 'Network error.' } ) );
+			throw new Error( errorData.message || 'Snooze failed.' );
+		}
+
+		const result = await response.json();
+	};
+
+	/**
+	 * Handle unsnooze action.
+	 */
+	handleUnsnoozeAction = async ( row, rowIndex, tableIndex ) => {
+		// Get action configuration from row.
+		const actionConfig = row.actions?.unsnooze;
+
+		if ( ! actionConfig || ! actionConfig.endpoint ) {
+			throw new Error( 'Unsnooze action not configured for this row.' );
+		}
+
+		// Extract ID from the first cell.
+		const id = this.extractIdFromRow( row );
+
+		// Build request data.
+		const requestData = {
+			id: id,
+			widget_id: this.props.widgetId,
+			row_data: row,
+			row_index: rowIndex,
+			table_index: tableIndex,
+			timestamp: new Date().toISOString(),
+		};
+
+		// Call external API endpoint.
+		const response = await fetch( actionConfig.endpoint, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify( requestData ),
+		} );
+
+		if ( ! response.ok ) {
+			const errorData = await response
+				.json()
+				.catch( () => ( { message: 'Network error.' } ) );
+			throw new Error( errorData.message || 'Unsnooze failed.' );
 		}
 
 		const result = await response.json();
@@ -366,6 +462,8 @@ class TabularWidget extends React.Component {
 		const titles = {
 			delete: 'Delete',
 			sync: 'Sync',
+			snooze: 'Snooze',
+			unsnooze: 'Unsnooze',
 		};
 
 		return titles[ action ] || action;
@@ -377,9 +475,13 @@ class TabularWidget extends React.Component {
 	getActionIcon = ( action ) => {
 		switch ( action ) {
 			case 'delete':
-				return <Icon name="delete_outline" size="medium" />;
+				return <Icon name="highlight_off" size="medium" />;
 			case 'sync':
 				return <Icon name="autorenew" size="medium" />;
+			case 'snooze':
+				return <Icon name="schedule" size="medium" />;
+			case 'unsnooze':
+				return <Icon name="restore" size="medium" />;
 			default:
 				return <Icon name="settings" size="medium" />;
 		}

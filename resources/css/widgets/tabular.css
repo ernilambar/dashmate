@@ -235,6 +235,22 @@
 	animation: spin 1s linear infinite;
 }
 
+.tabular-widget .action-btn.snooze-btn {
+	color: #2271b1;
+}
+
+.tabular-widget .action-btn.snooze-btn:hover {
+	color: #00a32a;
+}
+
+.tabular-widget .action-btn.unsnooze-btn {
+	color: #2271b1;
+}
+
+.tabular-widget .action-btn.unsnooze-btn:hover {
+	color: #00a32a;
+}
+
 /* Empty container styling */
 .tabular-widget .empty-container {
 	padding: 0;
