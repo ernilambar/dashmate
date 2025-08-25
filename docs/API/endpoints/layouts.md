@@ -1,253 +1,58 @@
-# Layouts Endpoints
+# Layout Endpoints
 
 ## Overview
 
-Layouts endpoints provide functionality for managing dashboard layouts, including retrieving available layouts, getting specific layout data, and applying layouts to the current dashboard.
+Layout endpoints provide functionality for managing saved dashboard layouts, including creating, retrieving, updating, and deleting layouts.
 
-## Endpoints
+## GET /layouts
 
-### Get All Layouts
-**GET** `/wp-json/dashmate/v1/layouts`
-
-Returns a list of all available layouts including the current layout from options, with layout data included for immediate use.
+Retrieves a list of all saved layouts.
 
 **Response:**
 ```json
 {
   "success": true,
   "data": {
-    "current": {
-      "id": "current",
-      "title": "Current Layout",
-      "type": "options",
-      "layoutData": {
-        "columns": [
-          {
-            "id": "col-1",
-            "widgets": [
-              {
-                "id": "widget-1",
-                "settings": {},
-                "collapsed": false
-              }
-            ]
-          }
-        ]
-      }
-    },
-    "default": {
-      "id": "default",
-      "title": "Default",
-      "type": "file",
-      "path": "/path/to/layouts/default.json",
-      "layoutData": {
-        "columns": [
-          {
-            "id": "col-1",
-            "widgets": [
-              {
-                "id": "widget-1",
-                "settings": {},
-                "collapsed": false
-              }
-            ]
-          }
-        ]
-      }
-    }
-  }
-}
-```
-
-**Note:** The `layoutData` field contains the complete layout structure with columns and their nested widgets. This eliminates the need for separate API calls to fetch individual layout data.
-
-**Custom Layouts:** Custom layouts are automatically discovered and included in this response. They are identified by `type: 'custom'` and can be managed through the separate `/custom-layouts` endpoints.
-
-### Get Specific Layout
-**GET** `/wp-json/dashmate/v1/layouts/{layout_key}`
-
-Returns the layout data for a specific layout key.
-
-**Parameters:**
-- `layout_key` (string, required): The layout identifier (e.g., "current", "default")
-
-**Examples:**
-
-#### Get Current Layout from Options
-**GET** `/wp-json/dashmate/v1/layouts/current`
-
-Returns the current layout data stored in WordPress options.
-
-**Response:**
-```json
-{
-  "success": true,
-  "data": {
-    "columns": [
+    "layouts": [
       {
-        "id": "col-1",
-        "widgets": [
-          {
-            "id": "widget-1",
-            "settings": {},
-            "collapsed": false
-          }
-        ]
+        "id": 1,
+        "name": "Default Layout",
+        "description": "Default dashboard layout",
+        "created_at": "2024-01-01T00:00:00Z",
+        "updated_at": "2024-01-01T00:00:00Z"
+      },
+      {
+        "id": 2,
+        "name": "Analytics Layout",
+        "description": "Layout focused on analytics widgets",
+        "created_at": "2024-01-02T00:00:00Z",
+        "updated_at": "2024-01-02T00:00:00Z"
       }
     ]
   }
 }
 ```
 
-#### Get Default Layout from File
-**GET** `/wp-json/dashmate/v1/layouts/default`
+## POST /layouts
 
-Returns the default layout data from the JSON file.
+Creates a new saved layout.
 
-**Response:**
+**Request Body:**
 ```json
 {
-  "success": true,
-  "data": {
-    "columns": [
-      {
-        "id": "col-1",
-        "widgets": [
-          {
-            "id": "widget-1",
-            "settings": {},
-            "collapsed": false
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-
-### Apply Layout
-**POST** `/wp-json/dashmate/v1/layouts/{layout_key}/apply`
-
-Applies a specific layout to the current dashboard configuration.
-
-**Parameters:**
-- `layout_key` (string, required): The layout identifier to apply (e.g., "default", "minimal-layout")
-
-**Examples:**
-
-#### Apply Default Layout
-**POST** `/wp-json/dashmate/v1/layouts/default/apply`
-
-Applies the default layout to the current dashboard.
-
-**Response:**
-```json
-{
-  "success": true,
-  "data": {
-    "message": "Layout \"Default\" applied successfully!",
-    "layout_key": "default"
-  }
-}
-```
-
-#### Apply Custom Layout
-**POST** `/wp-json/dashmate/v1/layouts/custom-layout/apply`
-
-Applies a custom layout to the current dashboard.
-
-**Response:**
-```json
-{
-  "success": true,
-  "data": {
-    "message": "Layout \"Custom Layout\" applied successfully!",
-    "layout_key": "custom-layout"
-  }
-}
-```
-
-## Layout Types
-
-### Options-based Layouts
-- **Type**: `options`
-- **Source**: WordPress options table
-- **Example**: `current` layout
-- **Use Case**: Current dashboard configuration
-- **Access**: Read-only (cannot be applied)
-
-### File-based Layouts
-- **Type**: `file`
-- **Source**: JSON files in `/layouts/` directory
-- **Example**: `default` layout
-- **Use Case**: Predefined layout templates
-- **Access**: Can be applied to dashboard
-
-### Custom Layouts
-- **Type**: `custom`
-- **Source**: WordPress options table with `dashmate_dashboard_custom_<key>` format
-- **Example**: `favourite`, `my-custom-layout`
-- **Use Case**: User-created custom layouts
-- **Access**: Can be applied to dashboard, full CRUD operations available
-- **Management**: Separate API endpoints at `/custom-layouts`
-
-## Usage Examples
-
-### Getting All Layouts
-
-```javascript
-fetch('/wp-json/dashmate/v1/layouts')
-  .then(response => response.json())
-  .then(data => {
-    console.log('Available layouts:', Object.keys(data.data));
-    console.log('Current layout:', data.data.current);
-  });
-```
-
-### Getting Specific Layout
-
-```javascript
-fetch('/wp-json/dashmate/v1/layouts/default')
-  .then(response => response.json())
-  .then(data => {
-    console.log('Default layout:', data.data);
-  });
-```
-
-### Applying a Layout
-
-```javascript
-fetch('/wp-json/dashmate/v1/layouts/default/apply', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  }
-})
-.then(response => response.json())
-.then(data => {
-  console.log('Layout applied:', data.data.message);
-});
-```
-
-## Data Structure
-
-### Layout Object
-- **id** (string): Layout identifier
-- **title** (string): Human-readable layout name
-- **type** (string): Layout type (`options` or `file`)
-- **path** (string, optional): File path for file-based layouts
-- **layoutData** (object): Complete layout structure with columns and widgets
-
-### Layout Data Structure
-```json
-{
+  "name": "New Layout",
+  "description": "A new dashboard layout",
   "columns": [
     {
       "id": "col-1",
       "widgets": [
         {
           "id": "widget-1",
-          "settings": {},
+          "type": "html",
+          "settings": {
+            "title": "Widget Title",
+            "content": "Widget content"
+          },
           "collapsed": false
         }
       ]
@@ -256,15 +61,149 @@ fetch('/wp-json/dashmate/v1/layouts/default/apply', {
 }
 ```
 
-## Error Handling
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "id": 3,
+    "name": "New Layout",
+    "description": "A new dashboard layout",
+    "created_at": "2024-01-03T00:00:00Z",
+    "updated_at": "2024-01-03T00:00:00Z"
+  }
+}
+```
 
-Common errors for layouts endpoints:
+## GET /layouts/{id}
 
-- `layout_not_found`: Layout not found
-- `current_layout_readonly`: Cannot apply current layout as it is read-only
-- `current_layout_not_found`: No layout data found
-- `layout_apply_failed`: Failed to update dashboard data
-- `layout_json_conversion_failed`: Failed to convert layout data to JSON
-- `invalid_layout_data`: Invalid layout data structure
+Retrieves a specific saved layout by ID.
 
-See [Error Handling](../error-handling.md) for more details.
+**Parameters:**
+- `id` (integer, required): Layout ID
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "id": 1,
+    "name": "Default Layout",
+    "description": "Default dashboard layout",
+    "columns": [
+      {
+        "id": "col-1",
+        "widgets": [
+          {
+            "id": "widget-1",
+            "type": "html",
+            "settings": {
+              "title": "Widget Title",
+              "content": "Widget content"
+            },
+            "collapsed": false
+          }
+        ]
+      }
+    ],
+    "created_at": "2024-01-01T00:00:00Z",
+    "updated_at": "2024-01-01T00:00:00Z"
+  }
+}
+```
+
+## PUT /layouts/{id}
+
+Updates an existing saved layout.
+
+**Parameters:**
+- `id` (integer, required): Layout ID
+
+**Request Body:**
+```json
+{
+  "name": "Updated Layout Name",
+  "description": "Updated layout description",
+  "columns": [
+    {
+      "id": "col-1",
+      "widgets": [
+        {
+          "id": "widget-1",
+          "type": "html",
+          "settings": {
+            "title": "Updated Widget Title",
+            "content": "Updated widget content"
+          },
+          "collapsed": false
+        }
+      ]
+    }
+  ]
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "id": 1,
+    "name": "Updated Layout Name",
+    "description": "Updated layout description",
+    "updated_at": "2024-01-03T00:00:00Z"
+  }
+}
+```
+
+## DELETE /layouts/{id}
+
+Deletes a saved layout.
+
+**Parameters:**
+- `id` (integer, required): Layout ID
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "message": "Layout deleted successfully"
+  }
+}
+```
+
+## Error Responses
+
+### Layout Not Found
+```json
+{
+  "code": "layout_not_found",
+  "message": "Layout not found",
+  "data": {
+    "status": 404
+  }
+}
+```
+
+### Invalid Request
+```json
+{
+  "code": "invalid_request",
+  "message": "Invalid layout data",
+  "data": {
+    "status": 400
+  }
+}
+```
+
+### Permission Denied
+```json
+{
+  "code": "permission_denied",
+  "message": "Insufficient permissions",
+  "data": {
+    "status": 403
+  }
+}
+```

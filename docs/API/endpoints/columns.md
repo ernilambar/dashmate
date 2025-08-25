@@ -1,103 +1,162 @@
-# Columns Endpoints
+# Column Endpoints
 
 ## Overview
 
-Columns endpoints provide functionality for managing dashboard columns, including creating, reading, updating, and deleting columns.
+Column endpoints provide functionality for managing dashboard columns, including creating, retrieving, updating, and deleting columns.
 
-## Endpoints
+## GET /columns
 
-### GET `/columns`
-
-Retrieves all columns from the dashboard.
+Retrieves a list of all columns in the current dashboard.
 
 **Response:**
 ```json
 {
   "success": true,
-  "data": [
+  "data": {
+    "columns": [
+      {
+        "id": "col-1",
+        "widgets": [
+          {
+            "id": "widget-1",
+            "type": "html",
+            "settings": {
+              "title": "Widget Title",
+              "content": "Widget content"
+            },
+            "collapsed": false
+          }
+        ]
+      },
+      {
+        "id": "col-2",
+        "widgets": []
+      }
+    ]
+  }
+}
+```
+
+## POST /columns
+
+Creates a new column in the dashboard.
+
+**Request Body:**
+```json
+{
+  "id": "col-3",
+  "widgets": []
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "id": "col-3",
+    "widgets": []
+  }
+}
+```
+
+## GET /columns/{id}
+
+Retrieves a specific column by ID.
+
+**Parameters:**
+- `id` (string, required): Column ID
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "id": "col-1",
+    "widgets": [
+      {
+        "id": "widget-1",
+        "type": "html",
+        "settings": {
+          "title": "Widget Title",
+          "content": "Widget content"
+        },
+        "collapsed": false
+      }
+    ]
+  }
+}
+```
+
+## PUT /columns/{id}
+
+Updates an existing column.
+
+**Parameters:**
+- `id` (string, required): Column ID
+
+**Request Body:**
+```json
+{
+  "widgets": [
     {
-      "id": "col-1",
-      "title": "Main Column",
-      "widgets": []
+      "id": "widget-1",
+      "type": "html",
+      "settings": {
+        "title": "Updated Widget Title",
+        "content": "Updated widget content"
+      },
+      "collapsed": false
+    },
+    {
+      "id": "widget-2",
+      "type": "links",
+      "settings": {
+        "title": "Links Widget",
+        "links": []
+      },
+      "collapsed": false
     }
   ]
 }
 ```
 
-### POST `/columns`
-
-Creates a new column.
-
-**Request Body:**
-```json
-{
-  "title": "New Column"
-}
-```
-
-**Response:**
-```json
-{
-  "success": true,
-  "data": {
-    "id": "col-abc123",
-    "title": "New Column",
-    "widgets": []
-  }
-}
-```
-
-### GET `/columns/{id}`
-
-Retrieves a specific column by ID.
-
-**Parameters:**
-- `id` (string, required): Column ID (alphanumeric, hyphens)
-
 **Response:**
 ```json
 {
   "success": true,
   "data": {
     "id": "col-1",
-    "title": "Main Column",
-    "widgets": []
+    "widgets": [
+      {
+        "id": "widget-1",
+        "type": "html",
+        "settings": {
+          "title": "Updated Widget Title",
+          "content": "Updated widget content"
+        },
+        "collapsed": false
+      },
+      {
+        "id": "widget-2",
+        "type": "links",
+        "settings": {
+          "title": "Links Widget",
+          "links": []
+        },
+        "collapsed": false
+      }
+    ]
   }
 }
 ```
 
-### PUT `/columns/{id}`
+## DELETE /columns/{id}
 
-Updates a specific column.
-
-**Parameters:**
-- `id` (string, required): Column ID (alphanumeric, hyphens)
-
-**Request Body:**
-```json
-{
-  "title": "Updated Column Title"
-}
-```
-
-**Response:**
-```json
-{
-  "success": true,
-  "data": {
-    "id": "col-1",
-    "title": "Updated Column Title",
-    "widgets": []
-  }
-}
-```
-
-### DELETE `/columns/{id}`
-
-Deletes a specific column.
+Deletes a column from the dashboard.
 
 **Parameters:**
-- `id` (string, required): Column ID (alphanumeric, hyphens)
+- `id` (string, required): Column ID
 
 **Response:**
 ```json
@@ -109,130 +168,49 @@ Deletes a specific column.
 }
 ```
 
-## Usage Examples
+## Error Responses
 
-### Getting All Columns
-
-```javascript
-fetch('/wp-json/dashmate/v1/columns')
-  .then(response => response.json())
-  .then(data => {
-    console.log('All columns:', data.data);
-    data.data.forEach(column => {
-      console.log(`Column ${column.id}: ${column.title} (${column.widgets.length} widgets)`);
-    });
-  });
-```
-
-### Creating a New Column
-
-```javascript
-const newColumn = {
-  title: "New Column"
-};
-
-fetch('/wp-json/dashmate/v1/columns', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify(newColumn)
-})
-.then(response => response.json())
-.then(data => {
-  console.log('Column created:', data.data);
-  console.log('New column ID:', data.data.id);
-});
-```
-
-### Getting a Specific Column
-
-```javascript
-fetch('/wp-json/dashmate/v1/columns/col-1')
-  .then(response => response.json())
-  .then(data => {
-    console.log('Column details:', data.data);
-    console.log('Widgets in column:', data.data.widgets);
-  });
-```
-
-### Updating a Column
-
-```javascript
-const updatedColumn = {
-  title: "Updated Column Title"
-};
-
-fetch('/wp-json/dashmate/v1/columns/col-1', {
-  method: 'PUT',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify(updatedColumn)
-})
-.then(response => response.json())
-.then(data => {
-  console.log('Column updated:', data.data);
-});
-```
-
-### Deleting a Column
-
-```javascript
-fetch('/wp-json/dashmate/v1/columns/col-1', {
-  method: 'DELETE',
-  headers: {
-    'Content-Type': 'application/json',
+### Column Not Found
+```json
+{
+  "code": "column_not_found",
+  "message": "Column not found",
+  "data": {
+    "status": 404
   }
-})
-.then(response => response.json())
-.then(data => {
-  console.log('Column deleted:', data.data.message);
-});
+}
 ```
 
-## Data Structure
+### Invalid Request
+```json
+{
+  "code": "invalid_request",
+  "message": "Invalid column data",
+  "data": {
+    "status": 400
+  }
+}
+```
+
+### Permission Denied
+```json
+{
+  "code": "permission_denied",
+  "message": "Insufficient permissions",
+  "data": {
+    "status": 403
+  }
+}
+```
+
+## Column Structure
 
 ### Column Object
-- **id** (string): Unique column identifier (alphanumeric, hyphens allowed)
-- **title** (string): Human-readable column name
-- **widgets** (array): Array of widget objects in the column
+- **id** (string, required): Unique column identifier (alphanumeric, hyphens allowed)
+- **widgets** (array): Array of widget objects
 
-### Widget Object (within Column)
-- **id** (string): Unique widget identifier
+### Widget Object
+- **id** (string, required): Unique widget identifier
+- **type** (string, required): Widget type (html, links, progress_circles, tabular, line_chart)
 - **settings** (object): Widget configuration data
 - **collapsed** (boolean): Whether the widget is minimized
-
-## Column Management
-
-### Creating Columns
-- Column IDs are automatically generated
-- Column titles should be descriptive and user-friendly
-- New columns start with an empty widgets array
-
-### Updating Columns
-- Only the title can be updated
-- Column ID remains unchanged
-- Widgets array is preserved during updates
-
-### Deleting Columns
-- All widgets in the column are also deleted
-- This action cannot be undone
-- Ensure widgets are moved to other columns before deletion if needed
-
-## Error Handling
-
-Common errors for columns endpoints:
-
-- `column_not_found`: Column not found
-- `invalid_column`: Column data is invalid
-- `invalid_column_id`: Invalid column ID format
-
-See [Error Handling](../error-handling.md) for more details.
-
-## Best Practices
-
-1. **Column Naming**: Use descriptive titles that indicate the column's purpose
-2. **Widget Organization**: Group related widgets in the same column
-3. **Column Limits**: Consider the number of columns for optimal layout
-4. **Backup**: Save important layouts before making structural changes
