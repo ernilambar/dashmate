@@ -1,6 +1,6 @@
 {
   "name": "ernilambar/dashmate",
-  "description": "Dashboard helper.",
+  "description": "WordPress plugin for custom dashboard layouts with drag-and-drop widgets.",
   "license": "GPL-2.0-or-later",
   "require": {
     "php": ">=7.4"
