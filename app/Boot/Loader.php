@@ -26,13 +26,6 @@ class Loader {
 	public function __construct() {
 		add_action( 'dashmate_action_after_page_title', [ $this, 'add_settings_app' ] );
 
-		add_filter(
-			'linkit_menu_bar_pages',
-			function ( $pages ) {
-				return array_merge( $pages, [ 'toplevel_page_dashmate' ] );
-			}
-		);
-
 		// Initialize widgets after init hook to ensure text domain is loaded.
 		add_action( 'init', [ $this, 'init_widgets' ] );
 
