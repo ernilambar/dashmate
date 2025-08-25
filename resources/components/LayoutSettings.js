@@ -56,6 +56,7 @@ export default function LayoutSettings( { onClose } ) {
 			onClose={ onClose }
 			title="Layout Settings"
 			showRemoveButton={ false }
+			showCancelButton={ true }
 		/>
 	);
 }

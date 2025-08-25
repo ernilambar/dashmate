@@ -31,6 +31,7 @@ export default function GenericSettingsForm( {
 	removeButtonText = 'Remove',
 	removeButtonTitle = 'Remove Item',
 	itemId,
+	showCancelButton = false,
 } ) {
 	const [ localValues, setLocalValues ] = React.useState( values );
 	const [ isSaving, setIsSaving ] = React.useState( false );
@@ -344,6 +345,16 @@ export default function GenericSettingsForm( {
 						isDestructive
 						onClick={ handleRemove }
 						title={ removeButtonTitle }
+						className="remove-button"
+					>
+						<Icon name="close" library="material-icons" size="small" />
+					</Button>
+				) }
+				{ showCancelButton && (
+					<Button
+						isDestructive
+						onClick={ onClose }
+						title="Cancel"
 						className="remove-button"
 					>
 						<Icon name="close" library="material-icons" size="small" />
