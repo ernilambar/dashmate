@@ -121,7 +121,7 @@ class TabularWidget extends React.Component {
 		const id = this.extractIdFromRow( row );
 
 		// Build request data.
-		const requestData = {
+		let requestData = {
 			id: id,
 			action: action,
 			widget_id: this.props.widgetId,
@@ -131,20 +131,42 @@ class TabularWidget extends React.Component {
 			timestamp: new Date().toISOString(),
 		};
 
+		// Always merge extra_data if provided in action configuration.
+		if ( actionConfig.extra_data ) {
+			Object.assign( requestData, actionConfig.extra_data );
+		}
+
+		// For admin-ajax.php, override action with the one from extra_data if available.
+		if ( actionConfig.endpoint && actionConfig.endpoint.includes( 'admin-ajax.php' ) ) {
+			if ( actionConfig.extra_data?.action ) {
+				requestData.action = actionConfig.extra_data.action;
+			}
+		}
+
 		// Determine HTTP method from configuration.
 		const method = actionConfig.methods || 'POST';
+
+		// Check if we should use form data (for WordPress admin-ajax.php compatibility).
+		const useFormData =
+			actionConfig.endpoint && actionConfig.endpoint.includes( 'admin-ajax.php' );
 
 		// Prepare fetch options.
 		const fetchOptions = {
 			method: method,
-			headers: {
-				'Content-Type': 'application/json',
-			},
+			headers: {},
 		};
 
 		// Add body for non-GET requests.
 		if ( method !== 'GET' ) {
-			fetchOptions.body = JSON.stringify( requestData );
+			if ( useFormData ) {
+				// Use form data for WordPress admin-ajax.php.
+				fetchOptions.headers[ 'Content-Type' ] = 'application/x-www-form-urlencoded';
+				fetchOptions.body = new URLSearchParams( requestData );
+			} else {
+				// Use JSON for other endpoints.
+				fetchOptions.headers[ 'Content-Type' ] = 'application/json';
+				fetchOptions.body = JSON.stringify( requestData );
+			}
 		}
 
 		// Call external API endpoint.
@@ -175,22 +197,30 @@ class TabularWidget extends React.Component {
 	 * @return {string} Extracted ID.
 	 */
 	extractIdFromRow = ( row ) => {
-		if ( ! row.cells || ! row.cells[ 0 ] || ! row.cells[ 0 ].text ) {
+		if ( ! row.cells || ! row.cells[ 0 ] ) {
 			throw new Error( 'Could not extract ID from row data.' );
 		}
 
-		const cellText = row.cells[ 0 ].text;
+		const firstCell = row.cells[ 0 ];
 
-		// Try to extract ID from HTML link.
-		const linkMatch = cellText.match( /<a[^>]*>(\d+)<\/a>/ );
-		if ( linkMatch ) {
-			return linkMatch[ 1 ]; // Extract the number inside the link.
-		}
+		// First try to get ID from data-id attribute in the HTML link.
+		if ( firstCell.text ) {
+			const dataIdMatch = firstCell.text.match( /data-id="(\d+)"/ );
+			if ( dataIdMatch ) {
+				return dataIdMatch[ 1 ]; // Extract the data-id value.
+			}
 
-		// Fallback: try to extract just the number.
-		const numberMatch = cellText.match( /(\d+)/ );
-		if ( numberMatch ) {
-			return numberMatch[ 1 ];
+			// Fallback: try to extract ID from HTML link text.
+			const linkMatch = firstCell.text.match( /<a[^>]*>(\d+)<\/a>/ );
+			if ( linkMatch ) {
+				return linkMatch[ 1 ]; // Extract the number inside the link.
+			}
+
+			// Fallback: try to extract just the number.
+			const numberMatch = firstCell.text.match( /(\d+)/ );
+			if ( numberMatch ) {
+				return numberMatch[ 1 ];
+			}
 		}
 
 		throw new Error( 'Could not extract ID from row data.' );
