@@ -14,7 +14,7 @@
  * @package Dashmate
  */
 
-use Nilambar\Dashmate\Boot\Loader;
+use Nilambar\Dashmate\Core\Bootstrap;
 
 // Define.
 define( 'DASHMATE_VERSION', '1.0.0' );
@@ -33,6 +33,6 @@ if ( file_exists( DASHMATE_DIR . '/vendor/autoload.php' ) ) {
 add_action(
 	'plugins_loaded',
 	function () {
-		new Loader();
+		new Bootstrap();
 	}
 );

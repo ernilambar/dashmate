@@ -1,22 +1,22 @@
 <?php
 /**
- * Loader
+ * Bootstrap
  *
  * @package Dashmate
  */
 
-namespace Nilambar\Dashmate\Boot;
+namespace Nilambar\Dashmate\Core;
 
 use Nilambar\Dashmate\Admin\Admin_Page;
 use Nilambar\Dashmate\API\API_Main;
 use Nilambar\Dashmate\Widget_Initializer;
 
 /**
- * Loader class.
+ * Bootstrap class.
  *
  * @since 1.0.0
  */
-class Loader {
+class Bootstrap {
 
 	/**
 	 * Constructor.
