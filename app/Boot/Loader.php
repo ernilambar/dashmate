@@ -24,10 +24,8 @@ class Loader {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-		add_action( 'dashmate_action_after_page_title', [ $this, 'add_settings_app' ] );
-
-		// Initialize widgets after init hook to ensure text domain is loaded.
 		add_action( 'init', [ $this, 'init_widgets' ] );
+		add_filter( 'plugin_action_links_' . DASHMATE_BASE_FILENAME, [ $this, 'customize_action_links' ] );
 
 		new API_Main();
 		new Admin_Page();
@@ -40,5 +38,21 @@ class Loader {
 	 */
 	public function init_widgets() {
 		Widget_Initializer::init();
+	}
+
+	/**
+	 * Customize plugin action links.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $actions Action links.
+	 * @return array Modified action links.
+	 */
+	public function customize_action_links( $actions ) {
+		$url = add_query_arg( [ 'page' => 'dashmate' ], admin_url( 'admin.php' ) );
+
+		$actions = [ 'dashmate' => '<a href="' . esc_url( $url ) . '">' . esc_html__( 'Dashmate', 'dashmate' ) . '</a>' ] + $actions;
+
+		return $actions;
 	}
 }
