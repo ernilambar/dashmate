@@ -22,7 +22,7 @@ class TabularWidget extends React.Component {
 	/**
 	 * Handle action click with proper state management.
 	 *
-	 * @param {string} action Action type (sync, delete).
+	 * @param {string} action Action type.
 	 * @param {Object} row Row data.
 	 * @param {number} rowIndex Row index.
 	 * @param {number} tableIndex Table index.
@@ -46,25 +46,7 @@ class TabularWidget extends React.Component {
 		try {
 			let actionCompleted = false;
 
-			switch ( action ) {
-				case 'delete':
-					actionCompleted = await this.handleDeleteAction( row, rowIndex, tableIndex );
-					break;
-				case 'sync':
-					await this.handleSyncAction( row, rowIndex, tableIndex );
-					actionCompleted = true; // Sync actions don't have cancellation.
-					break;
-				case 'snooze':
-					await this.handleSnoozeAction( row, rowIndex, tableIndex );
-					actionCompleted = true; // Snooze actions don't have cancellation.
-					break;
-				case 'unsnooze':
-					await this.handleUnsnoozeAction( row, rowIndex, tableIndex );
-					actionCompleted = true; // Unsnooze actions don't have cancellation.
-					break;
-				default:
-					throw new Error( `Unknown action: ${ action }` );
-			}
+			actionCompleted = await this.handleGenericAction( action, row, rowIndex, tableIndex );
 
 			// Only set success state if action was actually completed (not cancelled).
 			if ( actionCompleted ) {
@@ -110,6 +92,83 @@ class TabularWidget extends React.Component {
 	};
 
 	/**
+	 * Generic action handler that uses configuration from PHP.
+	 *
+	 * @param {string} action Action type.
+	 * @param {Object} row Row data.
+	 * @param {number} rowIndex Row index.
+	 * @param {number} tableIndex Table index.
+	 * @returns {boolean} True if action was completed successfully, false if cancelled.
+	 */
+	handleGenericAction = async ( action, row, rowIndex, tableIndex ) => {
+		// Get action configuration from row.
+		const actionConfig = row.actions?.[ action ];
+		if ( ! actionConfig || ! actionConfig.endpoint ) {
+			throw new Error( `${ action } action not configured for this row.` );
+		}
+
+		// Check if confirmation is required.
+		if ( actionConfig.requires_confirmation ) {
+			const confirmationMessage = actionConfig.confirmation_text || 'Are you sure?';
+			const confirmed = window.confirm( confirmationMessage );
+			if ( ! confirmed ) {
+				// Return false to indicate action was cancelled.
+				return false;
+			}
+		}
+
+		// Extract ID from the first cell.
+		const id = this.extractIdFromRow( row );
+
+		// Build request data.
+		const requestData = {
+			id: id,
+			action: action,
+			widget_id: this.props.widgetId,
+			row_data: row,
+			row_index: rowIndex,
+			table_index: tableIndex,
+			timestamp: new Date().toISOString(),
+		};
+
+		// Determine HTTP method from configuration.
+		const method = actionConfig.methods || 'POST';
+
+		// Prepare fetch options.
+		const fetchOptions = {
+			method: method,
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		};
+
+		// Add body for non-GET requests.
+		if ( method !== 'GET' ) {
+			fetchOptions.body = JSON.stringify( requestData );
+		}
+
+		// Call external API endpoint.
+		const response = await fetch( actionConfig.endpoint, fetchOptions );
+
+		if ( ! response.ok ) {
+			const errorData = await response
+				.json()
+				.catch( () => ( { message: 'Network error.' } ) );
+			throw new Error( errorData.message || `Failed to ${ action } item.` );
+		}
+
+		const result = await response.json();
+
+		// Handle special case for delete action - remove row from UI.
+		if ( action === 'delete' ) {
+			this.handleSuccessfulDelete( rowIndex, tableIndex );
+		}
+
+		// Return true to indicate successful completion.
+		return true;
+	};
+
+	/**
 	 * Extract ID from row data.
 	 *
 	 * @param {Object} row Row data.
@@ -135,68 +194,6 @@ class TabularWidget extends React.Component {
 		}
 
 		throw new Error( 'Could not extract ID from row data.' );
-	};
-
-	/**
-	 * Handle delete action with confirmation.
-	 *
-	 * @returns {boolean} True if action was completed successfully, false if cancelled.
-	 */
-	handleDeleteAction = async ( row, rowIndex, tableIndex ) => {
-		// Get action configuration from row.
-		const actionConfig = row.actions?.delete;
-		if ( ! actionConfig || ! actionConfig.endpoint ) {
-			throw new Error( 'Delete action not configured for this row.' );
-		}
-
-		// Check if confirmation is required.
-		if ( actionConfig.requires_confirmation ) {
-			const confirmationMessage =
-				actionConfig.message || 'Are you sure you want to delete this item?';
-			const confirmed = window.confirm( confirmationMessage );
-			if ( ! confirmed ) {
-				// Return false to indicate action was cancelled.
-				return false;
-			}
-		}
-
-		// Extract ID from the first cell.
-		const id = this.extractIdFromRow( row );
-
-		// Build request data.
-		const requestData = {
-			id: id,
-			action: 'delete',
-			widget_id: this.props.widgetId,
-			row_data: row,
-			row_index: rowIndex,
-			table_index: tableIndex,
-			timestamp: new Date().toISOString(),
-		};
-
-		// Call external API endpoint.
-		const response = await fetch( actionConfig.endpoint, {
-			method: 'DELETE',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify( requestData ),
-		} );
-
-		if ( ! response.ok ) {
-			const errorData = await response
-				.json()
-				.catch( () => ( { message: 'Network error.' } ) );
-			throw new Error( errorData.message || 'Failed to delete item.' );
-		}
-
-		const result = await response.json();
-
-		// On successful deletion, trigger fade-out animation and remove row.
-		this.handleSuccessfulDelete( rowIndex, tableIndex );
-
-		// Return true to indicate successful completion.
-		return true;
 	};
 
 	/**
@@ -227,135 +224,6 @@ class TabularWidget extends React.Component {
 	isRowRemoved = ( rowIndex, tableIndex ) => {
 		const rowKey = `${ tableIndex }-${ rowIndex }`;
 		return this.state.removedRows[ rowKey ] || false;
-	};
-
-	/**
-	 * Handle sync action.
-	 */
-	handleSyncAction = async ( row, rowIndex, tableIndex ) => {
-		// Get action configuration from row.
-		const actionConfig = row.actions?.sync;
-
-		if ( ! actionConfig || ! actionConfig.endpoint ) {
-			throw new Error( 'Sync action not configured for this row.' );
-		}
-
-		// Extract ID from the first cell.
-		const id = this.extractIdFromRow( row );
-
-		// Build request data.
-		const requestData = {
-			id: id,
-			widget_id: this.props.widgetId,
-			row_data: row,
-			row_index: rowIndex,
-			table_index: tableIndex,
-			timestamp: new Date().toISOString(),
-		};
-
-		// Call external API endpoint.
-		const response = await fetch( actionConfig.endpoint, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify( requestData ),
-		} );
-
-		if ( ! response.ok ) {
-			const errorData = await response
-				.json()
-				.catch( () => ( { message: 'Network error.' } ) );
-			throw new Error( errorData.message || 'Sync failed.' );
-		}
-
-		const result = await response.json();
-	};
-
-	/**
-	 * Handle snooze action.
-	 */
-	handleSnoozeAction = async ( row, rowIndex, tableIndex ) => {
-		// Get action configuration from row.
-		const actionConfig = row.actions?.snooze;
-
-		if ( ! actionConfig || ! actionConfig.endpoint ) {
-			throw new Error( 'Snooze action not configured for this row.' );
-		}
-
-		// Extract ID from the first cell.
-		const id = this.extractIdFromRow( row );
-
-		// Build request data.
-		const requestData = {
-			id: id,
-			widget_id: this.props.widgetId,
-			row_data: row,
-			row_index: rowIndex,
-			table_index: tableIndex,
-			timestamp: new Date().toISOString(),
-		};
-
-		// Call external API endpoint.
-		const response = await fetch( actionConfig.endpoint, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify( requestData ),
-		} );
-
-		if ( ! response.ok ) {
-			const errorData = await response
-				.json()
-				.catch( () => ( { message: 'Network error.' } ) );
-			throw new Error( errorData.message || 'Snooze failed.' );
-		}
-
-		const result = await response.json();
-	};
-
-	/**
-	 * Handle unsnooze action.
-	 */
-	handleUnsnoozeAction = async ( row, rowIndex, tableIndex ) => {
-		// Get action configuration from row.
-		const actionConfig = row.actions?.unsnooze;
-
-		if ( ! actionConfig || ! actionConfig.endpoint ) {
-			throw new Error( 'Unsnooze action not configured for this row.' );
-		}
-
-		// Extract ID from the first cell.
-		const id = this.extractIdFromRow( row );
-
-		// Build request data.
-		const requestData = {
-			id: id,
-			widget_id: this.props.widgetId,
-			row_data: row,
-			row_index: rowIndex,
-			table_index: tableIndex,
-			timestamp: new Date().toISOString(),
-		};
-
-		// Call external API endpoint.
-		const response = await fetch( actionConfig.endpoint, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify( requestData ),
-		} );
-
-		if ( ! response.ok ) {
-			const errorData = await response
-				.json()
-				.catch( () => ( { message: 'Network error.' } ) );
-			throw new Error( errorData.message || 'Unsnooze failed.' );
-		}
-
-		const result = await response.json();
 	};
 
 	/**
@@ -434,7 +302,7 @@ class TabularWidget extends React.Component {
 				{ isLoading ? (
 					<span className="loading-spinner"></span>
 				) : (
-					this.getActionIcon( action )
+					this.getActionIcon( action, row )
 				) }
 				{ result && (
 					<span
@@ -450,7 +318,7 @@ class TabularWidget extends React.Component {
 	};
 
 	/**
-	 * Get action title.
+	 * Get action title from configuration.
 	 */
 	getActionTitle = ( action, row ) => {
 		const actionConfig = row.actions && row.actions[ action ];
@@ -459,32 +327,22 @@ class TabularWidget extends React.Component {
 			return actionConfig.title;
 		}
 
-		const titles = {
-			delete: 'Delete',
-			sync: 'Sync',
-			snooze: 'Snooze',
-			unsnooze: 'Unsnooze',
-		};
-
-		return titles[ action ] || action;
+		// Fallback to action name if no title configured.
+		return action;
 	};
 
 	/**
-	 * Get action icon.
+	 * Get action icon from configuration.
 	 */
-	getActionIcon = ( action ) => {
-		switch ( action ) {
-			case 'delete':
-				return <Icon name="highlight_off" size="medium" />;
-			case 'sync':
-				return <Icon name="autorenew" size="medium" />;
-			case 'snooze':
-				return <Icon name="schedule" size="medium" />;
-			case 'unsnooze':
-				return <Icon name="restore" size="medium" />;
-			default:
-				return <Icon name="settings" size="medium" />;
+	getActionIcon = ( action, row ) => {
+		const actionConfig = row.actions && row.actions[ action ];
+
+		if ( actionConfig && actionConfig.icon ) {
+			return <Icon name={ actionConfig.icon } size="medium" />;
 		}
+
+		// Fallback to default icon if no icon configured.
+		return <Icon name="settings" size="medium" />;
 	};
 
 	/**
