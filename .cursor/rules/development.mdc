@@ -16,7 +16,7 @@ alwaysApply: true
   - Favor hooks (actions and filters) for extending functionality.
 
   PHP/WordPress
-  - Use PHP 7.4+ features when appropriate (e.g., typed properties)
+  - Use PHP 7.4+ features when appropriate (e.g., typed properties).
   - Minimum supported PHP version is 7.4.
   - Follow WordPress PHP Coding Standards.
   - Utilize WordPress core functions and APIs when available.
@@ -32,10 +32,8 @@ alwaysApply: true
   - Use prepare() statements for secure database queries.
   - Implement proper database schema changes using dbDelta() function.
   - Use Yoda conditions in conditionals.
-  - When possible use snake case naming convention.
-  - Use PSR4 for naming PHP class name and file name.
-  - Inline comments in any type of files (PHP, JS, CSS, etc) should start with capital letter and end with period character.
-  - Inline comments should be concise.
+  - When possible, use Snake Case naming convention.
+  - Use PSR4 for naming PHP class names and file names.
   - Always use `use` import statements for PHP classes instead of fully qualified class names (e.g., `use WP_Error;` instead of `\WP_Error`, `use WP_Query;` instead of `\WP_Query`, `use Exception;` instead of `\Exception`, etc.).
 
   Dependencies
@@ -43,14 +41,19 @@ alwaysApply: true
   - Composer for dependency management (when building advanced plugins or themes)
 
   Package Management
-  - This project uses **pnpm** as the package manager
-  - Always use `pnpm` commands instead of `npm` commands
+  - This project uses **pnpm** as the package manager.
+  - Always use `pnpm` commands instead of `npm` commands.
   - Use `pnpm install`, `pnpm run build`, `pnpm run dev`, etc.
-  - Never use `npm` commands in this project
+  - Never use `npm` commands in this project.
 
-  Things to remember
+  Inline Comments
+  - Inline comments in any type of files (PHP, JS, CSS, etc.) should start with a capital letter and end with a period character.
+  - Inline comments should be concise and generic.
+  - Do not mention task-specific text in the comment.
+
+  Things to Remember
   - This project uses PostCSS. Nested CSS is encouraged but only to two levels.
-  - Do not use & operator for expanding selector name. Like avoid "&--active{}"
+  - Do not use the & operator for expanding selector names. Like avoid "&--active".
 
   WordPress Best Practices
   - Use WordPress hooks (actions and filters) instead of modifying core files.
@@ -76,20 +79,20 @@ alwaysApply: true
   10. Use WordPress's WP_Cron API for scheduling tasks.
 
   Documentation
-  - Use markdown format (with md file extension)
-  - Use generic content and examples instead of project specific.
-  - Use concise and professional tone
+  - Use markdown format (with .md file extension).
+  - Use generic content and examples instead of project-specific content.
+  - Use concise and professional tone.
 
   WordPress REST API Standards
   - Follow WordPress REST API response format:
     - Success: `{ success: true, message: '...', data: {...} }`
-    - Error: Use `WP_Error` with proper status codes
-  - Use WordPress sanitization functions for input validation
-  - Include proper nonce verification for security
-  - Use descriptive endpoint names and HTTP methods appropriately
-  - Follow WordPress coding standards for REST API development
+    - Error: Use `WP_Error` with proper status codes.
+  - Use WordPress sanitization functions for input validation.
+  - Include proper nonce verification for security.
+  - Use descriptive endpoint names and HTTP methods appropriately.
+  - Follow WordPress coding standards for REST API development.
 
   Before Making Code Changes:
-  - If the user asks about naming conventions, design patterns, or architecture decisions, provide recommendations and wait for their choice
-  - Do not write or modify code unless the user explicitly asks you to implement something
-  - Always confirm the user's intent before proceeding with any implementation
+  - If the user asks about naming conventions, design patterns, or architecture decisions, provide recommendations and wait for their choice.
+  - Do not write or modify code unless the user explicitly asks you to implement something.
+  - Always confirm the user's intent before proceeding with any implementation.
