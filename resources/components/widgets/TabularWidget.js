@@ -516,7 +516,6 @@ class TabularWidget extends React.Component {
 					e.stopPropagation();
 					this.handleExpandRow( row, rowIndex, tableIndex );
 				} }
-				title={ isExpanded ? 'Collapse Details' : 'Expand Details' }
 				disabled={ isLoading }
 			>
 				{ isLoading ? (
