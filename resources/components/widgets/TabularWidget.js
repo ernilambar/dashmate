@@ -1,5 +1,6 @@
 import React from 'react';
 import Icon from '../Icon';
+import Mustache from 'mustache';
 
 class TabularWidget extends React.Component {
 	constructor( props ) {
@@ -274,13 +275,15 @@ class TabularWidget extends React.Component {
 		// Get API endpoint from settings.
 		const { data } = this.props;
 		const { tabular_settings = {} } = data || {};
-		const {
-			child_row_api_endpoint = 'https://jsonplaceholder.typicode.com/posts/{id}',
-			child_row_title = 'Details',
-		} = tabular_settings;
+		const { child_row_api_endpoint = '', child_row_html_template = '' } = tabular_settings;
 
-		// Replace {id} placeholder with actual ID.
-		const apiEndpoint = child_row_api_endpoint.replace( '{id}', id );
+		// Check if API endpoint is configured.
+		if ( ! child_row_api_endpoint ) {
+			throw new Error( 'API endpoint not configured for child rows.' );
+		}
+
+		// Construct the full API endpoint by appending the ID.
+		const apiEndpoint = `${ child_row_api_endpoint }/${ id }`;
 
 		const response = await fetch( apiEndpoint );
 
@@ -290,25 +293,36 @@ class TabularWidget extends React.Component {
 
 		const responseData = await response.json();
 
-		// Return HTML content for the child row.
-		// You can modify this to match your actual API response structure.
-		return {
-			html: `
-				<div class="child-row-content">
-					<h4>${ child_row_title } for ID: ${ id }</h4>
-					<div class="child-row-details">
-						<p><strong>Title:</strong> ${ responseData.title }</p>
-						<p><strong>Body:</strong> ${ responseData.body }</p>
-						<p><strong>User ID:</strong> ${ responseData.userId }</p>
-						<p><strong>Post ID:</strong> ${ responseData.id }</p>
-					</div>
-					<div class="child-row-actions">
-						<button class="btn btn-primary">View Full Details</button>
-						<button class="btn btn-secondary">Edit</button>
-					</div>
-				</div>
-			`,
-		};
+		// Generate HTML content using the provided template.
+		const html = this.generateChildRowHtml( responseData, id, child_row_html_template );
+
+		return { html };
+	};
+
+	/**
+	 * Generate HTML content for child row using provided template.
+	 *
+	 * @param {Object} data API response data.
+	 * @param {string} id Row ID.
+	 * @param {string} htmlTemplate HTML template string.
+	 * @returns {string} Generated HTML.
+	 */
+	generateChildRowHtml = ( data, id, htmlTemplate ) => {
+		if ( ! htmlTemplate ) {
+			// Return empty content if no template provided.
+			return '<div class="child-row-content"><p>No template configured.</p></div>';
+		}
+
+		try {
+			// Pass data with id included.
+			const templateData = { ...data, id };
+
+			// Render template with Mustache.
+			return Mustache.render( htmlTemplate, templateData );
+		} catch ( error ) {
+			console.error( 'Template compilation error:', error );
+			return '<div class="child-row-content"><p>Template error. Please check your template syntax.</p></div>';
+		}
 	};
 
 	/**
@@ -527,11 +541,6 @@ class TabularWidget extends React.Component {
 		const isLoading = this.isChildRowLoading( rowIndex, tableIndex );
 		const childData = this.getChildRowData( rowIndex, tableIndex );
 
-		// Get loading text from settings.
-		const { data } = this.props;
-		const { tabular_settings = {} } = data || {};
-		const { child_row_loading_text = 'Loading details...' } = tabular_settings;
-
 		if ( ! isExpanded ) {
 			return null;
 		}
@@ -542,7 +551,7 @@ class TabularWidget extends React.Component {
 					<td colSpan="100%">
 						<div className="child-row-loading">
 							<span className="loading-spinner"></span>
-							<span>{ child_row_loading_text }</span>
+							<span>Loading...</span>
 						</div>
 					</td>
 				</tr>
@@ -631,7 +640,7 @@ class TabularWidget extends React.Component {
 		if ( cellIndex === 0 ) {
 			const { data } = this.props;
 			const { tabular_settings = {} } = data || {};
-			const { enable_child_rows = true } = tabular_settings;
+			const { enable_child_rows = false } = tabular_settings;
 
 			if ( enable_child_rows ) {
 				return (
@@ -757,14 +766,8 @@ class TabularWidget extends React.Component {
 
 		const firstCell = row.cells[ 0 ];
 
-		// First try to get ID from data-id attribute in the HTML link.
 		if ( firstCell.text ) {
-			const dataIdMatch = firstCell.text.match( /data-id="(\d+)"/ );
-			if ( dataIdMatch ) {
-				return parseInt( dataIdMatch[ 1 ], 10 ).toString(); // Convert to number and back to remove leading zeros.
-			}
-
-			// Fallback: try to extract ID from HTML link text.
+			// Try to extract ID from HTML link text (e.g., <a>#001</a>).
 			const linkMatch = firstCell.text.match( /<a[^>]*>#?(\d+)<\/a>/ );
 			if ( linkMatch ) {
 				return parseInt( linkMatch[ 1 ], 10 ).toString(); // Convert to number and back to remove leading zeros.
@@ -775,9 +778,18 @@ class TabularWidget extends React.Component {
 			if ( numberMatch ) {
 				return parseInt( numberMatch[ 1 ], 10 ).toString(); // Convert to number and back to remove leading zeros.
 			}
+
+			// Fallback: try to get ID from data-id attribute in the HTML link.
+			const dataIdMatch = firstCell.text.match( /data-id="(\d+)"/ );
+			if ( dataIdMatch ) {
+				return parseInt( dataIdMatch[ 1 ], 10 ).toString(); // Convert to number and back to remove leading zeros.
+			}
 		}
 
-		throw new Error( 'Could not extract ID from row data.' );
+		// If all else fails, throw an error.
+		throw new Error(
+			'Could not extract ID from row data. Please check the first cell content.'
+		);
 	};
 
 	/**
