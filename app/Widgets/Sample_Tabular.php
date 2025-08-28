@@ -257,9 +257,14 @@ class Sample_Tabular extends Abstract_Widget {
 		$orders['rows'] = array_slice( $orders['rows'], 0, (int) $max_items );
 
 		return [
-			'tables' => [
+			'tables'           => [
 				$products,
 				$orders,
+			],
+			'tabular_settings' => [
+				'enable_child_rows'       => $settings['enable_child_rows'] ?? true,
+				'child_row_api_endpoint'  => $settings['child_row_api_endpoint'] ?? 'https://jsonplaceholder.typicode.com/posts',
+				'child_row_html_template' => $settings['child_row_html_template'] ?? $this->get_default_child_row_template(),
 			],
 		];
 	}
@@ -282,5 +287,40 @@ class Sample_Tabular extends Abstract_Widget {
 			}
 		}
 		return $filtered_cells;
+	}
+
+	/**
+	 * Get default child row HTML template.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string Default HTML template.
+	 */
+	private function get_default_child_row_template(): string {
+		return '
+<div class="child-row-content">
+    <h4>Details for ID: {{id}}</h4>
+    <div class="child-row-details">
+        {{#title}}
+            <p><strong>Title:</strong> {{title}}</p>
+        {{/title}}
+        {{#body}}
+            <p><strong>Content:</strong> {{body}}</p>
+        {{/body}}
+        {{#userId}}
+            <p><strong>User ID:</strong> {{userId}}</p>
+        {{/userId}}
+        {{#name}}
+            <p><strong>Name:</strong> {{name}}</p>
+        {{/name}}
+        {{#email}}
+            <p><strong>Email:</strong> {{email}}</p>
+        {{/email}}
+    </div>
+    <div class="child-row-actions">
+        <button class="btn btn-primary">View Details</button>
+        <button class="btn btn-secondary">Edit</button>
+    </div>
+</div>';
 	}
 }
