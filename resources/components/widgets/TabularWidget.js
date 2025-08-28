@@ -8,6 +8,9 @@ class TabularWidget extends React.Component {
 			loadingActions: {}, // Track loading state for each action.
 			actionResults: {}, // Track success/error states.
 			removedRows: {}, // Track rows that have been removed from UI.
+			expandedRows: {}, // Track which rows are expanded.
+			childRowData: {}, // Store child row HTML content.
+			loadingChildRows: {}, // Track loading state for child rows.
 		};
 	}
 
@@ -191,57 +194,121 @@ class TabularWidget extends React.Component {
 	};
 
 	/**
-	 * Extract ID from row data.
+	 * Handle expand/collapse child row.
 	 *
 	 * @param {Object} row Row data.
-	 * @return {string} Extracted ID.
-	 */
-	extractIdFromRow = ( row ) => {
-		if ( ! row.cells || ! row.cells[ 0 ] ) {
-			throw new Error( 'Could not extract ID from row data.' );
-		}
-
-		const firstCell = row.cells[ 0 ];
-
-		// First try to get ID from data-id attribute in the HTML link.
-		if ( firstCell.text ) {
-			const dataIdMatch = firstCell.text.match( /data-id="(\d+)"/ );
-			if ( dataIdMatch ) {
-				return dataIdMatch[ 1 ]; // Extract the data-id value.
-			}
-
-			// Fallback: try to extract ID from HTML link text.
-			const linkMatch = firstCell.text.match( /<a[^>]*>(\d+)<\/a>/ );
-			if ( linkMatch ) {
-				return linkMatch[ 1 ]; // Extract the number inside the link.
-			}
-
-			// Fallback: try to extract just the number.
-			const numberMatch = firstCell.text.match( /(\d+)/ );
-			if ( numberMatch ) {
-				return numberMatch[ 1 ];
-			}
-		}
-
-		throw new Error( 'Could not extract ID from row data.' );
-	};
-
-	/**
-	 * Handle successful delete action - simply remove row from UI.
-	 *
 	 * @param {number} rowIndex Row index.
 	 * @param {number} tableIndex Table index.
 	 */
-	handleSuccessfulDelete = ( rowIndex, tableIndex ) => {
+	handleExpandRow = async ( row, rowIndex, tableIndex ) => {
 		const rowKey = `${ tableIndex }-${ rowIndex }`;
+		const isCurrentlyExpanded = this.state.expandedRows[ rowKey ];
 
-		// Mark row as removed to hide it from UI.
-		this.setState( ( prevState ) => ( {
-			removedRows: {
-				...prevState.removedRows,
-				[ rowKey ]: true,
-			},
-		} ) );
+		if ( isCurrentlyExpanded ) {
+			// Collapse the row.
+			this.setState( ( prevState ) => ( {
+				expandedRows: {
+					...prevState.expandedRows,
+					[ rowKey ]: false,
+				},
+			} ) );
+		} else {
+			// Expand the row and fetch child data.
+			this.setState( ( prevState ) => ( {
+				expandedRows: {
+					...prevState.expandedRows,
+					[ rowKey ]: true,
+				},
+				loadingChildRows: {
+					...prevState.loadingChildRows,
+					[ rowKey ]: true,
+				},
+			} ) );
+
+			try {
+				// Fetch child row data from third-party API.
+				const childData = await this.fetchChildRowData( row, rowIndex, tableIndex );
+
+				this.setState( ( prevState ) => ( {
+					childRowData: {
+						...prevState.childRowData,
+						[ rowKey ]: childData,
+					},
+				} ) );
+			} catch ( error ) {
+				console.error( 'Failed to fetch child row data:', error );
+				// Set error state in child row data.
+				this.setState( ( prevState ) => ( {
+					childRowData: {
+						...prevState.childRowData,
+						[ rowKey ]: {
+							error: true,
+							message: error.message || 'Failed to load child row data.',
+						},
+					},
+				} ) );
+			} finally {
+				// Clear loading state.
+				this.setState( ( prevState ) => ( {
+					loadingChildRows: {
+						...prevState.loadingChildRows,
+						[ rowKey ]: false,
+					},
+				} ) );
+			}
+		}
+	};
+
+	/**
+	 * Fetch child row data from third-party API.
+	 *
+	 * @param {Object} row Row data.
+	 * @param {number} rowIndex Row index.
+	 * @param {number} tableIndex Table index.
+	 * @returns {Promise<Object>} Child row data.
+	 */
+	fetchChildRowData = async ( row, rowIndex, tableIndex ) => {
+		// Extract ID from the row for the API call.
+		const id = this.extractIdFromRow( row );
+
+		// Get API endpoint from settings.
+		const { data } = this.props;
+		const { tabular_settings = {} } = data || {};
+		const {
+			child_row_api_endpoint = 'https://jsonplaceholder.typicode.com/posts/{id}',
+			child_row_title = 'Details',
+		} = tabular_settings;
+
+		// Replace {id} placeholder with actual ID.
+		const apiEndpoint = child_row_api_endpoint.replace( '{id}', id );
+
+		const response = await fetch( apiEndpoint );
+
+		if ( ! response.ok ) {
+			throw new Error( `Failed to fetch child data: ${ response.statusText }` );
+		}
+
+		const responseData = await response.json();
+
+		// Return HTML content for the child row.
+		// You can modify this to match your actual API response structure.
+		return {
+			html: `
+				<div class="child-row-content">
+					<h4>${ child_row_title } for ID: ${ id }</h4>
+					<div class="child-row-details">
+						<p><strong>Title:</strong> ${ responseData.title }</p>
+						<p><strong>Body:</strong> ${ responseData.body }</p>
+						<p><strong>User ID:</strong> ${ responseData.userId }</p>
+						<p><strong>Post ID:</strong> ${ responseData.id }</p>
+					</div>
+					<div class="child-row-actions">
+						<button class="btn btn-primary">View Full Details</button>
+						<button class="btn btn-secondary">Edit</button>
+					</div>
+				</div>
+			`,
+		};
 	};
 
 	/**
@@ -254,6 +321,42 @@ class TabularWidget extends React.Component {
 	isRowRemoved = ( rowIndex, tableIndex ) => {
 		const rowKey = `${ tableIndex }-${ rowIndex }`;
 		return this.state.removedRows[ rowKey ] || false;
+	};
+
+	/**
+	 * Check if a row is expanded.
+	 *
+	 * @param {number} rowIndex Row index.
+	 * @param {number} tableIndex Table index.
+	 * @returns {boolean} True if row is expanded.
+	 */
+	isRowExpanded = ( rowIndex, tableIndex ) => {
+		const rowKey = `${ tableIndex }-${ rowIndex }`;
+		return this.state.expandedRows[ rowKey ] || false;
+	};
+
+	/**
+	 * Check if child row is loading.
+	 *
+	 * @param {number} rowIndex Row index.
+	 * @param {number} tableIndex Table index.
+	 * @returns {boolean} True if child row is loading.
+	 */
+	isChildRowLoading = ( rowIndex, tableIndex ) => {
+		const rowKey = `${ tableIndex }-${ rowIndex }`;
+		return this.state.loadingChildRows[ rowKey ] || false;
+	};
+
+	/**
+	 * Get child row data.
+	 *
+	 * @param {number} rowIndex Row index.
+	 * @param {number} tableIndex Table index.
+	 * @returns {Object|null} Child row data.
+	 */
+	getChildRowData = ( rowIndex, tableIndex ) => {
+		const rowKey = `${ tableIndex }-${ rowIndex }`;
+		return this.state.childRowData[ rowKey ] || null;
 	};
 
 	/**
@@ -376,6 +479,106 @@ class TabularWidget extends React.Component {
 	};
 
 	/**
+	 * Render expand/collapse icon.
+	 *
+	 * @param {Object} row Row data.
+	 * @param {number} rowIndex Row index.
+	 * @param {number} tableIndex Table index.
+	 * @returns {JSX.Element} Expand/collapse icon.
+	 */
+	renderExpandIcon = ( row, rowIndex, tableIndex ) => {
+		const isExpanded = this.isRowExpanded( rowIndex, tableIndex );
+		const isLoading = this.isChildRowLoading( rowIndex, tableIndex );
+
+		let iconName = 'expand_more';
+		if ( isExpanded ) {
+			iconName = 'expand_less';
+		}
+
+		return (
+			<button
+				className="expand-row-btn"
+				onClick={ ( e ) => {
+					e.stopPropagation();
+					this.handleExpandRow( row, rowIndex, tableIndex );
+				} }
+				title={ isExpanded ? 'Collapse Details' : 'Expand Details' }
+				disabled={ isLoading }
+			>
+				{ isLoading ? (
+					<span className="loading-spinner small"></span>
+				) : (
+					<Icon name={ iconName } size="small" />
+				) }
+			</button>
+		);
+	};
+
+	/**
+	 * Render child row content.
+	 *
+	 * @param {Object} row Row data.
+	 * @param {number} rowIndex Row index.
+	 * @param {number} tableIndex Table index.
+	 * @returns {JSX.Element|null} Child row content.
+	 */
+	renderChildRow = ( row, rowIndex, tableIndex ) => {
+		const isExpanded = this.isRowExpanded( rowIndex, tableIndex );
+		const isLoading = this.isChildRowLoading( rowIndex, tableIndex );
+		const childData = this.getChildRowData( rowIndex, tableIndex );
+
+		// Get loading text from settings.
+		const { data } = this.props;
+		const { tabular_settings = {} } = data || {};
+		const { child_row_loading_text = 'Loading details...' } = tabular_settings;
+
+		if ( ! isExpanded ) {
+			return null;
+		}
+
+		if ( isLoading ) {
+			return (
+				<tr className="child-row loading">
+					<td colSpan="100%">
+						<div className="child-row-loading">
+							<span className="loading-spinner"></span>
+							<span>{ child_row_loading_text }</span>
+						</div>
+					</td>
+				</tr>
+			);
+		}
+
+		if ( childData && childData.error ) {
+			return (
+				<tr className="child-row error">
+					<td colSpan="100%">
+						<div className="child-row-error">
+							<Icon name="error" size="small" />
+							<span>{ childData.message }</span>
+						</div>
+					</td>
+				</tr>
+			);
+		}
+
+		if ( childData && childData.html ) {
+			return (
+				<tr className="child-row">
+					<td colSpan="100%">
+						<div
+							className="child-row-content"
+							dangerouslySetInnerHTML={ { __html: childData.html } }
+						/>
+					</td>
+				</tr>
+			);
+		}
+
+		return null;
+	};
+
+	/**
 	 * Render action icons.
 	 *
 	 * @param {Object} row Row data.
@@ -424,6 +627,29 @@ class TabularWidget extends React.Component {
 		// Check if the content contains HTML tags.
 		const hasHtmlTags = /<[^>]*>/g.test( cellContent );
 
+		// For the first column, add expand icon if child rows are enabled.
+		if ( cellIndex === 0 ) {
+			const { data } = this.props;
+			const { tabular_settings = {} } = data || {};
+			const { enable_child_rows = true } = tabular_settings;
+
+			if ( enable_child_rows ) {
+				return (
+					<div className="cell-with-expand">
+						{ this.renderExpandIcon( row, rowIndex, tableIndex ) }
+						<span className="cell-content">
+							{ hasHtmlTags ? (
+								<span dangerouslySetInnerHTML={ { __html: cellContent } } />
+							) : (
+								cellContent
+							) }
+						</span>
+					</div>
+				);
+			}
+		}
+
+		// Render other columns normally.
 		if ( hasHtmlTags ) {
 			// Render HTML content properly.
 			return <span dangerouslySetInnerHTML={ { __html: cellContent } } />;
@@ -518,10 +744,65 @@ class TabularWidget extends React.Component {
 		return classes.join( ' ' );
 	};
 
+	/**
+	 * Extract ID from row data.
+	 *
+	 * @param {Object} row Row data.
+	 * @return {string} Extracted ID.
+	 */
+	extractIdFromRow = ( row ) => {
+		if ( ! row.cells || ! row.cells[ 0 ] ) {
+			throw new Error( 'Could not extract ID from row data.' );
+		}
+
+		const firstCell = row.cells[ 0 ];
+
+		// First try to get ID from data-id attribute in the HTML link.
+		if ( firstCell.text ) {
+			const dataIdMatch = firstCell.text.match( /data-id="(\d+)"/ );
+			if ( dataIdMatch ) {
+				return parseInt( dataIdMatch[ 1 ], 10 ).toString(); // Convert to number and back to remove leading zeros.
+			}
+
+			// Fallback: try to extract ID from HTML link text.
+			const linkMatch = firstCell.text.match( /<a[^>]*>#?(\d+)<\/a>/ );
+			if ( linkMatch ) {
+				return parseInt( linkMatch[ 1 ], 10 ).toString(); // Convert to number and back to remove leading zeros.
+			}
+
+			// Fallback: try to extract just the number (with or without #).
+			const numberMatch = firstCell.text.match( /#?(\d+)/ );
+			if ( numberMatch ) {
+				return parseInt( numberMatch[ 1 ], 10 ).toString(); // Convert to number and back to remove leading zeros.
+			}
+		}
+
+		throw new Error( 'Could not extract ID from row data.' );
+	};
+
+	/**
+	 * Handle successful delete action - simply remove row from UI.
+	 *
+	 * @param {number} rowIndex Row index.
+	 * @param {number} tableIndex Table index.
+	 */
+	handleSuccessfulDelete = ( rowIndex, tableIndex ) => {
+		const rowKey = `${ tableIndex }-${ rowIndex }`;
+
+		// Mark row as removed to hide it from UI.
+		this.setState( ( prevState ) => ( {
+			removedRows: {
+				...prevState.removedRows,
+				[ rowKey ]: true,
+			},
+		} ) );
+	};
+
 	render() {
 		const { data, settings = {} } = this.props;
-		const { tables } = data || {};
+		const { tables, tabular_settings = {} } = data || {};
 		const { showHeaders = true, stripedRows = true } = settings;
+		const { enable_child_rows = true } = tabular_settings;
 
 		return (
 			<div className="tabular-widget">
@@ -576,40 +857,46 @@ class TabularWidget extends React.Component {
 											}
 
 											return (
-												<tr
-													key={ rowIndex }
-													className={ rowClasses.join( ' ' ) }
-													onClick={ () =>
-														this.handleRowClick(
-															row,
-															rowIndex,
-															tableIndex
-														)
-													}
-												>
-													{ ( row.cells || [] ).map(
-														( cell, cellIndex ) => (
-															<td
-																key={ cellIndex }
-																className={ this.getCellClassName(
-																	cellIndex,
-																	row.cells.length,
-																	table.headers,
-																	row
-																) }
-															>
-																{ this.renderCell(
-																	cell,
-																	cellIndex,
-																	row,
-																	rowIndex,
-																	tableIndex,
-																	table.headers
-																) }
-															</td>
-														)
+												<React.Fragment key={ rowIndex }>
+													<tr
+														className={ rowClasses.join( ' ' ) }
+														onClick={ () =>
+															this.handleRowClick(
+																row,
+																rowIndex,
+																tableIndex
+															)
+														}
+													>
+														{ ( row.cells || [] ).map(
+															( cell, cellIndex ) => (
+																<td
+																	key={ cellIndex }
+																	className={ this.getCellClassName(
+																		cellIndex,
+																		row.cells.length,
+																		table.headers,
+																		row
+																	) }
+																>
+																	{ this.renderCell(
+																		cell,
+																		cellIndex,
+																		row,
+																		rowIndex,
+																		tableIndex,
+																		table.headers
+																	) }
+																</td>
+															)
+														) }
+													</tr>
+													{ this.renderChildRow(
+														row,
+														rowIndex,
+														tableIndex
 													) }
-												</tr>
+												</React.Fragment>
 											);
 										} ) }
 									</tbody>

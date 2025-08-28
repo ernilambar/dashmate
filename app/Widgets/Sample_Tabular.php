@@ -257,9 +257,15 @@ class Sample_Tabular extends Abstract_Widget {
 		$orders['rows'] = array_slice( $orders['rows'], 0, (int) $max_items );
 
 		return [
-			'tables' => [
+			'tables'           => [
 				$products,
 				$orders,
+			],
+			'tabular_settings' => [
+				'enable_child_rows'      => $settings['enable_child_rows'] ?? true,
+				'child_row_api_endpoint' => $settings['child_row_api_endpoint'] ?? 'https://jsonplaceholder.typicode.com/posts/{id}',
+				'child_row_title'        => $settings['child_row_title'] ?? esc_html__( 'Details', 'dashmate' ),
+				'child_row_loading_text' => $settings['child_row_loading_text'] ?? esc_html__( 'Loading details...', 'dashmate' ),
 			],
 		];
 	}

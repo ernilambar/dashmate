@@ -55,15 +55,15 @@ class Widget_Type_Manager {
 			],
 		],
 		'tabular'          => [
-			'headers' => [
+			'tables'           => [
 				'type'        => 'array',
 				'required'    => true,
-				'description' => 'Table headers.',
+				'description' => 'Array of table objects.',
 			],
-			'rows'    => [
-				'type'        => 'array',
-				'required'    => true,
-				'description' => 'Table rows.',
+			'tabular_settings' => [
+				'type'        => 'object',
+				'required'    => false,
+				'description' => 'Tabular widget configuration settings.',
 			],
 		],
 		'links'            => [
@@ -81,10 +81,6 @@ class Widget_Type_Manager {
 			],
 		],
 	];
-
-
-
-
 
 	/**
 	 * Get output schema for a specific widget type.
