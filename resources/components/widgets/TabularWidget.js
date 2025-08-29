@@ -1,6 +1,7 @@
 import React from 'react';
 import Icon from '../Icon';
 import Mustache from 'mustache';
+import Toastle from 'toastle';
 
 class TabularWidget extends React.Component {
 	constructor( props ) {
@@ -54,27 +55,46 @@ class TabularWidget extends React.Component {
 
 			// Only set success state if action was actually completed (not cancelled).
 			if ( actionCompleted ) {
+				const successMessage = `${ action } action completed successfully.`;
+
+				// Set success state for UI display.
 				this.setState( ( prevState ) => ( {
 					actionResults: {
 						...prevState.actionResults,
 						[ actionKey ]: {
 							success: true,
-							message: `${ action } action completed successfully.`,
+							message: successMessage,
 						},
 					},
 				} ) );
+
+				// Show Toastle success notification.
+				Toastle( {
+					text: successMessage,
+					duration: 3000,
+					type: 'success',
+				} );
 			}
 		} catch ( error ) {
-			// Set error state.
+			const errorMessage = error.message || `Failed to ${ action }`;
+
+			// Set error state for UI display.
 			this.setState( ( prevState ) => ( {
 				actionResults: {
 					...prevState.actionResults,
 					[ actionKey ]: {
 						success: false,
-						message: error.message || `Failed to ${ action }`,
+						message: errorMessage,
 					},
 				},
 			} ) );
+
+			// Show Toastle error notification.
+			Toastle( {
+				text: errorMessage,
+				duration: 3000,
+				type: 'error',
+			} );
 		} finally {
 			// Clear loading state.
 			this.setState( ( prevState ) => ( {
