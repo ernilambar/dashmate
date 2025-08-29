@@ -49,13 +49,14 @@ class TabularWidget extends React.Component {
 		} ) );
 
 		try {
-			let actionCompleted = false;
+			let actionResult = false;
 
-			actionCompleted = await this.handleGenericAction( action, row, rowIndex, tableIndex );
+			actionResult = await this.handleGenericAction( action, row, rowIndex, tableIndex );
 
 			// Only set success state if action was actually completed (not cancelled).
-			if ( actionCompleted ) {
-				const successMessage = `${ action } action completed successfully.`;
+			if ( actionResult && actionResult.success ) {
+				const successMessage =
+					actionResult.message || `${ action } action completed successfully.`;
 
 				// Set success state for UI display.
 				this.setState( ( prevState ) => ( {
@@ -122,7 +123,7 @@ class TabularWidget extends React.Component {
 	 * @param {Object} row Row data.
 	 * @param {number} rowIndex Row index.
 	 * @param {number} tableIndex Table index.
-	 * @returns {boolean} True if action was completed successfully, false if cancelled.
+	 * @returns {Object|false} Success object with message and data, or false if cancelled.
 	 */
 	handleGenericAction = async ( action, row, rowIndex, tableIndex ) => {
 		// Get action configuration from row.
@@ -210,8 +211,15 @@ class TabularWidget extends React.Component {
 			this.handleSuccessfulDelete( rowIndex, tableIndex );
 		}
 
-		// Return true to indicate successful completion.
-		return true;
+		// Return success data including message from API response.
+		return {
+			success: true,
+			message:
+				result.message ||
+				result.data?.message ||
+				`${ action } action completed successfully.`,
+			data: result.data || result,
+		};
 	};
 
 	/**
