@@ -9,6 +9,7 @@
 @import "./generic-settings.css";
 @import "./widget-fields.css";
 @import "./sortable.css";
+@import "../../node_modules/toastle/style.css";
 /* Import widget-specific styles */
 @import "./widgets/html.css";
 @import "./widgets/links.css";
