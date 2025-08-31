@@ -64,9 +64,6 @@ class Admin_Page {
 			return;
 		}
 
-		// Enqueue Remix Icon CSS.
-		wp_enqueue_style( 'remixicon', 'https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css', [], '4.5.0' );
-
 		$asset_file_name = DASHMATE_DIR . '/assets/index.asset.php';
 
 		if ( file_exists( $asset_file_name ) ) {
