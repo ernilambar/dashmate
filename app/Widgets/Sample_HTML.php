@@ -35,8 +35,8 @@ class Sample_HTML extends Abstract_Widget {
 	 * @since 1.0.0
 	 */
 	protected function define_widget() {
-		$this->description = esc_html__( 'Display sample HTML content.', 'dashmate' );
-		$this->icon        = 'code';
+		$this->description = esc_html__( 'Display custom HTML content.', 'dashmate' );
+		$this->icon        = 'code-line';
 
 		$this->settings_schema = [
 			'text_field'        => [

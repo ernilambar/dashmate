@@ -107,7 +107,7 @@ class LinksWidget extends React.Component {
 		const getIconProps = ( link ) => {
 			if ( ! link.icon ) {
 				return {
-					name: 'links',
+					name: 'links-line',
 					library: 'remixicon',
 				};
 			}

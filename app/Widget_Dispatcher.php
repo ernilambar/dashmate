@@ -188,7 +188,7 @@ class Widget_Dispatcher {
 			$widget_types[ $template_type ] = [
 				'name'            => $template_config['component'],
 				'description'     => 'Widget using ' . $template_type . ' template',
-				'icon'            => 'settings',
+				'icon'            => 'settings-line',
 				'template_type'   => $template_type,
 				'settings_schema' => [],
 				'output_schema'   => [],
