@@ -36,7 +36,7 @@ class Sample_Line_Chart extends Abstract_Widget {
 	 */
 	protected function define_widget() {
 		$this->description = esc_html__( 'Display sample line chart data.', 'dashmate' );
-		$this->icon        = 'show_chart';
+		$this->icon        = 'line-chart';
 
 		$this->settings_schema = [
 			'points_number' => [

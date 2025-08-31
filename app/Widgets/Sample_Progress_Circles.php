@@ -36,7 +36,7 @@ class Sample_Progress_Circles extends Abstract_Widget {
 	 */
 	protected function define_widget() {
 		$this->description = esc_html__( 'Display sample progress circles.', 'dashmate' );
-		$this->icon        = 'pie_chart';
+		$this->icon        = 'pie-chart';
 
 		$this->settings_schema = [
 			'circles_number' => [

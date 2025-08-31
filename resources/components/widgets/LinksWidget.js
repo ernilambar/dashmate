@@ -105,7 +105,12 @@ class LinksWidget extends React.Component {
 
 		// Helper function to get icon props based on icon type.
 		const getIconProps = ( link ) => {
-			if ( ! link.icon ) return {};
+			if ( ! link.icon ) {
+				return {
+					name: 'links',
+					library: 'remixicon',
+				};
+			}
 
 			const linkIconType = link.icon_type || 'remixicon';
 
@@ -113,11 +118,6 @@ class LinksWidget extends React.Component {
 				return {
 					library: 'svg',
 					svgContent: link.icon,
-				};
-			} else if ( linkIconType === 'dashicons' ) {
-				return {
-					library: 'dashicons',
-					name: link.icon,
 				};
 			} else {
 				return {
@@ -136,7 +136,7 @@ class LinksWidget extends React.Component {
 							className="dm-link-item"
 							onClick={ () => this.handleLinkClick( link ) }
 						>
-							{ ! hideIcon && link.icon && (
+							{ ! hideIcon && (
 								<Icon
 									{ ...getIconProps( link ) }
 									size="small"

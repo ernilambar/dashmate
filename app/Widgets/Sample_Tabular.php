@@ -36,7 +36,7 @@ class Sample_Tabular extends Abstract_Widget {
 	 */
 	protected function define_widget() {
 		$this->description = esc_html__( 'Display sample data in tabular format.', 'dashmate' );
-		$this->icon        = 'table_chart';
+		$this->icon        = 'table';
 
 		$this->settings_schema = [
 			'max_items'       => [
