@@ -396,7 +396,7 @@ class Widget extends Component {
 											onClick={ this.openWidgetSettings }
 											title="Settings"
 										>
-											<Icon name="equalizer-line" size="small" />
+											<Icon name="settings-4-line" size="small" />
 										</button>
 									) }
 								<button
