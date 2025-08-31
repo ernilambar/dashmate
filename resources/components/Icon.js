@@ -14,7 +14,7 @@ import React from 'react';
  */
 const Icon = ( {
 	name,
-	library = 'material-icons',
+	library = 'remixicon',
 	className = '',
 	style = {},
 	size = 'medium',
@@ -62,7 +62,7 @@ const Icon = ( {
 
 	// If using Remix Icons, render class-based glyph and omit ligature text
 	if ( library === 'remixicon' ) {
-		const remixiconClasses = `dm-icon ri ri-${ name } ${ className }`;
+		const remixiconClasses = `dm-icon ri ri-${ name }-line ${ className }`;
 		return <span className={ remixiconClasses } style={ combinedStyles } aria-hidden="true" />;
 	}
 

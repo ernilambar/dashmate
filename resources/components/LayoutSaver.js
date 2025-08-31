@@ -180,7 +180,7 @@ class LayoutSaver extends Component {
 					title="Save Layout"
 					disabled={ saveButtonState === 'saving' }
 				>
-					<Icon name="dvr" size="20px" />
+					<Icon name="computer" size="20px" />
 				</button>
 				{ isOpen && (
 					<div className="layout-saver-dropdown">

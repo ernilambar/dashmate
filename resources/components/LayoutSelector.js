@@ -123,7 +123,7 @@ const LayoutSelector = ( { onLayoutSelect, currentLayout = 'current' } ) => {
 					disabled
 					title="Loading layouts..."
 				>
-					<Icon name="grid_view" size="20px" />
+					<Icon name="layout-grid" size="20px" />
 				</button>
 			</div>
 		);
@@ -138,7 +138,7 @@ const LayoutSelector = ( { onLayoutSelect, currentLayout = 'current' } ) => {
 					disabled
 					title="Error loading layouts"
 				>
-					<Icon name="grid_view" size="20px" />
+					<Icon name="layout-grid" size="20px" />
 				</button>
 			</div>
 		);
@@ -152,7 +152,7 @@ const LayoutSelector = ( { onLayoutSelect, currentLayout = 'current' } ) => {
 				onClick={ () => setShowPopup( ! showPopup ) }
 				title="Select layout"
 			>
-				<Icon name="grid_view" size="20px" />
+				<Icon name="layout-grid" size="20px" />
 			</button>
 
 			{ showPopup && (
@@ -192,7 +192,7 @@ const LayoutSelector = ( { onLayoutSelect, currentLayout = 'current' } ) => {
 													} }
 													title="Copy layout JSON"
 												>
-													<Icon name="content_copy" size="16px" />
+													<Icon name="file-copy" size="16px" />
 												</button>
 											) }
 										</div>
