@@ -1,4 +1,5 @@
 import { createRoot } from 'react-dom/client';
+import 'remixicon/fonts/remixicon.css';
 import './css/index.css';
 import Dashboard from './components/Dashboard';
 
