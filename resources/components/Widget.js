@@ -381,7 +381,7 @@ class Widget extends Component {
 										title="Reload Widget"
 										disabled={ reloading }
 									>
-										<Icon name="refresh-line" size="small" />
+										<Icon name="loop-right-line" size="small" />
 									</button>
 								) }
 								{ ! collapsed &&
