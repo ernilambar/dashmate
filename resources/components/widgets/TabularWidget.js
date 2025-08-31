@@ -517,7 +517,7 @@ class TabularWidget extends React.Component {
 		}
 
 		// Fallback to default icon if no icon configured.
-		return <Icon name="settings-4" size="medium" />;
+		return <Icon name="settings-4-line" size="medium" />;
 	};
 
 	/**
@@ -532,9 +532,9 @@ class TabularWidget extends React.Component {
 		const isExpanded = this.isRowExpanded( rowIndex, tableIndex );
 		const isLoading = this.isChildRowLoading( rowIndex, tableIndex );
 
-		let iconName = 'arrow-down-s';
+		let iconName = 'arrow-down-s-line';
 		if ( isExpanded ) {
-			iconName = 'arrow-up-s';
+			iconName = 'arrow-up-s-line';
 		}
 
 		return (
@@ -590,7 +590,7 @@ class TabularWidget extends React.Component {
 				<tr className="child-row error">
 					<td colSpan="100%">
 						<div className="child-row-error">
-							<Icon name="error-warning" size="small" />
+							<Icon name="error-warning-line" size="small" />
 							<span>{ childData.message }</span>
 						</div>
 					</td>

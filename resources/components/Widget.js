@@ -89,7 +89,7 @@ class Widget extends Component {
 					>
 						<div className="widget-header" { ...provided.dragHandleProps }>
 							<h3>
-								<Icon name="error-warning" size="medium" />
+								<Icon name="error-warning-line" size="medium" />
 								Widget Error
 							</h3>
 						</div>
@@ -310,7 +310,7 @@ class Widget extends Component {
 							<div className="widget-header" { ...provided.dragHandleProps }>
 								<h3>
 									<Icon
-										name="refresh"
+										name="refresh-line"
 										size="medium"
 										className="widget-loading-icon"
 									/>
@@ -381,7 +381,7 @@ class Widget extends Component {
 										title="Reload Widget"
 										disabled={ reloading }
 									>
-										<Icon name="refresh" size="small" />
+										<Icon name="refresh-line" size="small" />
 									</button>
 								) }
 								{ ! collapsed &&
@@ -396,7 +396,7 @@ class Widget extends Component {
 											onClick={ this.openWidgetSettings }
 											title="Settings"
 										>
-											<Icon name="equalizer" size="small" />
+											<Icon name="equalizer-line" size="small" />
 										</button>
 									) }
 								<button
@@ -404,7 +404,11 @@ class Widget extends Component {
 									onClick={ this.toggleCollapse }
 								>
 									<Icon
-										name={ collapsed ? 'arrow-down-double' : 'arrow-up-double' }
+										name={
+											collapsed
+												? 'arrow-down-double-line'
+												: 'arrow-up-double-line'
+										}
 										size="small"
 									/>
 								</button>
