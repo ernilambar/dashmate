@@ -89,7 +89,7 @@ class Widget extends Component {
 					>
 						<div className="widget-header" { ...provided.dragHandleProps }>
 							<h3>
-								<Icon name="warning" size="medium" />
+								<Icon name="error-warning" size="medium" />
 								Widget Error
 							</h3>
 						</div>
@@ -142,14 +142,9 @@ class Widget extends Component {
 								<button
 									className="dm-icon-button dm-icon-button--small widget-toggle"
 									onClick={ this.toggleCollapse }
-									title={ collapsed ? 'Expand' : 'Collapse' }
 								>
 									<Icon
-										name={
-											collapsed
-												? 'keyboard_double_arrow_down'
-												: 'keyboard_double_arrow_up'
-										}
+										name={ collapsed ? 'arrow-down-double' : 'arrow-up-double' }
 										size="small"
 									/>
 								</button>
@@ -401,20 +396,15 @@ class Widget extends Component {
 											onClick={ this.openWidgetSettings }
 											title="Settings"
 										>
-											<Icon name="tune" size="small" />
+											<Icon name="equalizer" size="small" />
 										</button>
 									) }
 								<button
 									className="dm-icon-button dm-icon-button--small widget-toggle"
 									onClick={ this.toggleCollapse }
-									title={ collapsed ? 'Expand' : 'Collapse' }
 								>
 									<Icon
-										name={
-											collapsed
-												? 'keyboard_double_arrow_down'
-												: 'keyboard_double_arrow_up'
-										}
+										name={ collapsed ? 'arrow-down-double' : 'arrow-up-double' }
 										size="small"
 									/>
 								</button>

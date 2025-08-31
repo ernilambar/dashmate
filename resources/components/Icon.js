@@ -5,7 +5,7 @@ import React from 'react';
  *
  * @param {Object} props - Component props
  * @param {string} props.name - Icon name
- * @param {string} props.library - Icon library (e.g., 'material-icons', 'dashicons', 'svg')
+ * @param {string} props.library - Icon library (e.g., 'material-icons', 'dashicons', 'remixicon', 'svg')
  * @param {string} props.className - Additional CSS classes
  * @param {Object} props.style - Inline styles
  * @param {string} props.size - Icon size ('small', 'medium', 'large', or custom)
@@ -14,7 +14,7 @@ import React from 'react';
  */
 const Icon = ( {
 	name,
-	library = 'material-icons',
+	library = 'remixicon',
 	className = '',
 	style = {},
 	size = 'medium',
@@ -58,6 +58,12 @@ const Icon = ( {
 	if ( library === 'dashicons' ) {
 		const dashiconsClasses = `dm-icon dashicons dashicons-${ name } ${ className }`;
 		return <span className={ dashiconsClasses } style={ combinedStyles } aria-hidden="true" />;
+	}
+
+	// If using Remix Icons, render class-based glyph and omit ligature text
+	if ( library === 'remixicon' ) {
+		const remixiconClasses = `dm-icon ri ri-${ name }-line ${ className }`;
+		return <span className={ remixiconClasses } style={ combinedStyles } aria-hidden="true" />;
 	}
 
 	// Default to ligature/text-based libraries (Material Icons, etc.)

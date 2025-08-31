@@ -532,9 +532,9 @@ class TabularWidget extends React.Component {
 		const isExpanded = this.isRowExpanded( rowIndex, tableIndex );
 		const isLoading = this.isChildRowLoading( rowIndex, tableIndex );
 
-		let iconName = 'expand_more';
+		let iconName = 'arrow-down-s';
 		if ( isExpanded ) {
-			iconName = 'expand_less';
+			iconName = 'arrow-up-s';
 		}
 
 		return (
@@ -590,7 +590,7 @@ class TabularWidget extends React.Component {
 				<tr className="child-row error">
 					<td colSpan="100%">
 						<div className="child-row-error">
-							<Icon name="error" size="small" />
+							<Icon name="error-warning" size="small" />
 							<span>{ childData.message }</span>
 						</div>
 					</td>
