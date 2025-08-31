@@ -152,6 +152,9 @@
 
 .widget-reload.reloading .dm-icon {
 	animation: spin 1s linear infinite;
+	transform-origin: center center;
+	will-change: transform;
+	backface-visibility: hidden;
 }
 
 @keyframes spin {
@@ -274,6 +277,9 @@
 /* Spinning loading icon */
 .widget-loading-icon {
 	animation: spin 1s linear infinite;
+	transform-origin: center center;
+	will-change: transform;
+	backface-visibility: hidden;
 	color: #0073aa;
 }
 
