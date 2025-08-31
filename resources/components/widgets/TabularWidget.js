@@ -517,7 +517,7 @@ class TabularWidget extends React.Component {
 		}
 
 		// Fallback to default icon if no icon configured.
-		return <Icon name="settings" size="medium" />;
+		return <Icon name="settings" size="large" />;
 	};
 
 	/**

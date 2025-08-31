@@ -5,7 +5,7 @@ import React from 'react';
  *
  * @param {Object} props - Component props
  * @param {string} props.name - Icon name
- * @param {string} props.library - Icon library (e.g., 'material-icons', 'dashicons', 'remixicon', 'svg')
+ * @param {string} props.library - Icon library (e.g., 'remixicon', 'dashicons', 'material-icons', 'svg')
  * @param {string} props.className - Additional CSS classes
  * @param {Object} props.style - Inline styles
  * @param {string} props.size - Icon size ('small', 'medium', 'large', or custom)
@@ -66,7 +66,7 @@ const Icon = ( {
 		return <span className={ remixiconClasses } style={ combinedStyles } aria-hidden="true" />;
 	}
 
-	// Default to ligature/text-based libraries (Material Icons, etc.)
+	// Default to ligature/text-based libraries (Remix Icons, Material Icons, etc.)
 	const classes = `dm-icon dm-${ library } ${ className }`;
 	return (
 		<span className={ classes } style={ combinedStyles }>

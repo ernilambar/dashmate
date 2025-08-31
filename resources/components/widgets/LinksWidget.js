@@ -93,7 +93,7 @@ class LinksWidget extends React.Component {
 		const links = data?.links || [];
 		const linkStyle = settings?.display_style || 'list';
 		const hideIcon = settings?.hide_icon || false;
-		const iconType = settings?.icon_type || 'material-icons';
+		const iconType = settings?.icon_type || 'remixicon';
 
 		// Show loading if data is not available yet.
 		if ( ! data ) {
@@ -107,7 +107,7 @@ class LinksWidget extends React.Component {
 		const getIconProps = ( link ) => {
 			if ( ! link.icon ) return {};
 
-			const linkIconType = link.icon_type || 'material-icons';
+			const linkIconType = link.icon_type || 'remixicon';
 
 			if ( linkIconType === 'svg' && link.icon.startsWith( '<svg' ) ) {
 				return {
@@ -121,7 +121,7 @@ class LinksWidget extends React.Component {
 				};
 			} else {
 				return {
-					library: 'material-icons',
+					library: 'remixicon',
 					name: link.icon,
 				};
 			}
