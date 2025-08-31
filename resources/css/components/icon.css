@@ -3,6 +3,7 @@
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
+	font-weight: 500;
 
 	svg {
 		width: 100%;

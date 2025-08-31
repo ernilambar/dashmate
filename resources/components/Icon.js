@@ -23,9 +23,9 @@ const Icon = ( {
 	// Size mappings
 	const sizeMap = {
 		small: { fontSize: '12px', width: '12px', height: '12px' },
-		medium: { fontSize: '16px', width: '16px', height: '16px' },
-		large: { fontSize: '24px', width: '24px', height: '24px' },
-		xlarge: { fontSize: '32px', width: '32px', height: '32px' },
+		medium: { fontSize: '14px', width: '14px', height: '14px' },
+		large: { fontSize: '20px', width: '20px', height: '20px' },
+		xlarge: { fontSize: '28px', width: '28px', height: '28px' },
 	};
 
 	// Get size styles
