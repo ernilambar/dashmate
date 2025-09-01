@@ -139,7 +139,7 @@ class LinksWidget extends React.Component {
 							{ ! hideIcon && (
 								<Icon
 									{ ...getIconProps( link ) }
-									size="small"
+									size="sm"
 									className="dm-link-icon"
 								/>
 							) }

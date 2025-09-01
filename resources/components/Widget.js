@@ -89,7 +89,7 @@ class Widget extends Component {
 					>
 						<div className="widget-header" { ...provided.dragHandleProps }>
 							<h3>
-								<Icon name="error-warning-line" size="medium" />
+								<Icon name="error-warning-line" size="md" />
 								Widget Error
 							</h3>
 						</div>
@@ -135,7 +135,7 @@ class Widget extends Component {
 					>
 						<div className="widget-header" { ...provided.dragHandleProps }>
 							<h3>
-								<Icon name={ widgetIcon } size="medium" />
+								<Icon name={ widgetIcon } size="md" />
 								{ widgetTitle }
 							</h3>
 							<div className="widget-actions">
@@ -145,7 +145,7 @@ class Widget extends Component {
 								>
 									<Icon
 										name={ collapsed ? 'arrow-down-double' : 'arrow-up-double' }
-										size="small"
+										size="sm"
 									/>
 								</button>
 							</div>
@@ -311,7 +311,7 @@ class Widget extends Component {
 								<h3>
 									<Icon
 										name="refresh-line"
-										size="medium"
+										size="md"
 										className="widget-loading-icon"
 									/>
 								</h3>
@@ -368,7 +368,7 @@ class Widget extends Component {
 					>
 						<div className="widget-header" { ...provided.dragHandleProps }>
 							<h3>
-								{ widgetIcon && <Icon name={ widgetIcon } size="medium" /> }
+								{ widgetIcon && <Icon name={ widgetIcon } size="md" /> }
 								{ widgetTitle }
 							</h3>
 							<div className="widget-actions">
@@ -381,7 +381,7 @@ class Widget extends Component {
 										title="Reload Widget"
 										disabled={ reloading }
 									>
-										<Icon name="loop-right-line" size="small" />
+										<Icon name="loop-right-line" size="sm" />
 									</button>
 								) }
 								{ ! collapsed &&
@@ -396,7 +396,7 @@ class Widget extends Component {
 											onClick={ this.openWidgetSettings }
 											title="Settings"
 										>
-											<Icon name="settings-4-line" size="small" />
+											<Icon name="settings-4-line" size="sm" />
 										</button>
 									) }
 								<button
@@ -409,7 +409,7 @@ class Widget extends Component {
 												? 'arrow-down-double-line'
 												: 'arrow-up-double-line'
 										}
-										size="small"
+										size="sm"
 									/>
 								</button>
 							</div>

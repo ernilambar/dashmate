@@ -347,7 +347,7 @@ export default function GenericSettingsForm( {
 						title={ removeButtonTitle }
 						className="remove-button"
 					>
-						<Icon name="close-line" library="remixicon" size="small" />
+						<Icon name="close-line" library="remixicon" size="sm" />
 					</Button>
 				) }
 				{ showCancelButton && (
@@ -357,7 +357,7 @@ export default function GenericSettingsForm( {
 						title="Cancel"
 						className="remove-button"
 					>
-						<Icon name="close-line" library="remixicon" size="small" />
+						<Icon name="close-line" library="remixicon" size="sm" />
 					</Button>
 				) }
 			</div>

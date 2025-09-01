@@ -8,7 +8,7 @@ import React from 'react';
  * @param {string} props.library - Icon library (e.g., 'remixicon', 'svg')
  * @param {string} props.className - Additional CSS classes
  * @param {Object} props.style - Inline styles
- * @param {string} props.size - Icon size ('small', 'medium', 'large', or custom)
+ * @param {string} props.size - Icon size ('xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl', '4xl', or custom)
  * @param {string} props.svgContent - Raw SVG markup (when library is 'svg')
  * @returns {JSX.Element} Icon component
  */
@@ -17,15 +17,19 @@ const Icon = ( {
 	library = 'remixicon',
 	className = '',
 	style = {},
-	size = 'medium',
+	size = 'md',
 	svgContent = null,
 } ) => {
-	// Size mappings
 	const sizeMap = {
-		small: { fontSize: '12px', width: '12px', height: '12px' },
-		medium: { fontSize: '14px', width: '14px', height: '14px' },
-		large: { fontSize: '20px', width: '20px', height: '20px' },
-		xlarge: { fontSize: '28px', width: '28px', height: '28px' },
+		// T-shirt Sizing System.
+		xs: { fontSize: '10px', width: '10px', height: '10px' },
+		sm: { fontSize: '12px', width: '12px', height: '12px' },
+		md: { fontSize: '14px', width: '14px', height: '14px' },
+		lg: { fontSize: '16px', width: '16px', height: '16px' },
+		xl: { fontSize: '18px', width: '18px', height: '18px' },
+		'2xl': { fontSize: '20px', width: '20px', height: '20px' },
+		'3xl': { fontSize: '28px', width: '28px', height: '28px' },
+		'4xl': { fontSize: '32px', width: '32px', height: '32px' },
 	};
 
 	// Get size styles
