@@ -123,7 +123,7 @@ const LayoutSelector = ( { onLayoutSelect, currentLayout = 'current' } ) => {
 					disabled
 					title="Loading layouts..."
 				>
-					<Icon name="layout-grid-2-fill" size="2xl" />
+					<Icon name="layout-grid-2-fill" size="xl" />
 				</button>
 			</div>
 		);
@@ -138,7 +138,7 @@ const LayoutSelector = ( { onLayoutSelect, currentLayout = 'current' } ) => {
 					disabled
 					title="Error loading layouts"
 				>
-					<Icon name="layout-grid-2-fill" size="2xl" />
+					<Icon name="layout-grid-2-fill" size="xl" />
 				</button>
 			</div>
 		);
@@ -152,7 +152,7 @@ const LayoutSelector = ( { onLayoutSelect, currentLayout = 'current' } ) => {
 				onClick={ () => setShowPopup( ! showPopup ) }
 				title="Select layout"
 			>
-				<Icon name="layout-grid-2-fill" size="2xl" />
+				<Icon name="layout-grid-2-fill" size="xl" />
 			</button>
 
 			{ showPopup && (
