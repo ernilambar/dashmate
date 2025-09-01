@@ -451,7 +451,7 @@ class Dashboard extends Component {
 						onClick={ this.handleLayoutSettingsToggle }
 						title="Layout Settings"
 					>
-						<Icon name="equalizer-fill" size="2xl" />
+						<Icon name="equalizer-fill" size="xl" />
 					</button>
 				</div>
 
