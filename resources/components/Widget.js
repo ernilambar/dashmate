@@ -144,7 +144,11 @@ class Widget extends Component {
 									onClick={ this.toggleCollapse }
 								>
 									<Icon
-										name={ collapsed ? 'arrow-down-double' : 'arrow-up-double' }
+										name={
+											collapsed
+												? 'arrow-down-double-line'
+												: 'arrow-up-double-line'
+										}
 										size="sm"
 									/>
 								</button>
