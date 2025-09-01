@@ -513,11 +513,11 @@ class TabularWidget extends React.Component {
 		const actionConfig = row.actions && row.actions[ action ];
 
 		if ( actionConfig && actionConfig.icon ) {
-			return <Icon name={ actionConfig.icon } size="medium" />;
+			return <Icon name={ actionConfig.icon } size="md" />;
 		}
 
 		// Fallback to default icon if no icon configured.
-		return <Icon name="settings-4-line" size="medium" />;
+		return <Icon name="settings-4-line" size="md" />;
 	};
 
 	/**
@@ -549,7 +549,7 @@ class TabularWidget extends React.Component {
 				{ isLoading ? (
 					<span className="loading-spinner small"></span>
 				) : (
-					<Icon name={ iconName } size="small" />
+					<Icon name={ iconName } size="sm" />
 				) }
 			</button>
 		);
@@ -590,7 +590,7 @@ class TabularWidget extends React.Component {
 				<tr className="child-row error">
 					<td colSpan="100%">
 						<div className="child-row-error">
-							<Icon name="error-warning-line" size="small" />
+							<Icon name="error-warning-line" size="sm" />
 							<span>{ childData.message }</span>
 						</div>
 					</td>
