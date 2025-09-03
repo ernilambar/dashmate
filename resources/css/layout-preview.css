@@ -5,7 +5,7 @@
 }
 
 .layout-preview-content {
-	display: flex;
+	display: grid;
 	gap: 16px;
 	padding-left: 0;
 	min-height: 150px;
@@ -13,15 +13,38 @@
 	margin: 0;
 }
 
+/* Grid layouts for different column counts */
+.layout-preview-columns-1 {
+	grid-template-columns: repeat(1, 1fr);
+}
+
+.layout-preview-columns-2 {
+	grid-template-columns: repeat(2, 1fr);
+}
+
+.layout-preview-columns-3 {
+	grid-template-columns: repeat(3, 1fr);
+}
+
+.layout-preview-columns-4 {
+	grid-template-columns: repeat(4, 1fr);
+}
+
+.layout-preview-columns-5 {
+	grid-template-columns: repeat(5, 1fr);
+}
+
+.layout-preview-columns-6 {
+	grid-template-columns: repeat(6, 1fr);
+}
+
 .layout-preview-column {
-	flex: 1;
 	min-width: 0;
 	max-width: 250px;
-	background: linear-gradient(180deg, #f8f9fa 0%, #ffffff 100%);
 	border-radius: 6px;
 	padding: 12px;
-	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 	overflow: hidden;
+	background: #fff;
 }
 
 .layout-preview-widgets {
