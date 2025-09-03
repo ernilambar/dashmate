@@ -14,9 +14,12 @@ const LayoutPreview = ( { layoutData, selectedLayout } ) => {
 		);
 	}
 
+	const columnCount = columns.length;
+	const columnClass = `layout-preview-columns-${ columnCount }`;
+
 	return (
 		<div className="layout-preview">
-			<div className="layout-preview-content">
+			<div className={ `layout-preview-content ${ columnClass }` }>
 				{ columns.map( ( column ) => {
 					const columnWidgets = column.widgets || [];
 

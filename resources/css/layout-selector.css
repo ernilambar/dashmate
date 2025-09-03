@@ -85,7 +85,8 @@
 }
 
 .layout-selector-option-header {
-	padding: 12px 20px 8px;
+	/* padding: 12px 20px 8px; */
+	padding: 5px 10px 2px;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -93,14 +94,14 @@
 
 .layout-selector-option-title {
 	margin: 0;
-	font-size: 14px;
+	font-size: 12px;
 	font-weight: 500;
 	color: #23282d;
 }
 
 .layout-selector-option-content {
 	position: relative;
-	padding: 0 20px 12px;
+	padding: 0 10px 6px;
 }
 
 .layout-selector-option-actions {
