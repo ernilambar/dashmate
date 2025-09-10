@@ -834,6 +834,8 @@ class TabularWidget extends React.Component {
 	 * @param {number} tableIndex Table index.
 	 */
 	handleSuccessfulDelete = ( rowIndex, tableIndex ) => {
+		// Do nothing for now.
+		return;
 		const rowKey = `${ tableIndex }-${ rowIndex }`;
 
 		// Mark row as removed to hide it from UI.
