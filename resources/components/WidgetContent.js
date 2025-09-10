@@ -122,6 +122,7 @@ class WidgetContent extends Component {
 						data={ data }
 						settings={ settings }
 						widgetSchemas={ this.props.widgetSchemas }
+						onReloadWidget={ this.props.onReloadWidget }
 					/>
 				);
 			default:

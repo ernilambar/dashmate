@@ -75,6 +75,14 @@ class TabularWidget extends React.Component {
 					duration: 3000,
 					type: 'success',
 				} );
+
+				// If configured from PHP, reload whole widget after a short delay.
+				const shouldReloadWidget = !! row.actions?.[ action ]?.reload_widget;
+				if ( shouldReloadWidget && this.props.onReloadWidget ) {
+					setTimeout( () => {
+						this.props.onReloadWidget();
+					}, 800 );
+				}
 			}
 		} catch ( error ) {
 			const errorMessage = error.message || `Failed to ${ action }`;

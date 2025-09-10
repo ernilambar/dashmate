@@ -443,6 +443,7 @@ class Widget extends Component {
 									settings={ widgetData?.settings || widget.settings || {} }
 									widgetSchemas={ widgets }
 									onSettingsChange={ this.handleSettingsChange }
+									onReloadWidget={ this.handleReload }
 								/>
 							</div>
 						) }
