@@ -742,6 +742,13 @@ class TabularWidget extends React.Component {
 			}
 		}
 
+		// Add has-child-row class to the first column when child rows are enabled.
+		const { data } = this.props;
+		const { tabular_settings = {} } = data || {};
+		if ( tabular_settings.enable_child_rows && cellIndex === 0 ) {
+			classes.push( 'has-child-row' );
+		}
+
 		return classes.join( ' ' );
 	};
 
@@ -783,6 +790,13 @@ class TabularWidget extends React.Component {
 			if ( isActionsColumn ) {
 				classes.push( 'action-column' );
 			}
+		}
+
+		// Add has-child-row class to the first header when child rows are enabled.
+		const { data } = this.props;
+		const { tabular_settings = {} } = data || {};
+		if ( tabular_settings.enable_child_rows && headerIndex === 0 ) {
+			classes.push( 'has-child-row' );
 		}
 
 		return classes.join( ' ' );
