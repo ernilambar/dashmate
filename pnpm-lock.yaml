@@ -39,8 +39,8 @@ importers:
         specifier: ^4.6.0
         version: 4.6.0
       toastle:
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^1.0.1
+        version: 1.0.1
     devDependencies:
       '@fullhuman/postcss-purgecss':
         specifier: ^7.0.2
@@ -6744,8 +6744,8 @@ packages:
     resolution: {integrity: sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==}
     engines: {node: '>=8.0'}
 
-  toastle@1.0.0:
-    resolution: {integrity: sha512-tmOiev2QuMmzxaARBRqBNOZbCi6QYcqQD+GGJ8MXVCtQz+Oxw7cMK0zY8c2lijlbKXQSUXHJCMx2aSa5t7ZD2w==}
+  toastle@1.0.1:
+    resolution: {integrity: sha512-aY/U8SQaB3iTz6xly9c7PyHH/4mlplxrn6d/EvrdUjx/vDa5NrAUDJ5Q8kNj8NS+4CT2i6vXPmoS74N1U7eAbQ==}
 
   toidentifier@1.0.1:
     resolution: {integrity: sha512-o5sSPKEkg/DIQNmH43V0/uerLrpzVedkUh8tGNvaeXpfpuwjKenlSox/2O/BTlZUtEe+JG7s5YhEz608PlAHRA==}
@@ -15417,7 +15417,7 @@ snapshots:
     dependencies:
       is-number: 7.0.0
 
-  toastle@1.0.0: {}
+  toastle@1.0.1: {}
 
   toidentifier@1.0.1: {}
 
