@@ -2,6 +2,7 @@ import React from 'react';
 import Icon from '../Icon';
 import Mustache from 'mustache';
 import Toastle from 'toastle';
+import { debounce } from '../../js/utils';
 
 class TabularWidget extends React.Component {
 	constructor( props ) {
@@ -14,6 +15,8 @@ class TabularWidget extends React.Component {
 			childRowData: {}, // Store child row HTML content.
 			loadingChildRows: {}, // Track loading state for child rows.
 		};
+
+		this.debouncedActionHandlers = {};
 	}
 
 	handleTableClick = ( table, tableIndex ) => {
@@ -22,6 +25,17 @@ class TabularWidget extends React.Component {
 
 	handleRowClick = ( row, rowIndex, tableIndex ) => {
 		// Handle row click if needed.
+	};
+
+	getDebouncedActionHandler = ( action, row, rowIndex, tableIndex ) => {
+		const actionKey = `${ tableIndex }-${ rowIndex }-${ action }`;
+		if ( ! this.debouncedActionHandlers[ actionKey ] ) {
+			this.debouncedActionHandlers[ actionKey ] = debounce( ( e ) => {
+				this.handleActionClick( action, row, rowIndex, tableIndex );
+			}, 300 );
+		}
+
+		return this.debouncedActionHandlers[ actionKey ];
 	};
 
 	/**
@@ -476,7 +490,7 @@ class TabularWidget extends React.Component {
 				onClick={ ( e ) => {
 					e.stopPropagation();
 					if ( ! isLoading ) {
-						this.handleActionClick( action, row, rowIndex, tableIndex );
+						this.getDebouncedActionHandler( action, row, rowIndex, tableIndex )( e );
 					}
 				} }
 				title={ title }
