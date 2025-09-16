@@ -28,14 +28,15 @@ class TabularWidget extends React.Component {
 	};
 
 	getDebouncedActionHandler = ( action, row, rowIndex, tableIndex ) => {
-		const actionKey = `${ tableIndex }-${ rowIndex }-${ action }`;
-		if ( ! this.debouncedActionHandlers[ actionKey ] ) {
-			this.debouncedActionHandlers[ actionKey ] = debounce( ( e ) => {
+		const rowId = this.extractIdFromRow( row );
+		const handlerKey = `${ this.props.widgetId }-${ tableIndex }-${ rowId }-${ action }`;
+		if ( ! this.debouncedActionHandlers[ handlerKey ] ) {
+			this.debouncedActionHandlers[ handlerKey ] = debounce( ( e ) => {
 				this.handleActionClick( action, row, rowIndex, tableIndex );
 			}, 300 );
 		}
 
-		return this.debouncedActionHandlers[ actionKey ];
+		return this.debouncedActionHandlers[ handlerKey ];
 	};
 
 	/**
