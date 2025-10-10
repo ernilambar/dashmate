@@ -2,7 +2,6 @@ import { Component } from 'react';
 import { __ } from '@wordpress/i18n';
 import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 import Column from './Column';
-import WidgetSelector from './WidgetSelector';
 import LayoutSaver from './LayoutSaver';
 import LayoutSelector from './LayoutSelector';
 import LayoutSettings from './LayoutSettings';
@@ -169,60 +168,6 @@ class Dashboard extends Component {
 				this.loadDashboard();
 			}
 		} catch ( error ) {
-			// Reload dashboard to revert changes
-			this.loadDashboard();
-		}
-	};
-
-	handleWidgetSelect = async ( widgetId ) => {
-		const { dashboard } = this.state;
-		if ( ! dashboard || ! dashboard.columns || dashboard.columns.length === 0 ) {
-			return;
-		}
-
-		// Get the first column
-		const firstColumn = dashboard.columns[ 0 ];
-		if ( ! firstColumn ) {
-			return;
-		}
-
-		// Create a copy of the dashboard data
-		const updatedDashboard = { ...dashboard };
-
-		// Initialize widgets array if it doesn't exist
-		if ( ! firstColumn.widgets ) {
-			firstColumn.widgets = [];
-		}
-
-		// Add the widget to the end of the first column
-		firstColumn.widgets.push( {
-			id: widgetId,
-			settings: {},
-			collapsed: false,
-		} );
-
-		// Update state immediately for UI responsiveness
-		this.setState( { dashboard: updatedDashboard } );
-
-		// Save the new layout to the server
-		try {
-			const response = await fetch( `${ dashmateApiSettings.restUrl }dashboard`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					'X-WP-Nonce': dashmateApiSettings?.nonce || '',
-				},
-				body: JSON.stringify( updatedDashboard ),
-			} );
-
-			const data = await response.json();
-
-			if ( ! data.success ) {
-				// Reload dashboard to revert changes
-				this.loadDashboard();
-			}
-		} catch ( error ) {
-			console.error( 'Error adding widget:', error );
 			// Reload dashboard to revert changes
 			this.loadDashboard();
 		}
@@ -438,11 +383,6 @@ class Dashboard extends Component {
 			<div className="dashmate-app">
 				{ /* Dashboard Controls */ }
 				<div className="dashboard-controls">
-					<WidgetSelector
-						widgets={ widgets }
-						dashboard={ dashboard }
-						onWidgetSelect={ this.handleWidgetSelect }
-					/>
 					<LayoutSaver dashboard={ dashboard } onLayoutSaved={ this.handleLayoutSaved } />
 					<LayoutSelector onLayoutSelect={ this.handleLayoutSelect } />
 					<button
