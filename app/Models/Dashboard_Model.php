@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Nilambar\Dashmate\Models;
 
+use Nilambar\Dashmate\Layout_Manager;
 use WP_Error;
 
 /**
@@ -28,6 +29,15 @@ class Dashboard_Model {
 	const OPTION_KEY = 'dashmate_dashboard_data';
 
 	/**
+	 * Starter layout for the main dashboard.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var string
+	 */
+	private static $starter_layout = 'default';
+
+	/**
 	 * Get dashboard data.
 	 *
 	 * @since 1.0.0
@@ -37,9 +47,9 @@ class Dashboard_Model {
 	public static function get_data(): array {
 		$data = get_option( self::OPTION_KEY, null );
 
-		// If no data exists, load the default starter layout.
+		// If no data exists, load the starter layout.
 		if ( null === $data ) {
-			$data = self::load_default_starter_layout();
+			$data = self::load_starter_layout();
 		}
 
 		$data = ( null === $data ) ? [] : $data;
@@ -97,30 +107,47 @@ class Dashboard_Model {
 	}
 
 	/**
-	 * Load default starter layout data.
+	 * Load starter layout data.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @return array|null Layout data or null if not found.
 	 */
-	private static function load_default_starter_layout() {
-		$layout_file = DASHMATE_DIR . '/layouts/default.json';
+	private static function load_starter_layout() {
+		// Get the starter layout from the dashboard page instance.
+		$starter_layout = self::get_starter_layout_from_dashboard_page();
 
-		if ( ! file_exists( $layout_file ) || ! is_readable( $layout_file ) ) {
-			return null;
-		}
+		// Use Layout_Manager to get layout data (supports filters and validation).
+		$layout_data = Layout_Manager::get_layout_data( $starter_layout );
 
-		$file_content = file_get_contents( $layout_file );
-		if ( false === $file_content ) {
-			return null;
-		}
-
-		$layout_data = json_decode( $file_content, true );
-		if ( json_last_error() !== JSON_ERROR_NONE ) {
+		// Return null if there's an error.
+		if ( is_wp_error( $layout_data ) ) {
 			return null;
 		}
 
 		return $layout_data;
+	}
+
+	/**
+	 * Get starter layout from dashboard page.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string Starter layout name.
+	 */
+	private static function get_starter_layout_from_dashboard_page() {
+		return self::$starter_layout;
+	}
+
+	/**
+	 * Set starter layout for the main dashboard.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $layout Layout name.
+	 */
+	public static function set_starter_layout( $layout ) {
+		self::$starter_layout = $layout;
 	}
 
 	/**
