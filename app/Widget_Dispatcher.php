@@ -98,6 +98,10 @@ class Widget_Dispatcher {
 	 * @return array
 	 */
 	public static function get_widgets() {
+		// Ensure widgets are initialized if not already done.
+		if ( empty( self::$widgets ) ) {
+			Widget_Initializer::init();
+		}
 		/**
 		 * Filter the registered widgets.
 		 *

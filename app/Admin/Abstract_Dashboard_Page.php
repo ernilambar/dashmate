@@ -94,6 +94,15 @@ abstract class Abstract_Dashboard_Page {
 	protected $dashboard_id;
 
 	/**
+	 * Starter layout to use when no dashboard data exists.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var string
+	 */
+	protected $starter_layout;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 1.0.0
@@ -320,5 +329,16 @@ abstract class Abstract_Dashboard_Page {
 	 */
 	public function get_dashboard_id() {
 		return $this->dashboard_id;
+	}
+
+	/**
+	 * Get starter layout.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string Starter layout.
+	 */
+	public function get_starter_layout() {
+		return $this->starter_layout;
 	}
 }

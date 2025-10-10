@@ -37,6 +37,11 @@ class Dashboard_Model {
 	public static function get_data(): array {
 		$data = get_option( self::OPTION_KEY, null );
 
+		// If no data exists, load the default starter layout.
+		if ( null === $data ) {
+			$data = self::load_default_starter_layout();
+		}
+
 		$data = ( null === $data ) ? [] : $data;
 
 		return self::prepare_data( $data );
@@ -89,6 +94,33 @@ class Dashboard_Model {
 	 */
 	public static function data_exists(): bool {
 		return null !== get_option( self::OPTION_KEY, null );
+	}
+
+	/**
+	 * Load default starter layout data.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return array|null Layout data or null if not found.
+	 */
+	private static function load_default_starter_layout() {
+		$layout_file = DASHMATE_DIR . '/layouts/default.json';
+
+		if ( ! file_exists( $layout_file ) || ! is_readable( $layout_file ) ) {
+			return null;
+		}
+
+		$file_content = file_get_contents( $layout_file );
+		if ( false === $file_content ) {
+			return null;
+		}
+
+		$layout_data = json_decode( $file_content, true );
+		if ( json_last_error() !== JSON_ERROR_NONE ) {
+			return null;
+		}
+
+		return $layout_data;
 	}
 
 	/**
