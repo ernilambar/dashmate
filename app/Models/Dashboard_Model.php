@@ -32,10 +32,12 @@ class Dashboard_Model {
 	 *
 	 * @since 1.0.0
 	 *
+	 * @param string $app_slug App slug for multi-dashboard support.
 	 * @return array Dashboard data with ensured structure.
 	 */
-	public static function get_data(): array {
-		$data = get_option( self::OPTION_KEY, null );
+	public static function get_data( $app_slug = 'default' ): array {
+		$option_key = self::get_option_key( $app_slug );
+		$data = get_option( $option_key, null );
 
 		$data = ( null === $data ) ? [] : $data;
 
@@ -47,14 +49,16 @@ class Dashboard_Model {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $data Dashboard data.
+	 * @param array  $data     Dashboard data.
+	 * @param string $app_slug App slug for multi-dashboard support.
 	 * @return bool|WP_Error True on success, WP_Error on failure.
 	 */
-	public static function set_data( array $data ) {
+	public static function set_data( array $data, $app_slug = 'default' ) {
+		$option_key = self::get_option_key( $app_slug );
 		$prepared_data  = self::prepare_data( $data );
 		$sanitized_data = self::sanitize_dashboard_data( $prepared_data );
 
-		$result = update_option( self::OPTION_KEY, $sanitized_data, false );
+		$result = update_option( $option_key, $sanitized_data, false );
 
 		if ( false === $result ) {
 			return new WP_Error( 'save_failed', 'Failed to save dashboard data' );
@@ -68,10 +72,12 @@ class Dashboard_Model {
 	 *
 	 * @since 1.0.0
 	 *
+	 * @param string $app_slug App slug for multi-dashboard support.
 	 * @return bool|WP_Error True on success, WP_Error on failure.
 	 */
-	public static function delete_data() {
-		$result = delete_option( self::OPTION_KEY );
+	public static function delete_data( $app_slug = 'default' ) {
+		$option_key = self::get_option_key( $app_slug );
+		$result = delete_option( $option_key );
 
 		if ( false === $result ) {
 			return new WP_Error( 'delete_failed', 'Failed to delete dashboard data' );
@@ -85,10 +91,27 @@ class Dashboard_Model {
 	 *
 	 * @since 1.0.0
 	 *
+	 * @param string $app_slug App slug for multi-dashboard support.
 	 * @return bool True if dashboard data exists, false otherwise.
 	 */
-	public static function data_exists(): bool {
-		return null !== get_option( self::OPTION_KEY, null );
+	public static function data_exists( $app_slug = 'default' ): bool {
+		$option_key = self::get_option_key( $app_slug );
+		return null !== get_option( $option_key, null );
+	}
+
+	/**
+	 * Get option key for app slug.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $app_slug App slug for multi-dashboard support.
+	 * @return string Option key.
+	 */
+	private static function get_option_key( $app_slug = 'default' ): string {
+		if ( empty( $app_slug ) || $app_slug === 'default' ) {
+			return self::OPTION_KEY; // 'dashmate_dashboard_data'
+		}
+		return self::OPTION_KEY . '_' . sanitize_key( $app_slug );
 	}
 
 	/**

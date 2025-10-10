@@ -45,7 +45,13 @@ class Columns_Controller extends Base_Controller {
 					'methods'             => \WP_REST_Server::READABLE,
 					'callback'            => [ $this, 'get_columns' ],
 					'permission_callback' => [ $this, 'check_permissions' ],
-					'args'                => [],
+					'args'                => [
+						'app_slug' => [
+							'required' => false,
+							'type'     => 'string',
+							'default'  => 'default',
+						],
+					],
 				],
 				[
 					'methods'             => \WP_REST_Server::CREATABLE,
@@ -55,6 +61,11 @@ class Columns_Controller extends Base_Controller {
 						'title' => [
 							'required' => true,
 							'type'     => 'string',
+						],
+						'app_slug' => [
+							'required' => false,
+							'type'     => 'string',
+							'default'  => 'default',
 						],
 					],
 				],
@@ -75,6 +86,11 @@ class Columns_Controller extends Base_Controller {
 							'required'          => true,
 							'validate_callback' => [ $this, 'validate_column_id' ],
 						],
+						'app_slug' => [
+							'required' => false,
+							'type'     => 'string',
+							'default'  => 'default',
+						],
 					],
 				],
 				[
@@ -90,6 +106,11 @@ class Columns_Controller extends Base_Controller {
 							'required' => false,
 							'type'     => 'string',
 						],
+						'app_slug' => [
+							'required' => false,
+							'type'     => 'string',
+							'default'  => 'default',
+						],
 					],
 				],
 				[
@@ -100,6 +121,11 @@ class Columns_Controller extends Base_Controller {
 						'id' => [
 							'required'          => true,
 							'validate_callback' => [ $this, 'validate_column_id' ],
+						],
+						'app_slug' => [
+							'required' => false,
+							'type'     => 'string',
+							'default'  => 'default',
 						],
 					],
 				],
@@ -117,7 +143,8 @@ class Columns_Controller extends Base_Controller {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public function get_columns( $request ) {
-		$dashboard_data = $this->get_dashboard_data();
+		$app_slug = $request->get_param( 'app_slug' ) ?: 'default';
+		$dashboard_data = $this->get_dashboard_data( $app_slug );
 
 		if ( is_wp_error( $dashboard_data ) ) {
 			return $dashboard_data;
@@ -139,9 +166,10 @@ class Columns_Controller extends Base_Controller {
 	 */
 	public function create_column( $request ) {
 		$title = $request->get_param( 'title' );
+		$app_slug = $request->get_param( 'app_slug' ) ?: 'default';
 
 		// Get current dashboard data.
-		$dashboard_data = $this->get_dashboard_data();
+		$dashboard_data = $this->get_dashboard_data( $app_slug );
 
 		if ( is_wp_error( $dashboard_data ) ) {
 			return $dashboard_data;
@@ -162,7 +190,7 @@ class Columns_Controller extends Base_Controller {
 		$dashboard_data['columns'] = $columns;
 
 		// Save updated dashboard data.
-		$result = Dashboard_Manager::save_dashboard_data( $dashboard_data );
+		$result = Dashboard_Manager::save_dashboard_data( $dashboard_data, $app_slug );
 
 		if ( is_wp_error( $result ) ) {
 			return $this->error_response( 'Unable to save dashboard data: ' . $result->get_error_message(), 500, 'save_error' );
@@ -182,8 +210,9 @@ class Columns_Controller extends Base_Controller {
 	 */
 	public function get_column( $request ) {
 		$column_id = $request->get_param( 'id' );
+		$app_slug = $request->get_param( 'app_slug' ) ?: 'default';
 
-		$dashboard_data = $this->get_dashboard_data();
+		$dashboard_data = $this->get_dashboard_data( $app_slug );
 
 		if ( is_wp_error( $dashboard_data ) ) {
 			return $dashboard_data;
@@ -210,8 +239,9 @@ class Columns_Controller extends Base_Controller {
 	public function update_column( $request ) {
 		$column_id = $request->get_param( 'id' );
 		$title     = $request->get_param( 'title' );
+		$app_slug = $request->get_param( 'app_slug' ) ?: 'default';
 
-		$dashboard_data = $this->get_dashboard_data();
+		$dashboard_data = $this->get_dashboard_data( $app_slug );
 
 		if ( is_wp_error( $dashboard_data ) ) {
 			return $dashboard_data;
@@ -225,7 +255,7 @@ class Columns_Controller extends Base_Controller {
 
 		$this->update_column_data( $column_id, $title, $dashboard_data );
 
-		$result = Dashboard_Manager::save_dashboard_data( $dashboard_data );
+		$result = Dashboard_Manager::save_dashboard_data( $dashboard_data, $app_slug );
 
 		if ( is_wp_error( $result ) ) {
 			return $this->error_response( 'Unable to save dashboard data: ' . $result->get_error_message(), 500, 'save_error' );
@@ -245,8 +275,9 @@ class Columns_Controller extends Base_Controller {
 	 */
 	public function delete_column( $request ) {
 		$column_id = $request->get_param( 'id' );
+		$app_slug = $request->get_param( 'app_slug' ) ?: 'default';
 
-		$dashboard_data = $this->get_dashboard_data();
+		$dashboard_data = $this->get_dashboard_data( $app_slug );
 
 		if ( is_wp_error( $dashboard_data ) ) {
 			return $dashboard_data;
@@ -260,7 +291,7 @@ class Columns_Controller extends Base_Controller {
 
 		$this->remove_column( $column_id, $dashboard_data );
 
-		$result = Dashboard_Manager::save_dashboard_data( $dashboard_data );
+		$result = Dashboard_Manager::save_dashboard_data( $dashboard_data, $app_slug );
 
 		if ( is_wp_error( $result ) ) {
 			return $this->error_response( 'Unable to save dashboard data: ' . $result->get_error_message(), 500, 'save_error' );

@@ -44,7 +44,13 @@ class Dashboard_Controller extends Base_Controller {
 					'methods'             => \WP_REST_Server::READABLE,
 					'callback'            => [ $this, 'get_dashboard' ],
 					'permission_callback' => [ $this, 'check_permissions' ],
-					'args'                => [],
+					'args'                => [
+						'app_slug' => [
+							'required' => false,
+							'type'     => 'string',
+							'default'  => 'default',
+						],
+					],
 				],
 				[
 					'methods'             => \WP_REST_Server::EDITABLE,
@@ -55,6 +61,11 @@ class Dashboard_Controller extends Base_Controller {
 							'required'          => true,
 							'type'              => 'array',
 							'validate_callback' => [ $this, 'validate_columns' ],
+						],
+						'app_slug' => [
+							'required' => false,
+							'type'     => 'string',
+							'default'  => 'default',
 						],
 					],
 				],
@@ -75,6 +86,11 @@ class Dashboard_Controller extends Base_Controller {
 							'required' => true,
 							'type'     => 'object',
 						],
+						'app_slug' => [
+							'required' => false,
+							'type'     => 'string',
+							'default'  => 'default',
+						],
 					],
 				],
 			]
@@ -91,7 +107,8 @@ class Dashboard_Controller extends Base_Controller {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public function get_dashboard( $request ) {
-		$data = Dashboard_Manager::get_enhanced_dashboard_data();
+		$app_slug = $request->get_param( 'app_slug' ) ?: 'default';
+		$data = Dashboard_Manager::get_enhanced_dashboard_data( $app_slug );
 
 		return $this->success_response( $data );
 	}
@@ -107,6 +124,7 @@ class Dashboard_Controller extends Base_Controller {
 	 */
 	public function save_dashboard( $request ) {
 		$columns = $request->get_param( 'columns' );
+		$app_slug = $request->get_param( 'app_slug' ) ?: 'default';
 
 		if ( ! is_array( $columns ) ) {
 			return $this->error_response( 'Columns must be an array', 400, 'invalid_columns' );
@@ -125,7 +143,7 @@ class Dashboard_Controller extends Base_Controller {
 			'columns' => $layout_columns,
 		];
 
-		$result = Dashboard_Manager::save_dashboard_data( $dashboard_data );
+		$result = Dashboard_Manager::save_dashboard_data( $dashboard_data, $app_slug );
 		if ( is_wp_error( $result ) ) {
 			return $this->error_response( 'Unable to save dashboard data: ' . $result->get_error_message(), 500, 'save_error' );
 		}
@@ -145,12 +163,13 @@ class Dashboard_Controller extends Base_Controller {
 	public function reorder_widgets( $request ) {
 		try {
 			$column_widgets = $request->get_param( 'column_widgets' );
+			$app_slug = $request->get_param( 'app_slug' ) ?: 'default';
 
 			if ( ! is_array( $column_widgets ) ) {
 				return $this->error_response( 'Column widgets must be an array', 400, 'invalid_column_widgets' );
 			}
 
-			$dashboard_data = $this->get_dashboard_data();
+			$dashboard_data = $this->get_dashboard_data( $app_slug );
 
 			if ( is_wp_error( $dashboard_data ) ) {
 				return $dashboard_data;
@@ -197,13 +216,13 @@ class Dashboard_Controller extends Base_Controller {
 
 			$dashboard_data['columns'] = $updated_columns;
 
-			$current_data = $this->get_dashboard_data();
+			$current_data = $this->get_dashboard_data( $app_slug );
 
 			if ( $current_data === $dashboard_data ) {
 				return $this->success_response( [ 'message' => 'Widgets reordered successfully' ] );
 			}
 
-			$result = Dashboard_Manager::save_dashboard_data( $dashboard_data );
+			$result = Dashboard_Manager::save_dashboard_data( $dashboard_data, $app_slug );
 			if ( is_wp_error( $result ) ) {
 				return $this->error_response( 'Unable to save widget order: ' . $result->get_error_message(), 500, 'save_error' );
 			}

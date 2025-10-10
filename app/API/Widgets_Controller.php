@@ -64,6 +64,11 @@ class Widgets_Controller extends Base_Controller {
 							'required'          => true,
 							'validate_callback' => [ $this, 'validate_widget_id' ],
 						],
+						'app_slug' => [
+							'required' => false,
+							'type'     => 'string',
+							'default'  => 'default',
+						],
 					],
 				],
 			]
@@ -86,6 +91,11 @@ class Widgets_Controller extends Base_Controller {
 						'settings' => [
 							'required' => true,
 							'type'     => 'object',
+						],
+						'app_slug' => [
+							'required' => false,
+							'type'     => 'string',
+							'default'  => 'default',
 						],
 					],
 				],
@@ -153,6 +163,7 @@ class Widgets_Controller extends Base_Controller {
 	 */
 	public function get_widget_data( $request ) {
 		$widget_id = $request->get_param( 'id' );
+		$app_slug = $request->get_param( 'app_slug' ) ?: 'default';
 
 		// Get widget from the new system.
 		$widget = Widget_Dispatcher::get_widget( $widget_id );
@@ -162,7 +173,7 @@ class Widgets_Controller extends Base_Controller {
 		}
 
 		// Get widget settings from WordPress options.
-		$dashboard_data = $this->get_dashboard_data();
+		$dashboard_data = $this->get_dashboard_data( $app_slug );
 
 		if ( is_wp_error( $dashboard_data ) ) {
 			return $dashboard_data;
@@ -269,6 +280,7 @@ class Widgets_Controller extends Base_Controller {
 	public function save_widget_settings( $request ) {
 		$widget_id = sanitize_key( $request->get_param( 'id' ) );
 		$settings  = $request->get_param( 'settings' );
+		$app_slug = $request->get_param( 'app_slug' ) ?: 'default';
 
 		// Basic validation.
 		if ( empty( $widget_id ) ) {
@@ -279,7 +291,7 @@ class Widgets_Controller extends Base_Controller {
 			return $this->error_response( 'Settings must be an array', 400, 'invalid_settings' );
 		}
 
-		$result = Widget_Dispatcher::update_widget_settings( $widget_id, $settings );
+		$result = Widget_Dispatcher::update_widget_settings( $widget_id, $settings, $app_slug );
 
 		if ( is_wp_error( $result ) ) {
 			return $this->error_response( $result->get_error_message(), 400, $result->get_error_code() );

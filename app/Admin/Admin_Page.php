@@ -49,7 +49,29 @@ class Admin_Page {
 	 * @since 1.0.0
 	 */
 	public function render_page_content() {
-		View::render( 'pages/app' );
+		// Support multiple dashboards on same page
+		$dashboard_configs = [
+			[
+				'id' => 'main-dashboard',
+				'slug' => 'main',
+				'title' => 'Main Dashboard',
+				'container' => '#dashboard-main'
+			],
+			[
+				'id' => 'analytics-dashboard',
+				'slug' => 'analytics',
+				'title' => 'Analytics Dashboard',
+				'container' => '#dashboard-analytics'
+			],
+			[
+				'id' => 'reports-dashboard',
+				'slug' => 'reports',
+				'title' => 'Reports Dashboard',
+				'container' => '#dashboard-reports'
+			]
+		];
+
+		View::render( 'pages/app', [ 'dashboard_configs' => $dashboard_configs ] );
 	}
 
 	/**
@@ -73,6 +95,7 @@ class Admin_Page {
 			wp_enqueue_style( 'wp-components' );
 
 			wp_enqueue_style( 'dashmate-main', DASHMATE_URL . '/assets/index.css', [ 'wp-components' ], $asset_file['version'] );
+			wp_enqueue_style( 'dashmate-multi-dashboard', DASHMATE_URL . '/resources/css/multi-dashboard.css', [ 'dashmate-main' ], $asset_file['version'] );
 			wp_enqueue_script( 'dashmate-main', DASHMATE_URL . '/assets/index.js', $asset_file['dependencies'], $asset_file['version'], true );
 			wp_localize_script(
 				'dashmate-main',

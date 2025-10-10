@@ -1,0 +1,46 @@
+/* Multi-Dashboard Layout Styles */
+
+.dashmate-dashboard {
+	margin: 20px 0;
+	padding: 20px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	background: #fff;
+}
+
+.dashmate-dashboard h2 {
+	margin-top: 0;
+	margin-bottom: 15px;
+	color: #23282d;
+	border-bottom: 1px solid #eee;
+	padding-bottom: 10px;
+}
+
+.dashboard-content {
+	min-height: 200px;
+}
+
+/* Responsive layout */
+@media (min-width: 768px) {
+	.dashmate-dashboard {
+		display: inline-block;
+		width: 48%;
+		margin-right: 2%;
+		vertical-align: top;
+	}
+
+	.dashmate-dashboard:nth-child(even) {
+		margin-right: 0;
+	}
+}
+
+@media (min-width: 1200px) {
+	.dashmate-dashboard {
+		width: 31%;
+		margin-right: 2%;
+	}
+
+	.dashmate-dashboard:nth-child(3n) {
+		margin-right: 0;
+	}
+}

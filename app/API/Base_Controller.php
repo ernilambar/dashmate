@@ -149,10 +149,11 @@ abstract class Base_Controller {
 	 *
 	 * @since 1.0.0
 	 *
+	 * @param string $app_slug App slug for multi-dashboard support.
 	 * @return array|WP_Error
 	 */
-	protected function get_dashboard_data() {
-		$data = Dashboard_Manager::get_dashboard_data();
+	protected function get_dashboard_data( $app_slug = 'default' ) {
+		$data = Dashboard_Manager::get_dashboard_data( $app_slug );
 
 		return $data;
 	}

@@ -28,10 +28,11 @@ class Widget_Manager {
 	 * @param string $type      Widget type.
 	 * @param array  $settings  Initial settings.
 	 * @param string $column_id Column ID to add widget to.
+	 * @param string $app_slug  App slug for multi-dashboard support.
 	 *
 	 * @return array|WP_Error
 	 */
-	public static function create_widget( $type, $settings = [], $column_id = null ) {
+	public static function create_widget( $type, $settings = [], $column_id = null, $app_slug = 'default' ) {
 		// Validate widget type.
 		if ( ! Widget_Type_Manager::is_widget_type_registered( $type ) ) {
 			return new WP_Error( 'unknown_widget_type', 'Unknown widget type: ' . $type );
@@ -51,7 +52,7 @@ class Widget_Manager {
 
 		// Add to dashboard if column_id provided.
 		if ( $column_id ) {
-			$result = self::add_widget_to_column( $widget, $column_id );
+			$result = self::add_widget_to_column( $widget, $column_id, $app_slug );
 			if ( is_wp_error( $result ) ) {
 				return $result;
 			}
@@ -66,11 +67,12 @@ class Widget_Manager {
 	 * @since 1.0.0
 	 *
 	 * @param string $widget_id Widget ID.
+	 * @param string $app_slug  App slug for multi-dashboard support.
 	 *
 	 * @return array|null
 	 */
-	public static function get_widget( $widget_id ) {
-		$dashboard_data = self::get_dashboard_data();
+	public static function get_widget( $widget_id, $app_slug = 'default' ) {
+		$dashboard_data = self::get_dashboard_data( $app_slug );
 
 		if ( is_wp_error( $dashboard_data ) ) {
 			return null;
@@ -86,11 +88,12 @@ class Widget_Manager {
 	 *
 	 * @param string $widget_id Widget ID.
 	 * @param array  $settings  New settings.
+	 * @param string $app_slug  App slug for multi-dashboard support.
 	 *
 	 * @return bool|WP_Error
 	 */
-	public static function update_widget_settings( $widget_id, $settings ) {
-		$dashboard_data = self::get_dashboard_data();
+	public static function update_widget_settings( $widget_id, $settings, $app_slug = 'default' ) {
+		$dashboard_data = self::get_dashboard_data( $app_slug );
 
 		if ( is_wp_error( $dashboard_data ) ) {
 			return $dashboard_data;
@@ -107,7 +110,7 @@ class Widget_Manager {
 		$widget['updated']  = current_time( 'mysql' );
 
 		// Save dashboard data.
-		return self::save_dashboard_data( $dashboard_data );
+		return self::save_dashboard_data( $dashboard_data, $app_slug );
 	}
 
 	/**
@@ -116,11 +119,12 @@ class Widget_Manager {
 	 * @since 1.0.0
 	 *
 	 * @param string $widget_id Widget ID.
+	 * @param string $app_slug  App slug for multi-dashboard support.
 	 *
 	 * @return bool|WP_Error
 	 */
-	public static function delete_widget( $widget_id ) {
-		$dashboard_data = self::get_dashboard_data();
+	public static function delete_widget( $widget_id, $app_slug = 'default' ) {
+		$dashboard_data = self::get_dashboard_data( $app_slug );
 
 		if ( is_wp_error( $dashboard_data ) ) {
 			return $dashboard_data;
@@ -152,7 +156,7 @@ class Widget_Manager {
 			}
 		}
 
-		return self::save_dashboard_data( $dashboard_data );
+		return self::save_dashboard_data( $dashboard_data, $app_slug );
 	}
 
 	/**
@@ -240,11 +244,12 @@ class Widget_Manager {
 	 *
 	 * @param array  $widget    Widget data.
 	 * @param string $column_id Column ID.
+	 * @param string $app_slug  App slug for multi-dashboard support.
 	 *
 	 * @return bool|WP_Error
 	 */
-	private static function add_widget_to_column( $widget, $column_id ) {
-		$dashboard_data = self::get_dashboard_data();
+	private static function add_widget_to_column( $widget, $column_id, $app_slug = 'default' ) {
+		$dashboard_data = self::get_dashboard_data( $app_slug );
 
 		if ( is_wp_error( $dashboard_data ) ) {
 			return $dashboard_data;
@@ -270,7 +275,7 @@ class Widget_Manager {
 
 		$target_column['widgets'][] = $widget;
 
-		return self::save_dashboard_data( $dashboard_data );
+		return self::save_dashboard_data( $dashboard_data, $app_slug );
 	}
 
 	/**
@@ -278,10 +283,11 @@ class Widget_Manager {
 	 *
 	 * @since 1.0.0
 	 *
+	 * @param string $app_slug App slug for multi-dashboard support.
 	 * @return array|WP_Error
 	 */
-	private static function get_dashboard_data() {
-		return Dashboard_Manager::get_enhanced_dashboard_data();
+	private static function get_dashboard_data( $app_slug = 'default' ) {
+		return Dashboard_Manager::get_enhanced_dashboard_data( $app_slug );
 	}
 
 	/**
@@ -289,11 +295,12 @@ class Widget_Manager {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $data Dashboard data.
+	 * @param array  $data     Dashboard data.
+	 * @param string $app_slug App slug for multi-dashboard support.
 	 *
 	 * @return bool|WP_Error
 	 */
-	private static function save_dashboard_data( $data ) {
-		return Dashboard_Manager::save_dashboard_data( $data );
+	private static function save_dashboard_data( $data, $app_slug = 'default' ) {
+		return Dashboard_Manager::save_dashboard_data( $data, $app_slug );
 	}
 }
