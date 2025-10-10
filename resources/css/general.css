@@ -140,12 +140,6 @@
 	overflow: hidden;
 }
 
-.column-content.dragging-over {
-	background-color: #f0f8ff;
-	border: 2px dashed #0073aa;
-	border-radius: 6px;
-}
-
 .empty-column {
 	text-align: center;
 	padding: 40px 20px;

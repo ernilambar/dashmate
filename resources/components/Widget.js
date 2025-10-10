@@ -1,5 +1,4 @@
 import { Component } from 'react';
-import { Draggable } from '@hello-pangea/dnd';
 import WidgetContent from './WidgetContent';
 import WidgetSettingsForm from './WidgetSettingsForm';
 import Icon from './Icon';
@@ -73,49 +72,38 @@ class Widget extends Component {
 	};
 
 	renderErrorWidget( error ) {
-		const { widget, index } = this.props;
+		const { widget } = this.props;
 		const { fadeState } = this.state;
 
 		return (
-			<Draggable draggableId={ widget.id } index={ index }>
-				{ ( provided, snapshot ) => (
-					<div
-						className={ this.getWidgetClasses( 'error', widget.id, [], {
-							isDragging: snapshot.isDragging,
-							state: 'error',
-						} ) }
-						ref={ provided.innerRef }
-						{ ...provided.draggableProps }
-					>
-						<div className="widget-header" { ...provided.dragHandleProps }>
-							<h3>
-								<Icon name="error-warning-line" size="md" />
-								Widget Error
-							</h3>
-						</div>
-						<div
-							className={ `widget-content ${
-								fadeState !== 'normal' ? fadeState : ''
-							}` }
-						>
-							<div className="widget-error-message">
-								<p>
-									<strong>Error:</strong> { error.message }
-								</p>
-								<p>
-									<strong>Widget ID:</strong> { widget.id }
-								</p>
-							</div>
-						</div>
+			<div
+				className={ this.getWidgetClasses( 'error', widget.id, [], {
+					state: 'error',
+				} ) }
+			>
+				<div className="widget-header">
+					<h3>
+						<Icon name="error-warning-line" size="md" />
+						Widget Error
+					</h3>
+				</div>
+				<div className={ `widget-content ${ fadeState !== 'normal' ? fadeState : '' }` }>
+					<div className="widget-error-message">
+						<p>
+							<strong>Error:</strong> { error.message }
+						</p>
+						<p>
+							<strong>Widget ID:</strong> { widget.id }
+						</p>
 					</div>
-				) }
-			</Draggable>
+				</div>
+			</div>
 		);
 	}
 
 	renderBasicWidget() {
-		const { widget, widgets, index } = this.props;
-		const { collapsed, showSettings, fadeState } = this.state;
+		const { widget, widgets } = this.props;
+		const { collapsed, fadeState } = this.state;
 
 		// Use title and icon from widget data (now provided by API) or fallback to schema.
 		const widgetTitle =
@@ -123,52 +111,41 @@ class Widget extends Component {
 		const widgetIcon = widget.icon || widgets[ widget.id ]?.icon || 'settings';
 
 		return (
-			<Draggable draggableId={ widget.id } index={ index }>
-				{ ( provided, snapshot ) => (
+			<div
+				className={ this.getWidgetClasses( 'basic', widget.id, [], {
+					collapsed,
+				} ) }
+			>
+				<div className="widget-header">
+					<h3>
+						<Icon name={ widgetIcon } size="md" />
+						{ widgetTitle }
+					</h3>
+					<div className="widget-actions">
+						<button
+							className="dm-icon-button dm-icon-button--small widget-toggle"
+							onClick={ this.toggleCollapse }
+						>
+							<Icon
+								name={
+									collapsed ? 'arrow-down-double-line' : 'arrow-up-double-line'
+								}
+								size="sm"
+							/>
+						</button>
+					</div>
+				</div>
+				{ ! collapsed && (
 					<div
-						className={ this.getWidgetClasses( 'basic', widget.id, [], {
-							collapsed,
-							isDragging: snapshot.isDragging,
-						} ) }
-						ref={ provided.innerRef }
-						{ ...provided.draggableProps }
+						className={ `widget-content ${ fadeState !== 'normal' ? fadeState : '' }` }
 					>
-						<div className="widget-header" { ...provided.dragHandleProps }>
-							<h3>
-								<Icon name={ widgetIcon } size="md" />
-								{ widgetTitle }
-							</h3>
-							<div className="widget-actions">
-								<button
-									className="dm-icon-button dm-icon-button--small widget-toggle"
-									onClick={ this.toggleCollapse }
-								>
-									<Icon
-										name={
-											collapsed
-												? 'arrow-down-double-line'
-												: 'arrow-up-double-line'
-										}
-										size="sm"
-									/>
-								</button>
-							</div>
+						<div className="widget-basic-message">
+							<p>Widget configuration not available.</p>
+							<p>Check console for details.</p>
 						</div>
-						{ ! collapsed && (
-							<div
-								className={ `widget-content ${
-									fadeState !== 'normal' ? fadeState : ''
-								}` }
-							>
-								<div className="widget-basic-message">
-									<p>Widget configuration not available.</p>
-									<p>Check console for details.</p>
-								</div>
-							</div>
-						) }
 					</div>
 				) }
-			</Draggable>
+			</div>
 		);
 	}
 
@@ -301,33 +278,22 @@ class Widget extends Component {
 		// Show loading state while data is being fetched (but not for collapsed widgets).
 		if ( loading && ! collapsed ) {
 			return (
-				<Draggable draggableId={ widget.id } index={ index }>
-					{ ( provided, snapshot ) => (
-						<div
-							className={ this.getWidgetClasses( 'loading', widget.id, [], {
-								isDragging: snapshot.isDragging,
-								state: 'loading',
-							} ) }
-							ref={ provided.innerRef }
-							{ ...provided.draggableProps }
-						>
-							<div className="widget-header" { ...provided.dragHandleProps }>
-								<h3>
-									<Icon
-										name="refresh-line"
-										size="md"
-										className="widget-loading-icon"
-									/>
-								</h3>
-							</div>
-							<div className="widget-content">
-								<div className="widget-loading">
-									<p>Loading widget data...</p>
-								</div>
-							</div>
+				<div
+					className={ this.getWidgetClasses( 'loading', widget.id, [], {
+						state: 'loading',
+					} ) }
+				>
+					<div className="widget-header">
+						<h3>
+							<Icon name="refresh-line" size="md" className="widget-loading-icon" />
+						</h3>
+					</div>
+					<div className="widget-content">
+						<div className="widget-loading">
+							<p>Loading widget data...</p>
 						</div>
-					) }
-				</Draggable>
+					</div>
+				</div>
 			);
 		}
 
@@ -359,97 +325,84 @@ class Widget extends Component {
 		}
 
 		return (
-			<Draggable draggableId={ widget.id } index={ index }>
-				{ ( provided, snapshot ) => (
-					<div
-						className={ this.getWidgetClasses( widgetType, widget.id, customClasses, {
-							collapsed,
-							isDragging: snapshot.isDragging,
-						} ) }
-						ref={ provided.innerRef }
-						{ ...provided.draggableProps }
-						{ ...customAttributes }
-					>
-						<div className="widget-header" { ...provided.dragHandleProps }>
-							<h3>
-								{ widgetIcon && <Icon name={ widgetIcon } size="md" /> }
-								{ widgetTitle }
-							</h3>
-							<div className="widget-actions">
-								{ ! collapsed && (
-									<button
-										className={ `dm-icon-button dm-icon-button--small widget-reload ${
-											reloading ? 'reloading' : ''
-										}` }
-										onClick={ this.handleReload }
-										title="Reload Widget"
-										disabled={ reloading }
-									>
-										<Icon name="loop-right-line" size="sm" />
-									</button>
-								) }
-								{ ! collapsed &&
-									widgetSchema?.settings_schema &&
-									Object.keys( widgetSchema.settings_schema ).length > 0 && (
-										<button
-											className={ `dm-icon-button dm-icon-button--small widget-settings ${
-												settingsSaveStatus
-													? `settings-${ settingsSaveStatus }`
-													: ''
-											}` }
-											onClick={ this.openWidgetSettings }
-											title="Settings"
-										>
-											<Icon name="settings-4-line" size="sm" />
-										</button>
-									) }
-								<button
-									className="dm-icon-button dm-icon-button--small widget-toggle"
-									onClick={ this.toggleCollapse }
-								>
-									<Icon
-										name={
-											collapsed
-												? 'arrow-down-double-line'
-												: 'arrow-up-double-line'
-										}
-										size="sm"
-									/>
-								</button>
-							</div>
-						</div>
+			<div
+				className={ this.getWidgetClasses( widgetType, widget.id, customClasses, {
+					collapsed,
+				} ) }
+				{ ...customAttributes }
+			>
+				<div className="widget-header">
+					<h3>
+						{ widgetIcon && <Icon name={ widgetIcon } size="md" /> }
+						{ widgetTitle }
+					</h3>
+					<div className="widget-actions">
 						{ ! collapsed && (
-							<div
-								className={ `widget-content ${
-									fadeState !== 'normal' ? fadeState : ''
+							<button
+								className={ `dm-icon-button dm-icon-button--small widget-reload ${
+									reloading ? 'reloading' : ''
 								}` }
+								onClick={ this.handleReload }
+								title="Reload Widget"
+								disabled={ reloading }
 							>
-								{ showSettings && (
-									<div className="widget-settings-panel">
-										<WidgetSettingsForm
-											schema={ widgetSchema?.settings_schema || {} }
-											values={ widgetData?.settings || widget.settings || {} }
-											onChange={ this.handleSettingsChange }
-											onClose={ this.openWidgetSettings }
-											onSaveStatus={ this.handleSettingsSaveStatus }
-											onRemove={ onRemove }
-											widgetId={ widget.id }
-										/>
-									</div>
-								) }
-								<WidgetContent
-									widget={ { ...widget, type: widgetType } }
-									widgetData={ widgetData }
-									settings={ widgetData?.settings || widget.settings || {} }
-									widgetSchemas={ widgets }
-									onSettingsChange={ this.handleSettingsChange }
-									onReloadWidget={ this.handleReload }
+								<Icon name="loop-right-line" size="sm" />
+							</button>
+						) }
+						{ ! collapsed &&
+							widgetSchema?.settings_schema &&
+							Object.keys( widgetSchema.settings_schema ).length > 0 && (
+								<button
+									className={ `dm-icon-button dm-icon-button--small widget-settings ${
+										settingsSaveStatus ? `settings-${ settingsSaveStatus }` : ''
+									}` }
+									onClick={ this.openWidgetSettings }
+									title="Settings"
+								>
+									<Icon name="settings-4-line" size="sm" />
+								</button>
+							) }
+						<button
+							className="dm-icon-button dm-icon-button--small widget-toggle"
+							onClick={ this.toggleCollapse }
+						>
+							<Icon
+								name={
+									collapsed ? 'arrow-down-double-line' : 'arrow-up-double-line'
+								}
+								size="sm"
+							/>
+						</button>
+					</div>
+				</div>
+				{ ! collapsed && (
+					<div
+						className={ `widget-content ${ fadeState !== 'normal' ? fadeState : '' }` }
+					>
+						{ showSettings && (
+							<div className="widget-settings-panel">
+								<WidgetSettingsForm
+									schema={ widgetSchema?.settings_schema || {} }
+									values={ widgetData?.settings || widget.settings || {} }
+									onChange={ this.handleSettingsChange }
+									onClose={ this.openWidgetSettings }
+									onSaveStatus={ this.handleSettingsSaveStatus }
+									onRemove={ onRemove }
+									widgetId={ widget.id }
 								/>
 							</div>
 						) }
+						<WidgetContent
+							widget={ { ...widget, type: widgetType } }
+							widgetData={ widgetData }
+							settings={ widgetData?.settings || widget.settings || {} }
+							widgetSchemas={ widgets }
+							onSettingsChange={ this.handleSettingsChange }
+							onReloadWidget={ this.handleReload }
+						/>
 					</div>
 				) }
-			</Draggable>
+			</div>
 		);
 	}
 }

@@ -2,7 +2,7 @@
 	"name": "dashmate",
 	"version": "1.0.0",
 	"title": "Dashmate",
-	"description": "WordPress plugin for custom dashboard layouts with drag-and-drop widgets.",
+	"description": "WordPress plugin for custom dashboard layouts with widgets.",
 	"author": "Nilambar Sharma",
 	"license": "GPL-2.0-or-later",
 	"main_file": "dashmate.php",

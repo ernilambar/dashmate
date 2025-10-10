@@ -16,13 +16,6 @@
 	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
-.widget.dragging {
-	transform: rotate(5deg);
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-	cursor: grabbing;
-	z-index: 1000;
-}
-
 .widget-header {
 	display: flex;
 	justify-content: space-between;
@@ -36,8 +29,6 @@
 	min-height: 32px; /* Ensure consistent height */
 	box-sizing: border-box;
 }
-
-/* Removed drag indicator dots from header */
 
 .widget-header:hover {
 	background: #f0f0f0;
