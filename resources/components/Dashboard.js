@@ -24,7 +24,12 @@ class Dashboard extends Component {
 
 	async loadDashboard() {
 		try {
-			const response = await fetch( `${ dashmateApiSettings.restUrl }dashboard`, {
+			const url = new URL( `${ dashmateApiSettings.restUrl }dashboard` );
+			if ( this.props.dashboardId ) {
+				url.searchParams.set( 'dashboard_id', this.props.dashboardId );
+			}
+
+			const response = await fetch( url.toString(), {
 				headers: {
 					'X-WP-Nonce': dashmateApiSettings?.nonce || '',
 				},
@@ -77,7 +82,12 @@ class Dashboard extends Component {
 
 	async saveDashboard( dashboardData ) {
 		try {
-			const response = await fetch( `${ dashmateApiSettings.restUrl }dashboard`, {
+			const url = new URL( `${ dashmateApiSettings.restUrl }dashboard` );
+			if ( this.props.dashboardId ) {
+				url.searchParams.set( 'dashboard_id', this.props.dashboardId );
+			}
+
+			const response = await fetch( url.toString(), {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -135,7 +145,12 @@ class Dashboard extends Component {
 
 		// Save the updated dashboard to the server.
 		try {
-			const response = await fetch( `${ dashmateApiSettings.restUrl }dashboard`, {
+			const url = new URL( `${ dashmateApiSettings.restUrl }dashboard` );
+			if ( this.props.dashboardId ) {
+				url.searchParams.set( 'dashboard_id', this.props.dashboardId );
+			}
+
+			const response = await fetch( url.toString(), {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -190,7 +205,12 @@ class Dashboard extends Component {
 
 		// Save the updated dashboard to the server.
 		try {
-			const response = await fetch( `${ dashmateApiSettings.restUrl }dashboard`, {
+			const url = new URL( `${ dashmateApiSettings.restUrl }dashboard` );
+			if ( this.props.dashboardId ) {
+				url.searchParams.set( 'dashboard_id', this.props.dashboardId );
+			}
+
+			const response = await fetch( url.toString(), {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -311,6 +331,7 @@ class Dashboard extends Component {
 										columnWidgets={ columnWidgets }
 										onWidgetPropertyUpdate={ this.handleWidgetPropertyUpdate }
 										onWidgetRemove={ this.handleWidgetRemove }
+										dashboardId={ this.props.dashboardId }
 									/>
 								);
 							} )

@@ -200,6 +200,12 @@ abstract class Abstract_Dashboard_Page {
 	 * @param string $hook Hook name.
 	 */
 	public function enqueue_dashboard_assets( $hook ) {
+		// Only enqueue assets on our specific dashboard page.
+		// Check if the hook contains our page slug (more flexible approach).
+		if ( false === strpos( $hook, $this->page_slug ) ) {
+			return;
+		}
+
 		$asset_file_path = DASHMATE_DIR . '/assets/index.asset.php';
 
 		if ( ! file_exists( $asset_file_path ) ) {
@@ -228,14 +234,12 @@ abstract class Abstract_Dashboard_Page {
 			true
 		);
 
-		// Localize script with API settings.
+		// Localize script with API settings (only nonce and restUrl needed now).
 		$api_settings = apply_filters(
 			'dashmate_dashboard_api_settings',
 			[
-				'nonce'       => wp_create_nonce( 'wp_rest' ),
-				'restUrl'     => rest_url( 'dashmate/v1/' ),
-				'dashboardId' => $this->dashboard_id,
-				'pageSlug'    => $this->page_slug,
+				'nonce'   => wp_create_nonce( 'wp_rest' ),
+				'restUrl' => rest_url( 'dashmate/v1/' ),
 			],
 			$this->page_slug,
 			$this->dashboard_id
@@ -350,8 +354,30 @@ abstract class Abstract_Dashboard_Page {
 	 * @since 1.0.0
 	 */
 	private function register_starter_layout() {
-		if ( ! empty( $this->starter_layout ) && 'main' === $this->dashboard_id ) {
-			Dashboard_Model::set_starter_layout( $this->starter_layout );
+		if ( ! empty( $this->starter_layout ) ) {
+			if ( 'main' === $this->dashboard_id ) {
+				Dashboard_Model::set_starter_layout( $this->starter_layout );
+			} else {
+				// For non-main dashboards, use a filter to set the starter layout.
+				add_filter( 'dashmate_starter_layout', [ $this, 'get_starter_layout_for_dashboard' ], 10, 2 );
+			}
 		}
+	}
+
+	/**
+	 * Get starter layout for specific dashboard.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $default_layout Default layout.
+	 * @param string $dashboard_id   Dashboard ID.
+	 * @return string Starter layout.
+	 */
+	public function get_starter_layout_for_dashboard( $default_layout, $dashboard_id ) {
+		if ( $dashboard_id === $this->dashboard_id ) {
+			return $this->starter_layout;
+		}
+
+		return $default_layout;
 	}
 }

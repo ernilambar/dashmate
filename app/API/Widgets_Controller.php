@@ -152,7 +152,8 @@ class Widgets_Controller extends Base_Controller {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public function get_widget_data( $request ) {
-		$widget_id = $request->get_param( 'id' );
+		$widget_id    = $request->get_param( 'id' );
+		$dashboard_id = $this->get_dashboard_id_from_request( $request );
 
 		// Get widget from the new system.
 		$widget = Widget_Dispatcher::get_widget( $widget_id );
@@ -162,7 +163,7 @@ class Widgets_Controller extends Base_Controller {
 		}
 
 		// Get widget settings from WordPress options.
-		$dashboard_data = $this->get_dashboard_data();
+		$dashboard_data = $this->get_dashboard_data( $dashboard_id );
 
 		if ( is_wp_error( $dashboard_data ) ) {
 			return $dashboard_data;
@@ -267,8 +268,9 @@ class Widgets_Controller extends Base_Controller {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public function save_widget_settings( $request ) {
-		$widget_id = sanitize_key( $request->get_param( 'id' ) );
-		$settings  = $request->get_param( 'settings' );
+		$widget_id    = sanitize_key( $request->get_param( 'id' ) );
+		$settings     = $request->get_param( 'settings' );
+		$dashboard_id = $this->get_dashboard_id_from_request( $request );
 
 		// Basic validation.
 		if ( empty( $widget_id ) ) {
@@ -279,7 +281,7 @@ class Widgets_Controller extends Base_Controller {
 			return $this->error_response( 'Settings must be an array', 400, 'invalid_settings' );
 		}
 
-		$result = Widget_Dispatcher::update_widget_settings( $widget_id, $settings );
+		$result = Widget_Dispatcher::update_widget_settings( $widget_id, $settings, $dashboard_id );
 
 		if ( is_wp_error( $result ) ) {
 			return $this->error_response( $result->get_error_message(), 400, $result->get_error_code() );
@@ -327,5 +329,25 @@ class Widgets_Controller extends Base_Controller {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Get dashboard ID from request.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_REST_Request $request Request object.
+	 * @return string Dashboard ID.
+	 */
+	private function get_dashboard_id_from_request( $request ) {
+		// Try to get dashboard_id from request parameters first.
+		$dashboard_id = $request->get_param( 'dashboard_id' );
+
+		if ( ! empty( $dashboard_id ) ) {
+			return sanitize_key( $dashboard_id );
+		}
+
+		// Fallback to 'main' if not provided.
+		return 'main';
 	}
 }

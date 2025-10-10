@@ -244,13 +244,14 @@ class Widget_Dispatcher {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $widget_id Widget ID.
-	 * @param array  $settings  Widget settings.
+	 * @param string $widget_id    Widget ID.
+	 * @param array  $settings     Widget settings.
+	 * @param string $dashboard_id Dashboard ID. Defaults to 'main'.
 	 *
 	 * @return bool|WP_Error
 	 */
-	public static function update_widget_settings( $widget_id, $settings ) {
-		$dashboard_data = self::get_dashboard_data();
+	public static function update_widget_settings( $widget_id, $settings, $dashboard_id = 'main' ) {
+		$dashboard_data = self::get_dashboard_data( $dashboard_id );
 
 		if ( is_wp_error( $dashboard_data ) ) {
 			return $dashboard_data;
@@ -284,7 +285,7 @@ class Widget_Dispatcher {
 						}
 
 						$widget['settings'] = $new_settings;
-						return self::save_dashboard_data( $dashboard_data );
+						return self::save_dashboard_data( $dashboard_data, $dashboard_id );
 					}
 				}
 			}
@@ -298,10 +299,11 @@ class Widget_Dispatcher {
 	 *
 	 * @since 1.0.0
 	 *
+	 * @param string $dashboard_id Dashboard ID. Defaults to 'main'.
 	 * @return array|WP_Error
 	 */
-	private static function get_dashboard_data() {
-		return Dashboard_Manager::get_enhanced_dashboard_data();
+	private static function get_dashboard_data( $dashboard_id = 'main' ) {
+		return Dashboard_Manager::get_enhanced_dashboard_data( $dashboard_id );
 	}
 
 	/**
@@ -309,12 +311,13 @@ class Widget_Dispatcher {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $data Dashboard data.
+	 * @param array  $data         Dashboard data.
+	 * @param string $dashboard_id Dashboard ID. Defaults to 'main'.
 	 *
 	 * @return bool|WP_Error
 	 */
-	private static function save_dashboard_data( $data ) {
-		return Dashboard_Manager::save_dashboard_data( $data );
+	private static function save_dashboard_data( $data, $dashboard_id = 'main' ) {
+		return Dashboard_Manager::save_dashboard_data( $data, $dashboard_id );
 	}
 
 
@@ -354,12 +357,13 @@ class Widget_Dispatcher {
 	 *
 	 * @param string $column_id      Column ID.
 	 * @param array  $dashboard_data Dashboard data.
+	 * @param string $dashboard_id   Dashboard ID. Defaults to 'main'.
 	 *
 	 * @return array
 	 */
-	public static function get_widgets_for_column( $column_id, $dashboard_data = null ) {
+	public static function get_widgets_for_column( $column_id, $dashboard_data = null, $dashboard_id = 'main' ) {
 		if ( null === $dashboard_data ) {
-			$dashboard_data = self::get_dashboard_data();
+			$dashboard_data = self::get_dashboard_data( $dashboard_id );
 		}
 
 		if ( is_wp_error( $dashboard_data ) ) {
