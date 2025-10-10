@@ -7,7 +7,7 @@
 
 namespace Nilambar\Dashmate\Core;
 
-use Nilambar\Dashmate\Admin\Admin_Page;
+use Nilambar\Dashmate\Admin\Main_Dashboard_Page;
 use Nilambar\Dashmate\API\API_Main;
 use Nilambar\Dashmate\Widget_Initializer;
 
@@ -28,7 +28,13 @@ class Bootstrap {
 		add_filter( 'plugin_action_links_' . DASHMATE_BASE_FILENAME, [ $this, 'customize_action_links' ] );
 
 		new API_Main();
-		new Admin_Page();
+
+		add_action(
+			'init',
+			function () {
+				new Main_Dashboard_Page();
+			}
+		);
 	}
 
 	/**
