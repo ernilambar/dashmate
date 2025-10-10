@@ -2,7 +2,6 @@ import { Component } from 'react';
 import { __ } from '@wordpress/i18n';
 import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 import Column from './Column';
-import LayoutSaver from './LayoutSaver';
 import LayoutSelector from './LayoutSelector';
 import LayoutSettings from './LayoutSettings';
 import Icon from './Icon';
@@ -285,11 +284,6 @@ class Dashboard extends Component {
 		}
 	};
 
-	handleLayoutSaved = () => {
-		// Reload layouts to include the new one
-		this.loadLayouts();
-	};
-
 	handleLayoutSelect = async ( layoutKey ) => {
 		if ( layoutKey === 'current' ) {
 			return; // Don't apply current layout
@@ -383,7 +377,6 @@ class Dashboard extends Component {
 			<div className="dashmate-app">
 				{ /* Dashboard Controls */ }
 				<div className="dashboard-controls">
-					<LayoutSaver dashboard={ dashboard } onLayoutSaved={ this.handleLayoutSaved } />
 					<LayoutSelector onLayoutSelect={ this.handleLayoutSelect } />
 					<button
 						type="button"
