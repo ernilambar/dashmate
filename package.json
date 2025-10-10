@@ -53,6 +53,6 @@
 		"build": "wp-scripts build",
 		"dev": "wp-scripts start",
 		"format": "wp-scripts format && pnpm run format:css",
-		"format:css": "prettier --write \"**/*.{css,scss}\""
+		"format:css": "prettier --write \"**/*.{css,scss}\" --log-level warn"
 	}
 }
