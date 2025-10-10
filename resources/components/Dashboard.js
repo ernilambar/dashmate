@@ -1,6 +1,5 @@
 import { Component } from 'react';
 import { __ } from '@wordpress/i18n';
-import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 import Column from './Column';
 import LayoutSettings from './LayoutSettings';
 import Icon from './Icon';
@@ -99,77 +98,6 @@ class Dashboard extends Component {
 			return false;
 		}
 	}
-
-	handleDragEnd = async ( result ) => {
-		const { source, destination, draggableId } = result;
-
-		// If dropped outside a droppable area or no movement
-		if (
-			! destination ||
-			( source.droppableId === destination.droppableId && source.index === destination.index )
-		) {
-			return;
-		}
-
-		const { dashboard } = this.state;
-		if ( ! dashboard ) {
-			return;
-		}
-
-		// Create a copy of the dashboard data
-		const updatedDashboard = { ...dashboard };
-
-		// Find source and destination columns
-		const sourceColumn = updatedDashboard.columns.find(
-			( col ) => col.id === source.droppableId
-		);
-		const destColumn = updatedDashboard.columns.find(
-			( col ) => col.id === destination.droppableId
-		);
-
-		if ( ! sourceColumn || ! destColumn ) {
-			return;
-		}
-
-		// Find the widget to move
-		const widgetToMove = sourceColumn.widgets.find( ( widget ) => widget.id === draggableId );
-		if ( ! widgetToMove ) {
-			return;
-		}
-
-		// Remove widget from source column
-		sourceColumn.widgets = sourceColumn.widgets.filter(
-			( widget ) => widget.id !== draggableId
-		);
-
-		// Add widget to destination column at the correct position
-		destColumn.widgets.splice( destination.index, 0, widgetToMove );
-
-		// Update state immediately for UI responsiveness
-		this.setState( { dashboard: updatedDashboard } );
-
-		// Save the new order to the server
-		try {
-			const response = await fetch( `${ dashmateApiSettings.restUrl }dashboard`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					'X-WP-Nonce': dashmateApiSettings?.nonce || '',
-				},
-				body: JSON.stringify( updatedDashboard ),
-			} );
-
-			const data = await response.json();
-
-			if ( ! data.success ) {
-				// Reload dashboard to revert changes
-				this.loadDashboard();
-			}
-		} catch ( error ) {
-			// Reload dashboard to revert changes
-			this.loadDashboard();
-		}
-	};
 
 	handleWidgetPropertyUpdate = async ( widgetId, properties ) => {
 		const { dashboard } = this.state;
@@ -361,42 +289,38 @@ class Dashboard extends Component {
 					</div>
 				) }
 
-				<DragDropContext onDragEnd={ this.handleDragEnd }>
-					<div className={ dashboardContentClass }>
-						{ columns.length > 0 ? (
-							columns
-								.map( ( column ) => {
-									// Ensure column is an object with an id
-									if ( ! column || typeof column !== 'object' || ! column.id ) {
-										return null;
-									}
+				<div className={ dashboardContentClass }>
+					{ columns.length > 0 ? (
+						columns
+							.map( ( column ) => {
+								// Ensure column is an object with an id
+								if ( ! column || typeof column !== 'object' || ! column.id ) {
+									return null;
+								}
 
-									// Get widgets for this column directly from the column
-									const columnWidgets = Array.isArray( column.widgets )
-										? column.widgets
-										: [];
+								// Get widgets for this column directly from the column
+								const columnWidgets = Array.isArray( column.widgets )
+									? column.widgets
+									: [];
 
-									return (
-										<Column
-											key={ column.id }
-											column={ column }
-											widgets={ widgets }
-											columnWidgets={ columnWidgets }
-											onWidgetPropertyUpdate={
-												this.handleWidgetPropertyUpdate
-											}
-											onWidgetRemove={ this.handleWidgetRemove }
-										/>
-									);
-								} )
-								.filter( Boolean ) // Remove any null columns
-						) : (
-							<div className="empty-dashboard">
-								<p>No dashboard columns found</p>
-							</div>
-						) }
-					</div>
-				</DragDropContext>
+								return (
+									<Column
+										key={ column.id }
+										column={ column }
+										widgets={ widgets }
+										columnWidgets={ columnWidgets }
+										onWidgetPropertyUpdate={ this.handleWidgetPropertyUpdate }
+										onWidgetRemove={ this.handleWidgetRemove }
+									/>
+								);
+							} )
+							.filter( Boolean ) // Remove any null columns
+					) : (
+						<div className="empty-dashboard">
+							<p>No dashboard columns found</p>
+						</div>
+					) }
+				</div>
 			</div>
 		);
 	}
