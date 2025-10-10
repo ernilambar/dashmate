@@ -42,9 +42,12 @@ class Widget extends Component {
 			// Set to faded state
 			this.setState( { fadeState: 'faded' } );
 
-			const url = `${ dashmateApiSettings.restUrl }widgets/${ widget.id }/data`;
+			const url = new URL( `${ dashmateApiSettings.restUrl }widgets/${ widget.id }/data` );
+			if ( this.props.dashboardId ) {
+				url.searchParams.set( 'dashboard_id', this.props.dashboardId );
+			}
 
-			const response = await fetch( url, {
+			const response = await fetch( url.toString(), {
 				headers: {
 					'X-WP-Nonce': dashmateApiSettings?.nonce || '',
 				},
@@ -175,19 +178,23 @@ class Widget extends Component {
 		this.setState( { settingsVersion: this.state.settingsVersion + 1 } );
 
 		try {
-			const response = await fetch(
-				`${ dashmateApiSettings.restUrl }widgets/${ this.props.widget.id }/settings`,
-				{
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-						'X-WP-Nonce': dashmateApiSettings?.nonce || '',
-					},
-					body: JSON.stringify( {
-						settings: newSettings,
-					} ),
-				}
+			const url = new URL(
+				`${ dashmateApiSettings.restUrl }widgets/${ this.props.widget.id }/settings`
 			);
+			if ( this.props.dashboardId ) {
+				url.searchParams.set( 'dashboard_id', this.props.dashboardId );
+			}
+
+			const response = await fetch( url.toString(), {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'X-WP-Nonce': dashmateApiSettings?.nonce || '',
+				},
+				body: JSON.stringify( {
+					settings: newSettings,
+				} ),
+			} );
 
 			const result = await response.json();
 

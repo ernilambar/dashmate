@@ -27,13 +27,14 @@ class Dashboard_Manager {
 	 *
 	 * @since 1.0.0
 	 *
+	 * @param string $dashboard_id Dashboard ID. Defaults to 'main'.
 	 * @return array Dashboard data.
 	 */
-	public static function get_dashboard_data(): array {
-		$data = self::get_raw_dashboard_data();
+	public static function get_dashboard_data( string $dashboard_id = 'main' ): array {
+		$data = self::get_raw_dashboard_data( $dashboard_id );
 
 		// Apply dashboard data filter to allow filtering of widgets and other data.
-		$data = apply_filters( 'dashmate_dashboard_data', $data );
+		$data = apply_filters( 'dashmate_dashboard_data', $data, $dashboard_id );
 
 		return $data;
 	}
@@ -43,10 +44,11 @@ class Dashboard_Manager {
 	 *
 	 * @since 1.0.0
 	 *
+	 * @param string $dashboard_id Dashboard ID. Defaults to 'main'.
 	 * @return array Dashboard data.
 	 */
-	public static function get_raw_dashboard_data(): array {
-		return Dashboard_Model::get_data();
+	public static function get_raw_dashboard_data( string $dashboard_id = 'main' ): array {
+		return Dashboard_Model::get_data( $dashboard_id );
 	}
 
 	/**
@@ -54,10 +56,11 @@ class Dashboard_Manager {
 	 *
 	 * @since 1.0.0
 	 *
+	 * @param string $dashboard_id Dashboard ID. Defaults to 'main'.
 	 * @return array Enhanced dashboard data.
 	 */
-	public static function get_enhanced_dashboard_data(): array {
-		$data = self::get_raw_dashboard_data();
+	public static function get_enhanced_dashboard_data( string $dashboard_id = 'main' ): array {
+		$data = self::get_raw_dashboard_data( $dashboard_id );
 
 		// Get widget information to include titles.
 		$widget_types = Widget_Dispatcher::get_widget_types_for_frontend();
@@ -84,7 +87,7 @@ class Dashboard_Manager {
 		}
 
 		// Apply dashboard data filter to the entire dashboard data.
-		$data = apply_filters( 'dashmate_dashboard_data', $data );
+		$data = apply_filters( 'dashmate_dashboard_data', $data, $dashboard_id );
 
 		return $data;
 	}
@@ -94,12 +97,13 @@ class Dashboard_Manager {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $data Dashboard data.
+	 * @param array  $data         Dashboard data.
+	 * @param string $dashboard_id Dashboard ID. Defaults to 'main'.
 	 *
 	 * @return bool|WP_Error True on success, WP_Error on failure.
 	 */
-	public static function save_dashboard_data( array $data ) {
-		return Dashboard_Model::set_data( $data );
+	public static function save_dashboard_data( array $data, string $dashboard_id = 'main' ) {
+		return Dashboard_Model::set_data( $data, $dashboard_id );
 	}
 
 	/**
@@ -107,10 +111,11 @@ class Dashboard_Manager {
 	 *
 	 * @since 1.0.0
 	 *
+	 * @param string $dashboard_id Dashboard ID. Defaults to 'main'.
 	 * @return bool|WP_Error True on success, WP_Error on failure.
 	 */
-	public static function delete_dashboard_data() {
-		return Dashboard_Model::delete_data();
+	public static function delete_dashboard_data( string $dashboard_id = 'main' ) {
+		return Dashboard_Model::delete_data( $dashboard_id );
 	}
 
 	/**
@@ -118,10 +123,11 @@ class Dashboard_Manager {
 	 *
 	 * @since 1.0.0
 	 *
+	 * @param string $dashboard_id Dashboard ID. Defaults to 'main'.
 	 * @return bool True if dashboard data exists, false otherwise.
 	 */
-	public static function dashboard_data_exists(): bool {
-		return Dashboard_Model::data_exists();
+	public static function dashboard_data_exists( string $dashboard_id = 'main' ): bool {
+		return Dashboard_Model::data_exists( $dashboard_id );
 	}
 
 	/**

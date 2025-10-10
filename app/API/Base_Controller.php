@@ -149,10 +149,11 @@ abstract class Base_Controller {
 	 *
 	 * @since 1.0.0
 	 *
+	 * @param string $dashboard_id Dashboard ID. Defaults to 'main'.
 	 * @return array|WP_Error
 	 */
-	protected function get_dashboard_data() {
-		$data = Dashboard_Manager::get_dashboard_data();
+	protected function get_dashboard_data( string $dashboard_id = 'main' ) {
+		$data = Dashboard_Manager::get_dashboard_data( $dashboard_id );
 
 		return $data;
 	}

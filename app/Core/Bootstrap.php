@@ -8,6 +8,7 @@
 namespace Nilambar\Dashmate\Core;
 
 use Nilambar\Dashmate\Admin\Main_Dashboard_Page;
+use Nilambar\Dashmate\Admin\Secondary_Dashboard_Page;
 use Nilambar\Dashmate\API\API_Main;
 use Nilambar\Dashmate\Widget_Initializer;
 
@@ -33,6 +34,7 @@ class Bootstrap {
 			'init',
 			function () {
 				new Main_Dashboard_Page();
+				new Secondary_Dashboard_Page();
 			}
 		);
 	}
