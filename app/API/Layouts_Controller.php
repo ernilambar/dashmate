@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace Nilambar\Dashmate\API;
 
 use Nilambar\Dashmate\Layout_Manager;
-use Nilambar\Dashmate\Models\Dashboard_Model;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -55,25 +54,6 @@ class Layouts_Controller extends Base_Controller {
 			[
 				'methods'             => 'GET',
 				'callback'            => [ $this, 'get_layout' ],
-				'permission_callback' => [ $this, 'check_permissions' ],
-				'args'                => [
-					'layout_key' => [
-						'required'          => true,
-						'type'              => 'string',
-						'sanitize_callback' => 'sanitize_text_field',
-						'validate_callback' => [ $this, 'validate_layout_key' ],
-					],
-				],
-			]
-		);
-
-		// Apply layout.
-		register_rest_route(
-			$this->get_namespace(),
-			'/' . $this->get_base_route() . '/(?P<layout_key>[a-zA-Z0-9_-]+)/apply',
-			[
-				'methods'             => 'POST',
-				'callback'            => [ $this, 'apply_layout' ],
 				'permission_callback' => [ $this, 'check_permissions' ],
 				'args'                => [
 					'layout_key' => [
@@ -172,60 +152,5 @@ class Layouts_Controller extends Base_Controller {
 		}
 
 		return $this->success_response( $layout_data );
-	}
-
-	/**
-	 * Apply layout.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param WP_REST_Request $request Request object.
-	 *
-	 * @return WP_REST_Response|WP_Error
-	 */
-	public function apply_layout( WP_REST_Request $request ) {
-		$layout_key = $request->get_param( 'layout_key' );
-
-		// Prevent applying to current layout as it's read-only.
-		if ( 'current' === $layout_key ) {
-			return $this->error_response(
-				esc_html__( 'Cannot apply current layout as it is read-only.', 'dashmate' ),
-				400,
-				'current_layout_readonly'
-			);
-		}
-
-		// Get layout data using Layout_Manager.
-		$layout_data = Layout_Manager::get_layout_data( $layout_key );
-
-		if ( is_wp_error( $layout_data ) ) {
-			return $this->error_response(
-				$layout_data->get_error_message(),
-				404,
-				'layout_not_found'
-			);
-		}
-
-		// Apply the layout data directly to the options table.
-		$result = Dashboard_Model::set_data( $layout_data );
-
-		if ( is_wp_error( $result ) ) {
-			return $this->error_response(
-				$result->get_error_message(),
-				500,
-				'layout_apply_failed'
-			);
-		}
-
-		return $this->success_response(
-			[
-				'message'    => sprintf(
-					/* translators: %s: Layout title */
-					esc_html__( 'Layout "%s" applied successfully!', 'dashmate' ),
-					Layout_Manager::get_layout( $layout_key )['title'] ?? $layout_key
-				),
-				'layout_key' => $layout_key,
-			]
-		);
 	}
 }

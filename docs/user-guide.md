@@ -30,11 +30,6 @@
 3. Enter a name for your layout
 4. Click **Save** to store the layout
 
-#### Loading Layouts
-
-1. Click **Load Layout** in the top toolbar
-2. Select a previously saved layout
-3. Click **Load** to apply the layout
 
 ## Widget Types
 

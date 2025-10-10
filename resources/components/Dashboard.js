@@ -2,7 +2,6 @@ import { Component } from 'react';
 import { __ } from '@wordpress/i18n';
 import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 import Column from './Column';
-import LayoutSelector from './LayoutSelector';
 import LayoutSettings from './LayoutSettings';
 import Icon from './Icon';
 
@@ -284,37 +283,6 @@ class Dashboard extends Component {
 		}
 	};
 
-	handleLayoutSelect = async ( layoutKey ) => {
-		if ( layoutKey === 'current' ) {
-			return; // Don't apply current layout
-		}
-
-		try {
-			// Apply the selected layout
-			const response = await fetch(
-				`${ dashmateApiSettings.restUrl }layouts/${ layoutKey }/apply`,
-				{
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-						'X-WP-Nonce': dashmateApiSettings?.nonce || '',
-					},
-				}
-			);
-
-			const data = await response.json();
-
-			if ( data.success ) {
-				// Reload the dashboard with the new layout
-				this.loadDashboard();
-			} else {
-				console.error( 'Failed to apply layout:', data.message );
-			}
-		} catch ( error ) {
-			console.error( 'Error applying layout:', error );
-		}
-	};
-
 	handleLayoutSettingsToggle = () => {
 		this.setState( ( prevState ) => ( {
 			showLayoutSettings: ! prevState.showLayoutSettings,
@@ -377,7 +345,6 @@ class Dashboard extends Component {
 			<div className="dashmate-app">
 				{ /* Dashboard Controls */ }
 				<div className="dashboard-controls">
-					<LayoutSelector onLayoutSelect={ this.handleLayoutSelect } />
 					<button
 						type="button"
 						className="layout-settings-button"
