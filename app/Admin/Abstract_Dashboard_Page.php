@@ -7,6 +7,7 @@
 
 namespace Nilambar\Dashmate\Admin;
 
+use Nilambar\Dashmate\Models\Dashboard_Model;
 use Nilambar\Dashmate\View\View;
 
 /**
@@ -94,6 +95,15 @@ abstract class Abstract_Dashboard_Page {
 	protected $dashboard_id;
 
 	/**
+	 * Starter layout to use when no dashboard data exists.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var string
+	 */
+	protected $starter_layout;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 1.0.0
@@ -101,6 +111,7 @@ abstract class Abstract_Dashboard_Page {
 	public function __construct() {
 		$this->init_properties();
 		$this->init_hooks();
+		$this->register_starter_layout();
 	}
 
 	/**
@@ -320,5 +331,27 @@ abstract class Abstract_Dashboard_Page {
 	 */
 	public function get_dashboard_id() {
 		return $this->dashboard_id;
+	}
+
+	/**
+	 * Get starter layout.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string Starter layout.
+	 */
+	public function get_starter_layout() {
+		return $this->starter_layout;
+	}
+
+	/**
+	 * Register starter layout with the model.
+	 *
+	 * @since 1.0.0
+	 */
+	private function register_starter_layout() {
+		if ( ! empty( $this->starter_layout ) && 'main' === $this->dashboard_id ) {
+			Dashboard_Model::set_starter_layout( $this->starter_layout );
+		}
 	}
 }
