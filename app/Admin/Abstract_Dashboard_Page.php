@@ -7,6 +7,7 @@
 
 namespace Nilambar\Dashmate\Admin;
 
+use Nilambar\Dashmate\Dashmate;
 use Nilambar\Dashmate\Models\Dashboard_Model;
 
 /**
@@ -211,7 +212,15 @@ abstract class Abstract_Dashboard_Page {
 			return;
 		}
 
-		$asset_file_path = DASHMATE_DIR . '/assets/index.asset.php';
+		// Get asset paths from Dashmate class.
+		$asset_path = Dashmate::get_asset_path();
+		$asset_url  = Dashmate::get_asset_url();
+
+		if ( empty( $asset_path ) || empty( $asset_url ) ) {
+			return;
+		}
+
+		$asset_file_path = $asset_path . '/assets/index.asset.php';
 
 		if ( ! file_exists( $asset_file_path ) ) {
 			return;
@@ -225,7 +234,7 @@ abstract class Abstract_Dashboard_Page {
 		// Enqueue dashboard styles.
 		wp_enqueue_style(
 			'dashmate-dashboard',
-			DASHMATE_URL . '/assets/index.css',
+			$asset_url . '/assets/index.css',
 			[ 'wp-components' ],
 			$asset_file['version']
 		);
@@ -233,7 +242,7 @@ abstract class Abstract_Dashboard_Page {
 		// Enqueue dashboard scripts.
 		wp_enqueue_script(
 			'dashmate-dashboard',
-			DASHMATE_URL . '/assets/index.js',
+			$asset_url . '/assets/index.js',
 			$asset_file['dependencies'],
 			$asset_file['version'],
 			true
