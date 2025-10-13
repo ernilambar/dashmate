@@ -96,24 +96,45 @@ class Dashmate {
 	 * @param string $hook Current admin page hook.
 	 */
 	public static function enqueue_assets( string $hook ) {
-		if ( empty( self::$asset_url ) ) {
+		if ( empty( self::$asset_url ) || empty( self::$asset_path ) ) {
 			return;
 		}
 
-		wp_enqueue_script(
-			'dashmate',
-			self::$asset_url . '/assets/index.js',
-			[],
-			'1.0.0',
-			true
-		);
+		$asset_file_path = self::$asset_path . '/assets/index.asset.php';
 
+		if ( ! file_exists( $asset_file_path ) ) {
+			return;
+		}
+
+		$asset_file = include $asset_file_path;
+
+		// Enqueue WordPress components styles as dependency.
+		wp_enqueue_style( 'wp-components' );
+
+		// Enqueue dashboard styles.
 		wp_enqueue_style(
 			'dashmate',
 			self::$asset_url . '/assets/index.css',
-			[],
-			'1.0.0'
+			[ 'wp-components' ],
+			$asset_file['version']
 		);
+
+		// Enqueue dashboard scripts.
+		wp_enqueue_script(
+			'dashmate',
+			self::$asset_url . '/assets/index.js',
+			$asset_file['dependencies'],
+			$asset_file['version'],
+			true
+		);
+
+		// Localize script with API settings.
+		$api_settings = [
+			'nonce'   => wp_create_nonce( 'wp_rest' ),
+			'restUrl' => rest_url( 'dashmate/v1/' ),
+		];
+
+		wp_localize_script( 'dashmate', 'dashmateApiSettings', $api_settings );
 	}
 
 	/**

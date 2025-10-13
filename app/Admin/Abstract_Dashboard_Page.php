@@ -7,7 +7,6 @@
 
 namespace Nilambar\Dashmate\Admin;
 
-use Nilambar\Dashmate\Dashmate;
 use Nilambar\Dashmate\Models\Dashboard_Model;
 
 /**
@@ -129,7 +128,6 @@ abstract class Abstract_Dashboard_Page {
 	 */
 	protected function init_hooks() {
 		add_action( 'admin_menu', [ $this, 'register_dashboard_page' ] );
-		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_dashboard_assets' ] );
 	}
 
 	/**
@@ -210,58 +208,6 @@ abstract class Abstract_Dashboard_Page {
 		<?php
 	}
 
-	/**
-	 * Enqueue assets for dashboard pages.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $hook Hook name.
-	 */
-	public function enqueue_dashboard_assets( $hook ) {
-		// Get asset paths from Dashmate class.
-		$asset_path = Dashmate::get_asset_path();
-		$asset_url  = Dashmate::get_asset_url();
-
-		if ( empty( $asset_path ) || empty( $asset_url ) ) {
-			return;
-		}
-
-		$asset_file_path = $asset_path . '/assets/index.asset.php';
-
-		if ( ! file_exists( $asset_file_path ) ) {
-			return;
-		}
-
-		$asset_file = include $asset_file_path;
-
-		// Enqueue WordPress components styles as dependency.
-		wp_enqueue_style( 'wp-components' );
-
-		// Enqueue dashboard styles.
-		wp_enqueue_style(
-			'dashmate-dashboard',
-			$asset_url . '/assets/index.css',
-			[ 'wp-components' ],
-			$asset_file['version']
-		);
-
-		// Enqueue dashboard scripts.
-		wp_enqueue_script(
-			'dashmate-dashboard',
-			$asset_url . '/assets/index.js',
-			$asset_file['dependencies'],
-			$asset_file['version'],
-			true
-		);
-
-		// Localize script with API settings.
-		$api_settings = [
-			'nonce'   => wp_create_nonce( 'wp_rest' ),
-			'restUrl' => rest_url( 'dashmate/v1/' ),
-		];
-
-		wp_localize_script( 'dashmate-dashboard', 'dashmateApiSettings', $api_settings );
-	}
 
 	/**
 	 * Get dashboard page slug.
