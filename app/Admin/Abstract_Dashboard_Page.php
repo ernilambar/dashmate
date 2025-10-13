@@ -15,8 +15,8 @@ use Nilambar\Dashmate\Models\Dashboard_Model;
  *
  * This abstract class provides a foundation for creating dashboard pages
  * that can be extended to support multiple dashboard pages in the future.
- * It handles common dashboard functionality like page registration,
- * asset enqueuing, and provides hooks for customization.
+ * It handles common dashboard functionality like page registration (both parent
+ * and child pages), asset enqueuing, and provides hooks for customization.
  *
  * @since 1.0.0
  */
@@ -76,14 +76,6 @@ abstract class Abstract_Dashboard_Page {
 	 */
 	protected $menu_position;
 
-	/**
-	 * Dashboard template name.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var string
-	 */
-	protected $template_name;
 
 	/**
 	 * Dashboard ID for API calls.
@@ -102,6 +94,15 @@ abstract class Abstract_Dashboard_Page {
 	 * @var string
 	 */
 	protected $starter_layout;
+
+	/**
+	 * Parent page slug for child pages.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @var string|null
+	 */
+	protected $parent_page;
 
 	/**
 	 * Constructor.
@@ -140,15 +141,27 @@ abstract class Abstract_Dashboard_Page {
 		$page_title = apply_filters( 'dashmate_dashboard_page_title', $this->page_title, $this->page_slug, $this->dashboard_id );
 		$menu_title = apply_filters( 'dashmate_dashboard_menu_title', $this->menu_title, $this->page_slug, $this->dashboard_id );
 
-		add_menu_page(
-			$page_title,
-			$menu_title,
-			$this->capability,
-			$this->page_slug,
-			[ $this, 'render_dashboard_content' ],
-			$this->menu_icon,
-			$this->menu_position
-		);
+		// Check if this is a child page.
+		if ( ! empty( $this->parent_page ) ) {
+			add_submenu_page(
+				$this->parent_page,
+				$page_title,
+				$menu_title,
+				$this->capability,
+				$this->page_slug,
+				[ $this, 'render_dashboard_content' ]
+			);
+		} else {
+			add_menu_page(
+				$page_title,
+				$menu_title,
+				$this->capability,
+				$this->page_slug,
+				[ $this, 'render_dashboard_content' ],
+				$this->menu_icon,
+				$this->menu_position
+			);
+		}
 	}
 
 	/**
@@ -158,7 +171,7 @@ abstract class Abstract_Dashboard_Page {
 	 */
 	public function render_dashboard_content() {
 		$template_data = $this->get_template_data();
-		$this->render_template( $this->template_name, $template_data );
+		$this->render_template( $template_data );
 	}
 
 	/**
@@ -185,10 +198,9 @@ abstract class Abstract_Dashboard_Page {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $template_name Template name.
-	 * @param array  $data         Template data.
+	 * @param array $data Template data.
 	 */
-	protected function render_template( $template_name, $data = [] ) {
+	protected function render_template( $data = [] ) {
 		$dashboard_id = $data['dashboard_id'] ?? '';
 		?>
 		<div class="wrap">
@@ -206,12 +218,6 @@ abstract class Abstract_Dashboard_Page {
 	 * @param string $hook Hook name.
 	 */
 	public function enqueue_dashboard_assets( $hook ) {
-		// Only enqueue assets on our specific dashboard page.
-		// Check if the hook contains our page slug (more flexible approach).
-		if ( false === strpos( $hook, $this->page_slug ) ) {
-			return;
-		}
-
 		// Get asset paths from Dashmate class.
 		$asset_path = Dashmate::get_asset_path();
 		$asset_url  = Dashmate::get_asset_url();
@@ -248,20 +254,14 @@ abstract class Abstract_Dashboard_Page {
 			true
 		);
 
-		// Localize script with API settings (only nonce and restUrl needed now).
-		$api_settings = apply_filters(
-			'dashmate_dashboard_api_settings',
-			[
-				'nonce'   => wp_create_nonce( 'wp_rest' ),
-				'restUrl' => rest_url( 'dashmate/v1/' ),
-			],
-			$this->page_slug,
-			$this->dashboard_id
-		);
+		// Localize script with API settings.
+		$api_settings = [
+			'nonce'   => wp_create_nonce( 'wp_rest' ),
+			'restUrl' => rest_url( 'dashmate/v1/' ),
+		];
 
 		wp_localize_script( 'dashmate-dashboard', 'dashmateApiSettings', $api_settings );
 	}
-
 
 	/**
 	 * Get dashboard page slug.
@@ -329,16 +329,6 @@ abstract class Abstract_Dashboard_Page {
 		return $this->menu_position;
 	}
 
-	/**
-	 * Get dashboard template name.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return string Dashboard template name.
-	 */
-	public function get_template_name() {
-		return $this->template_name;
-	}
 
 	/**
 	 * Get dashboard ID.
@@ -360,6 +350,17 @@ abstract class Abstract_Dashboard_Page {
 	 */
 	public function get_starter_layout() {
 		return $this->starter_layout;
+	}
+
+	/**
+	 * Get parent page slug.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string|null Parent page slug.
+	 */
+	public function get_parent_page() {
+		return $this->parent_page;
 	}
 
 	/**
