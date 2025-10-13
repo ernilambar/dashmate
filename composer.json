@@ -1,7 +1,15 @@
 {
   "name": "ernilambar/dashmate",
-  "description": "WordPress plugin for custom dashboard layouts with drag-and-drop widgets.",
+  "description": "WordPress dashboard widget system for plugins - provides drag-and-drop widgets and dashboard management.",
+  "type": "library",
   "license": "GPL-2.0-or-later",
+  "keywords": [
+    "wordpress",
+    "dashboard",
+    "widgets",
+    "composer",
+    "package"
+  ],
   "require": {
     "php": ">=7.4"
   },

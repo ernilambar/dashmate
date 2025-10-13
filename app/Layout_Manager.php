@@ -193,7 +193,7 @@ class Layout_Manager {
 			],
 			'default' => [
 				'title' => esc_html__( 'Default', 'dashmate' ),
-				'path'  => DASHMATE_DIR . '/layouts/default.json',
+				'path'  => Dashmate::get_package_dir() . '/layouts/default.json',
 				'type'  => 'file',
 			],
 		];
