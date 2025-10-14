@@ -29,23 +29,24 @@ class Dashboard_Model {
 	const OPTION_KEY_BASE = 'dashmate_dashboard_data';
 
 	/**
-	 * Starter layout for the main dashboard.
+	 * Starter layout file paths by dashboard ID.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @var string
+	 * @var array
 	 */
-	private static $starter_layout = 'default';
+	private static $starter_layouts = [];
+
 
 	/**
 	 * Get dashboard data.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $dashboard_id Dashboard ID. Defaults to 'main'.
+	 * @param string $dashboard_id Dashboard ID.
 	 * @return array Dashboard data with ensured structure.
 	 */
-	public static function get_data( string $dashboard_id = 'main' ): array {
+	public static function get_data( string $dashboard_id ): array {
 		$option_key = self::get_option_key( $dashboard_id );
 		$data       = get_option( $option_key, null );
 
@@ -65,10 +66,10 @@ class Dashboard_Model {
 	 * @since 1.0.0
 	 *
 	 * @param array  $data         Dashboard data.
-	 * @param string $dashboard_id Dashboard ID. Defaults to 'main'.
+	 * @param string $dashboard_id Dashboard ID.
 	 * @return bool|WP_Error True on success, WP_Error on failure.
 	 */
-	public static function set_data( array $data, string $dashboard_id = 'main' ) {
+	public static function set_data( array $data, string $dashboard_id ) {
 		$prepared_data  = self::prepare_data( $data );
 		$sanitized_data = self::sanitize_dashboard_data( $prepared_data );
 		$option_key     = self::get_option_key( $dashboard_id );
@@ -87,10 +88,10 @@ class Dashboard_Model {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $dashboard_id Dashboard ID. Defaults to 'main'.
+	 * @param string $dashboard_id Dashboard ID.
 	 * @return bool|WP_Error True on success, WP_Error on failure.
 	 */
-	public static function delete_data( string $dashboard_id = 'main' ) {
+	public static function delete_data( string $dashboard_id ) {
 		$option_key = self::get_option_key( $dashboard_id );
 		$result     = delete_option( $option_key );
 
@@ -106,10 +107,10 @@ class Dashboard_Model {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $dashboard_id Dashboard ID. Defaults to 'main'.
+	 * @param string $dashboard_id Dashboard ID.
 	 * @return bool True if dashboard data exists, false otherwise.
 	 */
-	public static function data_exists( string $dashboard_id = 'main' ): bool {
+	public static function data_exists( string $dashboard_id ): bool {
 		$option_key = self::get_option_key( $dashboard_id );
 		return null !== get_option( $option_key, null );
 	}
@@ -119,15 +120,17 @@ class Dashboard_Model {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $dashboard_id Dashboard ID. Defaults to 'main'.
+	 * @param string $dashboard_id Dashboard ID.
 	 * @return array|null Layout data or null if not found.
 	 */
-	private static function load_starter_layout( string $dashboard_id = 'main' ) {
-		// Get the starter layout from the dashboard page instance.
-		$starter_layout = self::get_starter_layout_from_dashboard_page( $dashboard_id );
+	private static function load_starter_layout( string $dashboard_id ) {
+		// If no layout path is set for this dashboard, return null (will result in empty dashboard).
+		if ( empty( self::$starter_layouts[ $dashboard_id ] ) ) {
+			return null;
+		}
 
-		// Use Layout_Manager to get layout data (supports filters and validation).
-		$layout_data = Layout_Manager::get_layout_data( $starter_layout );
+		// Use Layout_Manager to get layout data from the JSON file.
+		$layout_data = Layout_Manager::get_layout_data( self::$starter_layouts[ $dashboard_id ] );
 
 		// Return null if there's an error.
 		if ( is_wp_error( $layout_data ) ) {
@@ -138,33 +141,15 @@ class Dashboard_Model {
 	}
 
 	/**
-	 * Get starter layout from dashboard page.
+	 * Set starter layout file path for a specific dashboard.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $dashboard_id Dashboard ID. Defaults to 'main'.
-	 * @return string Starter layout name.
+	 * @param string $dashboard_id Dashboard ID.
+	 * @param string $path         Path to the JSON layout file.
 	 */
-	private static function get_starter_layout_from_dashboard_page( string $dashboard_id = 'main' ) {
-		// For now, we'll use the static starter layout for main dashboard.
-		// In the future, this could be made dynamic based on dashboard_id.
-		if ( 'main' === $dashboard_id ) {
-			return self::$starter_layout;
-		}
-
-		// For other dashboards, we can use a filter to get the starter layout.
-		return apply_filters( 'dashmate_starter_layout', 'default', $dashboard_id );
-	}
-
-	/**
-	 * Set starter layout for the main dashboard.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $layout Layout name.
-	 */
-	public static function set_starter_layout( $layout ) {
-		self::$starter_layout = $layout;
+	public static function set_starter_layout( $dashboard_id, $path ) {
+		self::$starter_layouts[ $dashboard_id ] = $path;
 	}
 
 	/**
@@ -176,10 +161,6 @@ class Dashboard_Model {
 	 * @return string Option key.
 	 */
 	private static function get_option_key( string $dashboard_id ): string {
-		if ( 'main' === $dashboard_id ) {
-			return self::OPTION_KEY_BASE;
-		}
-
 		return self::OPTION_KEY_BASE . '_' . sanitize_key( $dashboard_id );
 	}
 

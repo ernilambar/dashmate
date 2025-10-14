@@ -20,126 +20,32 @@ use WP_Error;
 class Layout_Manager {
 
 	/**
-	 * Get registered layouts.
+	 * Get layout data from JSON file.
 	 *
 	 * @since 1.0.0
 	 *
+	 * @param string $file_path Path to the JSON layout file.
 	 * @return array|WP_Error
 	 */
-	public static function get_layouts() {
-		$layouts = self::get_registered_layouts_only();
-
-		if ( is_wp_error( $layouts ) ) {
-			return $layouts;
+	public static function get_layout_data( $file_path ) {
+		if ( empty( $file_path ) ) {
+			return new WP_Error( 'layout_path_empty', esc_html__( 'Layout file path is empty.', 'dashmate' ) );
 		}
 
-		/**
-		 * Filter the registered layouts.
-		 *
-		 * @since 1.0.0
-		 *
-		 * @param array $layouts Array of registered layouts.
-		 */
-		$layouts = apply_filters( 'dashmate_layouts', $layouts );
-
-		foreach ( $layouts as $key => $layout ) {
-			// Automatically add id field based on the array key.
-			$layouts[ $key ]['id'] = $key;
-
-			// Skip path validation for options-based layouts.
-			if ( 'options' === ( $layout['type'] ?? 'file' ) ) {
-				continue;
-			}
-
-			if ( ! array_key_exists( 'path', $layout ) ) {
-				return new WP_Error( 'layout_path_missing', esc_html__( 'Layout file path not provided.', 'dashmate' ) );
-			}
-
-			if ( ! file_exists( $layout['path'] ) ) {
-				return new WP_Error( 'layout_file_not_found', esc_html__( 'Layout file does not exist: ', 'dashmate' ) . $layout['path'] );
-			}
+		if ( ! file_exists( $file_path ) || ! is_readable( $file_path ) ) {
+			return new WP_Error( 'layout_load_error', esc_html__( 'Layout file does not exist or is not readable: ', 'dashmate' ) . $file_path );
 		}
 
-		return $layouts;
-	}
-
-	/**
-	 * Get layout by slug.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $slug Layout slug.
-	 *
-	 * @return array|WP_Error
-	 */
-	public static function get_layout( $slug ) {
-		$layouts = self::get_layouts();
-
-		if ( is_wp_error( $layouts ) ) {
-			return $layouts;
-		}
-
-		if ( ! isset( $layouts[ $slug ] ) ) {
-			return new WP_Error( 'layout_not_found', esc_html__( 'Layout not found: ', 'dashmate' ) . $slug );
-		}
-
-		return $layouts[ $slug ];
-	}
-
-	/**
-	 * Check if layout exists.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $slug Layout slug.
-	 *
-	 * @return bool
-	 */
-	public static function layout_exists( $slug ) {
-		$layouts = self::get_layouts();
-
-		if ( is_wp_error( $layouts ) ) {
-			return false;
-		}
-
-		return isset( $layouts[ $slug ] );
-	}
-
-	/**
-	 * Get layout data by slug.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $slug Layout slug.
-	 *
-	 * @return array|WP_Error
-	 */
-	public static function get_layout_data( $slug ) {
-		$layout = self::get_layout( $slug );
-
-		if ( is_wp_error( $layout ) ) {
-			return $layout;
-		}
-
-		// Handle options-based layouts.
-		if ( 'options' === ( $layout['type'] ?? 'file' ) ) {
-			return self::get_current_layout_data();
-		}
-
-		if ( ! file_exists( $layout['path'] ) || ! is_readable( $layout['path'] ) ) {
-			return new WP_Error( 'layout_load_error', esc_html__( 'Layout file does not exist or is not readable: ', 'dashmate' ) . $layout['path'] );
-		}
-
-		$file_content = file_get_contents( $layout['path'] );
+		$file_content = file_get_contents( $file_path );
 
 		if ( false === $file_content ) {
-			return new WP_Error( 'layout_load_error', esc_html__( 'Failed to read layout file: ', 'dashmate' ) . $layout['path'] );
+			return new WP_Error( 'layout_load_error', esc_html__( 'Failed to read layout file: ', 'dashmate' ) . $file_path );
 		}
 
 		$layout_data = JSON_Utils::decode_from_json( $file_content );
 
 		if ( is_wp_error( $layout_data ) ) {
-			return new WP_Error( 'layout_load_error', esc_html__( 'Failed to parse layout data from file: ', 'dashmate' ) . $layout['path'] . ' - ' . $layout_data->get_error_message() );
+			return new WP_Error( 'layout_load_error', esc_html__( 'Failed to parse layout data from file: ', 'dashmate' ) . $file_path . ' - ' . $layout_data->get_error_message() );
 		}
 
 		/**
@@ -150,141 +56,9 @@ class Layout_Manager {
 		 * @since 1.0.0
 		 *
 		 * @param array $layout_data Layout data array.
-		 * @param string $slug       Layout slug.
+		 * @param string $file_path  Layout file path.
 		 */
-		return apply_filters( 'dashmate_layout_data', $layout_data, $slug );
+		return apply_filters( 'dashmate_layout_data', $layout_data, $file_path );
 	}
 
-	/**
-	 * Get current layout data from options.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return array|WP_Error
-	 */
-	public static function get_current_layout_data() {
-		$layout_data = Dashboard_Manager::get_enhanced_dashboard_data();
-
-		if ( is_wp_error( $layout_data ) ) {
-			return $layout_data;
-		}
-
-		// Ensure we return the expected structure.
-		if ( ! is_array( $layout_data ) ) {
-			return new WP_Error( 'invalid_layout_data', esc_html__( 'Invalid layout data structure.', 'dashmate' ) );
-		}
-
-		return $layout_data;
-	}
-
-
-	/**
-	 * Get registered layouts without database layouts.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return array|WP_Error
-	 */
-	private static function get_registered_layouts_only() {
-		$layouts = [
-			'current' => [
-				'title' => esc_html__( 'Current Layout', 'dashmate' ),
-				'type'  => 'options',
-			],
-			'default' => [
-				'title' => esc_html__( 'Default', 'dashmate' ),
-				'path'  => Dashmate::get_package_dir() . '/layouts/default.json',
-				'type'  => 'file',
-			],
-		];
-
-		/**
-		 * Filter the registered layouts.
-		 *
-		 * @since 1.0.0
-		 *
-		 * @param array $layouts Array of registered layouts.
-		 */
-		$layouts = apply_filters( 'dashmate_layouts', $layouts );
-
-		foreach ( $layouts as $key => $layout ) {
-			// Automatically add id field based on the array key.
-			$layouts[ $key ]['id'] = $key;
-
-			// Skip path validation for options-based layouts.
-			if ( 'options' === ( $layout['type'] ?? 'file' ) ) {
-				continue;
-			}
-
-			if ( ! array_key_exists( 'path', $layout ) ) {
-				return new WP_Error( 'layout_path_missing', esc_html__( 'Layout file path not provided.', 'dashmate' ) );
-			}
-
-			if ( ! file_exists( $layout['path'] ) ) {
-				return new WP_Error( 'layout_file_not_found', esc_html__( 'Layout file does not exist: ', 'dashmate' ) . $layout['path'] );
-			}
-		}
-
-		return $layouts;
-	}
-
-
-	/**
-	 * Get widgets from layout.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $slug Layout slug.
-	 *
-	 * @return array|WP_Error
-	 */
-	public static function get_layout_widgets( $slug ) {
-		$layout_data = self::get_layout_data( $slug );
-
-		if ( is_wp_error( $layout_data ) ) {
-			return $layout_data;
-		}
-
-		$widgets = [];
-		foreach ( $layout_data['columns'] as $column ) {
-			if ( isset( $column['widgets'] ) && is_array( $column['widgets'] ) ) {
-				foreach ( $column['widgets'] as $widget ) {
-					$widgets[] = [
-						'id'        => $widget['id'],
-						'column_id' => $column['id'],
-						'settings'  => $widget['settings'] ?? [],
-					];
-				}
-			}
-		}
-		return $widgets;
-	}
-
-	/**
-	 * Get column widgets mapping from layout.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $slug Layout slug.
-	 *
-	 * @return array|WP_Error
-	 */
-	public static function get_layout_column_widgets( $slug ) {
-		$layout_data = self::get_layout_data( $slug );
-
-		if ( is_wp_error( $layout_data ) ) {
-			return $layout_data;
-		}
-
-		$column_widgets = [];
-		foreach ( $layout_data['columns'] as $column ) {
-			$column_widgets[ $column['id'] ] = [];
-			if ( isset( $column['widgets'] ) && is_array( $column['widgets'] ) ) {
-				foreach ( $column['widgets'] as $widget ) {
-					$column_widgets[ $column['id'] ][] = $widget['id'];
-				}
-			}
-		}
-		return $column_widgets;
-	}
 }
