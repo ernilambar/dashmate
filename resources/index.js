@@ -8,7 +8,6 @@ document.addEventListener( 'DOMContentLoaded', () => {
 
 	if ( domContainer ) {
 		const dashboardId = domContainer.getAttribute( 'data-dashboard-id' ) || 'main';
-		console.log( 'Dashmate: Initializing with dashboard ID:', dashboardId );
 		const root = createRoot( domContainer );
 		root.render( <Dashboard dashboardId={ dashboardId } /> );
 	} else {

@@ -452,6 +452,9 @@ abstract class Abstract_Widget {
 		// Add universal fields (title and icon) if not already present.
 		$content = $this->add_universal_fields( $content );
 
+		// Add metadata (classes and attributes) to the content.
+		$content['metadata'] = $this->get_metadata( $settings );
+
 		// Validate output against schema.
 		if ( ! $this->validate_output( $content ) ) {
 			return new \WP_Error( 'invalid_output', 'Widget output does not match schema for widget type: ' . $this->template_type );
