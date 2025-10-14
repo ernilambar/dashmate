@@ -35,7 +35,7 @@ class Widget_Dispatcher {
 	 *
 	 * @return bool
 	 */
-	private static function register_widget( Abstract_Widget $widget ) {
+	public static function register_widget( Abstract_Widget $widget ) {
 		$id = $widget->get_id();
 
 		if ( empty( $id ) ) {
