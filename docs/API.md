@@ -301,3 +301,45 @@ $result = Widget_Manager::update_widget_settings('widget_id', [
 // Delete widget
 $result = Widget_Manager::delete_widget('widget_id');
 ```
+
+### Widget Registration
+
+**Important**: Custom widgets can ONLY be registered using the `dashmate_widgets` filter. All direct registration methods are restricted to internal use only and are not accessible to external plugins.
+
+```php
+use Nilambar\Dashmate\Abstract_Widget;
+
+class My_Custom_Widget extends Abstract_Widget {
+    public function __construct($id) {
+        parent::__construct($id, 'my_custom', esc_html__('My Custom Widget', 'my-plugin'));
+    }
+
+    protected function define_widget() {
+        $this->description = esc_html__('A custom widget.', 'my-plugin');
+        $this->icon        = 'admin-tools';
+
+        $this->settings_schema = [
+            'title' => [
+                'type'        => 'text',
+                'label'       => esc_html__('Title', 'my-plugin'),
+                'default'     => esc_html__('My Widget', 'my-plugin'),
+            ],
+        ];
+    }
+
+    public function get_content(array $settings = []): array {
+        $settings = $this->merge_settings_with_defaults($settings);
+        return [
+            'title' => $settings['title'],
+            'content' => '<p>Widget content here</p>',
+        ];
+    }
+}
+
+// Register widget using the dashmate_widgets filter
+add_filter('dashmate_widgets', function($widgets) {
+    $widgets['my_custom'] = new My_Custom_Widget('my_custom');
+    return $widgets;
+});
+```
+

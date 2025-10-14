@@ -1,12 +1,11 @@
 # DashMate
 
-A WordPress dashboard customization plugin that allows users to create and manage custom dashboard layouts with drag-and-drop widgets.
+A WordPress dashboard customization plugin that allows users to create and manage custom dashboard layouts with custom widgets.
 
 ## Features
 
 - **Custom Dashboard Layouts**: Create and save multiple dashboard configurations
 - **Widget System**: Extensible widget framework with sample widgets included
-- **Drag & Drop Interface**: Intuitive layout management
 - **REST API**: Full API for dashboard and widget management
 - **Responsive Design**: Works across all device sizes
 
@@ -131,9 +130,10 @@ class My_Widget extends Abstract_Widget {
     }
 }
 
-// Register widget
-add_action('init', function() {
-    Widget_Registry::register_widget('my_widget', My_Widget::class);
+// Register widget using the dashmate_widgets filter
+add_filter('dashmate_widgets', function($widgets) {
+    $widgets['my_widget'] = new My_Widget('my_widget');
+    return $widgets;
 });
 ```
 
@@ -144,13 +144,6 @@ add_action('init', function() {
 - **Links Widget** (`links`) - Display a list of links
 - **Progress Circles Widget** (`progress_circles`) - Display progress circles
 - **Tabular Widget** (`tabular`) - Display tabular data
-
-## Project Structure
-
-- `app/` - PHP backend classes
-- `resources/` - Frontend React components and assets
-- `layouts/` - Default layout configurations
-- `docs/` - API documentation
 
 ## Requirements
 
@@ -169,6 +162,7 @@ See [docs/API.md](docs/API.md) for complete REST API reference.
 - `dashmate_widgets_loaded` - Fired when widgets are loaded
 
 ### Filters
+- `dashmate_widgets` - **Primary filter for widget registration** - Add custom widgets to the system
 - `dashmate_dashboard_data` - Filter dashboard data
 - `dashmate_widget_types` - Filter available widget types
 - `dashmate_widget_custom_classes` - Add custom CSS classes to widgets

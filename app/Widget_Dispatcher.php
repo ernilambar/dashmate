@@ -29,12 +29,13 @@ class Widget_Dispatcher {
 	 * Register a widget.
 	 *
 	 * @since 1.0.0
+	 * @internal This method is for internal use only. External widgets should be registered via the dashmate_widgets filter.
 	 *
 	 * @param Abstract_Widget $widget Widget instance.
 	 *
 	 * @return bool
 	 */
-	public static function register_widget( Abstract_Widget $widget ) {
+	private static function register_widget( Abstract_Widget $widget ) {
 		$id = $widget->get_id();
 
 		if ( empty( $id ) ) {
@@ -50,13 +51,14 @@ class Widget_Dispatcher {
 	 * Create a widget instance with ID.
 	 *
 	 * @since 1.0.0
+	 * @internal This method is for internal use only.
 	 *
 	 * @param string $type Widget type.
 	 * @param string $id   Widget instance ID.
 	 *
 	 * @return Abstract_Widget|null
 	 */
-	public static function create_widget_instance( $type, $id ) {
+	private static function create_widget_instance( $type, $id ) {
 		// Get widget by ID from registered widgets.
 		$widget = self::get_widget( $id );
 
@@ -105,8 +107,9 @@ class Widget_Dispatcher {
 		/**
 		 * Filter the registered widgets.
 		 *
-		 * This filter allows other plugins and addons to add their own widgets
-		 * to the Dashmate dashboard.
+		 * This is the ONLY way for external plugins and addons to register their own
+		 * widgets with the Dashmate dashboard. All direct registration methods are
+		 * restricted to internal use only.
 		 *
 		 * @since 1.0.0
 		 *
@@ -224,12 +227,13 @@ class Widget_Dispatcher {
 	 * Unregister a widget.
 	 *
 	 * @since 1.0.0
+	 * @internal This method is for internal use only.
 	 *
 	 * @param string $id Widget ID.
 	 *
 	 * @return bool
 	 */
-	public static function unregister_widget( $id ) {
+	private static function unregister_widget( $id ) {
 		if ( ! self::is_widget_registered( $id ) ) {
 			return false;
 		}
