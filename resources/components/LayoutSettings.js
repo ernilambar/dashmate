@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import GenericSettingsForm from './GenericSettingsForm';
 
 // Simple layout settings component using the existing GenericSettingsForm
-export default function LayoutSettings( { onClose } ) {
+export default function LayoutSettings( { onClose, dashboardId = 'main' } ) {
 	// Load all settings from localStorage with defaults
 	const loadSettings = () => {
-		const storedSettings = localStorage.getItem( 'dashmate_layout_settings' );
+		const storageKey = `dashmate_layout_settings_${ dashboardId }`;
+		const storedSettings = localStorage.getItem( storageKey );
 		const defaultSettings = {
-			max_columns: '3',
+			max_columns: '2',
 		};
 
 		return storedSettings
@@ -40,7 +41,8 @@ export default function LayoutSettings( { onClose } ) {
 		setValues( updatedValues );
 
 		// Save all settings to localStorage
-		localStorage.setItem( 'dashmate_layout_settings', JSON.stringify( updatedValues ) );
+		const storageKey = `dashmate_layout_settings_${ dashboardId }`;
+		localStorage.setItem( storageKey, JSON.stringify( updatedValues ) );
 
 		// If refresh is needed, reload the page
 		if ( needsRefresh ) {

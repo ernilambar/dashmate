@@ -252,11 +252,13 @@ class Dashboard extends Component {
 		// Get columns from the dashboard structure
 		const columns = Array.isArray( dashboard?.columns ) ? dashboard.columns : [];
 
-		// Get max columns from localStorage, fallback to 3 if not set
+		// Get max columns from localStorage, fallback to 2 if not set
+		const dashboardId = this.props.dashboardId || 'main';
+		const storageKey = `dashmate_layout_settings_${ dashboardId }`;
 		const maxColumns = parseInt(
-			localStorage.getItem( 'dashmate_layout_settings' )
-				? JSON.parse( localStorage.getItem( 'dashmate_layout_settings' ) ).max_columns
-				: '3',
+			localStorage.getItem( storageKey )
+				? JSON.parse( localStorage.getItem( storageKey ) ).max_columns
+				: '2',
 			10
 		);
 		const gridColumns = Math.min( maxColumns, columns.length );
@@ -279,7 +281,10 @@ class Dashboard extends Component {
 
 				{ showLayoutSettings && (
 					<div className="layout-settings-modal">
-						<LayoutSettings onClose={ this.handleLayoutSettingsClose } />
+						<LayoutSettings
+							onClose={ this.handleLayoutSettingsClose }
+							dashboardId={ this.props.dashboardId }
+						/>
 					</div>
 				) }
 
