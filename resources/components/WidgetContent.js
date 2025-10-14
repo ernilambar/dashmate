@@ -34,11 +34,12 @@ class WidgetContent extends Component {
 	}
 
 	async loadWidgetData() {
-		const { widget } = this.props;
+		const { widget, dashboardId } = this.props;
 
 		try {
+			const dashboardIdParam = dashboardId || 'main';
 			const response = await fetch(
-				`${ dashmateApiSettings.restUrl }widgets/${ widget.id }/data`,
+				`${ dashmateApiSettings.restUrl }dashboards/${ dashboardIdParam }/widgets/${ widget.id }/content`,
 				{
 					headers: {
 						'X-WP-Nonce': dashmateApiSettings?.nonce || '',

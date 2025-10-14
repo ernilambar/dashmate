@@ -4,9 +4,12 @@
 
 Dashboard endpoints provide functionality for managing the overall dashboard layout, including retrieving dashboard data, updating layouts, and reordering widgets.
 
-## GET /dashboard
+## GET /dashboards/{dashboard_id}
 
-Retrieves the complete dashboard data including columns and their widgets.
+Retrieves the complete dashboard data including columns and their widgets for a specific dashboard.
+
+**Parameters:**
+- `dashboard_id` (string, required): Dashboard identifier
 
 **Response:**
 ```json
@@ -33,9 +36,12 @@ Retrieves the complete dashboard data including columns and their widgets.
 }
 ```
 
-## PUT /dashboard
+## POST /dashboards/{dashboard_id}
 
-Updates the dashboard layout with new column configuration.
+Updates the dashboard layout with new column configuration for a specific dashboard.
+
+**Parameters:**
+- `dashboard_id` (string, required): Dashboard identifier
 
 **Request Body:**
 ```json
@@ -84,9 +90,12 @@ Updates the dashboard layout with new column configuration.
 }
 ```
 
-## PUT /dashboard/reorder
+## POST /dashboards/{dashboard_id}/reorder
 
-Reorders widgets across columns using a column_widgets structure.
+Reorders widgets across columns using a column_widgets structure for a specific dashboard.
+
+**Parameters:**
+- `dashboard_id` (string, required): Dashboard identifier
 
 **Request Body:**
 ```json

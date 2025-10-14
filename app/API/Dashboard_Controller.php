@@ -28,7 +28,7 @@ class Dashboard_Controller extends Base_Controller {
 	 *
 	 * @var string
 	 */
-	protected $base_route = 'dashboard';
+	protected $base_route = 'dashboards';
 
 	/**
 	 * Register routes.
@@ -36,22 +36,32 @@ class Dashboard_Controller extends Base_Controller {
 	 * @since 1.0.0
 	 */
 	public function register_routes() {
+		// Get dashboard data.
 		register_rest_route(
 			$this->get_namespace(),
-			'/' . $this->get_base_route(),
+			'/' . $this->get_base_route() . '/(?P<dashboard_id>[a-zA-Z0-9_-]+)',
 			[
 				[
 					'methods'             => \WP_REST_Server::READABLE,
 					'callback'            => [ $this, 'get_dashboard' ],
 					'permission_callback' => [ $this, 'check_permissions' ],
-					'args'                => [],
+					'args'                => [
+						'dashboard_id' => [
+							'required'          => true,
+							'validate_callback' => [ $this, 'validate_dashboard_id' ],
+						],
+					],
 				],
 				[
 					'methods'             => \WP_REST_Server::EDITABLE,
 					'callback'            => [ $this, 'save_dashboard' ],
 					'permission_callback' => [ $this, 'check_permissions' ],
 					'args'                => [
-						'columns' => [
+						'dashboard_id' => [
+							'required'          => true,
+							'validate_callback' => [ $this, 'validate_dashboard_id' ],
+						],
+						'columns'      => [
 							'required'          => true,
 							'type'              => 'array',
 							'validate_callback' => [ $this, 'validate_columns' ],
@@ -61,16 +71,20 @@ class Dashboard_Controller extends Base_Controller {
 			]
 		);
 
-		// Batch reorder widgets endpoint.
+		// Reorder widgets endpoint.
 		register_rest_route(
 			$this->get_namespace(),
-			'/' . $this->get_base_route() . '/reorder',
+			'/' . $this->get_base_route() . '/(?P<dashboard_id>[a-zA-Z0-9_-]+)/reorder',
 			[
 				[
 					'methods'             => \WP_REST_Server::EDITABLE,
 					'callback'            => [ $this, 'reorder_widgets' ],
 					'permission_callback' => [ $this, 'check_permissions' ],
 					'args'                => [
+						'dashboard_id'   => [
+							'required'          => true,
+							'validate_callback' => [ $this, 'validate_dashboard_id' ],
+						],
 						'column_widgets' => [
 							'required' => true,
 							'type'     => 'object',
@@ -91,7 +105,7 @@ class Dashboard_Controller extends Base_Controller {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public function get_dashboard( $request ) {
-		$dashboard_id = $this->get_dashboard_id_from_request( $request );
+		$dashboard_id = $request->get_param( 'dashboard_id' );
 		$data         = Dashboard_Manager::get_enhanced_dashboard_data( $dashboard_id );
 
 		return $this->success_response( $data );
@@ -107,7 +121,7 @@ class Dashboard_Controller extends Base_Controller {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public function save_dashboard( $request ) {
-		$dashboard_id = $this->get_dashboard_id_from_request( $request );
+		$dashboard_id = $request->get_param( 'dashboard_id' );
 		$columns      = $request->get_param( 'columns' );
 
 		if ( ! is_array( $columns ) ) {
@@ -146,7 +160,7 @@ class Dashboard_Controller extends Base_Controller {
 	 */
 	public function reorder_widgets( $request ) {
 		try {
-			$dashboard_id   = $this->get_dashboard_id_from_request( $request );
+			$dashboard_id   = $request->get_param( 'dashboard_id' );
 			$column_widgets = $request->get_param( 'column_widgets' );
 
 			if ( ! is_array( $column_widgets ) ) {
@@ -241,22 +255,23 @@ class Dashboard_Controller extends Base_Controller {
 	}
 
 	/**
-	 * Get dashboard ID from request.
+	 * Validate dashboard ID.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param WP_REST_Request $request Request object.
-	 * @return string Dashboard ID.
+	 * @param string $dashboard_id Dashboard ID.
+	 *
+	 * @return bool|WP_Error
 	 */
-	private function get_dashboard_id_from_request( $request ) {
-		// Try to get dashboard_id from request parameters first.
-		$dashboard_id = $request->get_param( 'dashboard_id' );
-
-		if ( ! empty( $dashboard_id ) ) {
-			return sanitize_key( $dashboard_id );
+	public function validate_dashboard_id( $dashboard_id ) {
+		if ( empty( $dashboard_id ) ) {
+			return new WP_Error( 'invalid_dashboard_id', 'Dashboard ID is required' );
 		}
 
-		// Fallback to 'main' if not provided.
-		return 'main';
+		if ( ! preg_match( '/^[a-zA-Z0-9_-]+$/', $dashboard_id ) ) {
+			return new WP_Error( 'invalid_dashboard_id', 'Dashboard ID contains invalid characters' );
+		}
+
+		return true;
 	}
 }
