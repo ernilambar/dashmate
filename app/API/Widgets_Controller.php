@@ -36,7 +36,7 @@ class Widgets_Controller extends Base_Controller {
 	 * @since 1.0.0
 	 */
 	public function register_routes() {
-		// Get available widgets.
+		// Get available widgets (global endpoint - not dashboard-specific).
 		register_rest_route(
 			$this->get_namespace(),
 			'/' . $this->get_base_route(),
@@ -50,59 +50,40 @@ class Widgets_Controller extends Base_Controller {
 			]
 		);
 
-		// Get widget data.
+		// Get widgets for a specific dashboard.
 		register_rest_route(
 			$this->get_namespace(),
-			'/' . $this->get_base_route() . '/(?P<id>[a-zA-Z0-9_-]+)/data',
+			'/dashboards/(?P<dashboard_id>[a-zA-Z0-9_-]+)/' . $this->get_base_route(),
 			[
 				[
 					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_widget_data' ],
+					'callback'            => [ $this, 'get_dashboard_widgets' ],
 					'permission_callback' => [ $this, 'check_permissions' ],
 					'args'                => [
-						'id' => [
+						'dashboard_id' => [
 							'required'          => true,
-							'validate_callback' => [ $this, 'validate_widget_id' ],
+							'validate_callback' => [ $this, 'validate_dashboard_id' ],
 						],
 					],
 				],
 			]
 		);
 
-		// Save widget settings.
+		// Get widget content for a specific dashboard and widget.
 		register_rest_route(
 			$this->get_namespace(),
-			'/' . $this->get_base_route() . '/(?P<id>[a-zA-Z0-9_-]+)/settings',
-			[
-				[
-					'methods'             => \WP_REST_Server::EDITABLE,
-					'callback'            => [ $this, 'save_widget_settings' ],
-					'permission_callback' => [ $this, 'check_permissions' ],
-					'args'                => [
-						'id'       => [
-							'required'          => true,
-							'validate_callback' => [ $this, 'validate_widget_id' ],
-						],
-						'settings' => [
-							'required' => true,
-							'type'     => 'object',
-						],
-					],
-				],
-			]
-		);
-
-		// Get widget content by widget ID.
-		register_rest_route(
-			$this->get_namespace(),
-			'/' . $this->get_base_route() . '/content/(?P<widget_id>[a-zA-Z0-9_-]+)',
+			'/dashboards/(?P<dashboard_id>[a-zA-Z0-9_-]+)/' . $this->get_base_route() . '/(?P<widget_id>[a-zA-Z0-9_-]+)/content',
 			[
 				[
 					'methods'             => \WP_REST_Server::READABLE,
 					'callback'            => [ $this, 'get_widget_content' ],
 					'permission_callback' => [ $this, 'check_permissions' ],
 					'args'                => [
-						'widget_id' => [
+						'dashboard_id' => [
+							'required'          => true,
+							'validate_callback' => [ $this, 'validate_dashboard_id' ],
+						],
+						'widget_id'    => [
 							'required'          => true,
 							'validate_callback' => [ $this, 'validate_widget_id' ],
 						],
@@ -113,12 +94,43 @@ class Widgets_Controller extends Base_Controller {
 					'callback'            => [ $this, 'get_widget_content_with_settings' ],
 					'permission_callback' => [ $this, 'check_permissions' ],
 					'args'                => [
-						'widget_id' => [
+						'dashboard_id' => [
+							'required'          => true,
+							'validate_callback' => [ $this, 'validate_dashboard_id' ],
+						],
+						'widget_id'    => [
 							'required'          => true,
 							'validate_callback' => [ $this, 'validate_widget_id' ],
 						],
-						'settings'  => [
+						'settings'     => [
 							'required' => false,
+							'type'     => 'object',
+						],
+					],
+				],
+			]
+		);
+
+		// Save widget settings for a specific dashboard and widget.
+		register_rest_route(
+			$this->get_namespace(),
+			'/dashboards/(?P<dashboard_id>[a-zA-Z0-9_-]+)/' . $this->get_base_route() . '/(?P<widget_id>[a-zA-Z0-9_-]+)/settings',
+			[
+				[
+					'methods'             => \WP_REST_Server::EDITABLE,
+					'callback'            => [ $this, 'save_widget_settings' ],
+					'permission_callback' => [ $this, 'check_permissions' ],
+					'args'                => [
+						'dashboard_id' => [
+							'required'          => true,
+							'validate_callback' => [ $this, 'validate_dashboard_id' ],
+						],
+						'widget_id'    => [
+							'required'          => true,
+							'validate_callback' => [ $this, 'validate_widget_id' ],
+						],
+						'settings'     => [
+							'required' => true,
 							'type'     => 'object',
 						],
 					],
@@ -143,7 +155,7 @@ class Widgets_Controller extends Base_Controller {
 	}
 
 	/**
-	 * Get widget data.
+	 * Get dashboard widgets.
 	 *
 	 * @since 1.0.0
 	 *
@@ -151,49 +163,13 @@ class Widgets_Controller extends Base_Controller {
 	 *
 	 * @return WP_REST_Response|WP_Error
 	 */
-	public function get_widget_data( $request ) {
-		$widget_id    = $request->get_param( 'id' );
-		$dashboard_id = $this->get_dashboard_id_from_request( $request );
+	public function get_dashboard_widgets( $request ) {
+		$dashboard_id = $request->get_param( 'dashboard_id' );
+		$data         = Dashboard_Manager::get_enhanced_dashboard_data( $dashboard_id );
 
-		// Get widget from the new system.
-		$widget = Widget_Dispatcher::get_widget( $widget_id );
-
-		if ( null === $widget ) {
-			return $this->error_response( 'Widget not found: ' . $widget_id, 404, 'widget_not_found' );
-		}
-
-		// Get widget settings from WordPress options.
-		$dashboard_data = $this->get_dashboard_data( $dashboard_id );
-
-		if ( is_wp_error( $dashboard_data ) ) {
-			return $dashboard_data;
-		}
-
-		$widget_data = $this->find_widget_by_id( $widget_id, $dashboard_data );
-		$settings    = $widget_data['settings'] ?? [];
-
-		// Merge settings with defaults to ensure frontend gets complete settings.
-		$merged_settings = $widget->merge_settings_with_defaults( $settings );
-
-		// Get content using the new system.
-		$content = Widget_Dispatcher::get_widget_content( $widget->get_template_type(), $widget_id, $settings );
-
-		if ( is_wp_error( $content ) ) {
-			return $content;
-		}
-
-		// Add widget type and merged settings to the response.
-		$content['type']     = $widget->get_template_type();
-		$content['settings'] = $merged_settings;
-
-		// Add metadata to the response.
-		$metadata = $widget->get_metadata( $settings );
-		if ( ! empty( $metadata['classes'] ) || ! empty( $metadata['attributes'] ) ) {
-			$content['metadata'] = $metadata;
-		}
-
-		return $this->success_response( $content );
+		return $this->success_response( $data );
 	}
+
 
 	/**
 	 * Get widget content by widget ID.
@@ -205,7 +181,8 @@ class Widgets_Controller extends Base_Controller {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public function get_widget_content( $request ) {
-		$widget_id = $request->get_param( 'widget_id' );
+		$dashboard_id = $request->get_param( 'dashboard_id' );
+		$widget_id    = $request->get_param( 'widget_id' );
 
 		// Get widget from the new system.
 		$widget = Widget_Dispatcher::get_widget( $widget_id );
@@ -214,7 +191,17 @@ class Widgets_Controller extends Base_Controller {
 			return $this->error_response( 'Widget not found: ' . $widget_id, 404, 'widget_not_found' );
 		}
 
-		$content = Widget_Dispatcher::get_widget_content( $widget->get_template_type(), $widget_id );
+		// Get widget settings from dashboard data.
+		$dashboard_data = $this->get_dashboard_data( $dashboard_id );
+
+		if ( is_wp_error( $dashboard_data ) ) {
+			return $dashboard_data;
+		}
+
+		$widget_data = $this->find_widget_by_id( $widget_id, $dashboard_data );
+		$settings    = $widget_data['settings'] ?? [];
+
+		$content = Widget_Dispatcher::get_widget_content( $widget->get_template_type(), $widget_id, $settings );
 
 		if ( is_wp_error( $content ) ) {
 			return $content;
@@ -236,8 +223,9 @@ class Widgets_Controller extends Base_Controller {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public function get_widget_content_with_settings( $request ) {
-		$widget_id = $request->get_param( 'widget_id' );
-		$settings  = $request->get_param( 'settings' ) ?? [];
+		$dashboard_id = $request->get_param( 'dashboard_id' );
+		$widget_id    = $request->get_param( 'widget_id' );
+		$settings     = $request->get_param( 'settings' ) ?? [];
 
 		// Get widget from the new system.
 		$widget = Widget_Dispatcher::get_widget( $widget_id );
@@ -268,9 +256,9 @@ class Widgets_Controller extends Base_Controller {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public function save_widget_settings( $request ) {
-		$widget_id    = sanitize_key( $request->get_param( 'id' ) );
+		$dashboard_id = $request->get_param( 'dashboard_id' );
+		$widget_id    = sanitize_key( $request->get_param( 'widget_id' ) );
 		$settings     = $request->get_param( 'settings' );
-		$dashboard_id = $this->get_dashboard_id_from_request( $request );
 
 		// Basic validation.
 		if ( empty( $widget_id ) ) {
@@ -332,22 +320,23 @@ class Widgets_Controller extends Base_Controller {
 	}
 
 	/**
-	 * Get dashboard ID from request.
+	 * Validate dashboard ID.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param WP_REST_Request $request Request object.
-	 * @return string Dashboard ID.
+	 * @param string $dashboard_id Dashboard ID.
+	 *
+	 * @return bool|WP_Error
 	 */
-	private function get_dashboard_id_from_request( $request ) {
-		// Try to get dashboard_id from request parameters first.
-		$dashboard_id = $request->get_param( 'dashboard_id' );
-
-		if ( ! empty( $dashboard_id ) ) {
-			return sanitize_key( $dashboard_id );
+	public function validate_dashboard_id( $dashboard_id ) {
+		if ( empty( $dashboard_id ) ) {
+			return new WP_Error( 'invalid_dashboard_id', 'Dashboard ID is required' );
 		}
 
-		// Fallback to 'main' if not provided.
-		return 'main';
+		if ( ! preg_match( '/^[a-zA-Z0-9_-]+$/', $dashboard_id ) ) {
+			return new WP_Error( 'invalid_dashboard_id', 'Dashboard ID contains invalid characters' );
+		}
+
+		return true;
 	}
 }

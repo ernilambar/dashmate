@@ -23,12 +23,10 @@ class Dashboard extends Component {
 
 	async loadDashboard() {
 		try {
-			const url = new URL( `${ dashmateApiSettings.restUrl }dashboard` );
-			if ( this.props.dashboardId ) {
-				url.searchParams.set( 'dashboard_id', this.props.dashboardId );
-			}
+			const dashboardId = this.props.dashboardId || 'main';
+			const url = `${ dashmateApiSettings.restUrl }dashboards/${ dashboardId }`;
 
-			const response = await fetch( url.toString(), {
+			const response = await fetch( url, {
 				headers: {
 					'X-WP-Nonce': dashmateApiSettings?.nonce || '',
 				},
@@ -64,12 +62,10 @@ class Dashboard extends Component {
 
 	async saveDashboard( dashboardData ) {
 		try {
-			const url = new URL( `${ dashmateApiSettings.restUrl }dashboard` );
-			if ( this.props.dashboardId ) {
-				url.searchParams.set( 'dashboard_id', this.props.dashboardId );
-			}
+			const dashboardId = this.props.dashboardId || 'main';
+			const url = `${ dashmateApiSettings.restUrl }dashboards/${ dashboardId }`;
 
-			const response = await fetch( url.toString(), {
+			const response = await fetch( url, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -127,12 +123,10 @@ class Dashboard extends Component {
 
 		// Save the updated dashboard to the server.
 		try {
-			const url = new URL( `${ dashmateApiSettings.restUrl }dashboard` );
-			if ( this.props.dashboardId ) {
-				url.searchParams.set( 'dashboard_id', this.props.dashboardId );
-			}
+			const dashboardId = this.props.dashboardId || 'main';
+			const url = `${ dashmateApiSettings.restUrl }dashboards/${ dashboardId }`;
 
-			const response = await fetch( url.toString(), {
+			const response = await fetch( url, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -187,12 +181,10 @@ class Dashboard extends Component {
 
 		// Save the updated dashboard to the server.
 		try {
-			const url = new URL( `${ dashmateApiSettings.restUrl }dashboard` );
-			if ( this.props.dashboardId ) {
-				url.searchParams.set( 'dashboard_id', this.props.dashboardId );
-			}
+			const dashboardId = this.props.dashboardId || 'main';
+			const url = `${ dashmateApiSettings.restUrl }dashboards/${ dashboardId }`;
 
-			const response = await fetch( url.toString(), {
+			const response = await fetch( url, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',

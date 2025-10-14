@@ -204,11 +204,13 @@ Dashmate comes with several built-in widget types:
 
 Dashmate automatically registers REST API endpoints:
 
-- `GET /wp-json/dashmate/v1/dashboard/{dashboard_id}` - Get dashboard data
-- `POST /wp-json/dashmate/v1/dashboard/{dashboard_id}` - Save dashboard data
-- `DELETE /wp-json/dashmate/v1/dashboard/{dashboard_id}` - Delete dashboard data
+- `GET /wp-json/dashmate/v1/dashboards/{dashboard_id}` - Get dashboard data
+- `POST /wp-json/dashmate/v1/dashboards/{dashboard_id}` - Save dashboard data
+- `POST /wp-json/dashmate/v1/dashboards/{dashboard_id}/reorder` - Reorder widgets
 - `GET /wp-json/dashmate/v1/widgets` - Get available widgets
-- `GET /wp-json/dashmate/v1/widgets/{widget_id}/content` - Get widget content
+- `GET /wp-json/dashmate/v1/dashboards/{dashboard_id}/widgets` - Get dashboard widgets
+- `GET /wp-json/dashmate/v1/dashboards/{dashboard_id}/widgets/{widget_id}/content` - Get widget content
+- `POST /wp-json/dashmate/v1/dashboards/{dashboard_id}/widgets/{widget_id}/settings` - Save widget settings
 - `GET /wp-json/dashmate/v1/layouts` - Get available layouts
 
 ## Hooks and Filters

@@ -37,14 +37,16 @@ The Dashmate API provides REST endpoints for managing dashboards and widgets. Al
 ## Endpoints
 
 ### Dashboard Management
-- **[GET /dashboard](./endpoints/dashboard.md#get-dashboard)** - Retrieve dashboard data
-- **[PUT /dashboard](./endpoints/dashboard.md#put-dashboard)** - Update dashboard layout
-- **[PUT /dashboard/reorder](./endpoints/dashboard.md#put-dashboard-reorder)** - Reorder widgets
+- **[GET /dashboards/{dashboard_id}](./endpoints/dashboard.md#get-dashboards-dashboard_id)** - Retrieve dashboard data
+- **[POST /dashboards/{dashboard_id}](./endpoints/dashboard.md#post-dashboards-dashboard_id)** - Update dashboard layout
+- **[POST /dashboards/{dashboard_id}/reorder](./endpoints/dashboard.md#post-dashboards-dashboard_id-reorder)** - Reorder widgets
 
 ### Widget Management
-- **[GET /widgets](./endpoints/widgets.md#get-widgets)** - List available widget types
-- **[GET /widgets/{id}](./endpoints/widgets.md#get-widgets-id)** - Get widget configuration
-- **[PUT /widgets/{id}](./endpoints/widgets.md#put-widgets-id)** - Update widget settings
+- **[GET /widgets](./endpoints/widgets.md#get-widgets)** - List available widget types (global)
+- **[GET /dashboards/{dashboard_id}/widgets](./endpoints/widgets.md#get-dashboards-dashboard_id-widgets)** - Get dashboard widgets
+- **[GET /dashboards/{dashboard_id}/widgets/{widget_id}/content](./endpoints/widgets.md#get-dashboards-dashboard_id-widgets-widget_id-content)** - Get widget content
+- **[POST /dashboards/{dashboard_id}/widgets/{widget_id}/content](./endpoints/widgets.md#post-dashboards-dashboard_id-widgets-widget_id-content)** - Get widget content with custom settings
+- **[POST /dashboards/{dashboard_id}/widgets/{widget_id}/settings](./endpoints/widgets.md#post-dashboards-dashboard_id-widgets-widget_id-settings)** - Update widget settings
 
 ## Data Structures
 

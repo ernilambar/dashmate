@@ -6,7 +6,7 @@ Widget endpoints provide functionality for managing individual widgets, includin
 
 ## GET /widgets
 
-Retrieves a list of all available widget types and their configurations.
+Retrieves a list of all available widget types and their configurations (global endpoint).
 
 **Response:**
 ```json
@@ -57,45 +57,99 @@ Retrieves a list of all available widget types and their configurations.
 }
 ```
 
-## GET /widgets/{id}
+## GET /dashboards/{dashboard_id}/widgets
 
-Retrieves the configuration for a specific widget type.
+Retrieves all widgets for a specific dashboard.
 
 **Parameters:**
-- `id` (string, required): Widget type identifier
+- `dashboard_id` (string, required): Dashboard identifier
 
 **Response:**
 ```json
 {
   "success": true,
   "data": {
-    "id": "html",
-    "title": "HTML Widget",
-    "description": "Display custom HTML content",
-    "fields": [
+    "columns": [
       {
-        "id": "title",
-        "type": "text",
-        "label": "Title",
-        "required": true
-      },
-      {
-        "id": "content",
-        "type": "textarea",
-        "label": "Content",
-        "required": true
+        "id": "col-1",
+        "widgets": [
+          {
+            "id": "widget-1",
+            "type": "html",
+            "settings": {
+              "title": "Widget Title",
+              "content": "Widget content"
+            },
+            "collapsed": false
+          }
+        ]
       }
     ]
   }
 }
 ```
 
-## PUT /widgets/{id}
+## GET /dashboards/{dashboard_id}/widgets/{widget_id}/content
 
-Updates the settings for a specific widget instance.
+Retrieves the content for a specific widget in a specific dashboard.
 
 **Parameters:**
-- `id` (string, required): Widget instance identifier
+- `dashboard_id` (string, required): Dashboard identifier
+- `widget_id` (string, required): Widget instance identifier
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "id": "widget-1",
+    "type": "html",
+    "content": "<div>Widget content</div>",
+    "metadata": {
+      "classes": ["widget", "html-widget"],
+      "attributes": {}
+    }
+  }
+}
+```
+
+## POST /dashboards/{dashboard_id}/widgets/{widget_id}/content
+
+Retrieves widget content with custom settings (for preview purposes).
+
+**Parameters:**
+- `dashboard_id` (string, required): Dashboard identifier
+- `widget_id` (string, required): Widget instance identifier
+
+**Request Body:**
+```json
+{
+  "settings": {
+    "title": "Preview Title",
+    "content": "Preview content"
+  }
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "id": "widget-1",
+    "type": "html",
+    "content": "<div>Preview content</div>"
+  }
+}
+```
+
+## POST /dashboards/{dashboard_id}/widgets/{widget_id}/settings
+
+Updates the settings for a specific widget instance in a specific dashboard.
+
+**Parameters:**
+- `dashboard_id` (string, required): Dashboard identifier
+- `widget_id` (string, required): Widget instance identifier
 
 **Request Body:**
 ```json
@@ -112,13 +166,7 @@ Updates the settings for a specific widget instance.
 {
   "success": true,
   "data": {
-    "id": "widget-1",
-    "type": "html",
-    "settings": {
-      "title": "Updated Widget Title",
-      "content": "Updated widget content"
-    },
-    "collapsed": false
+    "message": "Settings saved successfully"
   }
 }
 ```
