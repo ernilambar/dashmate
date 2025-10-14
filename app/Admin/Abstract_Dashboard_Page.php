@@ -319,5 +319,4 @@ abstract class Abstract_Dashboard_Page {
 			Dashboard_Model::set_starter_layout( $this->dashboard_id, $this->starter_layout );
 		}
 	}
-
 }

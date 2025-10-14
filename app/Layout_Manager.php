@@ -60,5 +60,4 @@ class Layout_Manager {
 		 */
 		return apply_filters( 'dashmate_layout_data', $layout_data, $file_path );
 	}
-
 }
