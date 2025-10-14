@@ -209,7 +209,6 @@ Dashmate automatically registers REST API endpoints:
 - `DELETE /wp-json/dashmate/v1/dashboard/{dashboard_id}` - Delete dashboard data
 - `GET /wp-json/dashmate/v1/widgets` - Get available widgets
 - `GET /wp-json/dashmate/v1/widgets/{widget_id}/content` - Get widget content
-- `GET /wp-json/dashmate/v1/columns` - Get column management endpoints
 - `GET /wp-json/dashmate/v1/layouts` - Get available layouts
 
 ## Hooks and Filters

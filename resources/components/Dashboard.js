@@ -19,7 +19,6 @@ class Dashboard extends Component {
 	componentDidMount() {
 		this.loadDashboard();
 		this.loadWidgets();
-		this.loadLayouts();
 	}
 
 	async loadDashboard() {
@@ -57,23 +56,6 @@ class Dashboard extends Component {
 
 			if ( data.success ) {
 				this.setState( { widgets: data.data } );
-			}
-		} catch ( error ) {
-			// Handle error silently
-		}
-	}
-
-	async loadLayouts() {
-		try {
-			const response = await fetch( `${ dashmateApiSettings.restUrl }layouts`, {
-				headers: {
-					'X-WP-Nonce': dashmateApiSettings?.nonce || '',
-				},
-			} );
-			const data = await response.json();
-
-			if ( data.success ) {
-				this.setState( { layouts: data.data } );
 			}
 		} catch ( error ) {
 			// Handle error silently
