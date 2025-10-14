@@ -33,7 +33,5 @@ class API_Main {
 	private function init_controllers() {
 		new Dashboard_Controller();
 		new Widgets_Controller();
-		new Columns_Controller();
-		new Layouts_Controller();
 	}
 }

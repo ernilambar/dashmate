@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Dashmate API provides REST endpoints for managing dashboard layouts, widgets, and columns. All endpoints are prefixed with `/wp-json/dashmate/v1/`.
+The Dashmate API provides REST endpoints for managing dashboards and widgets. All endpoints are prefixed with `/wp-json/dashmate/v1/`.
 
 ## Base Information
 
@@ -45,20 +45,6 @@ The Dashmate API provides REST endpoints for managing dashboard layouts, widgets
 - **[GET /widgets](./endpoints/widgets.md#get-widgets)** - List available widget types
 - **[GET /widgets/{id}](./endpoints/widgets.md#get-widgets-id)** - Get widget configuration
 - **[PUT /widgets/{id}](./endpoints/widgets.md#put-widgets-id)** - Update widget settings
-
-### Layout Management
-- **[GET /layouts](./endpoints/layouts.md#get-layouts)** - List saved layouts
-- **[POST /layouts](./endpoints/layouts.md#post-layouts)** - Save new layout
-- **[GET /layouts/{id}](./endpoints/layouts.md#get-layouts-id)** - Get specific layout
-- **[PUT /layouts/{id}](./endpoints/layouts.md#put-layouts-id)** - Update layout
-- **[DELETE /layouts/{id}](./endpoints/layouts.md#delete-layouts-id)** - Delete layout
-
-### Column Management
-- **[GET /columns](./endpoints/columns.md#get-columns)** - List columns
-- **[POST /columns](./endpoints/columns.md#post-columns)** - Create column
-- **[GET /columns/{id}](./endpoints/columns.md#get-columns-id)** - Get specific column
-- **[PUT /columns/{id}](./endpoints/columns.md#put-columns-id)** - Update column
-- **[DELETE /columns/{id}](./endpoints/columns.md#delete-columns-id)** - Delete column
 
 ## Data Structures
 
