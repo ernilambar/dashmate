@@ -7,8 +7,9 @@
 
 declare(strict_types=1);
 
-namespace Nilambar\Dashmate;
+namespace Nilambar\Dashmate\Services;
 
+use Nilambar\Dashmate\Widgets\Abstract_Widget;
 use Nilambar\Dashmate\Widgets\Sample_HTML;
 use Nilambar\Dashmate\Widgets\Sample_Line_Chart;
 use Nilambar\Dashmate\Widgets\Sample_Links;

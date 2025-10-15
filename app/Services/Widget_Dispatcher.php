@@ -7,7 +7,10 @@
 
 declare(strict_types=1);
 
-namespace Nilambar\Dashmate;
+namespace Nilambar\Dashmate\Services;
+
+use Nilambar\Dashmate\Core\Widget_Initializer;
+use Nilambar\Dashmate\Widgets\Abstract_Widget;
 
 /**
  * Widget_Dispatcher class.

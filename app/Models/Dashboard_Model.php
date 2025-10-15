@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace Nilambar\Dashmate\Models;
 
-use Nilambar\Dashmate\Layout_Manager;
+use Nilambar\Dashmate\Utils\Layout_Utils;
 use WP_Error;
 
 /**
@@ -129,8 +129,8 @@ class Dashboard_Model {
 			return null;
 		}
 
-		// Use Layout_Manager to get layout data from the JSON file.
-		$layout_data = Layout_Manager::get_layout_data( self::$starter_layouts[ $dashboard_id ] );
+		// Use Layout_Utils to get layout data from the JSON file.
+		$layout_data = Layout_Utils::get_layout_data( self::$starter_layouts[ $dashboard_id ] );
 
 		// Return null if there's an error.
 		if ( is_wp_error( $layout_data ) ) {

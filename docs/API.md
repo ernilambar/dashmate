@@ -97,23 +97,6 @@ Updates the dashboard layout with new column configuration.
 }
 ```
 
-### POST /dashboards/{dashboard_id}/reorder
-
-Reorders widgets across columns using a column_widgets structure.
-
-**Parameters:**
-- `dashboard_id` (string, required): Dashboard identifier
-
-**Request Body:**
-```json
-{
-  "column_widgets": {
-    "col-1": ["widget-1", "widget-3"],
-    "col-2": ["widget-2", "widget-4"]
-  }
-}
-```
-
 ## Widget Endpoints
 
 ### GET /widgets
@@ -267,7 +250,7 @@ X-WP-Nonce: your-nonce-value
 ### Dashboard Management
 
 ```php
-use Nilambar\Dashmate\Dashboard_Manager;
+use Nilambar\Dashmate\Services\Dashboard_Manager;
 
 // Get dashboard data
 $dashboard_data = Dashboard_Manager::get_dashboard_data('my_dashboard');
@@ -282,7 +265,7 @@ $exists = Dashboard_Manager::dashboard_data_exists('my_dashboard');
 ### Widget Management
 
 ```php
-use Nilambar\Dashmate\Widget_Manager;
+use Nilambar\Dashmate\Services\Widget_Manager;
 
 // Create a widget
 $widget = Widget_Manager::create_widget('my_custom', [
@@ -307,7 +290,7 @@ $result = Widget_Manager::delete_widget('widget_id');
 **Important**: Custom widgets can ONLY be registered using the `dashmate_widgets` filter. All direct registration methods are restricted to internal use only and are not accessible to external plugins.
 
 ```php
-use Nilambar\Dashmate\Abstract_Widget;
+use Nilambar\Dashmate\Widgets\Abstract_Widget;
 
 class My_Custom_Widget extends Abstract_Widget {
     public function __construct($id) {

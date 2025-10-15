@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace Nilambar\Dashmate\API;
 
-use Nilambar\Dashmate\Dashboard_Manager;
+use Nilambar\Dashmate\Services\Dashboard_Manager;
 use WP_Error;
 use WP_REST_Response;
 
@@ -95,9 +95,6 @@ abstract class Base_Controller {
 	 * @return bool
 	 */
 	public function check_permissions() {
-		// Temporarily disable authentication for testing
-		return true;
-
 		if ( ! current_user_can( 'manage_options' ) ) {
 			return false;
 		}

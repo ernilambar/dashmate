@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace Nilambar\Dashmate\API;
 
-use Nilambar\Dashmate\Widget_Dispatcher;
+use Nilambar\Dashmate\Services\Widget_Dispatcher;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -169,7 +169,6 @@ class Widgets_Controller extends Base_Controller {
 
 		return $this->success_response( $data );
 	}
-
 
 	/**
 	 * Get widget content by widget ID.

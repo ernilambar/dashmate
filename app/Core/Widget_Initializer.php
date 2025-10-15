@@ -7,7 +7,9 @@
 
 declare(strict_types=1);
 
-namespace Nilambar\Dashmate;
+namespace Nilambar\Dashmate\Core;
+
+use Nilambar\Dashmate\Services\Widget_Registry;
 
 /**
  * Widget_Initializer class.

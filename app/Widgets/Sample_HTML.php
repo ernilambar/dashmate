@@ -9,8 +9,6 @@ declare(strict_types=1);
 
 namespace Nilambar\Dashmate\Widgets;
 
-use Nilambar\Dashmate\Abstract_Widget;
-
 /**
  * Sample_HTML class.
  *

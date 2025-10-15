@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace Nilambar\Dashmate;
+namespace Nilambar\Dashmate\Core;
 
 use Nilambar\Dashmate\API\API_Main;
 
