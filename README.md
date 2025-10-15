@@ -67,7 +67,7 @@ Dashmate::init();
 // Load assets.
 Dashmate::load_assets(
     plugin_dir_path(__FILE__) . 'vendor/ernilambar/dashmate',
-    plugin_dir_url(__FILE__) . 'vendor/ernilambar/dashmate/'
+    plugin_dir_url(__FILE__) . 'vendor/ernilambar/dashmate'
 );
 ```
 
