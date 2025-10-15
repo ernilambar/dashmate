@@ -2,12 +2,14 @@
 	"name": "dashmate",
 	"version": "1.0.0",
 	"title": "Dashmate",
-	"description": "WordPress dashboard widget system.",
+	"description": "WordPress library for dashboard widget system.",
 	"author": "Nilambar Sharma",
 	"license": "GPL-2.0-or-later",
 	"keywords": [
 		"wordpress",
-		"wordpress-plugin"
+		"wordpress-library",
+		"dashboard",
+		"widgets"
 	],
 	"homepage": "https://github.com/ernilambar/dashmate",
 	"repository": {
