@@ -9,8 +9,10 @@ declare(strict_types=1);
 
 namespace Nilambar\Dashmate\Services;
 
+use Exception;
 use Nilambar\Dashmate\Core\Widget_Initializer;
 use Nilambar\Dashmate\Widgets\Abstract_Widget;
+use WP_Error;
 
 /**
  * Widget_Dispatcher class.
@@ -169,13 +171,13 @@ class Widget_Dispatcher {
 		$widget = self::get_widget( $widget_id );
 
 		if ( null === $widget ) {
-			return new \WP_Error( 'unknown_widget', 'Unknown widget: ' . $widget_id );
+			return new WP_Error( 'unknown_widget', 'Unknown widget: ' . $widget_id );
 		}
 
 		try {
 			return $widget->get_validated_content( $settings );
-		} catch ( \Exception $e ) {
-			return new \WP_Error( 'widget_error', 'Widget error: ' . $e->getMessage() );
+		} catch ( Exception $e ) {
+			return new WP_Error( 'widget_error', 'Widget error: ' . $e->getMessage() );
 		}
 	}
 
@@ -298,7 +300,7 @@ class Widget_Dispatcher {
 			}
 		}
 
-		return new \WP_Error( 'widget_not_found', 'Widget not found: ' . $widget_id );
+		return new WP_Error( 'widget_not_found', 'Widget not found: ' . $widget_id );
 	}
 
 	/**

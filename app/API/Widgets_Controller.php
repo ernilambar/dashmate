@@ -13,6 +13,7 @@ use Nilambar\Dashmate\Services\Widget_Dispatcher;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
+use WP_REST_Server;
 
 /**
  * Widgets_Controller class.
@@ -42,7 +43,7 @@ class Widgets_Controller extends Base_Controller {
 			'/' . $this->get_base_route(),
 			[
 				[
-					'methods'             => \WP_REST_Server::READABLE,
+					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => [ $this, 'get_widgets' ],
 					'permission_callback' => [ $this, 'check_permissions' ],
 					'args'                => [],
@@ -56,7 +57,7 @@ class Widgets_Controller extends Base_Controller {
 			'/dashboards/(?P<dashboard_id>[a-zA-Z0-9_-]+)/' . $this->get_base_route(),
 			[
 				[
-					'methods'             => \WP_REST_Server::READABLE,
+					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => [ $this, 'get_dashboard_widgets' ],
 					'permission_callback' => [ $this, 'check_permissions' ],
 					'args'                => [
@@ -75,7 +76,7 @@ class Widgets_Controller extends Base_Controller {
 			'/dashboards/(?P<dashboard_id>[a-zA-Z0-9_-]+)/' . $this->get_base_route() . '/(?P<widget_id>[a-zA-Z0-9_-]+)/content',
 			[
 				[
-					'methods'             => \WP_REST_Server::READABLE,
+					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => [ $this, 'get_widget_content' ],
 					'permission_callback' => [ $this, 'check_permissions' ],
 					'args'                => [
@@ -90,7 +91,7 @@ class Widgets_Controller extends Base_Controller {
 					],
 				],
 				[
-					'methods'             => \WP_REST_Server::EDITABLE,
+					'methods'             => WP_REST_Server::EDITABLE,
 					'callback'            => [ $this, 'get_widget_content_with_settings' ],
 					'permission_callback' => [ $this, 'check_permissions' ],
 					'args'                => [
@@ -117,7 +118,7 @@ class Widgets_Controller extends Base_Controller {
 			'/dashboards/(?P<dashboard_id>[a-zA-Z0-9_-]+)/' . $this->get_base_route() . '/(?P<widget_id>[a-zA-Z0-9_-]+)/settings',
 			[
 				[
-					'methods'             => \WP_REST_Server::EDITABLE,
+					'methods'             => WP_REST_Server::EDITABLE,
 					'callback'            => [ $this, 'save_widget_settings' ],
 					'permission_callback' => [ $this, 'check_permissions' ],
 					'args'                => [
