@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace Nilambar\Dashmate;
+namespace Nilambar\Dashmate\Services;
 
 /**
  * Widget_Template_Registry class.

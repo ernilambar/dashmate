@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace Nilambar\Dashmate;
+namespace Nilambar\Dashmate\Widgets;
 
 /**
  * Abstract_Widget class.

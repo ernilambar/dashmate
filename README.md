@@ -59,7 +59,7 @@ composer install
 // Include Composer autoloader
 require_once plugin_dir_path(__FILE__) . 'vendor/autoload.php';
 
-use Nilambar\Dashmate\Dashmate;
+use Nilambar\Dashmate\Core\Dashmate;
 
 // Initialize Dashmate
 Dashmate::init();
@@ -99,7 +99,7 @@ add_action('init', function() {
 
 ```php
 <?php
-use Nilambar\Dashmate\Abstract_Widget;
+use Nilambar\Dashmate\Widgets\Abstract_Widget;
 
 class My_Widget extends Abstract_Widget {
     public function __construct($id) {
