@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Nilambar\Dashmate\Widgets;
 
+use WP_Error;
+
 /**
  * Abstract_Widget class.
  *
@@ -69,8 +71,6 @@ abstract class Abstract_Widget {
 	 * @var array
 	 */
 	protected $settings_schema;
-
-
 
 	/**
 	 * Constructor.
@@ -457,7 +457,7 @@ abstract class Abstract_Widget {
 
 		// Validate output against schema.
 		if ( ! $this->validate_output( $content ) ) {
-			return new \WP_Error( 'invalid_output', 'Widget output does not match schema for widget type: ' . $this->template_type );
+			return new WP_Error( 'invalid_output', 'Widget output does not match schema for widget type: ' . $this->template_type );
 		}
 
 		return $content;

@@ -13,6 +13,7 @@ use Nilambar\Dashmate\Services\Dashboard_Manager;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
+use WP_REST_Server;
 
 /**
  * Dashboard_Controller class.
@@ -42,7 +43,7 @@ class Dashboard_Controller extends Base_Controller {
 			'/' . $this->get_base_route() . '/(?P<dashboard_id>[a-zA-Z0-9_-]+)',
 			[
 				[
-					'methods'             => \WP_REST_Server::READABLE,
+					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => [ $this, 'get_dashboard' ],
 					'permission_callback' => [ $this, 'check_permissions' ],
 					'args'                => [
@@ -53,7 +54,7 @@ class Dashboard_Controller extends Base_Controller {
 					],
 				],
 				[
-					'methods'             => \WP_REST_Server::EDITABLE,
+					'methods'             => WP_REST_Server::EDITABLE,
 					'callback'            => [ $this, 'save_dashboard' ],
 					'permission_callback' => [ $this, 'check_permissions' ],
 					'args'                => [
@@ -125,7 +126,6 @@ class Dashboard_Controller extends Base_Controller {
 
 		return $this->success_response( $dashboard_data, 201 );
 	}
-
 
 	/**
 	 * Validate columns.

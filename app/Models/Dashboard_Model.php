@@ -37,7 +37,6 @@ class Dashboard_Model {
 	 */
 	private static $starter_layouts = [];
 
-
 	/**
 	 * Get dashboard data.
 	 *
@@ -112,6 +111,7 @@ class Dashboard_Model {
 	 */
 	public static function data_exists( string $dashboard_id ): bool {
 		$option_key = self::get_option_key( $dashboard_id );
+
 		return null !== get_option( $option_key, null );
 	}
 
@@ -189,7 +189,7 @@ class Dashboard_Model {
 	}
 
 	/**
-	 * Sanitize dashboard data to prevent XSS and other security issues.
+	 * Sanitize dashboard data.
 	 *
 	 * @since 1.0.0
 	 *
