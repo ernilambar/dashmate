@@ -97,23 +97,6 @@ Updates the dashboard layout with new column configuration.
 }
 ```
 
-### POST /dashboards/{dashboard_id}/reorder
-
-Reorders widgets across columns using a column_widgets structure.
-
-**Parameters:**
-- `dashboard_id` (string, required): Dashboard identifier
-
-**Request Body:**
-```json
-{
-  "column_widgets": {
-    "col-1": ["widget-1", "widget-3"],
-    "col-2": ["widget-2", "widget-4"]
-  }
-}
-```
-
 ## Widget Endpoints
 
 ### GET /widgets

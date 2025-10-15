@@ -170,7 +170,6 @@ class Widgets_Controller extends Base_Controller {
 		return $this->success_response( $data );
 	}
 
-
 	/**
 	 * Get widget content by widget ID.
 	 *

@@ -70,29 +70,6 @@ class Dashboard_Controller extends Base_Controller {
 				],
 			]
 		);
-
-		// Reorder widgets endpoint.
-		register_rest_route(
-			$this->get_namespace(),
-			'/' . $this->get_base_route() . '/(?P<dashboard_id>[a-zA-Z0-9_-]+)/reorder',
-			[
-				[
-					'methods'             => \WP_REST_Server::EDITABLE,
-					'callback'            => [ $this, 'reorder_widgets' ],
-					'permission_callback' => [ $this, 'check_permissions' ],
-					'args'                => [
-						'dashboard_id'   => [
-							'required'          => true,
-							'validate_callback' => [ $this, 'validate_dashboard_id' ],
-						],
-						'column_widgets' => [
-							'required' => true,
-							'type'     => 'object',
-						],
-					],
-				],
-			]
-		);
 	}
 
 	/**
@@ -149,87 +126,6 @@ class Dashboard_Controller extends Base_Controller {
 		return $this->success_response( $dashboard_data, 201 );
 	}
 
-	/**
-	 * Reorder widgets.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param WP_REST_Request $request Request object.
-	 *
-	 * @return WP_REST_Response|WP_Error
-	 */
-	public function reorder_widgets( $request ) {
-		try {
-			$dashboard_id   = $request->get_param( 'dashboard_id' );
-			$column_widgets = $request->get_param( 'column_widgets' );
-
-			if ( ! is_array( $column_widgets ) ) {
-				return $this->error_response( 'Column widgets must be an array', 400, 'invalid_column_widgets' );
-			}
-
-			$dashboard_data = $this->get_dashboard_data( $dashboard_id );
-
-			if ( is_wp_error( $dashboard_data ) ) {
-				return $dashboard_data;
-			}
-
-			// Get existing widgets for reference.
-			$existing_widgets_by_id = [];
-			if ( isset( $dashboard_data['columns'] ) && is_array( $dashboard_data['columns'] ) ) {
-				foreach ( $dashboard_data['columns'] as $column ) {
-					if ( isset( $column['widgets'] ) && is_array( $column['widgets'] ) ) {
-						foreach ( $column['widgets'] as $widget ) {
-							if ( isset( $widget['id'] ) ) {
-								$existing_widgets_by_id[ $widget['id'] ] = $widget;
-							}
-						}
-					}
-				}
-			}
-
-			// Update columns with new widget order.
-			$updated_columns = [];
-
-			foreach ( $column_widgets as $column_id => $widget_ids ) {
-				$column = [
-					'id'      => $column_id,
-					'widgets' => [],
-				];
-
-				foreach ( $widget_ids as $widget_id ) {
-					if ( isset( $existing_widgets_by_id[ $widget_id ] ) ) {
-						$column['widgets'][] = $existing_widgets_by_id[ $widget_id ];
-					} else {
-						// Add new widget to the dashboard.
-						$column['widgets'][] = [
-							'id'        => $widget_id,
-							'settings'  => [],
-							'collapsed' => false,
-						];
-					}
-				}
-
-				$updated_columns[] = $column;
-			}
-
-			$dashboard_data['columns'] = $updated_columns;
-
-			$current_data = $this->get_dashboard_data( $dashboard_id );
-
-			if ( $current_data === $dashboard_data ) {
-				return $this->success_response( [ 'message' => 'Widgets reordered successfully' ] );
-			}
-
-			$result = Dashboard_Manager::save_dashboard_data( $dashboard_data, $dashboard_id );
-			if ( is_wp_error( $result ) ) {
-				return $this->error_response( 'Unable to save widget order: ' . $result->get_error_message(), 500, 'save_error' );
-			}
-
-			return $this->success_response( [ 'message' => 'Widgets reordered successfully' ] );
-		} catch ( Exception $e ) {
-			return $this->error_response( 'Internal server error: ' . $e->getMessage(), 500, 'internal_error' );
-		}
-	}
 
 	/**
 	 * Validate columns.

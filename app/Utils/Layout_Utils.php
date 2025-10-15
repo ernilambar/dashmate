@@ -1,23 +1,22 @@
 <?php
 /**
- * Layout_Manager
+ * Layout_Utils
  *
  * @package Dashmate
  */
 
 declare(strict_types=1);
 
-namespace Nilambar\Dashmate;
+namespace Nilambar\Dashmate\Utils;
 
-use Nilambar\Dashmate\Utils\JSON_Utils;
 use WP_Error;
 
 /**
- * Layout_Manager class.
+ * Layout_Utils class.
  *
  * @since 1.0.0
  */
-class Layout_Manager {
+class Layout_Utils {
 
 	/**
 	 * Get layout data from JSON file.
