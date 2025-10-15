@@ -155,13 +155,8 @@ See [docs/API.md](docs/API.md) for complete REST API reference.
 
 ## Hooks and Filters
 
-### Actions
-- `dashmate_init` - Fired when Dashmate is initialized
-- `dashmate_widgets_loaded` - Fired when widgets are loaded
-
 ### Filters
 - `dashmate_widgets` - **Primary filter for widget registration** - Add custom widgets to the system
 - `dashmate_dashboard_data` - Filter dashboard data
-- `dashmate_widget_types` - Filter available widget types
 - `dashmate_widget_custom_classes` - Add custom CSS classes to widgets
 - `dashmate_widget_metadata` - Add custom metadata to widgets

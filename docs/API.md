@@ -249,41 +249,41 @@ X-WP-Nonce: your-nonce-value
 
 ### Dashboard Management
 
-```php
-use Nilambar\Dashmate\Services\Dashboard_Manager;
-
-// Get dashboard data
-$dashboard_data = Dashboard_Manager::get_dashboard_data('my_dashboard');
-
-// Save dashboard data
-$result = Dashboard_Manager::save_dashboard_data($data, 'my_dashboard');
-
-// Check if dashboard exists
-$exists = Dashboard_Manager::dashboard_data_exists('my_dashboard');
-```
-
-### Widget Management
+Create custom dashboard pages by extending the `Abstract_Dashboard_Page` class:
 
 ```php
-use Nilambar\Dashmate\Services\Widget_Manager;
+use Nilambar\Dashmate\Admin\Abstract_Dashboard_Page;
 
-// Create a widget
-$widget = Widget_Manager::create_widget('my_custom', [
-    'title' => 'My Widget Title',
-    'content' => 'Widget content here'
-], 'column_1');
+class My_Dashboard extends Abstract_Dashboard_Page {
+    protected function init_properties() {
+        $this->page_slug      = 'my-dashboard';
+        $this->page_title     = esc_html__('My Dashboard', 'my-plugin');
+        $this->menu_title     = esc_html__('My Dashboard', 'my-plugin');
+        $this->capability     = 'manage_options';
+        $this->menu_icon      = 'dashicons-dashboard';
+        $this->menu_position  = 30;
+        $this->dashboard_id   = 'my_dashboard';
+    }
+}
 
-// Get widget content
-$content = Widget_Manager::get_widget_content('widget_id');
-
-// Update widget settings
-$result = Widget_Manager::update_widget_settings('widget_id', [
-    'title' => 'Updated Title'
-]);
-
-// Delete widget
-$result = Widget_Manager::delete_widget('widget_id');
+// Register the dashboard page
+add_action('init', function() {
+    new My_Dashboard();
+});
 ```
+
+**Required Properties:**
+- `page_slug` - Unique page identifier
+- `page_title` - Page title displayed in browser
+- `menu_title` - Menu item text
+- `capability` - Required user capability
+- `dashboard_id` - Dashboard identifier for API calls
+- `starter_layout` - Default layout configuration
+
+**Optional Properties:**
+- `menu_icon` - WordPress dashicon or custom icon
+- `menu_position` - Menu position in admin menu
+- `parent_page` - Parent page slug for submenu items
 
 ### Widget Registration
 
