@@ -15,9 +15,6 @@ use WP_Error;
 /**
  * Dashboard_Manager class.
  *
- * Service layer for dashboard operations. Handles business logic
- * while delegating data operations to Dashboard_Model.
- *
  * @since 1.0.0
  */
 class Dashboard_Manager {
@@ -33,7 +30,6 @@ class Dashboard_Manager {
 	public static function get_dashboard_data( string $dashboard_id ): array {
 		$data = self::get_raw_dashboard_data( $dashboard_id );
 
-		// Apply dashboard data filter to allow filtering of widgets and other data.
 		$data = apply_filters( 'dashmate_dashboard_data', $data, $dashboard_id );
 
 		return $data;
@@ -86,7 +82,6 @@ class Dashboard_Manager {
 			}
 		}
 
-		// Apply dashboard data filter to the entire dashboard data.
 		$data = apply_filters( 'dashmate_dashboard_data', $data, $dashboard_id );
 
 		return $data;

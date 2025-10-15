@@ -1,6 +1,5 @@
 const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
 
-// Prevent cleaning output directory.
 const plugins = defaultConfig.plugins.filter(
 	( plugin ) => plugin.constructor.name !== 'CleanWebpackPlugin'
 );
@@ -21,7 +20,6 @@ module.exports = {
 		...defaultConfig.optimization,
 		splitChunks: false,
 	},
-	// Use filtered plugins
 	plugins: [ ...plugins ],
 	cache: {
 		type: 'filesystem',
@@ -29,7 +27,6 @@ module.exports = {
 			config: [ __filename ],
 		},
 	},
-	// Hide webpack performance warnings
 	performance: {
 		hints: false,
 	},

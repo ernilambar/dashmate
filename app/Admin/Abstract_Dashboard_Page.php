@@ -12,11 +12,6 @@ use Nilambar\Dashmate\Models\Dashboard_Model;
 /**
  * Abstract Dashboard Page class.
  *
- * This abstract class provides a foundation for creating dashboard pages
- * that can be extended to support multiple dashboard pages in the future.
- * It handles common dashboard functionality like page registration (both parent
- * and child pages), asset enqueuing, and provides hooks for customization.
- *
  * @since 1.0.0
  */
 abstract class Abstract_Dashboard_Page {
@@ -75,7 +70,6 @@ abstract class Abstract_Dashboard_Page {
 	 */
 	protected $menu_position;
 
-
 	/**
 	 * Dashboard ID for API calls.
 	 *
@@ -86,7 +80,7 @@ abstract class Abstract_Dashboard_Page {
 	protected $dashboard_id;
 
 	/**
-	 * Starter layout to use when no dashboard data exists.
+	 * Starter layout to use.
 	 *
 	 * @since 1.0.0
 	 *
@@ -169,6 +163,7 @@ abstract class Abstract_Dashboard_Page {
 	 */
 	public function render_dashboard_content() {
 		$template_data = $this->get_template_data();
+
 		$this->render_template( $template_data );
 	}
 
@@ -201,13 +196,12 @@ abstract class Abstract_Dashboard_Page {
 	protected function render_template( $data = [] ) {
 		$dashboard_id = $data['dashboard_id'] ?? '';
 		?>
-		<div class="wrap">
+		<div class="wrap wrap-<?php echo esc_attr( $dashboard_id ); ?>">
 			<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
 			<div id="dashmate-app" data-dashboard-id="<?php echo esc_attr( $dashboard_id ); ?>"><?php esc_html_e( 'Loading...', 'dashmate' ); ?></div>
 		</div><!-- .wrap -->
 		<?php
 	}
-
 
 	/**
 	 * Get dashboard page slug.
@@ -319,5 +313,4 @@ abstract class Abstract_Dashboard_Page {
 			Dashboard_Model::set_starter_layout( $this->dashboard_id, $this->starter_layout );
 		}
 	}
-
 }
