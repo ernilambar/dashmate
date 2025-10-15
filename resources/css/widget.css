@@ -24,14 +24,9 @@
 	border-bottom: 1px solid #e1e1e1;
 	background: #f9f9f9;
 	border-radius: 6px 6px 0 0;
-	cursor: grab;
 	position: relative;
-	min-height: 32px; /* Ensure consistent height */
+	min-height: 32px;
 	box-sizing: border-box;
-}
-
-.widget-header:hover {
-	background: #f0f0f0;
 }
 
 .widget-header h3 {
@@ -44,8 +39,8 @@
 	align-items: center;
 	gap: 8px;
 	margin-left: 0;
-	min-height: 20px; /* Ensure consistent height for text area */
-	line-height: 1.2; /* Consistent line height */
+	min-height: 20px;
+	line-height: 1.2;
 }
 
 /* Ensure consistent spacing when icon is not present */
@@ -58,7 +53,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	flex-shrink: 0; /* Prevent icon from shrinking */
+	flex-shrink: 0;
 }
 
 /* Add placeholder for missing icon to prevent layout shift */
@@ -73,7 +68,7 @@
 	display: flex;
 	gap: 4px;
 	align-items: center;
-	min-height: 20px; /* Ensure consistent height */
+	min-height: 20px;
 }
 
 /* Dashmate icon-only button (avoids WP core button classes) */
@@ -81,8 +76,7 @@
 	appearance: none;
 	-webkit-appearance: none;
 	background-color: #ffffff;
-	border: 1px solid #c6e1f2; /* light bluish border */
-	border: 1px solid #2271b1; /* light bluish border */
+	border: 1px solid #2271b1;
 	border-radius: 3px;
 	padding: 4px 6px;
 	line-height: 1;
@@ -101,9 +95,9 @@
 }
 
 .dm-icon-button:hover:not(:disabled) {
-	background-color: #f0f8ff; /* very light blue */
-	border-color: #8cc5df; /* hover blue */
-	color: #007cba; /* WP admin blue */
+	background-color: #f0f8ff;
+	border-color: #8cc5df;
+	color: #007cba;
 }
 
 .dm-icon-button:focus-visible {

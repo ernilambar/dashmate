@@ -51,8 +51,6 @@ class Layout_Manager {
 		/**
 		 * Filter layout data before returning.
 		 *
-		 * Allows others to modify layout data before it's returned.
-		 *
 		 * @since 1.0.0
 		 *
 		 * @param array $layout_data Layout data array.
@@ -60,5 +58,4 @@ class Layout_Manager {
 		 */
 		return apply_filters( 'dashmate_layout_data', $layout_data, $file_path );
 	}
-
 }

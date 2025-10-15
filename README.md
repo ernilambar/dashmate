@@ -85,9 +85,7 @@ class My_Dashboard extends Abstract_Dashboard_Page {
         $this->capability     = 'manage_options';
         $this->menu_icon      = 'dashicons-dashboard';
         $this->menu_position  = 30;
-        $this->template_name  = 'pages/app';
         $this->dashboard_id   = 'my_dashboard';
-        $this->starter_layout = 'default';
     }
 }
 
