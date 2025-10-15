@@ -127,7 +127,6 @@ class Dashboard_Controller extends Base_Controller {
 		return $this->success_response( $dashboard_data, 201 );
 	}
 
-
 	/**
 	 * Validate columns.
 	 *

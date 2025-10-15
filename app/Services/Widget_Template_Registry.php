@@ -90,8 +90,6 @@ class Widget_Template_Registry {
 		return isset( $templates[ $template_type ] );
 	}
 
-
-
 	/**
 	 * Register a new template.
 	 *

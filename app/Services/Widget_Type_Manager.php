@@ -95,10 +95,6 @@ class Widget_Type_Manager {
 		return self::$output_schemas[ $type ] ?? null;
 	}
 
-
-
-
-
 	/**
 	 * Validate widget output against the widget type's output schema.
 	 *

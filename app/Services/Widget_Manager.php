@@ -18,8 +18,6 @@ use WP_Error;
  */
 class Widget_Manager {
 
-
-
 	/**
 	 * Create a new widget instance.
 	 *
@@ -170,17 +168,15 @@ class Widget_Manager {
 		return Widget_Dispatcher::get_widget_content( '', $widget_id, $settings );
 	}
 
-
-
-		/**
-		 * Generate unique widget ID.
-		 *
-		 * @since 1.0.0
-		 *
-		 * @param string $type Widget type.
-		 *
-		 * @return string
-		 */
+	/**
+	 * Generate unique widget ID.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $type Widget type.
+	 *
+	 * @return string
+	 */
 	private static function generate_widget_id( $type ) {
 		$prefix    = str_replace( '-', '_', $type );
 		$timestamp = time();

@@ -72,8 +72,6 @@ abstract class Abstract_Widget {
 	 */
 	protected $settings_schema;
 
-
-
 	/**
 	 * Constructor.
 	 *

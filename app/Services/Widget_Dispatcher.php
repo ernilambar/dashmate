@@ -112,18 +112,12 @@ class Widget_Dispatcher {
 		/**
 		 * Filter the registered widgets.
 		 *
-		 * This is the ONLY way for external plugins and addons to register their own
-		 * widgets with the Dashmate dashboard. All direct registration methods are
-		 * restricted to internal use only.
-		 *
 		 * @since 1.0.0
 		 *
 		 * @param array $widgets Array of registered widgets.
 		 */
 		return apply_filters( 'dashmate_widgets', self::$widgets );
 	}
-
-
 
 	/**
 	 * Get a specific widget.
@@ -138,8 +132,6 @@ class Widget_Dispatcher {
 		$widgets = self::get_widgets();
 		return $widgets[ $id ] ?? null;
 	}
-
-
 
 	/**
 	 * Check if a widget is registered.
@@ -328,8 +320,6 @@ class Widget_Dispatcher {
 	private static function save_dashboard_data( $data, $dashboard_id = 'main' ) {
 		return Dashboard_Manager::save_dashboard_data( $data, $dashboard_id );
 	}
-
-
 
 	/**
 	 * Find widget by ID in dashboard data.
