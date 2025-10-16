@@ -29,7 +29,7 @@ class Column extends Component {
 						) )
 					) : (
 						<div className="empty-column">
-							<p>No widgets in this column</p>
+							<p>&nbsp;</p>
 						</div>
 					) }
 				</div>

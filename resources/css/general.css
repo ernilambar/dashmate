@@ -4,7 +4,7 @@
 	top: -30px;
 	right: 0;
 	display: grid;
-	grid-template-columns: repeat(4, 20px);
+	grid-template-columns: repeat(1, 20px);
 	gap: 2px;
 	z-index: 1000;
 	height: 20px;
@@ -138,29 +138,6 @@
 	transition: background-color 0.2s ease;
 	min-width: 0;
 	overflow: hidden;
-}
-
-.empty-column {
-	text-align: center;
-	padding: 40px 20px;
-	color: #666;
-	background: #f8f9fa;
-	border: 2px dashed #dee2e6;
-	border-radius: 8px;
-	margin: 10px 0;
-	transition: all 0.2s ease;
-}
-
-.empty-column:hover {
-	background: #e9ecef;
-	border-color: #adb5bd;
-}
-
-.empty-column p {
-	margin: 0;
-	font-size: 14px;
-	font-weight: 500;
-	color: #6c757d;
 }
 
 /* Table Widget */
